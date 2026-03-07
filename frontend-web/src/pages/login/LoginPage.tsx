@@ -8,7 +8,7 @@ import { useTheme } from '@shared/hooks/useTheme';
 import { Button } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/pages/Login.module.scss';
 
-function LoginPage(): React.ReactElement {
+export function LoginPage(): React.ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
@@ -44,5 +44,3 @@ function LoginPage(): React.ReactElement {
     </div>
   );
 }
-
-export default LoginPage;

@@ -21,6 +21,16 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "msw": "^2.12.10"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.21",
+    "zod": "^4.3.6"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

@@ -1,28 +1,37 @@
-import { StrictMode } from 'react';
+import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-
-// Global styles and core configurations
+import { App } from './app/App';
 import '@assets/styles/main.scss';
-import '@core/i18n';
+import './core/i18n';
 
-// Absolute alias import to enforce consistency
-import { App } from '@app/App';
+// Defer React mounting until MSW is ready in development mode
+async function enableMocking(): Promise<void> {
+  if (process.env.NODE_ENV !== 'development') {
+    return;
+  }
 
-const rootElement = document.getElementById('root');
-
-// Fail-Fast Pattern: Do not fail silently
-if (!rootElement) {
-  throw new Error('Fatal: Root container element not found. Application cannot mount.');
+  const { worker } = await import('./app/mock/browser');
+  await worker.start({
+    serviceWorker: {
+      url: '/mockServiceWorker.js'
+    },
+    onUnhandledRequest: 'bypass'
+  });
 }
 
-// Global unhandled promise listener (Security/Telemetry layer)
-window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
-  console.error('Unhandled Promise Rejection:', event.reason);
-  // Implementation note: Push to telemetry service here
-});
+const container = document.getElementById('root');
 
-createRoot(rootElement).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+if (!container) {
+  throw new Error('Root container missing in index.html');
+}
+
+const root = createRoot(container);
+
+// Initialize mocks, THEN render the application
+void enableMocking().then(() => {
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+});

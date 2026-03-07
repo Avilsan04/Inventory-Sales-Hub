@@ -6,12 +6,8 @@ import { PackageIcon, SunIcon, MoonIcon, LayoutDashboardIcon } from 'lucide-reac
 // Strict FSD: Importing downwards to 'shared'
 import { useTheme } from '@shared/hooks/useTheme';
 import { cn } from '@shared/lib/cn';
+import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/Layout.module.scss';
-
-// Temporary constant until routes are formally migrated to @shared/config/routes.ts
-const ROUTES = {
-  HOME: '/',
-} as const;
 
 export function Layout(): React.ReactElement {
   const { theme, toggleTheme } = useTheme();
@@ -21,14 +17,16 @@ export function Layout(): React.ReactElement {
     <div className={styles['layout']}>
       <header className={styles['header']}>
         <div className={styles['headerLeft']}>
-          <NavLink to={ROUTES.HOME} className={styles['logo']}>
+          {/* Update 'to' prop */}
+          <NavLink to={APP_ROUTES.ROOT} className={styles['logo']}>
             <PackageIcon className={styles['logoIcon']} aria-hidden="true" />
             <span>{t('common.appName')}</span>
           </NavLink>
 
           <nav className={styles['nav']} aria-label="Main Navigation">
+            {/* Update 'to' prop */}
             <NavLink
-              to={ROUTES.HOME}
+              to={APP_ROUTES.DASHBOARD}
               end
               className={({ isActive }): string =>
                 cn(styles['navLink'], isActive && styles['navLinkActive'])

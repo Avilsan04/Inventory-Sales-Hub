@@ -1,8 +1,10 @@
+/**
+ * Single Source of Truth for application routes.
+ */
 export const APP_ROUTES = {
-  HOME: '/',
+  ROOT: '/',
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
-  // Future routes go here
 } as const;
 
 export type AppRoute = typeof APP_ROUTES[keyof typeof APP_ROUTES];

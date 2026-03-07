@@ -1,2 +1,2 @@
-// Expose the layout module to the upper layers (app)
-export { Layout } from './layout';
+export * from './layout';
+export * from './inventory';
