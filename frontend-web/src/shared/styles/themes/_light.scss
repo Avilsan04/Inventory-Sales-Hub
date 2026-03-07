@@ -1,0 +1,36 @@
+// Light Theme
+// Injects design tokens as CSS custom properties
+
+@use '../tokens/colors' as *;
+@use '../tokens/typography' as *;
+@use '../tokens/spacing' as *;
+
+:root {
+  // Colors
+  --color-primary: #{$color-primary};
+  --color-primary-hover: #{$color-primary-hover};
+  --color-primary-light: #{$color-primary-light};
+  --color-secondary: #{$color-secondary};
+  --color-secondary-hover: #{$color-secondary-hover};
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-error: #{$color-error};
+  --color-bg-primary: #{$color-bg-primary};
+  --color-bg-secondary: #{$color-bg-secondary};
+  --color-bg-tertiary: #{$color-bg-tertiary};
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-inverse: #{$color-text-inverse};
+  --color-border: #{$color-border};
+  --color-border-focus: #{$color-border-focus};
+
+  // Typography
+  --font-family-base: #{$font-family-base};
+  --font-family-mono: #{$font-family-mono};
+  --font-size-base: #{$font-size-base};
+
+  // Spacing
+  --border-radius-base: #{$border-radius-base};
+  --shadow-base: #{$shadow-base};
+}

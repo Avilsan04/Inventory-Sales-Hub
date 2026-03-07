@@ -1,0 +1,26 @@
+{
+  "name": "inventory-sales-hub-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root workspace orchestrator for Inventory Sales Hub",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "workspaces": [
+    "frontend-web",
+    "frontend-mobile"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev:web": "npm run dev -w frontend-web",
+    "dev:mobile": "npm run start -w frontend-mobile",
+    "build:web": "npm run build -w frontend-web",
+    "lint:all": "npm run lint -w frontend-web && npm run lint -w frontend-mobile",
+    "format:all": "npm run format -w frontend-web && npm run format -w frontend-mobile",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
+}
