@@ -1,0 +1,174 @@
+.dropdownContent {
+  z-index: 50;
+  min-width: 8rem;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  padding: $spacing-1;
+  box-shadow: var(--shadow-base);
+  animation: contentShow 0.15s ease-out;
+}
+
+.dropdownItem {
+  position: relative;
+  display: flex;
+  cursor: default;
+  align-items: center;
+  gap: $spacing-2;
+  border-radius: var(--radius-sm);
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  outline: none;
+  user-select: none;
+
+  &:focus,
+  &[data-highlighted] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  &[data-disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &[data-inset='true'] {
+    padding-left: $spacing-8;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    flex-shrink: 0;
+    color: var(--color-muted-foreground);
+  }
+}
+
+.dropdownItemDestructive {
+  color: var(--color-destructive);
+
+  &:focus,
+  &[data-highlighted] {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--color-destructive);
+  }
+
+  svg {
+    color: var(--color-destructive);
+  }
+}
+
+.dropdownCheckboxItem {
+  position: relative;
+  display: flex;
+  cursor: default;
+  align-items: center;
+  gap: $spacing-2;
+  border-radius: var(--radius-sm);
+  padding: $spacing-1 $spacing-2 $spacing-1 $spacing-8;
+  font-size: $font-size-sm;
+  outline: none;
+  user-select: none;
+
+  &:focus,
+  &[data-highlighted] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  &[data-disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+.dropdownRadioItem {
+  @extend .dropdownCheckboxItem;
+}
+
+.dropdownItemIndicator {
+  position: absolute;
+  left: $spacing-2;
+  display: flex;
+  width: 0.875rem;
+  height: 0.875rem;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.dropdownLabel {
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  &[data-inset='true'] {
+    padding-left: $spacing-8;
+  }
+}
+
+.dropdownSeparator {
+  margin: $spacing-1 (
+    -$spacing-1
+  );
+height: 1px;
+background-color: var(--color-border);
+}
+
+.dropdownShortcut {
+  margin-left: auto;
+  font-size: $font-size-xs;
+  letter-spacing: 0.1em;
+  color: var(--color-muted-foreground);
+}
+
+.dropdownSubTrigger {
+  display: flex;
+  cursor: default;
+  align-items: center;
+  gap: $spacing-2;
+  border-radius: var(--radius-sm);
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  outline: none;
+  user-select: none;
+
+  &:focus,
+  &[data-highlighted],
+  &[data-state='open'] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    pointer-events: none;
+    color: var(--color-muted-foreground);
+
+    &:last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.dropdownSubContent {
+  z-index: 50;
+  min-width: 8rem;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  padding: $spacing-1;
+  box-shadow: var(--shadow-lg);
+  animation: contentShow 0.15s ease-out;
+}

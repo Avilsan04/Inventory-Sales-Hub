@@ -1,0 +1,95 @@
+{
+  "common": {
+    "appName": "Inventory Sales Hub",
+    "loading": "Cargando...",
+    "error": "Error",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "toggleTheme": "Cambiar tema",
+    "noData": "No hay datos disponibles"
+  },
+  "nav": {
+    "home": "Inicio",
+    "inventory": "Inventario",
+    "sales": "Ventas",
+    "reports": "Reportes",
+    "settings": "Configuración"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "rememberMe": "Recordarme",
+    "loginSubtitle": "Ingresa tus credenciales para continuar",
+    "welcomeBack": "Bienvenido de nuevo",
+    "enterCredentials": "Ingresa tus credenciales para acceder a tu cuenta",
+    "emailPlaceholder": "correo@ejemplo.com",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Credenciales inválidas. Por favor, intenta de nuevo."
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "welcome": "Bienvenido de nuevo",
+    "stats": {
+      "totalProducts": "Total de productos",
+      "monthlySales": "Ventas mensuales",
+      "activeOrders": "Pedidos activos",
+      "lowStock": "Stock bajo"
+    },
+    "recentActivity": {
+      "title": "Actividad reciente",
+      "noActivity": "Sin actividad reciente"
+    },
+    "quickActions": {
+      "title": "Acciones rápidas",
+      "newProduct": "Nuevo producto",
+      "newSale": "Nueva venta",
+      "viewReports": "Ver reportes"
+    }
+  },
+  "inventory": {
+    "title": "Inventario",
+    "products": "Productos",
+    "categories": "Categorías",
+    "addProduct": "Agregar producto",
+    "editProduct": "Editar producto",
+    "productName": "Nombre del producto",
+    "sku": "SKU",
+    "price": "Precio",
+    "stock": "Stock",
+    "category": "Categoría",
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "lowStock": "Stock bajo",
+      "outOfStock": "Sin stock"
+    }
+  },
+  "sales": {
+    "title": "Ventas",
+    "newSale": "Nueva venta",
+    "orderHistory": "Historial de pedidos",
+    "customer": "Cliente",
+    "total": "Total",
+    "date": "Fecha",
+    "status": {
+      "pending": "Pendiente",
+      "completed": "Completado",
+      "cancelled": "Cancelado"
+    }
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Correo electrónico inválido",
+    "minLength": "Mínimo {{min}} caracteres requeridos",
+    "maxLength": "Máximo {{max}} caracteres permitidos"
+  }
+}

@@ -1,0 +1,46 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  color: var(--color-card-foreground);
+  padding: $spacing-6 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.cardHeader {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-items: start;
+  gap: $spacing-2;
+  padding: 0 $spacing-6;
+}
+
+.cardTitle {
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+}
+
+.cardDescription {
+  color: var(--color-muted-foreground);
+  font-size: $font-size-sm;
+}
+
+.cardAction {
+  grid-column-start: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  justify-self: end;
+}
+
+.cardContent {
+  padding: 0 $spacing-6;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  padding: 0 $spacing-6;
+}

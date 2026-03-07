@@ -1,0 +1,95 @@
+{
+  "common": {
+    "appName": "Inventory Sales Hub",
+    "loading": "Loading...",
+    "error": "Error",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "toggleTheme": "Toggle theme",
+    "noData": "No data available"
+  },
+  "nav": {
+    "home": "Home",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "loginSubtitle": "Enter your credentials to continue",
+    "welcomeBack": "Welcome back",
+    "enterCredentials": "Enter your credentials to access your account",
+    "emailPlaceholder": "email@example.com",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Invalid credentials. Please try again."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "stats": {
+      "totalProducts": "Total products",
+      "monthlySales": "Monthly sales",
+      "activeOrders": "Active orders",
+      "lowStock": "Low stock"
+    },
+    "recentActivity": {
+      "title": "Recent activity",
+      "noActivity": "No recent activity"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "newProduct": "New product",
+      "newSale": "New sale",
+      "viewReports": "View reports"
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "products": "Products",
+    "categories": "Categories",
+    "addProduct": "Add product",
+    "editProduct": "Edit product",
+    "productName": "Product name",
+    "sku": "SKU",
+    "price": "Price",
+    "stock": "Stock",
+    "category": "Category",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "lowStock": "Low stock",
+      "outOfStock": "Out of stock"
+    }
+  },
+  "sales": {
+    "title": "Sales",
+    "newSale": "New sale",
+    "orderHistory": "Order history",
+    "customer": "Customer",
+    "total": "Total",
+    "date": "Date",
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "minLength": "Minimum {{min}} characters required",
+    "maxLength": "Maximum {{max}} characters allowed"
+  }
+}

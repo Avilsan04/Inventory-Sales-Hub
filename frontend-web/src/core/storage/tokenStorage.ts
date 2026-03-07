@@ -1,25 +1,47 @@
-export interface AuthTokens {
-  token: string;
+export interface StorageAdapter {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
 }
+
+// Environment-safe adapter generator
+const createBrowserStorage = (storageType: 'local' | 'session'): StorageAdapter => {
+  const isBrowser = typeof window !== 'undefined';
+  const storage = isBrowser
+    ? (storageType === 'local' ? window.localStorage : window.sessionStorage)
+    : null;
+
+  return {
+    getItem: (key: string): string | null => storage?.getItem(key) ?? null,
+    setItem: (key: string, value: string): void => storage?.setItem(key, value),
+    removeItem: (key: string): void => storage?.removeItem(key),
+  };
+};
 
 const TOKEN_KEY = 'auth_token';
 
 export const tokenStorage = {
-  saveToken: async (token: string): Promise<void> => {
-    sessionStorage.setItem(TOKEN_KEY, token);
-    return Promise.resolve();
+  saveToken: (token: string, persistent: boolean = false): void => {
+    const adapter = createBrowserStorage(persistent ? 'local' : 'session');
+    // Ensure cleanup across both storages to prevent stale state
+    createBrowserStorage('local').removeItem(TOKEN_KEY);
+    createBrowserStorage('session').removeItem(TOKEN_KEY);
+
+    adapter.setItem(TOKEN_KEY, token);
   },
 
-  getToken: async (): Promise<string | null> => {
-    return Promise.resolve(sessionStorage.getItem(TOKEN_KEY));
+  getToken: (): string | null => {
+    const local = createBrowserStorage('local').getItem(TOKEN_KEY);
+    const session = createBrowserStorage('session').getItem(TOKEN_KEY);
+    return local ?? session;
   },
 
-  removeToken: async (): Promise<void> => {
-    sessionStorage.removeItem(TOKEN_KEY);
-    return Promise.resolve();
+  removeToken: (): void => {
+    createBrowserStorage('local').removeItem(TOKEN_KEY);
+    createBrowserStorage('session').removeItem(TOKEN_KEY);
   },
 
-  isAuthenticated: async (): Promise<boolean> => {
-    return Promise.resolve(sessionStorage.getItem(TOKEN_KEY) !== null);
+  isAuthenticated: (): boolean => {
+    return tokenStorage.getToken() !== null;
   }
 };

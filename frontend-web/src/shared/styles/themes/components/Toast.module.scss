@@ -1,0 +1,136 @@
+.toastViewport {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  max-height: 100vh;
+  width: 100%;
+  flex-direction: column-reverse;
+  padding: $spacing-4;
+
+  @media (min-width: 640px) {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    flex-direction: column;
+    max-width: 420px;
+  }
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: $spacing-6;
+  padding-right: $spacing-8;
+  box-shadow: var(--shadow-lg);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  &[data-state='open'] {
+    animation: slideInFromBottom 0.3s ease-out;
+  }
+
+  &[data-state='closed'] {
+    opacity: 0;
+  }
+}
+
+.toastDefault {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+.toastDestructive {
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+  border-color: var(--color-destructive);
+}
+
+.toastAction {
+  display: inline-flex;
+  height: 2rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  padding: 0 $spacing-3;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-secondary-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .toastDestructive & {
+    border-color: rgba(255, 255, 255, 0.4);
+
+    &:hover {
+      background-color: var(--color-destructive);
+      border-color: rgba(220, 38, 38, 0.3);
+    }
+  }
+}
+
+.toastClose {
+  position: absolute;
+  right: $spacing-2;
+  top: $spacing-2;
+  border-radius: var(--radius-md);
+  padding: $spacing-1;
+  color: inherit;
+  opacity: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--color-ring);
+  }
+
+  .toast:hover & {
+    opacity: 1;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.toastTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+}
+
+.toastDescription {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}

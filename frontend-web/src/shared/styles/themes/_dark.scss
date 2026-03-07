@@ -1,21 +1,66 @@
 // Dark Theme
 
 [data-theme='dark'] {
+  // ── Core brand ────────────────────────────────────────────────
   --color-primary: #3b82f6;
   --color-primary-hover: #60a5fa;
   --color-primary-light: #1e3a5f;
+  --color-primary-foreground: #fafafa;
   --color-secondary: #94a3b8;
   --color-secondary-hover: #cbd5e1;
+  --color-secondary-bg: #1e293b;
+  --color-secondary-foreground: #f8fafc;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
+
+  // ── Semantic backgrounds ──────────────────────────────────────
   --color-bg-primary: #0f172a;
   --color-bg-secondary: #1e293b;
   --color-bg-tertiary: #334155;
+  --color-background: #0f172a;
+  --color-foreground: #f8fafc;
+
+  // ── Text ──────────────────────────────────────────────────────
   --color-text-primary: #f8fafc;
   --color-text-secondary: #cbd5e1;
   --color-text-muted: #64748b;
   --color-text-inverse: #0f172a;
+
+  // ── Border & focus ────────────────────────────────────────────
   --color-border: #334155;
   --color-border-focus: #3b82f6;
+  --color-ring: #3b82f6;
+  --color-input: #334155;
+
+  // ── Extended semantic ─────────────────────────────────────────
+  --color-accent: #22c55e;
+  --color-accent-foreground: #052e16;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fafafa;
+  --color-muted: #334155;
+  --color-muted-foreground: #94a3b8;
+
+  // ── Card & Popover surfaces ───────────────────────────────────
+  --color-card: #1e293b;
+  --color-card-foreground: #f8fafc;
+  --color-popover: #1e293b;
+  --color-popover-foreground: #f8fafc;
+
+  // ── Sidebar ───────────────────────────────────────────────────
+  --color-sidebar: #0c1222;
+  --color-sidebar-foreground: #f8fafc;
+  --color-sidebar-primary: #3b82f6;
+  --color-sidebar-primary-foreground: #fafafa;
+  --color-sidebar-accent: #1e293b;
+  --color-sidebar-accent-foreground: #f8fafc;
+  --color-sidebar-border: #334155;
+  --color-sidebar-ring: #3b82f6;
+
+  // ── Charts ────────────────────────────────────────────────────
+  --color-chart-1: #3b82f6;
+  --color-chart-2: #22c55e;
+  --color-chart-3: #f59e0b;
+  --color-chart-4: #06b6d4;
+  --color-chart-5: #8b5cf6;
 }

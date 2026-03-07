@@ -1,0 +1,56 @@
+.input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 2.25rem;
+  padding: $spacing-1 $spacing-3;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-input);
+  background-color: transparent;
+  font-size: $font-size-base;
+  font-family: inherit;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  transition: color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+  @media (min-width: 768px) {
+    font-size: $font-size-sm;
+  }
+
+  &::placeholder {
+    color: var(--color-muted-foreground);
+  }
+
+  &::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  // File input styling
+  &[type='file'] {
+    color: var(--color-foreground);
+  }
+
+  &[type='file']::file-selector-button {
+    display: inline-flex;
+    height: 1.75rem;
+    border: 0;
+    background-color: transparent;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: var(--color-foreground);
+    cursor: pointer;
+  }
+}

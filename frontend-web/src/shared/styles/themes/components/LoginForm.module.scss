@@ -1,0 +1,62 @@
+.card {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.error {
+  padding: $spacing-3;
+  border-radius: var(--radius-md);
+  background-color: rgba(220, 38, 38, 0.1);
+  border: 1px solid var(--color-destructive);
+  color: var(--color-destructive);
+  font-size: $font-size-sm;
+  text-align: center;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.forgotPassword {
+  font-size: $font-size-sm;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footer {
+  flex-direction: column;
+}
+
+.submitButton {
+  width: 100%;
+}

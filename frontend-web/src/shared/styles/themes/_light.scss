@@ -6,31 +6,83 @@
 @use '../tokens/spacing' as *;
 
 :root {
-  // Colors
+  // ── Core brand ────────────────────────────────────────────────
   --color-primary: #{$color-primary};
   --color-primary-hover: #{$color-primary-hover};
   --color-primary-light: #{$color-primary-light};
+  --color-primary-foreground: #{$color-primary-foreground};
   --color-secondary: #{$color-secondary};
   --color-secondary-hover: #{$color-secondary-hover};
+  --color-secondary-bg: #{$color-bg-tertiary};
+  --color-secondary-foreground: #{$color-text-primary};
   --color-success: #{$color-success};
   --color-warning: #{$color-warning};
   --color-error: #{$color-error};
+
+  // ── Semantic backgrounds ──────────────────────────────────────
   --color-bg-primary: #{$color-bg-primary};
   --color-bg-secondary: #{$color-bg-secondary};
   --color-bg-tertiary: #{$color-bg-tertiary};
+  --color-background: #{$color-bg-primary};
+  --color-foreground: #{$color-text-primary};
+
+  // ── Text ──────────────────────────────────────────────────────
   --color-text-primary: #{$color-text-primary};
   --color-text-secondary: #{$color-text-secondary};
   --color-text-muted: #{$color-text-muted};
   --color-text-inverse: #{$color-text-inverse};
+
+  // ── Border & focus ────────────────────────────────────────────
   --color-border: #{$color-border};
   --color-border-focus: #{$color-border-focus};
+  --color-ring: #{$color-ring};
+  --color-input: #{$color-input-bg};
 
-  // Typography
+  // ── Extended semantic ─────────────────────────────────────────
+  --color-accent: #{$color-accent};
+  --color-accent-foreground: #{$color-accent-foreground};
+  --color-destructive: #{$color-destructive};
+  --color-destructive-foreground: #{$color-destructive-foreground};
+  --color-muted: #{$color-muted-bg};
+  --color-muted-foreground: #{$color-muted-foreground};
+
+  // ── Card & Popover surfaces ───────────────────────────────────
+  --color-card: #{$color-card-bg};
+  --color-card-foreground: #{$color-card-foreground};
+  --color-popover: #{$color-popover-bg};
+  --color-popover-foreground: #{$color-popover-foreground};
+
+  // ── Sidebar ───────────────────────────────────────────────────
+  --color-sidebar: #{$color-sidebar-bg};
+  --color-sidebar-foreground: #{$color-sidebar-foreground};
+  --color-sidebar-primary: #{$color-sidebar-primary};
+  --color-sidebar-primary-foreground: #{$color-sidebar-primary-foreground};
+  --color-sidebar-accent: #{$color-sidebar-accent};
+  --color-sidebar-accent-foreground: #{$color-sidebar-accent-foreground};
+  --color-sidebar-border: #{$color-sidebar-border};
+  --color-sidebar-ring: #{$color-sidebar-ring};
+
+  // ── Charts ────────────────────────────────────────────────────
+  --color-chart-1: #{$color-chart-1};
+  --color-chart-2: #{$color-chart-2};
+  --color-chart-3: #{$color-chart-3};
+  --color-chart-4: #{$color-chart-4};
+  --color-chart-5: #{$color-chart-5};
+
+  // ── Typography ────────────────────────────────────────────────
   --font-family-base: #{$font-family-base};
   --font-family-mono: #{$font-family-mono};
   --font-size-base: #{$font-size-base};
 
-  // Spacing
+  // ── Spacing & radius ──────────────────────────────────────────
+  --radius: #{$radius};
+  --radius-sm: #{$radius-sm};
+  --radius-md: #{$radius-md};
+  --radius-lg: #{$radius-lg};
+  --radius-xl: #{$radius-xl};
   --border-radius-base: #{$border-radius-base};
+  --shadow-xs: #{$shadow-xs};
+  --shadow-sm: #{$shadow-sm};
   --shadow-base: #{$shadow-base};
+  --shadow-lg: #{$shadow-lg};
 }

@@ -10,9 +10,9 @@ export const authApi = {
   register: async (data: RegisterRequest): Promise<UserResponse> => {
     return await httpClient.post<UserResponse>('/auth/register', data);
   },
-  
+
   // Future method example
   logout: async (): Promise<void> => {
-    return await httpClient.post<void>('/auth/logout');
+    await httpClient.post<unknown>('/auth/logout');
   }
 };

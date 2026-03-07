@@ -18,6 +18,14 @@ $border-radius-lg: 0.5rem;
 $border-radius-xl: 0.75rem;
 $border-radius-full: 9999px;
 
+$shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
 $shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 $shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 $shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+// ── Radius alias (component-level) ──────────────────────────────
+$radius: 0.5rem;
+$radius-sm: calc(#{$radius} - 4px);
+$radius-md: calc(#{$radius} - 2px);
+$radius-lg: $radius;
+$radius-xl: calc(#{$radius} + 4px);

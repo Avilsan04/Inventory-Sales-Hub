@@ -1,23 +1,21 @@
-// src/core/http/interceptors.ts
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
-import { tokenStorage } from '../storage/tokenStorage'; // Path must point to the namespace object
+import { tokenStorage } from '../storage/tokenStorage';
 
 export function setupRequestInterceptor(client: AxiosInstance): void {
   client.interceptors.request.use(
-    async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-      try {
-        const token = await tokenStorage.getToken();
-        if (token && config.headers) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      } catch (error) {
-        // Log secure storage failure if necessary, but reject the request
-        return Promise.reject(error);
+    (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+      const token = tokenStorage.getToken();
+
+      // Abstracting header injection safely
+      if (token) {
+        config.headers.set('Authorization', `Bearer ${token}`);
       }
+      return config;
     },
-    (error: unknown) => Promise.reject(error)
+    (error: unknown) => {
+      return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+    }
   );
 }
 
@@ -27,16 +25,12 @@ export function setupResponseInterceptor(
 ): void {
   client.interceptors.response.use(
     (response) => response,
-    async (error: unknown) => {
+    (error: unknown) => {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        try {
-          await tokenStorage.removeToken();
-        } finally {
-          // Regardless of storage deletion success, force UI logout flow
-          onUnauthorized();
-        }
+        tokenStorage.removeToken();
+        onUnauthorized();
       }
-      return Promise.reject(error);
+      return Promise.reject(error instanceof Error ? error : new Error(String(error)));
     }
   );
 }
