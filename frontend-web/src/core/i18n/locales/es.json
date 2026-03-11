@@ -91,5 +91,70 @@
     "invalidEmail": "Correo electrónico inválido",
     "minLength": "Mínimo {{min}} caracteres requeridos",
     "maxLength": "Máximo {{max}} caracteres permitidos"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Plataforma de Gestión de Inventario",
+      "titleLine1": "Gestiona tu Inventario con ",
+      "titleAccent": "Precisión y Velocidad",
+      "description": "Una plataforma unificada para rastrear productos, gestionar ventas y obtener información en tiempo real. Diseñada para equipos que exigen control y eficiencia.",
+      "cta": "Comenzar",
+      "secondaryCta": "Saber Más"
+    },
+    "features": {
+      "title": "Todo lo que Necesitas",
+      "subtitle": "Herramientas potentes diseñadas para optimizar tus operaciones de inventario y ventas de principio a fin.",
+      "inventory": {
+        "title": "Inventario Inteligente",
+        "description": "Seguimiento automático de stock, alertas de bajo inventario y gestión de SKU en una vista unificada."
+      },
+      "analytics": {
+        "title": "Analíticas Avanzadas",
+        "description": "Dashboards en tiempo real e informes para tomar decisiones basadas en datos con confianza."
+      },
+      "security": {
+        "title": "Seguridad Empresarial",
+        "description": "Control de acceso basado en roles, almacenamiento cifrado y autenticación JWT integrada."
+      },
+      "realtime": {
+        "title": "Sincronización en Tiempo Real",
+        "description": "Actualizaciones instantáneas en web y móvil para que tu equipo siempre trabaje con datos frescos."
+      },
+      "multiplatform": {
+        "title": "Multiplataforma",
+        "description": "Accede a tus datos desde cualquier dispositivo — aplicación web responsive y experiencia móvil nativa."
+      },
+      "collaboration": {
+        "title": "Colaboración en Equipo",
+        "description": "Soporte multiusuario con registros de auditoría y logs de actividad para total transparencia."
+      }
+    },
+    "stats": {
+      "srTitle": "Estadísticas de la plataforma",
+      "products": {
+        "value": "10K+",
+        "label": "Productos gestionados"
+      },
+      "transactions": {
+        "value": "50K+",
+        "label": "Transacciones procesadas"
+      },
+      "uptime": {
+        "value": "99.9%",
+        "label": "Garantía de disponibilidad"
+      },
+      "support": {
+        "value": "24/7",
+        "label": "Soporte técnico"
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Tomar el Control?",
+      "description": "Empieza a gestionar tu inventario y ventas hoy. Sin tarjeta de crédito.",
+      "button": "Empezar Ahora"
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
   }
 }

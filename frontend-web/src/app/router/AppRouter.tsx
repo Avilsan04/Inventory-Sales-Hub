@@ -6,12 +6,16 @@ import { PublicRoute } from './guards/PublicRoute';
 import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
 
-const DashboardPage = React.lazy(() =>
-  import('@pages/dashboard/DashboardPage').then(module => ({ default: module.DashboardPage }))
+const LandingPage = React.lazy(() =>
+  import('@pages/landing/LandingPage').then(module => ({ default: module.LandingPage }))
 );
 
 const LoginPage = React.lazy(() =>
   import('@pages/login/LoginPage').then(module => ({ default: module.LoginPage }))
+);
+
+const DashboardPage = React.lazy(() =>
+  import('@pages/dashboard/DashboardPage').then(module => ({ default: module.DashboardPage }))
 );
 
 export function AppRouter(): React.ReactElement {
@@ -25,24 +29,23 @@ export function AppRouter(): React.ReactElement {
         }
       >
         <Routes>
-          {/* Public Layer */}
+          {/* Landing — public, standalone layout */}
+          <Route path={APP_ROUTES.LANDING} element={<LandingPage />} />
+
+          {/* Public Layer — auth pages */}
           <Route element={<PublicRoute />}>
             <Route path={APP_ROUTES.LOGIN} element={<LoginPage />} />
           </Route>
 
-          {/* Protected Layer */}
+          {/* Protected Layer — application shell */}
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
-              {/* Explicit mapping for /dashboard */}
               <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
-
-              {/* Root redirect: If user goes to '/', send them to dashboard */}
-              <Route path={APP_ROUTES.ROOT} element={<Navigate to={APP_ROUTES.DASHBOARD} replace />} />
             </Route>
           </Route>
 
-          {/* Fallback Catch-all: Send unknown URLs to ROOT (which then evaluates auth state) */}
-          <Route path="*" element={<Navigate to={APP_ROUTES.ROOT} replace />} />
+          {/* Fallback Catch-all */}
+          <Route path="*" element={<Navigate to={APP_ROUTES.LANDING} replace />} />
         </Routes>
       </React.Suspense>
     </BrowserRouter>

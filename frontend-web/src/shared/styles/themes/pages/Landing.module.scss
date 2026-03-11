@@ -1,0 +1,369 @@
+// ── Landing Page ──────────────────────────────────────────────────
+// Follows project token system: $spacing-*, $font-size-*, $font-weight-*
+// All colors via CSS custom properties (--color-*) for theme support.
+
+// ── Page Shell ───────────────────────────────────────────────────
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+// ── Navbar ───────────────────────────────────────────────────────
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  backdrop-filter: blur(12px);
+}
+
+.navbarContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: $spacing-3 $spacing-6;
+}
+
+.navbarBrand {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.navbarActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+// ── Main ─────────────────────────────────────────────────────────
+
+.main {
+  flex: 1;
+}
+
+// ── Shared Section Utilities ─────────────────────────────────────
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-3;
+  margin-bottom: $spacing-12;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: $line-height-tight;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: $font-size-4xl;
+  }
+}
+
+.sectionSubtitle {
+  max-width: 38rem;
+  font-size: $font-size-lg;
+  color: var(--color-text-muted);
+  line-height: $line-height-relaxed;
+  margin: 0;
+}
+
+// ── Hero ─────────────────────────────────────────────────────────
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 3.5rem);
+  padding: $spacing-8 $spacing-6;
+  overflow: hidden;
+}
+
+.heroBackground {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heroGlow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  width: 60rem;
+  height: 60rem;
+  transform: translateX(-50%);
+  border-radius: $border-radius-full;
+  background: radial-gradient(
+    circle,
+    var(--color-primary-light) 0%,
+    transparent 70%
+  );
+  opacity: 0.35;
+  filter: blur(80px);
+}
+
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-6;
+  max-width: 48rem;
+  text-align: center;
+  animation: heroFadeIn 0.6s ease-out both;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-1 $spacing-4;
+  border-radius: $border-radius-full;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-primary);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.heroTitle {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: $font-weight-bold;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.heroTitleAccent {
+  display: block;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-chart-4));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroDescription {
+  max-width: 36rem;
+  font-size: $font-size-lg;
+  color: var(--color-text-muted);
+  line-height: $line-height-relaxed;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: $font-size-xl;
+  }
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $spacing-3;
+  margin-top: $spacing-2;
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Features ─────────────────────────────────────────────────────
+
+.features {
+  padding: $spacing-16 $spacing-6;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-6;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.featureCard {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-6;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-base);
+  }
+}
+
+.featureIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.featureTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.featureDescription {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  line-height: $line-height-relaxed;
+  margin: 0;
+}
+
+// ── Stats ────────────────────────────────────────────────────────
+
+.stats {
+  padding: $spacing-12 $spacing-6;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-8;
+  max-width: 56rem;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-1;
+  text-align: center;
+}
+
+.statValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+  line-height: $line-height-tight;
+
+  @media (min-width: 768px) {
+    font-size: $font-size-4xl;
+  }
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  font-weight: $font-weight-medium;
+}
+
+// ── CTA ──────────────────────────────────────────────────────────
+
+.cta {
+  padding: $spacing-16 $spacing-6;
+}
+
+.ctaContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-4;
+  max-width: 36rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: $line-height-tight;
+  margin: 0;
+}
+
+.ctaDescription {
+  font-size: $font-size-lg;
+  color: var(--color-text-muted);
+  line-height: $line-height-relaxed;
+  margin: 0;
+}
+
+// ── Footer ───────────────────────────────────────────────────────
+
+.footer {
+  padding: $spacing-6;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.footerText {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  margin: 0;
+}

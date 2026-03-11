@@ -3,6 +3,7 @@
  */
 export const APP_ROUTES = {
   ROOT: '/',
+  LANDING: '/',
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
 } as const;

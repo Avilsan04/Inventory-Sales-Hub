@@ -91,5 +91,70 @@
     "invalidEmail": "Invalid email address",
     "minLength": "Minimum {{min}} characters required",
     "maxLength": "Maximum {{max}} characters allowed"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Inventory Management Platform",
+      "titleLine1": "Manage Your Inventory with ",
+      "titleAccent": "Precision & Speed",
+      "description": "A unified platform to track products, manage sales, and gain real-time insights. Built for teams that demand control and efficiency.",
+      "cta": "Get Started",
+      "secondaryCta": "Learn More"
+    },
+    "features": {
+      "title": "Everything You Need",
+      "subtitle": "Powerful tools designed to streamline your inventory and sales operations from end to end.",
+      "inventory": {
+        "title": "Smart Inventory",
+        "description": "Automatic stock tracking, low-stock alerts, and SKU management in a single unified view."
+      },
+      "analytics": {
+        "title": "Advanced Analytics",
+        "description": "Real-time dashboards and reports to make data-driven decisions with confidence."
+      },
+      "security": {
+        "title": "Enterprise Security",
+        "description": "Role-based access control, encrypted storage, and JWT authentication built-in."
+      },
+      "realtime": {
+        "title": "Real-Time Sync",
+        "description": "Instant updates across web and mobile so your team always works with fresh data."
+      },
+      "multiplatform": {
+        "title": "Multiplatform",
+        "description": "Access your data from any device — responsive web app and native mobile experience."
+      },
+      "collaboration": {
+        "title": "Team Collaboration",
+        "description": "Multi-user support with audit trails and activity logs for full transparency."
+      }
+    },
+    "stats": {
+      "srTitle": "Platform statistics",
+      "products": {
+        "value": "10K+",
+        "label": "Products managed"
+      },
+      "transactions": {
+        "value": "50K+",
+        "label": "Transactions processed"
+      },
+      "uptime": {
+        "value": "99.9%",
+        "label": "Uptime guarantee"
+      },
+      "support": {
+        "value": "24/7",
+        "label": "Technical support"
+      }
+    },
+    "cta": {
+      "title": "Ready to Take Control?",
+      "description": "Start managing your inventory and sales today. No credit card required.",
+      "button": "Start Now"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
   }
 }
