@@ -5,11 +5,12 @@
   justify-content: space-between;
   gap: $spacing-2;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-input);
+  border: $border-width-base solid var(--color-input);
   background-color: transparent;
   padding: $spacing-2 $spacing-3;
   font-size: $font-size-sm;
   font-family: inherit;
+  color: inherit;
   white-space: nowrap;
   box-shadow: var(--shadow-xs);
   outline: none;
@@ -18,7 +19,7 @@
 
   &:focus-visible {
     border-color: var(--color-ring);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
   }
 
   &:disabled {
@@ -27,16 +28,16 @@
   }
 
   &[data-size='default'] {
-    height: 2.25rem;
+    height: $size-9;
   }
 
   &[data-size='sm'] {
-    height: 2rem;
+    height: $size-8;
   }
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
     opacity: 0.5;
     pointer-events: none;
     flex-shrink: 0;
@@ -47,11 +48,11 @@
   position: relative;
   z-index: 50;
   max-height: var(--radix-select-content-available-height, 20rem);
-  min-width: 8rem;
+  min-width: $dropdown-min-width;
   overflow-x: hidden;
   overflow-y: auto;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background-color: var(--color-popover);
   color: var(--color-popover-foreground);
   padding: $spacing-1;
@@ -94,24 +95,22 @@
   position: absolute;
   right: $spacing-2;
   display: flex;
-  width: 0.875rem;
-  height: 0.875rem;
+  width: $size-3-5;
+  height: $size-3-5;
   align-items: center;
   justify-content: center;
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
   }
 }
 
 .selectSeparator {
-  margin: $spacing-1 (
-    -$spacing-1
-  );
-height: 1px;
-background-color: var(--color-border);
-pointer-events: none;
+  margin: var(--spacing-1);
+  height: $border-width-base;
+  background-color: var(--color-border);
+  pointer-events: none;
 }
 
 .selectScrollButton {
@@ -122,7 +121,7 @@ pointer-events: none;
   padding: $spacing-1 0;
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
   }
 }

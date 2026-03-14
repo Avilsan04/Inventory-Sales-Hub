@@ -10,6 +10,7 @@ import {
 } from '@shared/ui/composed/Table';
 import { Badge } from '@shared/ui/primitives';
 import type { InventoryItem } from '@entities/inventory';
+import styles from '@shared/styles/themes/widgets/InventoryTable.module.scss';
 
 interface InventoryTableWidgetProps {
     data: InventoryItem[];
@@ -34,24 +35,24 @@ export function InventoryTableWidget({ data }: InventoryTableWidgetProps): React
     const { t } = useTranslation();
 
     return (
-        <div style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+        <div className={styles.tableWrapper}>
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>{t('inventory.sku', 'SKU')}</TableHead>
                         <TableHead>{t('inventory.name', 'Product Name')}</TableHead>
-                        <TableHead style={{ textAlign: 'right' }}>{t('inventory.price', 'Price')}</TableHead>
-                        <TableHead style={{ textAlign: 'center' }}>{t('inventory.quantity', 'Stock')}</TableHead>
+                        <TableHead className={styles.priceCell}>{t('inventory.price', 'Price')}</TableHead>
+                        <TableHead className={styles.quantityCell}>{t('inventory.quantity', 'Stock')}</TableHead>
                         <TableHead>{t('inventory.status', 'Status')}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.map((item) => (
                         <TableRow key={item.id}>
-                            <TableCell style={{ fontFamily: 'monospace' }}>{item.sku}</TableCell>
-                            <TableCell style={{ fontWeight: 500 }}>{item.name}</TableCell>
-                            <TableCell style={{ textAlign: 'right' }}>{formatCurrency(item.price, item.currency)}</TableCell>
-                            <TableCell style={{ textAlign: 'center' }}>{item.quantity}</TableCell>
+                            <TableCell className={styles.skuCell}>{item.sku}</TableCell>
+                            <TableCell className={styles.nameCell}>{item.name}</TableCell>
+                            <TableCell className={styles.priceCell}>{formatCurrency(item.price, item.currency)}</TableCell>
+                            <TableCell className={styles.quantityCell}>{item.quantity}</TableCell>
                             <TableCell>
                                 <Badge variant={getStatusBadgeVariant(item.status)}>
                                     {t(`inventory.status_${item.status}`, item.status.replace(/_/g, ' '))}

@@ -1,9 +1,9 @@
 .dropdownContent {
   z-index: 50;
-  min-width: 8rem;
+  min-width: $dropdown-min-width;
   overflow: hidden;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background-color: var(--color-popover);
   color: var(--color-popover-foreground);
   padding: $spacing-1;
@@ -39,8 +39,8 @@
   }
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
     pointer-events: none;
     flex-shrink: 0;
     color: var(--color-muted-foreground);
@@ -52,7 +52,7 @@
 
   &:focus,
   &[data-highlighted] {
-    background-color: rgba(220, 38, 38, 0.1);
+    background-color: color-mix(in srgb, var(--color-destructive) 10%, transparent);
     color: var(--color-destructive);
   }
 
@@ -93,14 +93,14 @@
   position: absolute;
   left: $spacing-2;
   display: flex;
-  width: 0.875rem;
-  height: 0.875rem;
+  width: $size-3-5;
+  height: $size-3-5;
   align-items: center;
   justify-content: center;
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
   }
 }
 
@@ -115,17 +115,15 @@
 }
 
 .dropdownSeparator {
-  margin: $spacing-1 (
-    -$spacing-1
-  );
-height: 1px;
-background-color: var(--color-border);
+  margin: $spacing-1 (-$spacing-1);
+  height: $border-width-base;
+  background-color: var(--color-border);
 }
 
 .dropdownShortcut {
   margin-left: auto;
   font-size: $font-size-xs;
-  letter-spacing: 0.1em;
+  letter-spacing: $letter-spacing-wider;
   color: var(--color-muted-foreground);
 }
 
@@ -148,8 +146,8 @@ background-color: var(--color-border);
   }
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
     flex-shrink: 0;
     pointer-events: none;
     color: var(--color-muted-foreground);
@@ -162,10 +160,10 @@ background-color: var(--color-border);
 
 .dropdownSubContent {
   z-index: 50;
-  min-width: 8rem;
+  min-width: $dropdown-min-width;
   overflow: hidden;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background-color: var(--color-popover);
   color: var(--color-popover-foreground);
   padding: $spacing-1;

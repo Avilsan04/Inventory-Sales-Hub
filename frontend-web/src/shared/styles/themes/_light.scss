@@ -4,6 +4,7 @@
 @use '../tokens/colors' as *;
 @use '../tokens/typography' as *;
 @use '../tokens/spacing' as *;
+@use '../tokens/layout' as *;
 
 :root {
   // ── Core brand ────────────────────────────────────────────────
@@ -85,4 +86,7 @@
   --shadow-sm: #{$shadow-sm};
   --shadow-base: #{$shadow-base};
   --shadow-lg: #{$shadow-lg};
+
+  // ── Overlay ───────────────────────────────────────────────────
+  --color-overlay: #{$color-overlay};
 }

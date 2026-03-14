@@ -1,0 +1,57 @@
+// Design Tokens - Layout
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// Constraints
+$container-2xs: 24rem;
+$container-xs: 36rem;
+$container-sm: 38rem;
+$container-md: 48rem;
+$container-lg: 56rem;
+$container-xl: 72rem;
+$container-2xl: 80rem;
+
+// Component-specific containers
+$container-dialog: 32rem;
+$container-popover: 18rem;
+$container-toast: 26.25rem;
+$sheet-max-width: 24rem;
+$dropdown-min-width: 8rem;
+
+// Size scale (follows rem spacing: n * 0.25rem)
+$size-2: 0.5rem;
+$size-2-5: 0.625rem;
+$size-3: 0.75rem;
+$size-3-5: 0.875rem;
+$size-4: 1rem;
+$size-5: 1.25rem;
+$size-6: 1.5rem;
+$size-7: 1.75rem;
+$size-8: 2rem;
+$size-9: 2.25rem;
+$size-10: 2.5rem;
+$size-11: 2.75rem;
+$size-16: 4rem;
+$size-hero-glow: 60rem;
+
+// Heights
+$height-screen: 100vh;
+$navbar-height: 3.5rem;
+
+// Component heights (semantic aliases)
+$textarea-min-height: 3.75rem;
+
+// Borders
+$border-width-base: 1px;
+$border-width-focus: 2px;
+
+// Focus ring
+$focus-ring-spread: 3px;
+
+// Filters
+$blur-sm: 8px;
+$blur-md: 12px;
+$blur-3xl: 80px;

@@ -1,10 +1,11 @@
 .checkbox {
-  height: 1rem;
-  width: 1rem;
+  height: $size-4;
+  width: $size-4;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-primary);
+  border: $border-width-base solid var(--color-primary);
   background-color: transparent;
+  color: inherit;
   box-shadow: var(--shadow-xs);
   outline: none;
   cursor: pointer;
@@ -12,7 +13,7 @@
 
   &:focus-visible {
     border-color: var(--color-ring);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
   }
 
   &:disabled {
@@ -34,8 +35,8 @@
   justify-content: center;
 
   svg {
-    width: 0.75rem;
-    height: 0.75rem;
+    width: $size-3;
+    height: $size-3;
     color: currentColor;
   }
 }

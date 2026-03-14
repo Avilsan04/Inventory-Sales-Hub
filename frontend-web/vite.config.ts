@@ -21,7 +21,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@shared/styles/tokens/colors" as *;\n@use "@shared/styles/tokens/typography" as *;\n@use "@shared/styles/tokens/spacing" as *;\n`,
+        additionalData: `@use "@shared/styles/tokens/colors" as *;\n@use "@shared/styles/tokens/typography" as *;\n@use "@shared/styles/tokens/spacing" as *;\n@use "@shared/styles/tokens/layout" as *;\n`,
       },
     },
   },

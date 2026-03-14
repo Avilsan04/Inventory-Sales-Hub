@@ -1,0 +1,39 @@
+.card {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.error {
+  padding: $spacing-3;
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--color-destructive) 10%, transparent);
+  border: $border-width-base solid var(--color-destructive);
+  color: var(--color-destructive);
+  font-size: $font-size-sm;
+  text-align: center;
+}
+
+.footer {
+  flex-direction: column;
+}
+
+.submitButton {
+  width: 100%;
+  gap: $spacing-2;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}

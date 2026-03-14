@@ -1,47 +1,45 @@
-export interface StorageAdapter {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-}
-
-// Environment-safe adapter generator
-const createBrowserStorage = (storageType: 'local' | 'session'): StorageAdapter => {
-  const isBrowser = typeof window !== 'undefined';
-  const storage = isBrowser
-    ? (storageType === 'local' ? window.localStorage : window.sessionStorage)
-    : null;
-
-  return {
-    getItem: (key: string): string | null => storage?.getItem(key) ?? null,
-    setItem: (key: string, value: string): void => storage?.setItem(key, value),
-    removeItem: (key: string): void => storage?.removeItem(key),
-  };
-};
+import type { ITokenStorage } from './ITokenStorage';
 
 const TOKEN_KEY = 'auth_token';
 
-export const tokenStorage = {
-  saveToken: (token: string, persistent: boolean = false): void => {
-    const adapter = createBrowserStorage(persistent ? 'local' : 'session');
-    // Ensure cleanup across both storages to prevent stale state
-    createBrowserStorage('local').removeItem(TOKEN_KEY);
-    createBrowserStorage('session').removeItem(TOKEN_KEY);
+// Evaluate environment ONCE during module initialization
+const isBrowser = typeof window !== 'undefined';
 
-    adapter.setItem(TOKEN_KEY, token);
+// Safe extraction of native APIs
+const getStorage = (type: 'local' | 'session'): Storage | null => {
+  if (!isBrowser) {
+    console.warn(`[Storage Warning] Attempting to access ${type}Storage outside browser environment.`);
+    return null;
+  }
+  return type === 'local' ? window.localStorage : window.sessionStorage;
+};
+
+const localStorageAdapter = getStorage('local');
+const sessionStorageAdapter = getStorage('session');
+
+// Strict enforcement of the ITokenStorage contract
+export const tokenStorage: ITokenStorage = {
+  saveToken: (token: string, rememberMe: boolean): void => {
+    localStorageAdapter?.removeItem(TOKEN_KEY);
+    sessionStorageAdapter?.removeItem(TOKEN_KEY);
+
+    const targetStorage = rememberMe ? localStorageAdapter : sessionStorageAdapter;
+    targetStorage?.setItem(TOKEN_KEY, token);
   },
 
   getToken: (): string | null => {
-    const local = createBrowserStorage('local').getItem(TOKEN_KEY);
-    const session = createBrowserStorage('session').getItem(TOKEN_KEY);
-    return local ?? session;
+    // Architectural Correction: Coerce optional chaining 'undefined' into interface-compliant 'null'
+    const local = localStorageAdapter?.getItem(TOKEN_KEY) ?? null;
+
+    if (local !== null) {
+      return local;
+    }
+
+    return sessionStorageAdapter?.getItem(TOKEN_KEY) ?? null;
   },
 
   removeToken: (): void => {
-    createBrowserStorage('local').removeItem(TOKEN_KEY);
-    createBrowserStorage('session').removeItem(TOKEN_KEY);
-  },
-
-  isAuthenticated: (): boolean => {
-    return tokenStorage.getToken() !== null;
+    localStorageAdapter?.removeItem(TOKEN_KEY);
+    sessionStorageAdapter?.removeItem(TOKEN_KEY);
   }
 };

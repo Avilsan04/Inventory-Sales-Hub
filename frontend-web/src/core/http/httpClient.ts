@@ -1,5 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from '@core/config';
+import { tokenStorage } from '../storage/tokenStorage';
 import { setupRequestInterceptor, setupResponseInterceptor } from './interceptors';
 import type { HttpClient, HttpRequestConfig } from './http.types';
 
@@ -16,9 +18,21 @@ const mapConfig = (config?: HttpRequestConfig): AxiosRequestConfig => ({
   signal: config?.signal,
 });
 
-export const setupHttpEvents = (onUnauthorized: () => void): void => {
-  setupRequestInterceptor(axiosInstance);
-  setupResponseInterceptor(axiosInstance, onUnauthorized);
+// Architectural Correction: Strict signature returning a cleanup function
+export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
+  const reqInterceptorId = setupRequestInterceptor(axiosInstance, () => tokenStorage.getToken());
+
+  const resInterceptorId = setupResponseInterceptor(axiosInstance, () => {
+    // Centralize token destruction logic here before firing the navigation event
+    tokenStorage.removeToken();
+    onUnauthorized();
+  });
+
+  // Return the Teardown function to prevent Axios listener leaks
+  return (): void => {
+    axiosInstance.interceptors.request.eject(reqInterceptorId);
+    axiosInstance.interceptors.response.eject(resInterceptorId);
+  };
 };
 
 export const httpClient: HttpClient = {

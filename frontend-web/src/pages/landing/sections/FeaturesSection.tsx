@@ -7,48 +7,66 @@ import {
   ZapIcon,
   GlobeIcon,
   UsersIcon,
+  type LucideIcon,
 } from 'lucide-react';
 
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
-interface Feature {
-  icon: React.ReactNode;
-  titleKey: string;
-  descriptionKey: string;
+type FeatureIconKey =
+  | 'inventory'
+  | 'analytics'
+  | 'security'
+  | 'realtime'
+  | 'multiplatform'
+  | 'collaboration';
+
+interface FeatureConfig {
+  readonly iconKey: FeatureIconKey;
+  readonly titleKey: string;
+  readonly descriptionKey: string;
 }
 
-const FEATURES: Feature[] = [
+const FEATURE_ICON_MAP: Readonly<Record<FeatureIconKey, LucideIcon>> = {
+  inventory: PackageIcon,
+  analytics: BarChart3Icon,
+  security: ShieldCheckIcon,
+  realtime: ZapIcon,
+  multiplatform: GlobeIcon,
+  collaboration: UsersIcon,
+};
+
+const FEATURES: readonly FeatureConfig[] = [
   {
-    icon: <PackageIcon aria-hidden="true" />,
+    iconKey: 'inventory',
     titleKey: 'landing.features.inventory.title',
     descriptionKey: 'landing.features.inventory.description',
   },
   {
-    icon: <BarChart3Icon aria-hidden="true" />,
+    iconKey: 'analytics',
     titleKey: 'landing.features.analytics.title',
     descriptionKey: 'landing.features.analytics.description',
   },
   {
-    icon: <ShieldCheckIcon aria-hidden="true" />,
+    iconKey: 'security',
     titleKey: 'landing.features.security.title',
     descriptionKey: 'landing.features.security.description',
   },
   {
-    icon: <ZapIcon aria-hidden="true" />,
+    iconKey: 'realtime',
     titleKey: 'landing.features.realtime.title',
     descriptionKey: 'landing.features.realtime.description',
   },
   {
-    icon: <GlobeIcon aria-hidden="true" />,
+    iconKey: 'multiplatform',
     titleKey: 'landing.features.multiplatform.title',
     descriptionKey: 'landing.features.multiplatform.description',
   },
   {
-    icon: <UsersIcon aria-hidden="true" />,
+    iconKey: 'collaboration',
     titleKey: 'landing.features.collaboration.title',
     descriptionKey: 'landing.features.collaboration.description',
   },
-];
+] as const;
 
 export function FeaturesSection(): React.ReactElement {
   const { t } = useTranslation();
@@ -59,19 +77,22 @@ export function FeaturesSection(): React.ReactElement {
         <h2 id="features-heading" className={styles['sectionTitle']}>
           {t('landing.features.title')}
         </h2>
-        <p className={styles['sectionSubtitle']}>
-          {t('landing.features.subtitle')}
-        </p>
+        <p className={styles['sectionSubtitle']}>{t('landing.features.subtitle')}</p>
       </div>
 
       <div className={styles['featuresGrid']}>
-        {FEATURES.map((feature) => (
-          <article key={feature.titleKey} className={styles['featureCard']}>
-            <div className={styles['featureIcon']}>{feature.icon}</div>
-            <h3 className={styles['featureTitle']}>{t(feature.titleKey)}</h3>
-            <p className={styles['featureDescription']}>{t(feature.descriptionKey)}</p>
-          </article>
-        ))}
+        {FEATURES.map((feature) => {
+          const Icon = FEATURE_ICON_MAP[feature.iconKey];
+          return (
+            <article key={feature.titleKey} className={styles['featureCard']}>
+              <div className={styles['featureIcon']}>
+                <Icon aria-hidden="true" />
+              </div>
+              <h3 className={styles['featureTitle']}>{t(feature.titleKey)}</h3>
+              <p className={styles['featureDescription']}>{t(feature.descriptionKey)}</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

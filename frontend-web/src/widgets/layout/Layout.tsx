@@ -17,14 +17,12 @@ export function Layout(): React.ReactElement {
     <div className={styles['layout']}>
       <header className={styles['header']}>
         <div className={styles['headerLeft']}>
-          {/* Update 'to' prop */}
           <NavLink to={APP_ROUTES.ROOT} className={styles['logo']}>
             <PackageIcon className={styles['logoIcon']} aria-hidden="true" />
             <span>{t('common.appName')}</span>
           </NavLink>
 
           <nav className={styles['nav']} aria-label="Main Navigation">
-            {/* Update 'to' prop */}
             <NavLink
               to={APP_ROUTES.DASHBOARD}
               end

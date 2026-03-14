@@ -52,6 +52,7 @@ frontend-mobile/.env.local
 *~
 .DS_Store
 Thumbs.db
+.claude
 
 # Environment
 .env

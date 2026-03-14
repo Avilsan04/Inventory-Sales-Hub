@@ -13,7 +13,7 @@
 
 .tableHeader {
   tr {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: $border-width-base solid var(--color-border);
   }
 }
 
@@ -24,17 +24,17 @@
 }
 
 .tableFooter {
-  background-color: rgba(var(--color-muted), 0.5);
-  border-top: 1px solid var(--color-border);
+  background-color: color-mix(in srgb, var(--color-muted) 50%, transparent);
+  border-top: $border-width-base solid var(--color-border);
   font-weight: $font-weight-medium;
 
-  &>tr:last-child {
+  & > tr:last-child {
     border-bottom: 0;
   }
 }
 
 .tableRow {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
   transition: background-color 0.15s ease;
 
   &:hover {
@@ -43,7 +43,7 @@
 }
 
 .tableHead {
-  height: 2.5rem;
+  height: $size-10;
   padding: 0 $spacing-2;
   text-align: left;
   vertical-align: middle;

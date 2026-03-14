@@ -1,8 +1,8 @@
 .popoverContent {
   z-index: 50;
-  width: 18rem;
+  width: $container-popover;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background-color: var(--color-popover);
   color: var(--color-popover-foreground);
   padding: $spacing-4;

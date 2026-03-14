@@ -9,7 +9,7 @@
   border-radius: inherit;
 
   // Override Radix inline table display
-  &>div {
+  & > div {
     display: block !important;
   }
 }
@@ -19,21 +19,21 @@
   touch-action: none;
   user-select: none;
   transition: background-color 0.15s ease;
-  padding: 1px;
+  padding: $border-width-base;
 
   &:hover {
     background-color: var(--color-muted);
   }
 
   &[data-orientation='vertical'] {
-    width: 0.625rem;
-    border-left: 1px solid transparent;
+    width: $size-2-5;
+    border-left: $border-width-base solid transparent;
   }
 
   &[data-orientation='horizontal'] {
-    height: 0.625rem;
+    height: $size-2-5;
     flex-direction: column;
-    border-top: 1px solid transparent;
+    border-top: $border-width-base solid transparent;
   }
 }
 

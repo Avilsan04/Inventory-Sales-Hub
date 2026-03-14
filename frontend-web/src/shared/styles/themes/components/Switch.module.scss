@@ -1,19 +1,20 @@
 .switch {
   display: inline-flex;
   align-items: center;
-  height: 1.25rem;
-  width: 2.25rem;
+  height: $size-5;
+  width: $size-9;
   flex-shrink: 0;
   cursor: pointer;
   border-radius: $border-radius-full;
-  border: 2px solid transparent;
+  border: $border-width-focus solid transparent;
+  color: inherit;
   outline: none;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
   background-color: var(--color-input);
 
   &:focus-visible {
     border-color: var(--color-ring);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
   }
 
   &:disabled {
@@ -28,19 +29,19 @@
 
 .switchThumb {
   display: block;
-  height: 1rem;
-  width: 1rem;
+  height: $size-4;
+  width: $size-4;
   border-radius: $border-radius-full;
   background-color: var(--color-background);
   box-shadow: var(--shadow-lg);
   pointer-events: none;
   transition: transform 0.15s ease;
 
-  [data-state='checked']>& {
-    transform: translateX(1rem);
+  [data-state='checked'] > & {
+    transform: translateX($size-4);
   }
 
-  [data-state='unchecked']>& {
+  [data-state='unchecked'] > & {
     transform: translateX(0);
   }
 }

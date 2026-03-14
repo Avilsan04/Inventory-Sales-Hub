@@ -1,66 +1,67 @@
 // Dark Theme
+@use '../tokens/colors' as *;
 
 [data-theme='dark'] {
   // ── Core brand ────────────────────────────────────────────────
-  --color-primary: #3b82f6;
-  --color-primary-hover: #60a5fa;
-  --color-primary-light: #1e3a5f;
-  --color-primary-foreground: #fafafa;
-  --color-secondary: #94a3b8;
-  --color-secondary-hover: #cbd5e1;
-  --color-secondary-bg: #1e293b;
-  --color-secondary-foreground: #f8fafc;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-primary: #{$color-dark-primary};
+  --color-primary-hover: #{$color-dark-primary-hover};
+  --color-primary-light: #{$color-dark-primary-light};
+  --color-primary-foreground: #{$color-dark-primary-foreground};
+  --color-secondary: #{$color-dark-secondary};
+  --color-secondary-hover: #{$color-dark-secondary-hover};
+  --color-secondary-bg: #{$color-dark-secondary-bg};
+  --color-secondary-foreground: #{$color-dark-secondary-foreground};
+  --color-success: #{$color-dark-success};
+  --color-warning: #{$color-dark-warning};
+  --color-error: #{$color-dark-error};
 
   // ── Semantic backgrounds ──────────────────────────────────────
-  --color-bg-primary: #0f172a;
-  --color-bg-secondary: #1e293b;
-  --color-bg-tertiary: #334155;
-  --color-background: #0f172a;
-  --color-foreground: #f8fafc;
+  --color-bg-primary: #{$color-dark-bg-primary};
+  --color-bg-secondary: #{$color-dark-bg-secondary};
+  --color-bg-tertiary: #{$color-dark-bg-tertiary};
+  --color-background: #{$color-dark-bg-primary};
+  --color-foreground: #{$color-dark-text-primary};
 
   // ── Text ──────────────────────────────────────────────────────
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #64748b;
-  --color-text-inverse: #0f172a;
+  --color-text-primary: #{$color-dark-text-primary};
+  --color-text-secondary: #{$color-dark-text-secondary};
+  --color-text-muted: #{$color-dark-text-muted};
+  --color-text-inverse: #{$color-dark-text-inverse};
 
   // ── Border & focus ────────────────────────────────────────────
-  --color-border: #334155;
-  --color-border-focus: #3b82f6;
-  --color-ring: #3b82f6;
-  --color-input: #334155;
+  --color-border: #{$color-dark-border};
+  --color-border-focus: #{$color-dark-border-focus};
+  --color-ring: #{$color-dark-ring};
+  --color-input: #{$color-dark-input};
 
   // ── Extended semantic ─────────────────────────────────────────
-  --color-accent: #22c55e;
-  --color-accent-foreground: #052e16;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #fafafa;
-  --color-muted: #334155;
-  --color-muted-foreground: #94a3b8;
+  --color-accent: #{$color-dark-accent};
+  --color-accent-foreground: #{$color-dark-accent-foreground};
+  --color-destructive: #{$color-dark-destructive};
+  --color-destructive-foreground: #{$color-dark-destructive-foreground};
+  --color-muted: #{$color-dark-muted};
+  --color-muted-foreground: #{$color-dark-muted-foreground};
 
   // ── Card & Popover surfaces ───────────────────────────────────
-  --color-card: #1e293b;
-  --color-card-foreground: #f8fafc;
-  --color-popover: #1e293b;
-  --color-popover-foreground: #f8fafc;
+  --color-card: #{$color-dark-card};
+  --color-card-foreground: #{$color-dark-card-foreground};
+  --color-popover: #{$color-dark-popover};
+  --color-popover-foreground: #{$color-dark-popover-foreground};
 
   // ── Sidebar ───────────────────────────────────────────────────
-  --color-sidebar: #0c1222;
-  --color-sidebar-foreground: #f8fafc;
-  --color-sidebar-primary: #3b82f6;
-  --color-sidebar-primary-foreground: #fafafa;
-  --color-sidebar-accent: #1e293b;
-  --color-sidebar-accent-foreground: #f8fafc;
-  --color-sidebar-border: #334155;
-  --color-sidebar-ring: #3b82f6;
+  --color-sidebar: #{$color-dark-sidebar};
+  --color-sidebar-foreground: #{$color-dark-sidebar-foreground};
+  --color-sidebar-primary: #{$color-dark-sidebar-primary};
+  --color-sidebar-primary-foreground: #{$color-dark-sidebar-primary-foreground};
+  --color-sidebar-accent: #{$color-dark-sidebar-accent};
+  --color-sidebar-accent-foreground: #{$color-dark-sidebar-accent-foreground};
+  --color-sidebar-border: #{$color-dark-sidebar-border};
+  --color-sidebar-ring: #{$color-dark-sidebar-ring};
 
   // ── Charts ────────────────────────────────────────────────────
-  --color-chart-1: #3b82f6;
-  --color-chart-2: #22c55e;
-  --color-chart-3: #f59e0b;
-  --color-chart-4: #06b6d4;
-  --color-chart-5: #8b5cf6;
+  --color-chart-1: #{$color-dark-chart-1};
+  --color-chart-2: #{$color-dark-chart-2};
+  --color-chart-3: #{$color-dark-chart-3};
+  --color-chart-4: #{$color-dark-chart-4};
+  --color-chart-5: #{$color-dark-chart-5};
 }

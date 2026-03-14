@@ -1,3 +1,6 @@
+// Component-scoped constant: tabs list visual inset (not a semantic spacing value)
+$_tabs-list-padding: 3px;
+
 .tabs {
   display: flex;
   flex-direction: column;
@@ -6,14 +9,14 @@
 
 .tabsList {
   display: inline-flex;
-  height: 2.25rem;
+  height: $size-9;
   width: fit-content;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-lg);
   background-color: var(--color-muted);
   color: var(--color-muted-foreground);
-  padding: 3px;
+  padding: $_tabs-list-padding;
 }
 
 .tabsTrigger {
@@ -22,9 +25,9 @@
   align-items: center;
   justify-content: center;
   gap: $spacing-1;
-  height: calc(100% - 1px);
+  height: calc(100% - #{$border-width-base});
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: $border-width-base solid transparent;
   background: transparent;
   padding: $spacing-1 $spacing-2;
   font-size: $font-size-sm;
@@ -38,7 +41,7 @@
 
   &:focus-visible {
     border-color: var(--color-ring);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
   }
 
   &:disabled {
@@ -53,8 +56,8 @@
   }
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
     pointer-events: none;
     flex-shrink: 0;
   }

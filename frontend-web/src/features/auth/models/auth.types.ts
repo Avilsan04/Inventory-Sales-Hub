@@ -4,9 +4,9 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  username: string;
-  email: string;
-  password: string;
+  readonly username: string;
+  readonly email: string;
+  readonly password: string;
 }
 
 export interface UserResponse {

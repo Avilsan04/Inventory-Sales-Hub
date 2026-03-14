@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 50;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-overlay);
   animation: overlayShow 0.2s ease-out;
 }
 
@@ -13,18 +13,18 @@
   z-index: 50;
   display: grid;
   width: 100%;
-  max-width: calc(100% - 2rem);
+  max-width: calc(100% - #{$size-8});
   transform: translate(-50%, -50%);
   gap: $spacing-4;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background-color: var(--color-background);
   padding: $spacing-6;
   box-shadow: var(--shadow-lg);
   animation: zoomIn95 0.2s ease-out;
 
-  @media (min-width: 640px) {
-    max-width: 32rem;
+  @media (min-width: $breakpoint-sm) {
+    max-width: $container-dialog;
   }
 }
 
@@ -46,13 +46,13 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: 2px;
+    outline: $border-width-focus solid var(--color-ring);
+    outline-offset: $border-width-focus;
   }
 
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: $size-4;
+    height: $size-4;
   }
 }
 
@@ -62,7 +62,7 @@
   gap: $spacing-2;
   text-align: center;
 
-  @media (min-width: 640px) {
+  @media (min-width: $breakpoint-sm) {
     text-align: left;
   }
 }
@@ -72,7 +72,7 @@
   flex-direction: column-reverse;
   gap: $spacing-2;
 
-  @media (min-width: 640px) {
+  @media (min-width: $breakpoint-sm) {
     flex-direction: row;
     justify-content: flex-end;
   }
@@ -81,7 +81,7 @@
 .dialogTitle {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
-  line-height: 1;
+  line-height: $line-height-none;
 }
 
 .dialogDescription {

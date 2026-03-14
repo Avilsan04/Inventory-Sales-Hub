@@ -15,13 +15,13 @@
 .title {
   font-size: $font-size-2xl;
   font-weight: $font-weight-bold;
-  color: $color-text-primary;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
 .subtitle {
   font-size: $font-size-base;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -37,6 +37,6 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: $color-text-muted;
+  color: var(--color-text-muted);
   font-size: $font-size-sm;
 }

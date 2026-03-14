@@ -1,0 +1,4 @@
+export const AUTH_VALIDATION_RULES = {
+    MIN_USERNAME_LENGTH: 3,
+    MIN_PASSWORD_LENGTH: 8,
+} as const;

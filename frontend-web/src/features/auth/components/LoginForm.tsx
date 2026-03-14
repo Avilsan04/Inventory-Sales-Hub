@@ -1,92 +1,83 @@
+// @features/auth/components/LoginForm.tsx
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
+import { useAuthPresenter } from '@features/auth/hooks/useAuthPresenter';
+import { useDependencies } from '@shared/hooks/useDependencies';
 import { Button, Input, Label, Checkbox, Spinner } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@shared/ui/composed';
-import { authService } from '../services/authService';
-import type { LoginRequest } from '../models/auth.types';
 import styles from '@shared/styles/themes/components/LoginForm.module.scss';
 
 interface LoginFormProps {
-  onSuccess: () => void;
+  readonly onSuccess: () => void;
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
-  const { t } = useTranslation();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [formData, setFormData] = React.useState<LoginRequest>({
-    email: '',
-    password: '',
+  const { translate } = useTranslationAdapter();
+  const { authService } = useDependencies();
+
+  const {
+    formData,
+    isLoading,
+    error,
+    rememberMe,
+    isFormValid,
+    handleInputChange,
+    handleRememberMeChange,
+    handleSubmit
+  } = useAuthPresenter({
+    onSuccess,
+    authService
   });
-  const [rememberMe, setRememberMe] = React.useState<boolean>(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError(null);
-  };
-
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      await authService.login(formData, rememberMe);
-      onSuccess();
-    } catch {
-      setError(t('auth.invalidCredentials'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const isFormValid = formData.email.trim().length > 0 && formData.password.trim().length > 0;
+  const handleFormSubmit = React.useCallback(
+    (e: React.SyntheticEvent<HTMLFormElement>): void => {
+      void handleSubmit(e);
+    },
+    [handleSubmit]
+  );
 
   return (
     <Card className={styles.card}>
-      <form onSubmit={(e) => { void handleSubmit(e); }} noValidate>
+      <form onSubmit={handleFormSubmit} noValidate>
         <CardHeader>
-          <CardTitle>{t('auth.welcomeBack')}</CardTitle>
-          <CardDescription>{t('auth.enterCredentials')}</CardDescription>
+          <CardTitle>{translate('auth.welcomeBack')}</CardTitle>
+          <CardDescription>{translate('auth.enterCredentials')}</CardDescription>
         </CardHeader>
 
         <CardContent className={styles.content}>
-          {error && (
+          {error !== null && (
             <div className={styles.error} role="alert" aria-live="assertive">
               {error}
             </div>
           )}
 
           <div className={styles.field}>
-            <Label htmlFor="email">{t('auth.email')}</Label>
+            <Label htmlFor="email">{translate('auth.email')}</Label>
             <Input
               id="email"
               name="email"
               type="email"
-              placeholder={t('auth.emailPlaceholder')}
+              placeholder={translate('auth.emailPlaceholder')}
               value={formData.email}
               onChange={handleInputChange}
               autoComplete="email"
               required
               disabled={isLoading}
-              aria-invalid={!!error}
             />
           </div>
 
           <div className={styles.field}>
-            <Label htmlFor="password">{t('auth.password')}</Label>
+            <Label htmlFor="password">{translate('auth.password')}</Label>
             <Input
               id="password"
               name="password"
               type="password"
-              placeholder={t('auth.passwordPlaceholder')}
+              placeholder={translate('auth.passwordPlaceholder')}
               value={formData.password}
               onChange={handleInputChange}
               autoComplete="current-password"
               required
               disabled={isLoading}
-              aria-invalid={!!error}
             />
           </div>
 
@@ -94,20 +85,20 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
             <label className={styles.rememberMe}>
               <Checkbox
                 checked={rememberMe}
-                onCheckedChange={(checked: boolean | 'indeterminate') => { setRememberMe(checked === true); }}
+                onCheckedChange={handleRememberMeChange}
                 disabled={isLoading}
               />
-              <span>{t('auth.rememberMe')}</span>
+              <span>{translate('auth.rememberMe')}</span>
             </label>
             <button type="button" className={styles.forgotPassword}>
-              {t('auth.forgotPassword')}
+              {translate('auth.forgotPassword')}
             </button>
           </div>
         </CardContent>
 
         <CardFooter className={styles.footer}>
           <Button type="submit" disabled={!isFormValid || isLoading} className={styles.submitButton}>
-            {isLoading ? <Spinner size="sm" /> : t('auth.login')}
+            {isLoading ? <Spinner size="sm" /> : translate('auth.login')}
           </Button>
         </CardFooter>
       </form>

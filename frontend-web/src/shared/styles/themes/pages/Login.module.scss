@@ -1,12 +1,155 @@
+// ── Login Page ────────────────────────────────────────────────────
+// Split-panel layout: brand panel (desktop left) + form panel (right)
+// All colors via CSS custom properties for theme support.
+
+// ── Component-scoped layout constants ────────────────────────────
+// Values specific to this layout that do not belong in the global token scale.
+$_brand-panel-max-width: 28rem;
+$_decor-circle-sm: 16rem;
+$_decor-circle-lg: 22rem;
+$_decor-offset-corner: 4rem;
+$_decor-offset-left: 5rem;
+$_decor-offset-bottom: 6rem;
+
+// Brand panel text — always white at varying opacity (on gradient bg)
+$_brand-text-high: rgba(255 255 255 / 0.95);
+$_brand-text-base: rgba(255 255 255 / 0.9);
+$_brand-text-medium: rgba(255 255 255 / 0.85);
+$_brand-text-subtle: rgba(255 255 255 / 0.75);
+$_brand-icon-subtle: rgba(255 255 255 / 0.7);
+$_brand-decor-sm-bg: rgba(255 255 255 / 0.06);
+$_brand-decor-lg-bg: rgba(255 255 255 / 0.04);
+
+// ── Page Shell ───────────────────────────────────────────────────
+
 .page {
+  display: flex;
+  min-height: $height-screen;
+  background-color: var(--color-bg-primary);
+}
+
+// ── Brand Panel (desktop only) ────────────────────────────────────
+
+.brandPanel {
+  display: none;
+  flex: 0 0 45%;
+  max-width: $_brand-panel-max-width;
+  background: linear-gradient(160deg,
+      var(--color-primary) 0%,
+      color-mix(in srgb, var(--color-primary) 55%, black) 100%);
+  padding: $spacing-12;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative circles
+  &::before {
+    content: '';
+    position: absolute;
+    top: -$_decor-offset-corner;
+    right: -$_decor-offset-corner;
+    width: $_decor-circle-sm;
+    height: $_decor-circle-sm;
+    border-radius: $border-radius-full;
+    background: $_brand-decor-sm-bg;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -$_decor-offset-bottom;
+    left: -$_decor-offset-left;
+    width: $_decor-circle-lg;
+    height: $_decor-circle-lg;
+    border-radius: $border-radius-full;
+    background: $_brand-decor-lg-bg;
+    pointer-events: none;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    display: flex;
+  }
+}
+
+.brandPanelContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+}
+
+.brandPanelLogo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.brandPanelIcon {
+  width: $size-9;
+  height: $size-9;
+  color: $_brand-text-base;
+  flex-shrink: 0;
+}
+
+.brandPanelName {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $_brand-text-high;
+  letter-spacing: $letter-spacing-tight;
+}
+
+.brandPanelTagline {
+  font-size: $font-size-base;
+  color: $_brand-text-subtle;
+  line-height: $line-height-relaxed;
+  margin: 0;
+}
+
+.brandPanelFeatures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.brandPanelFeature {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $_brand-text-medium;
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+    flex-shrink: 0;
+    color: $_brand-icon-subtle;
+  }
+}
+
+// ── Form Panel ────────────────────────────────────────────────────
+
+.formPanel {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: $spacing-4;
-  background-color: var(--color-bg-secondary);
+  padding: $spacing-8 $spacing-4;
   position: relative;
+  background-color: var(--color-bg-secondary);
+
+  @media (min-width: $breakpoint-lg) {
+    padding: $spacing-12 $spacing-8;
+  }
 }
+
+// ── Theme Toggle ──────────────────────────────────────────────────
 
 .themeToggle {
   position: absolute;
@@ -14,13 +157,17 @@
   right: $spacing-4;
 }
 
+// ── Form Container ────────────────────────────────────────────────
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 24rem;
+  max-width: $container-2xs;
 }
+
+// ── Header ────────────────────────────────────────────────────────
 
 .header {
   display: flex;
@@ -31,21 +178,26 @@
   text-align: center;
 }
 
+// Logo visible on mobile only (brand panel replaces it on desktop)
 .logo {
   display: flex;
   align-items: center;
   gap: $spacing-2;
   margin-bottom: $spacing-4;
+
+  @media (min-width: $breakpoint-lg) {
+    display: none;
+  }
 }
 
 .logoIcon {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: $size-8;
+  height: $size-8;
   color: var(--color-primary);
 }
 
 .logoText {
-  font-size: $font-size-xl;
+  font-size: $font-size-lg;
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
 }

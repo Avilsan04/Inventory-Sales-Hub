@@ -1,0 +1,22 @@
+.tableWrapper {
+  border: $border-width-base solid var(--color-border);
+  border-radius: $border-radius-base;
+  overflow: hidden;
+}
+
+.skuCell {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+}
+
+.nameCell {
+  font-weight: $font-weight-medium;
+}
+
+.priceCell {
+  text-align: right;
+}
+
+.quantityCell {
+  text-align: center;
+}
