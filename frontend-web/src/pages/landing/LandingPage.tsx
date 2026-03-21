@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { PackageIcon, SunIcon, MoonIcon } from 'lucide-react';
+import { PackageIcon, SunIcon, MoonIcon, GlobeIcon } from 'lucide-react';
 
 import { useTheme } from '@shared/hooks/useTheme';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
+import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
 import { Button } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 
 import { HeroSection } from './sections/HeroSection';
 import { FeaturesSection } from './sections/FeaturesSection';
-import { StatsSection } from './sections/StatsSection';
-import { CTASection } from './sections/CTASection';
+import { AnalyticsSection } from './sections/AnalyticsSection';
+import { TrustedBySection } from './sections/TrustedBySection';
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -19,6 +20,7 @@ export function LandingPage(): React.ReactElement {
   const { translate } = useTranslationAdapter();
   const { navigateTo } = useRoutingAdapter();
   const { theme, toggleTheme } = useTheme();
+  const { language, toggleLanguage } = useLanguageAdapter();
 
   const handleNavigateToLogin = React.useCallback((): void => {
     navigateTo(APP_ROUTES.LOGIN);
@@ -28,7 +30,6 @@ export function LandingPage(): React.ReactElement {
     navigateTo(APP_ROUTES.REGISTER);
   }, [navigateTo]);
 
-  // Handle smooth scrolling to the top of the viewport
   const handleScrollToTop = React.useCallback((e: React.MouseEvent | React.KeyboardEvent): void => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -38,7 +39,6 @@ export function LandingPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['navbar']}>
         <div className={styles['navbarContent']}>
-          {/* Brand logo functions as a scroll-to-top anchor */}
           <button
             type="button"
             className={styles['navbarBrand']}
@@ -50,6 +50,16 @@ export function LandingPage(): React.ReactElement {
           </button>
 
           <div className={styles['navbarActions']}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleLanguage}
+              aria-label={translate('common.switchLanguage')}
+              className={styles['langButton']}
+            >
+              <GlobeIcon aria-hidden="true" />
+              <span>{language === 'en' ? 'ES' : 'EN'}</span>
+            </Button>
             <Button
               variant="ghost"
               size="icon-sm"
@@ -71,8 +81,8 @@ export function LandingPage(): React.ReactElement {
       <main className={styles['main']}>
         <HeroSection onGetStarted={handleNavigateToLogin} />
         <FeaturesSection />
-        <StatsSection />
-        <CTASection onGetStarted={handleNavigateToLogin} />
+        <AnalyticsSection />
+        <TrustedBySection />
       </main>
 
       <footer className={styles['footer']}>

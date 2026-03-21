@@ -14,7 +14,9 @@
     "toggleTheme": "Cambiar tema",
     "noData": "No hay datos disponibles",
     "scrollToTop": "Ir al inicio",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "switchLanguage": "Cambiar idioma",
+    "errorLoadingData": "No se pudieron obtener los datos. Inténtalo de nuevo."
   },
   "nav": {
     "home": "Inicio",
@@ -38,7 +40,6 @@
     "registerSubtitle": "Únete a miles de equipos que ya usan la plataforma",
     "welcomeBack": "Bienvenido de nuevo",
     "createAccount": "Crear cuenta",
-    "enterCredentials": "Ingresa tus credenciales para acceder a tu cuenta",
     "emailPlaceholder": "correo@ejemplo.com",
     "passwordPlaceholder": "••••••••",
     "alreadyHaveAccount": "¿Ya tienes una cuenta?",
@@ -46,7 +47,15 @@
     "validationError": "Por favor, completa todos los campos correctamente.",
     "passwordMismatch": "Las contraseñas no coinciden.",
     "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
-    "registerError": "El registro falló. Por favor, inténtalo de nuevo."
+    "registerError": "El registro falló. Por favor, inténtalo de nuevo.",
+    "orContinueWith": "o continuar con",
+    "continueWithGoogle": "Google",
+    "continueWithGithub": "GitHub",
+    "enterCredentials": "Accede a tu panel en segundos"
+  },
+  "login": {
+    "brandTitle": "Control total de tu negocio.",
+    "brandSubtitle": "Gestiona inventario, ventas y analíticas en una sola plataforma inteligente."
   },
   "dashboard": {
     "title": "Panel de control",
@@ -110,66 +119,39 @@
       "badge": "Plataforma de Gestión de Inventario",
       "titleLine1": "Gestiona tu Inventario con ",
       "titleAccent": "Precisión y Velocidad",
-      "description": "Una plataforma unificada para rastrear productos, gestionar ventas y obtener información en tiempo real. Diseñada para equipos que exigen control y eficiencia.",
-      "cta": "Comenzar",
-      "secondaryCta": "Saber Más",
-      "backTitle": "Detalles de la Plataforma",
-      "backDescription": "Nuestra plataforma garantiza una visibilidad del 100% sobre su cadena de suministro.",
-      "featureOne": "Integración en tiempo real.",
-      "featureTwo": "Análisis predictivo de stock.",
-      "featureThree": "Seguridad de grado empresarial."
+      "description": "La plataforma todo-en-uno para rastrear productos, analizar ventas y proteger tu negocio, de manera fácil y eficiente.",
+      "cta": "Empieza gratis",
+      "secondaryCta": "Ver demo",
+      "stat1": { "value": "+12.000", "label": "productos gestionados" },
+      "stat2": { "value": "+3.200", "label": "ventas hoy" },
+      "stat3": { "value": "99.9%", "label": "uptime" }
     },
     "features": {
-      "title": "Todo lo que Necesitas",
-      "subtitle": "Herramientas potentes diseñadas para optimizar tus operaciones de inventario y ventas de principio a fin.",
+      "title": "Todo lo que necesitas para optimizar tu inventario y ventas",
+      "subtitle": "La plataforma todo-en-uno para rastrear productos, analizar ventas y proteger tu negocio.",
       "inventory": {
         "title": "Inventario Inteligente",
-        "description": "Seguimiento automático de stock, alertas de bajo inventario y gestión de SKU en una vista unificada."
+        "description": "Rastreo preciso y en tiempo real de cada producto en tu inventario."
       },
-      "analytics": {
-        "title": "Analíticas Avanzadas",
-        "description": "Dashboards en tiempo real e informes para tomar decisiones basadas en datos con confianza."
+      "dashboards": {
+        "title": "Dashboards Interactivos",
+        "description": "Visualiza las ventas, el inventario y el rendimiento con gráficas claras e informes detallados."
+      },
+      "alerts": {
+        "title": "Alertas Automatizadas",
+        "description": "Recibe notificaciones instantáneas sobre bajo stock y tendencias de ventas."
       },
       "security": {
         "title": "Seguridad Empresarial",
-        "description": "Control de acceso basado en roles, almacenamiento cifrado y autenticación JWT integrada."
-      },
-      "realtime": {
-        "title": "Sincronización en Tiempo Real",
-        "description": "Actualizaciones instantáneas en web y móvil para que tu equipo siempre trabaje con datos frescos."
-      },
-      "multiplatform": {
-        "title": "Multiplataforma",
-        "description": "Accede a tus datos desde cualquier dispositivo — aplicación web responsive y experiencia móvil nativa."
-      },
-      "collaboration": {
-        "title": "Colaboración en Equipo",
-        "description": "Soporte multiusuario con registros de auditoría y logs de actividad para total transparencia."
+        "description": "Protección avanzada de datos y control de acceso para equipos."
       }
     },
-    "stats": {
-      "srTitle": "Estadísticas de la plataforma",
-      "products": {
-        "value": "10K+",
-        "label": "Productos gestionados"
-      },
-      "transactions": {
-        "value": "50K+",
-        "label": "Transacciones procesadas"
-      },
-      "uptime": {
-        "value": "99.9%",
-        "label": "Garantía de disponibilidad"
-      },
-      "support": {
-        "value": "24/7",
-        "label": "Soporte técnico"
-      }
+    "analytics": {
+      "title": "Análisis avanzado de ventas",
+      "description": "Obtén información en tiempo real para tomar decisiones basadas en datos y aumentar tus ventas."
     },
-    "cta": {
-      "title": "¿Listo para Tomar el Control?",
-      "description": "Empieza a gestionar tu inventario y ventas hoy. Sin tarjeta de crédito.",
-      "button": "Empezar Ahora"
+    "trusted": {
+      "title": "Miles de negocios confían en nuestro Hub"
     },
     "footer": {
       "rights": "Todos los derechos reservados."

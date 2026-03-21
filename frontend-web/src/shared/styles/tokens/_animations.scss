@@ -138,3 +138,49 @@
     opacity: 1;
   }
 }
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-1.5rem);
+  }
+}
+
+@keyframes floatAlt {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+
+  33% {
+    transform: translateY(-1rem) translateX(0.75rem);
+  }
+
+  66% {
+    transform: translateY(0.5rem) translateX(-0.5rem);
+  }
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}

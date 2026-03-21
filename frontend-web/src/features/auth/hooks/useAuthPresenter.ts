@@ -36,7 +36,8 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
 
     const handleInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
-        const sanitizedValue = value.replace(/[<>]/g, '');
+        const isPasswordField = name === 'password';
+        const sanitizedValue = isPasswordField ? value : value.replace(/[<>]/g, '');
         setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
         setError(null);
     }, []);

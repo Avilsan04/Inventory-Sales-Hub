@@ -3,3 +3,6 @@ export type { ITranslationAdapter } from './useTranslationAdapter';
 
 export { useRoutingAdapter } from './useRoutingAdapter';
 export type { IRoutingAdapter } from './useRoutingAdapter';
+
+export { useLanguageAdapter } from './useLanguageAdapter';
+export type { ILanguageAdapter, Language } from './useLanguageAdapter';

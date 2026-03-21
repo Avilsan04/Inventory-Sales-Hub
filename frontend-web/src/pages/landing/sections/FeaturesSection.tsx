@@ -1,38 +1,37 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
+import { Reveal } from '@shared/ui/animated';
+import { cn } from '@shared/lib/cn';
 import {
   PackageIcon,
   BarChart3Icon,
+  BellIcon,
   ShieldCheckIcon,
-  ZapIcon,
-  GlobeIcon,
-  UsersIcon,
   type LucideIcon,
 } from 'lucide-react';
-
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
-type FeatureIconKey =
-  | 'inventory'
-  | 'analytics'
-  | 'security'
-  | 'realtime'
-  | 'multiplatform'
-  | 'collaboration';
+type FeatureIconKey = 'inventory' | 'dashboards' | 'alerts' | 'security';
+type FeatureColorVariant = 'primary' | 'teal' | 'warning';
 
 interface FeatureConfig {
   readonly iconKey: FeatureIconKey;
   readonly titleKey: string;
   readonly descriptionKey: string;
+  readonly colorVariant: FeatureColorVariant;
 }
 
 const FEATURE_ICON_MAP: Readonly<Record<FeatureIconKey, LucideIcon>> = {
   inventory: PackageIcon,
-  analytics: BarChart3Icon,
+  dashboards: BarChart3Icon,
+  alerts: BellIcon,
   security: ShieldCheckIcon,
-  realtime: ZapIcon,
-  multiplatform: GlobeIcon,
-  collaboration: UsersIcon,
+};
+
+const ICON_COLOR_CLASS: Record<FeatureColorVariant, string> = {
+  primary: styles['featureIconPrimary'] ?? '',
+  teal: styles['featureIconTeal'] ?? '',
+  warning: styles['featureIconWarning'] ?? '',
 };
 
 const FEATURES: readonly FeatureConfig[] = [
@@ -40,57 +39,57 @@ const FEATURES: readonly FeatureConfig[] = [
     iconKey: 'inventory',
     titleKey: 'landing.features.inventory.title',
     descriptionKey: 'landing.features.inventory.description',
+    colorVariant: 'primary',
   },
   {
-    iconKey: 'analytics',
-    titleKey: 'landing.features.analytics.title',
-    descriptionKey: 'landing.features.analytics.description',
+    iconKey: 'dashboards',
+    titleKey: 'landing.features.dashboards.title',
+    descriptionKey: 'landing.features.dashboards.description',
+    colorVariant: 'teal',
+  },
+  {
+    iconKey: 'alerts',
+    titleKey: 'landing.features.alerts.title',
+    descriptionKey: 'landing.features.alerts.description',
+    colorVariant: 'warning',
   },
   {
     iconKey: 'security',
     titleKey: 'landing.features.security.title',
     descriptionKey: 'landing.features.security.description',
-  },
-  {
-    iconKey: 'realtime',
-    titleKey: 'landing.features.realtime.title',
-    descriptionKey: 'landing.features.realtime.description',
-  },
-  {
-    iconKey: 'multiplatform',
-    titleKey: 'landing.features.multiplatform.title',
-    descriptionKey: 'landing.features.multiplatform.description',
-  },
-  {
-    iconKey: 'collaboration',
-    titleKey: 'landing.features.collaboration.title',
-    descriptionKey: 'landing.features.collaboration.description',
+    colorVariant: 'primary',
   },
 ] as const;
 
 export function FeaturesSection(): React.ReactElement {
-  const { t } = useTranslation();
+  const { translate } = useTranslationAdapter();
 
   return (
     <section className={styles['features']} aria-labelledby="features-heading">
-      <div className={styles['sectionHeader']}>
+      <Reveal direction="fade" className={styles['sectionHeader']}>
         <h2 id="features-heading" className={styles['sectionTitle']}>
-          {t('landing.features.title')}
+          {translate('landing.features.title')}
         </h2>
-        <p className={styles['sectionSubtitle']}>{t('landing.features.subtitle')}</p>
-      </div>
+        <p className={styles['sectionSubtitle']}>{translate('landing.features.subtitle')}</p>
+      </Reveal>
 
       <div className={styles['featuresGrid']}>
-        {FEATURES.map((feature) => {
+        {FEATURES.map((feature, idx) => {
           const Icon = FEATURE_ICON_MAP[feature.iconKey];
           return (
-            <article key={feature.titleKey} className={styles['featureCard']}>
-              <div className={styles['featureIcon']}>
+            <Reveal
+              key={feature.titleKey}
+              as="article"
+              delay={idx * 0.1}
+              lift
+              className={styles['featureCard']}
+            >
+              <div className={cn(styles['featureIcon'], ICON_COLOR_CLASS[feature.colorVariant])}>
                 <Icon aria-hidden="true" />
               </div>
-              <h3 className={styles['featureTitle']}>{t(feature.titleKey)}</h3>
-              <p className={styles['featureDescription']}>{t(feature.descriptionKey)}</p>
-            </article>
+              <h3 className={styles['featureTitle']}>{translate(feature.titleKey)}</h3>
+              <p className={styles['featureDescription']}>{translate(feature.descriptionKey)}</p>
+            </Reveal>
           );
         })}
       </div>

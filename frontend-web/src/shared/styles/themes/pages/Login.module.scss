@@ -1,216 +1,61 @@
-// ── Login Page ────────────────────────────────────────────────────
-// Split-panel layout: brand panel (desktop left) + form panel (right)
-// All colors via CSS custom properties for theme support.
+// ── Login Page ─────────────────────────────────────────────────────────
+// Centered card on a professional SaaS-style background:
+// dot grid + two subtle radial glows stacked via CSS background-image layers.
 
-// ── Component-scoped layout constants ────────────────────────────
-// Values specific to this layout that do not belong in the global token scale.
-$_brand-panel-max-width: 28rem;
-$_decor-circle-sm: 16rem;
-$_decor-circle-lg: 22rem;
-$_decor-offset-corner: 4rem;
-$_decor-offset-left: 5rem;
-$_decor-offset-bottom: 6rem;
+// ── Layout-scoped constants ────────────────────────────────────────────
+$_page-bg:        #f0f4ff;
+$_form-max-width: 32rem;
+$_dot-color:      rgba(100 130 200 / 0.08);
+$_dot-size:       26px;
+$_glow-a:         rgba(90 110 255 / 0.10);   // bottom-left accent
+$_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
 
-// Brand panel text — always white at varying opacity (on gradient bg)
-$_brand-text-high: rgba(255 255 255 / 0.95);
-$_brand-text-base: rgba(255 255 255 / 0.9);
-$_brand-text-medium: rgba(255 255 255 / 0.85);
-$_brand-text-subtle: rgba(255 255 255 / 0.75);
-$_brand-icon-subtle: rgba(255 255 255 / 0.7);
-$_brand-decor-sm-bg: rgba(255 255 255 / 0.06);
-$_brand-decor-lg-bg: rgba(255 255 255 / 0.04);
-
-// ── Page Shell ───────────────────────────────────────────────────
+// ── Page Shell ─────────────────────────────────────────────────────────
 
 .page {
   display: flex;
-  min-height: $height-screen;
-  background-color: var(--color-bg-primary);
-}
-
-// ── Brand Panel (desktop only) ────────────────────────────────────
-
-.brandPanel {
-  display: none;
-  flex: 0 0 45%;
-  max-width: $_brand-panel-max-width;
-  background: linear-gradient(160deg,
-      var(--color-primary) 0%,
-      color-mix(in srgb, var(--color-primary) 55%, black) 100%);
-  padding: $spacing-12;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  min-height: $height-screen;
+
+  // Base color (fallback + dark-mode override target)
+  background-color: $_page-bg;
+
+  // Three stacked layers: bottom-left glow · top-right glow · dot grid
+  background-image:
+    radial-gradient(circle at 22% 88%, $_glow-a 0%, transparent 42%),
+    radial-gradient(circle at 82% 8%,  $_glow-b 0%, transparent 38%),
+    radial-gradient(circle, $_dot-color 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, $_dot-size $_dot-size;
+
   position: relative;
   overflow: hidden;
 
-  // Decorative circles
-  &::before {
-    content: '';
-    position: absolute;
-    top: -$_decor-offset-corner;
-    right: -$_decor-offset-corner;
-    width: $_decor-circle-sm;
-    height: $_decor-circle-sm;
-    border-radius: $border-radius-full;
-    background: $_brand-decor-sm-bg;
-    pointer-events: none;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -$_decor-offset-bottom;
-    left: -$_decor-offset-left;
-    width: $_decor-circle-lg;
-    height: $_decor-circle-lg;
-    border-radius: $border-radius-full;
-    background: $_brand-decor-lg-bg;
-    pointer-events: none;
-  }
-
-  @media (min-width: $breakpoint-lg) {
-    display: flex;
+  :global([data-theme='dark']) & {
+    background-color: var(--color-bg-primary);
+    background-image:
+      radial-gradient(circle at 22% 88%, rgba(90 110 255 / 0.07) 0%, transparent 42%),
+      radial-gradient(circle at 82% 8%,  rgba(60 140 255 / 0.05) 0%, transparent 38%),
+      radial-gradient(circle, rgba(255 255 255 / 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, $_dot-size $_dot-size;
   }
 }
 
-.brandPanelContent {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-8;
-}
-
-.brandPanelLogo {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-}
-
-.brandPanelIcon {
-  width: $size-9;
-  height: $size-9;
-  color: $_brand-text-base;
-  flex-shrink: 0;
-}
-
-.brandPanelName {
-  font-size: $font-size-xl;
-  font-weight: $font-weight-bold;
-  color: $_brand-text-high;
-  letter-spacing: $letter-spacing-tight;
-}
-
-.brandPanelTagline {
-  font-size: $font-size-base;
-  color: $_brand-text-subtle;
-  line-height: $line-height-relaxed;
-  margin: 0;
-}
-
-.brandPanelFeatures {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-3;
-}
-
-.brandPanelFeature {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: $_brand-text-medium;
-
-  svg {
-    width: $size-4;
-    height: $size-4;
-    flex-shrink: 0;
-    color: $_brand-icon-subtle;
-  }
-}
-
-// ── Form Panel ────────────────────────────────────────────────────
-
-.formPanel {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: $spacing-8 $spacing-4;
-  position: relative;
-  background-color: var(--color-bg-secondary);
-
-  @media (min-width: $breakpoint-lg) {
-    padding: $spacing-12 $spacing-8;
-  }
-}
-
-// ── Theme Toggle ──────────────────────────────────────────────────
+// ── Theme Toggle ───────────────────────────────────────────────────────
 
 .themeToggle {
   position: absolute;
   top: $spacing-4;
   right: $spacing-4;
+  z-index: 1;
 }
 
-// ── Form Container ────────────────────────────────────────────────
+// ── Form Container ─────────────────────────────────────────────────────
 
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  max-width: $container-2xs;
-}
-
-// ── Header ────────────────────────────────────────────────────────
-
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $spacing-2;
-  margin-bottom: $spacing-6;
-  text-align: center;
-}
-
-// Logo visible on mobile only (brand panel replaces it on desktop)
-.logo {
-  display: flex;
-  align-items: center;
-  gap: $spacing-2;
-  margin-bottom: $spacing-4;
-
-  @media (min-width: $breakpoint-lg) {
-    display: none;
-  }
-}
-
-.logoIcon {
-  width: $size-8;
-  height: $size-8;
-  color: var(--color-primary);
-}
-
-.logoText {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  color: var(--color-text-primary);
-}
-
-.title {
-  font-size: $font-size-2xl;
-  font-weight: $font-weight-bold;
-  color: var(--color-text-primary);
-  margin: 0;
-}
-
-.subtitle {
-  font-size: $font-size-sm;
-  color: var(--color-text-muted);
-  margin: 0;
+  max-width: $_form-max-width;
+  padding: 0 $spacing-4;
+  position: relative;
+  z-index: 1;
 }

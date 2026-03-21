@@ -1,6 +1,12 @@
 // ── Landing Page ──────────────────────────────────────────────────────
-// Follows project token system: $spacing-*, $font-size-*, $font-weight-*
 // All colors via CSS custom properties (--color-*) for theme support.
+// All values via SCSS tokens — zero magic numbers.
+
+@use '../../tokens/colors' as *;
+@use '../../tokens/spacing' as *;
+@use '../../tokens/typography' as *;
+@use '../../tokens/layout' as *;
+@use '../../tokens/animations' as *;
 
 // ── Page Shell ───────────────────────────────────────────────────
 
@@ -67,13 +73,27 @@
   gap: $spacing-2;
 }
 
+.langButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-sm;
+  letter-spacing: $letter-spacing-wider;
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
 // ── Main ─────────────────────────────────────────────────────────
 
 .main {
   flex: 1;
 }
 
-// ── Shared Section Utilities ─────────────────────────────────────
+// ── Shared Utilities ─────────────────────────────────────────────
 
 .sectionHeader {
   display: flex;
@@ -108,184 +128,39 @@
 // ── Hero ─────────────────────────────────────────────────────────
 
 .hero {
-  position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-12;
   align-items: center;
-  justify-content: center;
-  min-height: calc($height-screen - $navbar-height);
-  padding: $spacing-8 $spacing-6;
-  overflow: hidden;
-  perspective: 2000px;
-}
+  max-width: $container-xl;
+  margin: 0 auto;
+  padding: $spacing-16 $spacing-6;
 
-.heroBackground {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.heroGlow {
-  position: absolute;
-  top: -20%;
-  left: 50%;
-  width: $size-hero-glow;
-  height: $size-hero-glow;
-  transform: translateX(-50%);
-  border-radius: $border-radius-full;
-  background: radial-gradient(circle,
-      var(--color-primary-light) 0%,
-      transparent 70%);
-  opacity: 0.35;
-  filter: blur($blur-3xl);
-}
-
-.heroGrid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--color-border) $border-width-base, transparent $border-width-base),
-    linear-gradient(90deg, var(--color-border) $border-width-base, transparent $border-width-base);
-  background-size: $size-16 $size-16;
-  opacity: 0.35;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
-}
-
-// ── 3D Flip Architecture ──
-
-.heroFlipContainer {
-  position: relative;
-  width: 100%;
-  max-width: $container-md;
-  z-index: 1;
-  transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &.isFlipped {
-    transform: rotateY(180deg);
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: 1fr 1fr;
+    padding-top: $spacing-16;
+    padding-bottom: $spacing-16;
   }
 }
 
-.heroFront {
-  position: relative;
-  width: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: rotateY(0deg);
-  z-index: 2;
-}
-
-.heroBack {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: rotateY(180deg);
-  background-color: var(--color-bg-secondary);
-  border: $border-width-base solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: $spacing-8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-xl);
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-// ── Content ──
-
-.heroContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $spacing-6;
-  text-align: center;
-  animation: heroFadeIn 0.6s ease-out both;
-}
-
-.heroContentBack {
+.heroText {
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  position: relative;
-
-  h2 {
-    font-size: $font-size-2xl;
-    font-weight: $font-weight-bold;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
+  align-items: flex-start;
 }
 
-.backDetails {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-4;
-  color: var(--color-text-muted);
+.heroVisual {
+  display: none;
 
-  p {
-    font-size: $font-size-lg;
-    margin: 0;
-    line-height: $line-height-relaxed;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto;
+  @media (min-width: $breakpoint-lg) {
     display: flex;
-    flex-direction: column;
-    gap: $spacing-3;
-    text-align: left;
-    max-width: $container-xs;
-
-    li {
-      position: relative;
-      padding-left: $spacing-6;
-      font-size: $font-size-base;
-
-      &::before {
-        content: "→";
-        position: absolute;
-        left: 0;
-        color: var(--color-primary);
-        font-weight: $font-weight-bold;
-      }
-    }
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 
-.closeFlipButton {
-  position: absolute;
-  top: -$spacing-4;
-  right: -$spacing-4;
-  background: transparent;
-  border: none;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  padding: $spacing-2;
-  border-radius: var(--radius-sm);
-  transition: color 0.2s ease, background-color 0.2s ease;
-
-  &:hover {
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-primary);
-  }
-
-  svg {
-    width: $size-6;
-    height: $size-6;
-  }
-}
-
-// ── Shared Hero Elements ──
+// ── Hero Badge ──
 
 .heroBadge {
   display: inline-flex;
@@ -293,8 +168,8 @@
   gap: $spacing-2;
   padding: $spacing-1 $spacing-4;
   border-radius: $border-radius-full;
-  border: $border-width-base solid var(--color-border);
-  background-color: var(--color-bg-secondary);
+  border: $border-width-base solid color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  background-color: color-mix(in srgb, var(--color-primary-light) 60%, var(--color-bg-secondary));
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   color: var(--color-primary);
@@ -302,8 +177,30 @@
   svg {
     width: $size-4;
     height: $size-4;
+    flex-shrink: 0;
   }
 }
+
+.heroBadgeDot {
+  position: relative;
+  display: inline-block;
+  width: $size-2;
+  height: $size-2;
+  border-radius: $border-radius-full;
+  background-color: var(--color-primary);
+  flex-shrink: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: $border-radius-full;
+    background-color: var(--color-primary);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+}
+
+// ── Hero Title ──
 
 .heroTitle {
   font-size: clamp($font-size-4xl, 5vw, $size-16);
@@ -337,21 +234,221 @@
 .heroActions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: $spacing-3;
-  margin-top: $spacing-2;
 }
 
-@keyframes heroFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY($spacing-6);
-  }
+// ── Hero Stats ──
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.heroStats {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.heroStat {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+}
+
+.heroStatIconUp {
+  width: $size-4;
+  height: $size-4;
+  color: $color-success;
+  flex-shrink: 0;
+}
+
+.heroStatIconClock {
+  width: $size-4;
+  height: $size-4;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.heroStatValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+}
+
+.heroStatLabel {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
+.heroStatSep {
+  font-size: $font-size-sm;
+  color: var(--color-border);
+  user-select: none;
+}
+
+// ── Dashboard Mockup (shared by Hero and Analytics) ──
+
+.mockupWindow {
+  width: 100%;
+  max-width: 28rem;
+  border-radius: $border-radius-xl;
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  box-shadow: $shadow-xl;
+  overflow: hidden;
+}
+
+.mockupWindowLg {
+  max-width: 34rem;
+}
+
+.mockupTitlebar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-4;
+  background-color: var(--color-bg-secondary);
+  border-bottom: $border-width-base solid var(--color-border);
+}
+
+.mockupDotRed {
+  width: $size-3;
+  height: $size-3;
+  border-radius: $border-radius-full;
+  background-color: $color-error;
+  flex-shrink: 0;
+}
+
+.mockupDotYellow {
+  width: $size-3;
+  height: $size-3;
+  border-radius: $border-radius-full;
+  background-color: $color-warning;
+  flex-shrink: 0;
+}
+
+.mockupDotGreen {
+  width: $size-3;
+  height: $size-3;
+  border-radius: $border-radius-full;
+  background-color: $color-success;
+  flex-shrink: 0;
+}
+
+.mockupBrand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-secondary);
+  margin-left: $spacing-2;
+
+  svg {
+    width: $size-3;
+    height: $size-3;
+    color: var(--color-primary);
+    flex-shrink: 0;
   }
+}
+
+.mockupBody {
+  padding: $spacing-4;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.mockupStatsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-2;
+}
+
+.mockupStatCard {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: $spacing-2 $spacing-3;
+  background-color: var(--color-bg-secondary);
+  border-radius: $border-radius-base;
+  border: $border-width-base solid var(--color-border);
+}
+
+.mockupStatCardLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.mockupStatCardValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+}
+
+.mockupStatCardBadge {
+  font-size: $font-size-xs;
+  color: $color-success;
+  font-weight: $font-weight-medium;
+}
+
+.mockupChart {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  padding: $spacing-3;
+  background-color: var(--color-bg-secondary);
+  border-radius: $border-radius-base;
+  border: $border-width-base solid var(--color-border);
+
+  svg {
+    width: 100%;
+    height: $size-8;
+    display: block;
+  }
+}
+
+.mockupChartLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.mockupTableSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.mockupTableTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-secondary);
+  padding-bottom: $spacing-1;
+}
+
+.mockupTableRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $border-radius-sm;
+}
+
+.mockupTableDot {
+  width: $size-2;
+  height: $size-2;
+  border-radius: $border-radius-full;
+  background-color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.mockupTableName {
+  flex: 1;
+  font-size: $font-size-xs;
+  color: var(--color-text-primary);
+}
+
+.mockupTableAmount {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-success;
 }
 
 // ── Features ─────────────────────────────────────────────────────
@@ -372,7 +469,7 @@
   }
 
   @media (min-width: $breakpoint-lg) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -384,12 +481,11 @@
   border-radius: var(--radius-lg);
   border: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     border-color: var(--color-primary);
     box-shadow: var(--shadow-lg);
-    transform: translateY(-$spacing-1);
   }
 }
 
@@ -400,14 +496,26 @@
   width: $size-11;
   height: $size-11;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary-light), color-mix(in srgb, var(--color-primary-light) 60%, transparent));
-  color: var(--color-primary);
-  border: $border-width-base solid color-mix(in srgb, var(--color-primary) 20%, transparent);
 
   svg {
     width: $size-5;
     height: $size-5;
   }
+}
+
+.featureIconPrimary {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.featureIconTeal {
+  background-color: color-mix(in srgb, var(--color-chart-4) 15%, transparent);
+  color: var(--color-chart-4);
+}
+
+.featureIconWarning {
+  background-color: color-mix(in srgb, var(--color-chart-3) 15%, transparent);
+  color: var(--color-chart-3);
 }
 
 .featureTitle {
@@ -424,87 +532,149 @@
   margin: 0;
 }
 
-// ── Stats ────────────────────────────────────────────────────────
+// ── Analytics ────────────────────────────────────────────────────
 
-.stats {
-  padding: $spacing-12 $spacing-6;
+.analytics {
+  padding: $spacing-16 $spacing-6;
+  background-color: var(--color-bg-secondary);
   border-top: $border-width-base solid var(--color-border);
   border-bottom: $border-width-base solid var(--color-border);
-  background-color: var(--color-bg-secondary);
 }
 
-.statsGrid {
+.analyticsInner {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: $spacing-8;
-  max-width: $container-lg;
+  grid-template-columns: 1fr;
+  gap: $spacing-12;
+  align-items: center;
+  max-width: $container-xl;
   margin: 0 auto;
 
-  @media (min-width: $breakpoint-md) {
-    grid-template-columns: repeat(4, 1fr);
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-.statItem {
+.analyticsContent {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: $spacing-1;
-  text-align: center;
+  gap: $spacing-6;
+  align-items: flex-start;
 }
 
-.statValue {
-  font-size: $font-size-3xl;
-  font-weight: $font-weight-bold;
-  color: var(--color-primary);
-  letter-spacing: $letter-spacing-tighter;
-  line-height: $line-height-tight;
-
-  @media (min-width: $breakpoint-md) {
-    font-size: $font-size-4xl;
-  }
+.analyticsMockupCards {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  width: 100%;
 }
 
-.statLabel {
+.mockupMiniCard {
+  background-color: var(--color-bg-primary);
+  border: $border-width-base solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: $spacing-4;
+  box-shadow: $shadow-base;
+}
+
+.mockupMiniTitle {
   font-size: $font-size-sm;
-  color: var(--color-text-muted);
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin-bottom: $spacing-2;
 }
 
-// ── CTA ──────────────────────────────────────────────────────────
-
-.cta {
-  padding: $spacing-16 $spacing-6;
-  background: linear-gradient(to bottom,
-      var(--color-bg-secondary),
-      var(--color-bg-primary));
-  border-top: $border-width-base solid var(--color-border);
+.mockupMiniChart {
+  svg {
+    width: 100%;
+    height: $size-10;
+    display: block;
+  }
 }
 
-.ctaContent {
+.mockupMiniStatsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-3;
+}
+
+.mockupMiniStat {
   display: flex;
   flex-direction: column;
+  gap: $spacing-1;
+}
+
+.mockupMiniStatValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-chart-4));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: $letter-spacing-tighter;
+}
+
+.mockupMiniStatLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.analyticsVisual {
+  display: flex;
   align-items: center;
-  gap: $spacing-4;
-  max-width: $container-xs;
-  margin: 0 auto;
+  justify-content: center;
+}
+
+// ── Trusted By ───────────────────────────────────────────────────
+
+.trustedBy {
+  padding: $spacing-16 $spacing-6;
   text-align: center;
 }
 
-.ctaTitle {
-  font-size: $font-size-3xl;
-  font-weight: $font-weight-bold;
-  color: var(--color-text-primary);
-  letter-spacing: $letter-spacing-tighter;
-  line-height: $line-height-tight;
+.trustedInner {
+  max-width: $container-xl;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-8;
+}
+
+.trustedTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
-.ctaDescription {
-  font-size: $font-size-lg;
+.trustedLogos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-8;
+}
+
+.trustedLogo {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
   color: var(--color-text-muted);
-  line-height: $line-height-relaxed;
-  margin: 0;
+  letter-spacing: $letter-spacing-tight;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  svg {
+    width: $size-5;
+    height: $size-5;
+    flex-shrink: 0;
+  }
 }
 
 // ── Footer ───────────────────────────────────────────────────────
@@ -513,6 +683,7 @@
   padding: $spacing-6;
   border-top: $border-width-base solid var(--color-border);
   text-align: center;
+  background-color: var(--color-bg-secondary);
 }
 
 .footerText {

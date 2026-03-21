@@ -14,7 +14,9 @@
     "toggleTheme": "Toggle theme",
     "noData": "No data available",
     "scrollToTop": "Scroll to top",
-    "close": "Close"
+    "close": "Close",
+    "switchLanguage": "Switch language",
+    "errorLoadingData": "Unable to retrieve data. Please try again."
   },
   "nav": {
     "home": "Home",
@@ -38,7 +40,7 @@
     "registerSubtitle": "Join thousands of teams already using the platform",
     "welcomeBack": "Welcome back",
     "createAccount": "Create Account",
-    "enterCredentials": "Enter your credentials to access your account",
+    "enterCredentials": "Access your panel in seconds",
     "emailPlaceholder": "email@example.com",
     "passwordPlaceholder": "••••••••",
     "alreadyHaveAccount": "Already have an account?",
@@ -46,7 +48,14 @@
     "validationError": "Please fill in all fields correctly.",
     "passwordMismatch": "Passwords do not match.",
     "passwordTooShort": "Password must be at least 8 characters.",
-    "registerError": "Registration failed. Please try again."
+    "registerError": "Registration failed. Please try again.",
+    "orContinueWith": "or continue with",
+    "continueWithGoogle": "Google",
+    "continueWithGithub": "GitHub"
+  },
+  "login": {
+    "brandTitle": "Total control of your business.",
+    "brandSubtitle": "Manage inventory, sales and analytics on one intelligent platform."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -110,67 +119,39 @@
       "badge": "Inventory Management Platform",
       "titleLine1": "Manage Your Inventory with ",
       "titleAccent": "Precision & Speed",
-      "description": "A unified platform to track products, manage sales, and gain real-time insights. Built for teams that demand control and efficiency.",
-      "cta": "Get Started",
-      "secondaryCta": "Learn More",
-      "backTitle": "Platform Details",
-      "backDescription": "Our platform ensures 100% visibility over your supply chain.",
-      "featureOne": "Real-time integration.",
-      "featureTwo": "Predictive stock analysis.",
-      "featureThree": "Enterprise-grade security."
-
+      "description": "The all-in-one platform to track products, analyze sales and protect your business, easily and efficiently.",
+      "cta": "Get started free",
+      "secondaryCta": "View demo",
+      "stat1": { "value": "+12,000", "label": "products managed" },
+      "stat2": { "value": "+3,200", "label": "sales today" },
+      "stat3": { "value": "99.9%", "label": "uptime" }
     },
     "features": {
-      "title": "Everything You Need",
-      "subtitle": "Powerful tools designed to streamline your inventory and sales operations from end to end.",
+      "title": "Everything you need to optimize your inventory and sales",
+      "subtitle": "The all-in-one platform to track products, analyze sales and protect your business.",
       "inventory": {
         "title": "Smart Inventory",
-        "description": "Automatic stock tracking, low-stock alerts, and SKU management in a single unified view."
+        "description": "Precise, real-time tracking of every product in your inventory."
       },
-      "analytics": {
-        "title": "Advanced Analytics",
-        "description": "Real-time dashboards and reports to make data-driven decisions with confidence."
+      "dashboards": {
+        "title": "Interactive Dashboards",
+        "description": "Visualize sales, inventory and performance with clear charts and detailed reports."
+      },
+      "alerts": {
+        "title": "Automated Alerts",
+        "description": "Receive instant notifications about low stock and sales trends."
       },
       "security": {
         "title": "Enterprise Security",
-        "description": "Role-based access control, encrypted storage, and JWT authentication built-in."
-      },
-      "realtime": {
-        "title": "Real-Time Sync",
-        "description": "Instant updates across web and mobile so your team always works with fresh data."
-      },
-      "multiplatform": {
-        "title": "Multiplatform",
-        "description": "Access your data from any device — responsive web app and native mobile experience."
-      },
-      "collaboration": {
-        "title": "Team Collaboration",
-        "description": "Multi-user support with audit trails and activity logs for full transparency."
+        "description": "Advanced data protection and access control for teams."
       }
     },
-    "stats": {
-      "srTitle": "Platform statistics",
-      "products": {
-        "value": "10K+",
-        "label": "Products managed"
-      },
-      "transactions": {
-        "value": "50K+",
-        "label": "Transactions processed"
-      },
-      "uptime": {
-        "value": "99.9%",
-        "label": "Uptime guarantee"
-      },
-      "support": {
-        "value": "24/7",
-        "label": "Technical support"
-      }
+    "analytics": {
+      "title": "Advanced sales analytics",
+      "description": "Get real-time insights to make data-driven decisions and grow your sales."
     },
-    "cta": {
-      "title": "Ready to Take Control?",
-      "description": "Start managing your inventory and sales today. No credit card required.",
-      "button": "Start Now"
+    "trusted": {
+      "title": "Thousands of businesses trust our Hub"
     },
     "footer": {
       "rights": "All rights reserved."

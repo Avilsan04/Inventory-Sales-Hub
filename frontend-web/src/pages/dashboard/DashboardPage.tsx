@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useInventory } from '@features/inventory';
 import { Spinner } from '@shared/ui/primitives';
 import { InventoryTableWidget } from '@widgets/inventory';
 import styles from '@shared/styles/themes/pages/Dashboard.module.scss';
 
 export function DashboardPage(): React.ReactElement {
-  const { t } = useTranslation();
+  const { translate: t } = useTranslationAdapter();
   const { data: inventory, isLoading, isError, error } = useInventory();
 
   const renderContent = (): React.ReactNode => {
@@ -22,7 +22,7 @@ export function DashboardPage(): React.ReactElement {
       console.error("Zod Validation or Network Error:", error);
       return (
         <div className={styles['errorContainer']} role="alert" aria-live="assertive">
-          <p>{t('common.errorLoadingData', 'System failure: Unable to retrieve inventory data.')}</p>
+          <p>{t('common.errorLoadingData')}</p>
         </div>
       );
     }

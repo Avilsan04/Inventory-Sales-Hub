@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { tokenStorage } from '@core/storage/tokenStorage';
+import { useDependencies } from '@shared/hooks/useDependencies';
 import { APP_ROUTES } from '@shared/config/routes';
 
 export function PublicRoute(): React.ReactElement {
-  const token = tokenStorage.getToken();
+  const { authService } = useDependencies();
 
-  if (token) {
+  if (authService.isAuthenticated()) {
     return <Navigate to={APP_ROUTES.DASHBOARD} replace />;
   }
 
