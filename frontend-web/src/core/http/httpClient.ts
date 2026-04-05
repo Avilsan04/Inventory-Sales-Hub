@@ -51,6 +51,11 @@ export const httpClient: HttpClient = {
     return response.data;
   },
 
+  patch: async <T>(url: string, data?: unknown, config?: HttpRequestConfig): Promise<T> => {
+    const response = await axiosInstance.patch<T>(url, data, mapConfig(config));
+    return response.data;
+  },
+
   delete: async <T>(url: string, config?: HttpRequestConfig): Promise<T> => {
     const response = await axiosInstance.delete<T>(url, mapConfig(config));
     return response.data;

@@ -7,7 +7,6 @@ import {
   BarChart3Icon,
   BellIcon,
   ShieldCheckIcon,
-  type LucideIcon,
 } from 'lucide-react';
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
@@ -21,45 +20,29 @@ interface FeatureConfig {
   readonly colorVariant: FeatureColorVariant;
 }
 
-const FEATURE_ICON_MAP: Readonly<Record<FeatureIconKey, LucideIcon>> = {
-  inventory: PackageIcon,
-  dashboards: BarChart3Icon,
-  alerts: BellIcon,
-  security: ShieldCheckIcon,
-};
-
-const ICON_COLOR_CLASS: Record<FeatureColorVariant, string> = {
-  primary: styles['featureIconPrimary'] ?? '',
-  teal: styles['featureIconTeal'] ?? '',
-  warning: styles['featureIconWarning'] ?? '',
-};
-
 const FEATURES: readonly FeatureConfig[] = [
-  {
-    iconKey: 'inventory',
-    titleKey: 'landing.features.inventory.title',
-    descriptionKey: 'landing.features.inventory.description',
-    colorVariant: 'primary',
-  },
-  {
-    iconKey: 'dashboards',
-    titleKey: 'landing.features.dashboards.title',
-    descriptionKey: 'landing.features.dashboards.description',
-    colorVariant: 'teal',
-  },
-  {
-    iconKey: 'alerts',
-    titleKey: 'landing.features.alerts.title',
-    descriptionKey: 'landing.features.alerts.description',
-    colorVariant: 'warning',
-  },
-  {
-    iconKey: 'security',
-    titleKey: 'landing.features.security.title',
-    descriptionKey: 'landing.features.security.description',
-    colorVariant: 'primary',
-  },
+  { iconKey: 'inventory',  titleKey: 'landing.features.inventory.title',  descriptionKey: 'landing.features.inventory.description',  colorVariant: 'primary' },
+  { iconKey: 'dashboards', titleKey: 'landing.features.dashboards.title', descriptionKey: 'landing.features.dashboards.description', colorVariant: 'teal' },
+  { iconKey: 'alerts',     titleKey: 'landing.features.alerts.title',     descriptionKey: 'landing.features.alerts.description',     colorVariant: 'warning' },
+  { iconKey: 'security',   titleKey: 'landing.features.security.title',   descriptionKey: 'landing.features.security.description',   colorVariant: 'primary' },
 ] as const;
+
+function renderIcon(iconKey: FeatureIconKey): React.ReactElement {
+  switch (iconKey) {
+    case 'inventory':  return <PackageIcon  aria-hidden="true" />;
+    case 'dashboards': return <BarChart3Icon aria-hidden="true" />;
+    case 'alerts':     return <BellIcon     aria-hidden="true" />;
+    case 'security':   return <ShieldCheckIcon aria-hidden="true" />;
+  }
+}
+
+function getIconColorClass(variant: FeatureColorVariant): string {
+  switch (variant) {
+    case 'primary': return styles.featureIconPrimary ?? '';
+    case 'teal':    return styles.featureIconTeal ?? '';
+    case 'warning': return styles.featureIconWarning ?? '';
+  }
+}
 
 export function FeaturesSection(): React.ReactElement {
   const { translate } = useTranslationAdapter();
@@ -74,24 +57,21 @@ export function FeaturesSection(): React.ReactElement {
       </Reveal>
 
       <div className={styles['featuresGrid']}>
-        {FEATURES.map((feature, idx) => {
-          const Icon = FEATURE_ICON_MAP[feature.iconKey];
-          return (
-            <Reveal
-              key={feature.titleKey}
-              as="article"
-              delay={idx * 0.1}
-              lift
-              className={styles['featureCard']}
-            >
-              <div className={cn(styles['featureIcon'], ICON_COLOR_CLASS[feature.colorVariant])}>
-                <Icon aria-hidden="true" />
-              </div>
-              <h3 className={styles['featureTitle']}>{translate(feature.titleKey)}</h3>
-              <p className={styles['featureDescription']}>{translate(feature.descriptionKey)}</p>
-            </Reveal>
-          );
-        })}
+        {FEATURES.map((feature, idx) => (
+          <Reveal
+            key={feature.titleKey}
+            as="article"
+            delay={idx * 0.1}
+            lift
+            className={styles['featureCard']}
+          >
+            <div className={cn(styles['featureIcon'], getIconColorClass(feature.colorVariant))}>
+              {renderIcon(feature.iconKey)}
+            </div>
+            <h3 className={styles['featureTitle']}>{translate(feature.titleKey)}</h3>
+            <p className={styles['featureDescription']}>{translate(feature.descriptionKey)}</p>
+          </Reveal>
+        ))}
       </div>
     </section>
   );

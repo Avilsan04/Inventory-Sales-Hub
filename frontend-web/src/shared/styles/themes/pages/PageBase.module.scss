@@ -1,0 +1,24 @@
+// Shared page-level layout utilities.
+// Imported by all app pages for common structural patterns.
+
+.loading {
+  display: grid;
+  place-items: center;
+  height: 50vh;
+}
+
+.appLoading {
+  display: grid;
+  place-items: center;
+  height: $height-screen;
+}
+
+.header {
+  margin-bottom: $spacing-6;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}

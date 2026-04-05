@@ -7,6 +7,7 @@ import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
 import { setupHttpEvents } from '@core/http';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
+import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const LandingPage = React.lazy(() =>
   import('@pages/landing/LandingPage').then(module => ({ default: module.LandingPage }))
@@ -22,6 +23,38 @@ const RegisterPage = React.lazy(() =>
 
 const DashboardPage = React.lazy(() =>
   import('@pages/dashboard/DashboardPage').then(module => ({ default: module.DashboardPage }))
+);
+
+const InventoryPage = React.lazy(() =>
+  import('@pages/inventory/InventoryPage').then(module => ({ default: module.InventoryPage }))
+);
+
+const ProductsPage = React.lazy(() =>
+  import('@pages/products/ProductsPage').then(module => ({ default: module.ProductsPage }))
+);
+
+const SalesPage = React.lazy(() =>
+  import('@pages/sales/SalesPage').then(module => ({ default: module.SalesPage }))
+);
+
+const CustomersPage = React.lazy(() =>
+  import('@pages/customers/CustomersPage').then(module => ({ default: module.CustomersPage }))
+);
+
+const EmployeesPage = React.lazy(() =>
+  import('@pages/employees/EmployeesPage').then(module => ({ default: module.EmployeesPage }))
+);
+
+const SuppliersPage = React.lazy(() =>
+  import('@pages/suppliers/SuppliersPage').then(module => ({ default: module.SuppliersPage }))
+);
+
+const AnalyticsPage = React.lazy(() =>
+  import('@pages/analytics/AnalyticsPage').then(module => ({ default: module.AnalyticsPage }))
+);
+
+const NotificationsPage = React.lazy(() =>
+  import('@pages/notifications/NotificationsPage').then(module => ({ default: module.NotificationsPage }))
 );
 
 /**
@@ -55,7 +88,7 @@ export function AppRouter(): React.ReactElement {
       <HttpInterceptorSetup />
       <React.Suspense
         fallback={
-          <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
+          <div className={styles.appLoading}>
             <Spinner size="lg" />
           </div>
         }
@@ -74,6 +107,14 @@ export function AppRouter(): React.ReactElement {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
+              <Route path={APP_ROUTES.INVENTORY} element={<InventoryPage />} />
+              <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
+              <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
+              <Route path={APP_ROUTES.CUSTOMERS} element={<CustomersPage />} />
+              <Route path={APP_ROUTES.EMPLOYEES} element={<EmployeesPage />} />
+              <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
+              <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+              <Route path={APP_ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
             </Route>
           </Route>
 

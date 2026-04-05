@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  SlackIcon,
+  MessageSquareIcon,
   ShoppingBagIcon,
   TruckIcon,
   CloudIcon,
@@ -11,19 +11,19 @@ import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { Reveal } from '@shared/ui/animated';
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
-interface BrandConfig {
-  readonly name: string;
-  readonly Icon: React.ComponentType<{ 'aria-hidden': string; className?: string }>;
-}
+const BRANDS = ['Slack', 'Shopify', 'DoorDash', 'Salesforce', 'Dropbox', 'Uber'] as const;
+type BrandName = (typeof BRANDS)[number];
 
-const BRANDS: readonly BrandConfig[] = [
-  { name: 'Slack', Icon: SlackIcon },
-  { name: 'Shopify', Icon: ShoppingBagIcon },
-  { name: 'DoorDash', Icon: TruckIcon },
-  { name: 'Salesforce', Icon: CloudIcon },
-  { name: 'Dropbox', Icon: ArchiveIcon },
-  { name: 'Uber', Icon: CarIcon },
-] as const;
+function renderBrandIcon(name: BrandName): React.ReactElement {
+  switch (name) {
+    case 'Slack':      return <MessageSquareIcon aria-hidden="true" />;
+    case 'Shopify':    return <ShoppingBagIcon   aria-hidden="true" />;
+    case 'DoorDash':   return <TruckIcon         aria-hidden="true" />;
+    case 'Salesforce': return <CloudIcon         aria-hidden="true" />;
+    case 'Dropbox':    return <ArchiveIcon       aria-hidden="true" />;
+    case 'Uber':       return <CarIcon           aria-hidden="true" />;
+  }
+}
 
 export function TrustedBySection(): React.ReactElement {
   const { translate } = useTranslationAdapter();
@@ -38,10 +38,10 @@ export function TrustedBySection(): React.ReactElement {
         </Reveal>
 
         <div className={styles['trustedLogos']}>
-          {BRANDS.map(({ name, Icon }, idx) => (
+          {BRANDS.map((name, idx) => (
             <Reveal key={name} direction="fade" delay={idx * 0.07}>
               <span className={styles['trustedLogo']}>
-                <Icon aria-hidden="true" />
+                {renderBrandIcon(name)}
                 {name}
               </span>
             </Reveal>

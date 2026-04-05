@@ -18,7 +18,7 @@ export function useLanguageAdapter(): ILanguageAdapter {
   const toggleLanguage = React.useCallback((): void => {
     const next: Language = language === 'en' ? 'es' : 'en';
     void i18n.changeLanguage(next);
-    localStorage.setItem(STORAGE_KEY, next);
+    if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, next);
     setLanguage(next);
   }, [language]);
 

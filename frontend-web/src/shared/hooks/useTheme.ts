@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 // Centralized types for strictly defined UI states
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = 'light' | 'dark';
 
 export interface ThemeContextType {
   theme: Theme;

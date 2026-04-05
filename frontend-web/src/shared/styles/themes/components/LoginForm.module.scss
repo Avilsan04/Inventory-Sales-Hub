@@ -1,7 +1,3 @@
-// ── Layout-scoped constants ───────────────────────────────────────────
-$_github-bg: #24292f;
-$_github-bg-hover: #32383f;
-$_github-text: #ffffff;
 
 .card {
   width: 100%;
@@ -161,9 +157,9 @@ $_github-text: #ffffff;
 }
 
 .githubButton {
-  background-color: $_github-bg;
+  background-color: $color-github-bg;
   border: $border-width-base solid transparent;
-  color: $_github-text;
+  color: $color-github-text;
 
   svg {
     width: $size-4;
@@ -171,6 +167,6 @@ $_github-text: #ffffff;
   }
 
   &:hover {
-    background-color: $_github-bg-hover;
+    background-color: $color-github-bg-hover;
   }
 }

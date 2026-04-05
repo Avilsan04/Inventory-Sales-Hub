@@ -125,6 +125,11 @@
   }
 }
 
+.toastContent {
+  display: grid;
+  gap: $spacing-1;
+}
+
 .toastTitle {
   font-size: $font-size-sm;
   font-weight: $font-weight-semibold;

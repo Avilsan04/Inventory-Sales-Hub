@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Strict runtime validation boundary
 export const inventoryItemSchema = z.object({
   id: z.uuid({ message: 'Invalid entity ID format' }),
   sku: z.string().min(3, 'SKU must be at least 3 characters').max(50),
@@ -14,7 +13,31 @@ export const inventoryItemSchema = z.object({
 });
 
 export const inventoryListSchema = z.array(inventoryItemSchema);
+
 export const createInventoryItemSchema = inventoryItemSchema.omit({
   id: true,
   lastUpdated: true,
 });
+
+export const updateInventoryItemSchema = inventoryItemSchema.omit({
+  id: true,
+  lastUpdated: true,
+});
+
+export const stockAdjustmentSchema = z.object({
+  quantity: z.number().int(),
+  note: z.string().optional(),
+});
+
+export const inventoryMovementSchema = z.object({
+  id: z.uuid(),
+  inventoryItemId: z.uuid(),
+  type: z.enum(['in', 'out', 'adjustment']),
+  quantity: z.number().int(),
+  previousQuantity: z.number().int().nonnegative(),
+  newQuantity: z.number().int().nonnegative(),
+  note: z.string().optional(),
+  createdAt: z.iso.datetime(),
+});
+
+export const inventoryMovementListSchema = z.array(inventoryMovementSchema);

@@ -1,23 +1,22 @@
 import * as React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { PackageIcon, SunIcon, MoonIcon, LayoutDashboardIcon } from 'lucide-react';
 
-// Strict FSD: Importing downwards to 'shared'
 import { useTheme } from '@shared/hooks/useTheme';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/Layout.module.scss';
 
 export function Layout(): React.ReactElement {
   const { theme, toggleTheme } = useTheme();
-  const { t } = useTranslation();
+  const { translate: t } = useTranslationAdapter();
 
   return (
     <div className={styles['layout']}>
       <header className={styles['header']}>
         <div className={styles['headerLeft']}>
-          <NavLink to={APP_ROUTES.ROOT} className={styles['logo']}>
+          <NavLink to={APP_ROUTES.LANDING} className={styles['logo']}>
             <PackageIcon className={styles['logoIcon']} aria-hidden="true" />
             <span>{t('common.appName')}</span>
           </NavLink>

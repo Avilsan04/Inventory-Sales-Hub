@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styles from '@shared/styles/themes/components/ErrorBoundary.module.scss';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -27,12 +28,12 @@ export class GlobalErrorBoundary extends React.Component<ErrorBoundaryProps, Err
   render(): React.ReactNode {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'system-ui' }}>
+        <div className={styles.container}>
           <h1>System Failure</h1>
           <p>The application encountered an irrecoverable error.</p>
           <button
             onClick={() => { window.location.reload(); }}
-            style={{ padding: '0.5rem 1rem', marginTop: '1rem', cursor: 'pointer' }}
+            className={styles.reload}
           >
             Reload Application
           </button>

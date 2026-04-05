@@ -1,5 +1,9 @@
-// Auth feature
 export * from './auth';
-
-// Inventory feature
 export * from './inventory';
+export * from './products';
+export * from './customers';
+export * from './sales';
+export * from './employees';
+export * from './suppliers';
+export * from './analytics';
+export * from './notifications';

@@ -12,5 +12,6 @@
   width: 100%;
   flex: 1;
   background-color: var(--color-primary);
+  transform: var(--radix-progress-indicator-transform);
   transition: transform 0.3s ease;
 }

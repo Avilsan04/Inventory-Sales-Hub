@@ -24,52 +24,51 @@
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": false,
     /* Path aliases */
-    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ],
       "@app/*": [
-        "src/app/*"
+        "./src/app/*"
       ],
       "@pages": [
-        "src/pages"
+        "./src/pages"
       ],
       "@pages/*": [
-        "src/pages/*"
+        "./src/pages/*"
       ],
       "@widgets": [
-        "src/widgets"
+        "./src/widgets"
       ],
       "@widgets/*": [
-        "src/widgets/*"
+        "./src/widgets/*"
       ],
       "@features": [
-        "src/features"
+        "./src/features"
       ],
       "@features/*": [
-        "src/features/*"
+        "./src/features/*"
       ],
       "@entities": [
-        "src/entities"
+        "./src/entities"
       ],
       "@entities/*": [
-        "src/entities/*"
+        "./src/entities/*"
       ],
       "@shared/*": [
-        "src/shared/*"
+        "./src/shared/*"
       ],
       "@adapters": [
-        "src/shared/adapters"
+        "./src/shared/adapters"
       ],
       "@adapters/*": [
-        "src/shared/adapters/*"
+        "./src/shared/adapters/*"
       ],
       "@core/*": [
-        "src/core/*"
+        "./src/core/*"
       ],
       "@assets/*": [
-        "src/assets/*"
+        "./src/assets/*"
       ]
     }
   },

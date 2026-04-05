@@ -1,17 +1,18 @@
-/**
- * Inventory Entity Public API
- */
-
-// Models & Types
 export type {
-    InventoryItem,
-    InventoryFilters,
-    CreateInventoryItemDTO
+  InventoryItem,
+  InventoryFilters,
+  CreateInventoryItemDTO,
+  UpdateInventoryItemDTO,
+  StockAdjustmentDTO,
+  InventoryMovement,
 } from './models/inventory.types';
 
-// Runtime Schemas
 export {
-    inventoryItemSchema,
-    inventoryListSchema,
-    createInventoryItemSchema
+  inventoryItemSchema,
+  inventoryListSchema,
+  createInventoryItemSchema,
+  updateInventoryItemSchema,
+  stockAdjustmentSchema,
+  inventoryMovementSchema,
+  inventoryMovementListSchema,
 } from './models/inventory.schema';

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useToast } from '@shared/hooks/useToast';
+import styles from '@shared/styles/themes/components/Toast.module.scss';
 import {
   Toast,
   ToastClose,
@@ -16,7 +17,7 @@ export function Toaster(): React.ReactElement {
     <ToastProvider>
       {toasts.map(({ id, title, description, action, ...props }) => (
         <Toast key={id} {...props}>
-          <div style={{ display: 'grid', gap: '0.25rem' }}>
+          <div className={styles.toastContent}>
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}
           </div>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
     Table,
     TableBody,
@@ -32,18 +32,18 @@ const formatCurrency = (amount: number, currency: string): string => {
 };
 
 export function InventoryTableWidget({ data }: InventoryTableWidgetProps): React.ReactElement {
-    const { t } = useTranslation();
+    const { translate: t } = useTranslationAdapter();
 
     return (
         <div className={styles.tableWrapper}>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>{t('inventory.sku', 'SKU')}</TableHead>
-                        <TableHead>{t('inventory.name', 'Product Name')}</TableHead>
-                        <TableHead className={styles.priceCell}>{t('inventory.price', 'Price')}</TableHead>
-                        <TableHead className={styles.quantityCell}>{t('inventory.quantity', 'Stock')}</TableHead>
-                        <TableHead>{t('inventory.status', 'Status')}</TableHead>
+                        <TableHead>{t('inventory.sku')}</TableHead>
+                        <TableHead>{t('inventory.name')}</TableHead>
+                        <TableHead className={styles.priceCell}>{t('inventory.price')}</TableHead>
+                        <TableHead className={styles.quantityCell}>{t('inventory.quantity')}</TableHead>
+                        <TableHead>{t('inventory.status')}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -55,7 +55,7 @@ export function InventoryTableWidget({ data }: InventoryTableWidgetProps): React
                             <TableCell className={styles.quantityCell}>{item.quantity}</TableCell>
                             <TableCell>
                                 <Badge variant={getStatusBadgeVariant(item.status)}>
-                                    {t(`inventory.status_${item.status}`, item.status.replace(/_/g, ' '))}
+                                    {t(`inventory.status_${item.status}`)}
                                 </Badge>
                             </TableCell>
                         </TableRow>

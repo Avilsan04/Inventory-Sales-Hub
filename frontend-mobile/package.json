@@ -37,5 +37,8 @@
         "prettier": "^3.4.2",
         "typescript": "~5.7.2",
         "typescript-eslint": "^8.18.2"
+    },
+    "overrides": {
+        "sudo-prompt": "npm:@vscode/sudo-prompt@^9.3.0"
     }
 }
