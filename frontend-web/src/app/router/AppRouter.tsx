@@ -57,6 +57,14 @@ const NotificationsPage = React.lazy(() =>
   import('@pages/notifications/NotificationsPage').then(module => ({ default: module.NotificationsPage }))
 );
 
+const ProfilePage = React.lazy(() =>
+  import('@pages/profile/ProfilePage').then(module => ({ default: module.ProfilePage }))
+);
+
+const SettingsPage = React.lazy(() =>
+  import('@pages/settings/SettingsPage').then(module => ({ default: module.SettingsPage }))
+);
+
 /**
  * Registers global HTTP interceptors (e.g., 401 Unauthorized handling).
  * Uses the routing adapter to maintain architectural purity.
@@ -115,6 +123,8 @@ export function AppRouter(): React.ReactElement {
               <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
               <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
               <Route path={APP_ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
+              <Route path={APP_ROUTES.PROFILE} element={<ProfilePage />} />
+              <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
             </Route>
           </Route>
 

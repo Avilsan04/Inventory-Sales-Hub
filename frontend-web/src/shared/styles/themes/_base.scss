@@ -1,4 +1,5 @@
 // Base styles - Global resets and defaults
+@use '../tokens/layout' as *;
 
 *,
 *::before,
@@ -20,7 +21,7 @@ body {
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
   line-height: 1.5;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition: color $duration-base ease, background-color $duration-base ease;
 }
 
 #root {

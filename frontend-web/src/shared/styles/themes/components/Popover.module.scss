@@ -8,5 +8,5 @@
   padding: $spacing-4;
   box-shadow: var(--shadow-base);
   outline: none;
-  animation: contentShow 0.15s ease-out;
+  animation: contentShow $duration-fast ease-out;
 }

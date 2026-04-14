@@ -30,10 +30,10 @@
   padding: $spacing-6;
   padding-right: $spacing-8;
   box-shadow: var(--shadow-lg);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform $duration-slower ease, opacity $duration-slower ease;
 
   &[data-state='open'] {
-    animation: slideInFromBottom 0.3s ease-out;
+    animation: slideInFromBottom $duration-slower ease-out;
   }
 
   &[data-state='closed'] {
@@ -67,7 +67,7 @@
   font-family: inherit;
   cursor: pointer;
   outline: none;
-  transition: background-color 0.15s ease;
+  transition: background-color $duration-fast ease;
 
   &:hover {
     background-color: var(--color-secondary-bg);
@@ -104,7 +104,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: opacity $duration-fast ease;
 
   &:hover {
     color: var(--color-foreground);

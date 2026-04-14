@@ -35,7 +35,7 @@
 
 .tableRow {
   border-bottom: $border-width-base solid var(--color-border);
-  transition: background-color 0.15s ease;
+  transition: background-color $duration-fast ease;
 
   &:hover {
     background-color: var(--color-muted);

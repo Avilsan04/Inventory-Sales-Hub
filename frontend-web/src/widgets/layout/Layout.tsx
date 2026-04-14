@@ -1,56 +1,32 @@
 import * as React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import { PackageIcon, SunIcon, MoonIcon, LayoutDashboardIcon } from 'lucide-react';
+import { Outlet } from 'react-router-dom';
 
-import { useTheme } from '@shared/hooks/useTheme';
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { cn } from '@shared/lib/cn';
-import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/Layout.module.scss';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
 
 export function Layout(): React.ReactElement {
-  const { theme, toggleTheme } = useTheme();
-  const { translate: t } = useTranslationAdapter();
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+  const openSidebar = React.useCallback((): void => {
+    setIsSidebarOpen(true);
+  }, []);
+
+  const closeSidebar = React.useCallback((): void => {
+    setIsSidebarOpen(false);
+  }, []);
 
   return (
     <div className={styles['layout']}>
-      <header className={styles['header']}>
-        <div className={styles['headerLeft']}>
-          <NavLink to={APP_ROUTES.LANDING} className={styles['logo']}>
-            <PackageIcon className={styles['logoIcon']} aria-hidden="true" />
-            <span>{t('common.appName')}</span>
-          </NavLink>
+      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
-          <nav className={styles['nav']} aria-label="Main Navigation">
-            <NavLink
-              to={APP_ROUTES.DASHBOARD}
-              end
-              className={({ isActive }): string =>
-                cn(styles['navLink'], isActive && styles['navLinkActive'])
-              }
-            >
-              <LayoutDashboardIcon aria-hidden="true" />
-              {t('nav.home')}
-            </NavLink>
-          </nav>
-        </div>
+      <div className={styles['mainArea']}>
+        <TopBar onMenuToggle={openSidebar} />
 
-        <div className={styles['headerRight']}>
-          <button
-            type="button"
-            className={styles['themeToggle']}
-            onClick={toggleTheme}
-            aria-label={t('common.toggleTheme')}
-            title={t('common.toggleTheme')}
-          >
-            {theme === 'dark' ? <SunIcon aria-hidden="true" /> : <MoonIcon aria-hidden="true" />}
-          </button>
-        </div>
-      </header>
-
-      <main className={styles['main']}>
-        <Outlet />
-      </main>
+        <main className={styles['main']}>
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

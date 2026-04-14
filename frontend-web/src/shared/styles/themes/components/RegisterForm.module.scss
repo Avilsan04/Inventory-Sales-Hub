@@ -31,7 +31,7 @@
 .submitButton {
   width: 100%;
   gap: $spacing-2;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity $duration-fast ease, transform $duration-fast ease;
 
   &:active:not(:disabled) {
     transform: scale(0.98);

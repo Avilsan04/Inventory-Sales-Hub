@@ -12,7 +12,7 @@
   color: inherit;
   box-shadow: var(--shadow-xs);
   outline: none;
-  transition: color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: color $duration-fast ease, box-shadow $duration-fast ease, border-color $duration-fast ease;
 
   @media (min-width: $breakpoint-md) {
     font-size: $font-size-sm;

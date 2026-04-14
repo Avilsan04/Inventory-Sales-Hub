@@ -9,21 +9,35 @@
     "delete": "Eliminar",
     "edit": "Editar",
     "create": "Crear",
-    "search": "Buscar",
+    "search": "Buscar productos, pedidos, clientes...",
     "filter": "Filtrar",
     "toggleTheme": "Cambiar tema",
     "noData": "No hay datos disponibles",
     "scrollToTop": "Ir al inicio",
     "close": "Cerrar",
     "switchLanguage": "Cambiar idioma",
-    "errorLoadingData": "No se pudieron obtener los datos. Inténtalo de nuevo."
+    "errorLoadingData": "No se pudieron obtener los datos. Inténtalo de nuevo.",
+    "openMenu": "Abrir menú",
+    "status": "Estado"
   },
   "nav": {
     "home": "Inicio",
+    "dashboard": "Panel",
     "inventory": "Inventario",
+    "products": "Productos",
     "sales": "Ventas",
+    "customers": "Clientes",
+    "employees": "Empleados",
+    "suppliers": "Proveedores",
+    "analytics": "Analíticas",
+    "notifications": "Notificaciones",
     "reports": "Reportes",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "profile": "Perfil"
+  },
+  "sidebar": {
+    "storage": "Almacenamiento",
+    "storageDetail": "68% de 100GB"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -60,6 +74,7 @@
   "dashboard": {
     "title": "Panel de control",
     "welcome": "Bienvenido de nuevo",
+    "vsLastMonth": "vs mes anterior",
     "stats": {
       "totalProducts": "Total de productos",
       "monthlySales": "Ventas mensuales",
@@ -79,6 +94,7 @@
   },
   "inventory": {
     "title": "Inventario",
+    "subtitle": "Monitoriza y gestiona tus niveles de stock",
     "products": "Productos",
     "categories": "Categorías",
     "addProduct": "Agregar producto",
@@ -95,17 +111,99 @@
       "outOfStock": "Sin stock"
     }
   },
+  "products": {
+    "subtitle": "Explora y gestiona tu catálogo de productos",
+    "totalProducts": "Total de productos",
+    "totalCategories": "Categorías"
+  },
   "sales": {
     "title": "Ventas",
     "newSale": "Nueva venta",
     "orderHistory": "Historial de pedidos",
+    "revenue": "Ingresos",
+    "totalOrders": "Total de pedidos",
+    "completed": "Completados",
     "customer": "Cliente",
+    "items": "Artículos",
     "total": "Total",
     "date": "Fecha",
     "status": {
       "pending": "Pendiente",
       "completed": "Completado",
       "cancelled": "Cancelado"
+    }
+  },
+  "customers": {
+    "title": "Clientes",
+    "subtitle": "Gestiona tus relaciones con clientes",
+    "totalCustomers": "Total de clientes",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "address": "Dirección"
+  },
+  "employees": {
+    "title": "Empleados",
+    "subtitle": "Gestiona los miembros y roles de tu equipo",
+    "totalEmployees": "Total de empleados",
+    "activeEmployees": "Activos",
+    "adminCount": "Administradores",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "role": "Rol",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "roles": {
+      "admin": "Administrador",
+      "manager": "Gestor",
+      "staff": "Personal"
+    }
+  },
+  "suppliers": {
+    "title": "Proveedores",
+    "subtitle": "Gestiona tu red de proveedores",
+    "totalSuppliers": "Total de proveedores",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "contactPerson": "Persona de contacto"
+  },
+  "analytics": {
+    "title": "Analíticas",
+    "subtitle": "Resumen de rendimiento del negocio",
+    "totalRevenue": "Ingresos totales",
+    "totalOrders": "Pedidos totales",
+    "totalCustomers": "Total de clientes",
+    "totalProducts": "Total de productos",
+    "vsLastMonth": "vs mes anterior",
+    "topProducts": "Productos destacados",
+    "topCustomers": "Clientes destacados",
+    "lowStockAlerts": "Alertas de stock bajo",
+    "col": {
+      "product": "Producto",
+      "sku": "SKU",
+      "sold": "Unidades vendidas",
+      "revenue": "Ingresos",
+      "customer": "Cliente",
+      "orders": "Pedidos",
+      "spent": "Total gastado",
+      "item": "Artículo",
+      "qty": "Cant.",
+      "threshold": "Umbral"
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "subtitle": "Tus alertas y actualizaciones del sistema",
+    "unread": "{{count}} sin leer",
+    "markAllRead": "Marcar todo como leído",
+    "noNotifications": "No hay notificaciones",
+    "types": {
+      "info": "Info",
+      "warning": "Aviso",
+      "error": "Error",
+      "success": "Éxito"
     }
   },
   "validation": {

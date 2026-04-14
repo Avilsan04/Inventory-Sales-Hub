@@ -12,7 +12,7 @@
   flex-shrink: 0;
   gap: $spacing-1;
   overflow: hidden;
-  transition: color 0.15s ease, box-shadow 0.15s ease;
+  transition: color $duration-fast ease, box-shadow $duration-fast ease;
 
   svg {
     width: $size-3;

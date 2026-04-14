@@ -6,5 +6,5 @@
   color: var(--color-primary-foreground);
   padding: $spacing-1 $spacing-3;
   font-size: $font-size-xs;
-  animation: contentShow 0.15s ease-out;
+  animation: contentShow $duration-fast ease-out;
 }

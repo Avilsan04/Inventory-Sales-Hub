@@ -40,6 +40,7 @@ $size-hero-glow: 60rem;
 // Heights
 $height-screen: 100vh;
 $navbar-height: 3.5rem;
+$sidebar-width: 15rem;
 
 // Component heights (semantic aliases)
 $textarea-min-height: 3.75rem;
@@ -55,3 +56,16 @@ $focus-ring-spread: 3px;
 $blur-sm: 8px;
 $blur-md: 12px;
 $blur-3xl: 80px;
+
+// Size scale (extended)
+$size-24: 6rem;              // 24 × 0.25rem — KPI skeleton width
+
+// Semantic layout constraints
+$min-section-height: 12rem;  // Empty/error state container min height
+$card-min-width: 14rem;      // Min card width for auto-fill stats grids
+
+// Transition durations — single source of truth
+$duration-fast:   0.15s;    // Micro-interactions: hover, focus, color changes
+$duration-base:   0.2s;     // General state transitions: overlays, theme
+$duration-slow:   0.25s;    // Deliberate motion: sliding panels
+$duration-slower: 0.3s;     // Pronounced motion: toasts, progress bars

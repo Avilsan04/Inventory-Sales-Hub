@@ -9,21 +9,35 @@
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
-    "search": "Search",
+    "search": "Search products, orders, customers...",
     "filter": "Filter",
     "toggleTheme": "Toggle theme",
     "noData": "No data available",
     "scrollToTop": "Scroll to top",
     "close": "Close",
     "switchLanguage": "Switch language",
-    "errorLoadingData": "Unable to retrieve data. Please try again."
+    "errorLoadingData": "Unable to retrieve data. Please try again.",
+    "openMenu": "Open menu",
+    "status": "Status"
   },
   "nav": {
     "home": "Home",
+    "dashboard": "Dashboard",
     "inventory": "Inventory",
+    "products": "Products",
     "sales": "Sales",
+    "customers": "Customers",
+    "employees": "Employees",
+    "suppliers": "Suppliers",
+    "analytics": "Analytics",
+    "notifications": "Notifications",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "sidebar": {
+    "storage": "Storage Used",
+    "storageDetail": "68% of 100GB"
   },
   "auth": {
     "login": "Log in",
@@ -60,6 +74,7 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back",
+    "vsLastMonth": "vs last month",
     "stats": {
       "totalProducts": "Total products",
       "monthlySales": "Monthly sales",
@@ -79,6 +94,7 @@
   },
   "inventory": {
     "title": "Inventory",
+    "subtitle": "Monitor and manage your stock levels",
     "products": "Products",
     "categories": "Categories",
     "addProduct": "Add product",
@@ -95,17 +111,99 @@
       "outOfStock": "Out of stock"
     }
   },
+  "products": {
+    "subtitle": "Browse and manage your product catalog",
+    "totalProducts": "Total products",
+    "totalCategories": "Categories"
+  },
   "sales": {
     "title": "Sales",
     "newSale": "New sale",
     "orderHistory": "Order history",
+    "revenue": "Revenue",
+    "totalOrders": "Total orders",
+    "completed": "Completed",
     "customer": "Customer",
+    "items": "Items",
     "total": "Total",
     "date": "Date",
     "status": {
       "pending": "Pending",
       "completed": "Completed",
       "cancelled": "Cancelled"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "subtitle": "Manage your customer relationships",
+    "totalCustomers": "Total customers",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "employees": {
+    "title": "Employees",
+    "subtitle": "Manage your team members and roles",
+    "totalEmployees": "Total employees",
+    "activeEmployees": "Active",
+    "adminCount": "Admins",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "staff": "Staff"
+    }
+  },
+  "suppliers": {
+    "title": "Suppliers",
+    "subtitle": "Manage your supplier network",
+    "totalSuppliers": "Total suppliers",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "contactPerson": "Contact person"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Business performance overview",
+    "totalRevenue": "Total revenue",
+    "totalOrders": "Total orders",
+    "totalCustomers": "Total customers",
+    "totalProducts": "Total products",
+    "vsLastMonth": "vs last month",
+    "topProducts": "Top products",
+    "topCustomers": "Top customers",
+    "lowStockAlerts": "Low stock alerts",
+    "col": {
+      "product": "Product",
+      "sku": "SKU",
+      "sold": "Units sold",
+      "revenue": "Revenue",
+      "customer": "Customer",
+      "orders": "Orders",
+      "spent": "Total spent",
+      "item": "Item",
+      "qty": "Qty",
+      "threshold": "Threshold"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Your alerts and system updates",
+    "unread": "{{count}} unread",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications yet",
+    "types": {
+      "info": "Info",
+      "warning": "Warning",
+      "error": "Error",
+      "success": "Success"
     }
   },
   "validation": {

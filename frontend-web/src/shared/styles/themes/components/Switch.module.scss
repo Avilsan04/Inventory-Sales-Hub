@@ -9,7 +9,7 @@
   border: $border-width-focus solid transparent;
   color: inherit;
   outline: none;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color $duration-fast ease, box-shadow $duration-fast ease;
   background-color: var(--color-input);
 
   &:focus-visible {
@@ -35,7 +35,7 @@
   background-color: var(--color-background);
   box-shadow: var(--shadow-lg);
   pointer-events: none;
-  transition: transform 0.15s ease;
+  transition: transform $duration-fast ease;
 
   [data-state='checked'] > & {
     transform: translateX($size-4);

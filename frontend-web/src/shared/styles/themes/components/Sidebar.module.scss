@@ -1,0 +1,164 @@
+// ── Mobile overlay ──────────────────────────────────────────────────────
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background-color: var(--color-overlay);
+  opacity: 0;
+  transition: opacity $duration-base ease;
+  pointer-events: none;
+
+  @media (min-width: $breakpoint-lg) {
+    display: none;
+  }
+}
+
+.overlayVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+// ── Sidebar panel ───────────────────────────────────────────────────────
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: $sidebar-width;
+  background-color: var(--color-sidebar);
+  border-right: $border-width-base solid var(--color-sidebar-border);
+  overflow: hidden;
+
+  // Desktop: sticky within its grid column, always visible
+  @media (min-width: $breakpoint-lg) {
+    position: sticky;
+    top: 0;
+    height: $height-screen;
+  }
+
+  // Mobile: fixed, hidden off-screen by default
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: $height-screen;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform $duration-slow ease;
+  }
+}
+
+.sidebarOpen {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    transform: translateX(0);
+  }
+}
+
+// ── Brand ───────────────────────────────────────────────────────────────
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-5 $spacing-4;
+  border-bottom: $border-width-base solid var(--color-sidebar-border);
+  flex-shrink: 0;
+}
+
+.brandIcon {
+  width: $size-6;
+  height: $size-6;
+  color: var(--color-sidebar-primary);
+  flex-shrink: 0;
+}
+
+.brandName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-sidebar-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: $letter-spacing-tight;
+}
+
+// ── Navigation ──────────────────────────────────────────────────────────
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-4 $spacing-3;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: 0;
+  margin: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-2 $spacing-3;
+  border-radius: var(--radius-md);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-sidebar-foreground);
+  text-decoration: none;
+  transition: background-color $duration-fast ease, color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-sidebar-accent);
+    color: var(--color-sidebar-accent-foreground);
+  }
+}
+
+.navItemActive {
+  background-color: var(--color-sidebar-primary);
+  color: var(--color-sidebar-primary-foreground);
+
+  &:hover {
+    background-color: var(--color-sidebar-primary);
+    color: var(--color-sidebar-primary-foreground);
+  }
+}
+
+.navIcon {
+  width: $size-4;
+  height: $size-4;
+  flex-shrink: 0;
+}
+
+// ── Storage footer ──────────────────────────────────────────────────────
+.storageFooter {
+  padding: $spacing-4;
+  border-top: $border-width-base solid var(--color-sidebar-border);
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+.storageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.storageLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-sidebar-foreground);
+}
+
+.storagePercent {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-sidebar-primary);
+}
+
+.storageSubtext {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  margin: 0;
+}

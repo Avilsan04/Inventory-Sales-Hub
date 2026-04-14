@@ -9,7 +9,7 @@
   box-shadow: var(--shadow-xs);
   outline: none;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color $duration-fast ease, border-color $duration-fast ease, box-shadow $duration-fast ease;
 
   &:focus-visible {
     border-color: var(--color-ring);

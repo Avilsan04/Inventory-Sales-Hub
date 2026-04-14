@@ -3,7 +3,7 @@
   inset: 0;
   z-index: 50;
   background-color: var(--color-overlay);
-  animation: overlayShow 0.3s ease-out;
+  animation: overlayShow $duration-slower ease-out;
 }
 
 .sheetContent {
@@ -15,7 +15,7 @@
   background-color: var(--color-background);
   border: $border-width-base solid var(--color-border);
   box-shadow: var(--shadow-lg);
-  transition: transform 0.3s ease;
+  transition: transform $duration-slower ease;
 }
 
 .sheetTop {
@@ -23,7 +23,7 @@
   right: 0;
   left: 0;
   border-bottom: $border-width-base solid var(--color-border);
-  animation: slideInFromTop 0.3s ease-out;
+  animation: slideInFromTop $duration-slower ease-out;
 }
 
 .sheetBottom {
@@ -31,7 +31,7 @@
   right: 0;
   left: 0;
   border-top: $border-width-base solid var(--color-border);
-  animation: slideInFromBottom 0.3s ease-out;
+  animation: slideInFromBottom $duration-slower ease-out;
 }
 
 .sheetLeft {
@@ -41,7 +41,7 @@
   width: 75%;
   max-width: $sheet-max-width;
   border-right: $border-width-base solid var(--color-border);
-  animation: slideInFromLeft 0.3s ease-out;
+  animation: slideInFromLeft $duration-slower ease-out;
 
   @media (min-width: $breakpoint-sm) {
     max-width: $sheet-max-width;
@@ -55,7 +55,7 @@
   width: 75%;
   max-width: $sheet-max-width;
   border-left: $border-width-base solid var(--color-border);
-  animation: slideInFromRight 0.3s ease-out;
+  animation: slideInFromRight $duration-slower ease-out;
 
   @media (min-width: $breakpoint-sm) {
     max-width: $sheet-max-width;
@@ -72,7 +72,7 @@
   border: none;
   cursor: pointer;
   padding: $spacing-1;
-  transition: opacity 0.15s ease;
+  transition: opacity $duration-fast ease;
   color: inherit;
 
   &:hover {

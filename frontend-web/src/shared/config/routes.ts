@@ -11,6 +11,8 @@ export const APP_ROUTES = {
   SUPPLIERS: '/suppliers',
   ANALYTICS: '/analytics',
   NOTIFICATIONS: '/notifications',
+  PROFILE: '/profile',
+  SETTINGS: '/settings',
 } as const;
 
 export type AppRoute = typeof APP_ROUTES[keyof typeof APP_ROUTES];

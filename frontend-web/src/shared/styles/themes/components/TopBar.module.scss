@@ -1,0 +1,135 @@
+// ── Top bar shell ───────────────────────────────────────────────────────
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  height: $navbar-height;
+  padding: 0 $spacing-6;
+  border-bottom: $border-width-base solid var(--color-border);
+  background-color: var(--color-background);
+  backdrop-filter: blur($blur-sm);
+  flex-shrink: 0;
+}
+
+// ── Left section ────────────────────────────────────────────────────────
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  flex: 1;
+  min-width: 0;
+}
+
+// ── Right section ───────────────────────────────────────────────────────
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+// ── Hamburger — mobile only ─────────────────────────────────────────────
+.menuBtn {
+  display: inline-flex;
+
+  @media (min-width: $breakpoint-lg) {
+    display: none;
+  }
+}
+
+// ── Search ──────────────────────────────────────────────────────────────
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: $container-2xs;
+}
+
+.searchIcon {
+  position: absolute;
+  left: $spacing-3;
+  width: $size-4;
+  height: $size-4;
+  color: var(--color-muted-foreground);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  padding-left: $size-9 !important;
+  width: 100%;
+}
+
+// ── Icon button base ────────────────────────────────────────────────────
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $size-9;
+  height: $size-9;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-foreground);
+  transition: background-color $duration-fast ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
+// ── Notification badge ──────────────────────────────────────────────────
+.notifWrapper {
+  position: relative;
+}
+
+.notifBadge {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  transform: translate(35%, -35%) !important;
+  min-width: $size-4 !important;
+  height: $size-4 !important;
+  padding: 0 $spacing-1 !important;
+  font-size: $font-size-2xs !important;
+  line-height: $size-4 !important;
+  pointer-events: none;
+}
+
+// ── Avatar trigger button ────────────────────────────────────────────────
+.avatarBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+
+  &:focus-visible {
+    outline: $border-width-focus solid var(--color-primary);
+    outline-offset: $border-width-focus;
+  }
+}
+
+// ── Avatar initials ─────────────────────────────────────────────────────
+.avatarFallback {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+  font-size: $font-size-xs !important;
+  font-weight: $font-weight-semibold !important;
+}

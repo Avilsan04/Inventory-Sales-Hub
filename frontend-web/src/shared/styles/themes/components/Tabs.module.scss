@@ -37,7 +37,7 @@ $_tabs-list-padding: 3px;
   cursor: pointer;
   outline: none;
   color: var(--color-foreground);
-  transition: color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  transition: color $duration-fast ease, box-shadow $duration-fast ease, background-color $duration-fast ease;
 
   &:focus-visible {
     border-color: var(--color-ring);

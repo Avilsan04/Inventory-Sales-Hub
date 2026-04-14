@@ -20,7 +20,7 @@
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color $duration-fast ease;
 
   &:hover {
     background-color: var(--color-bg-tertiary);
