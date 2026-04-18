@@ -1,0 +1,120 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  min-height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-6;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: $spacing-1;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.tableCard {
+  overflow: hidden;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.searchBox {
+  flex: 1;
+  max-width: 320px;
+}
+
+// Avatar + name cell
+.customerCell {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.customerName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+}
+
+// Contact column (email + phone stacked)
+.contactName {
+  font-size: $font-size-sm;
+  color: var(--color-text-primary);
+}
+
+.contactEmail {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin-top: $spacing-1;
+}
+
+// Numeric metric columns
+.metaValue {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  color: var(--color-text-primary);
+  font-weight: $font-weight-medium;
+}
+
+.metaMuted {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
+.placeholderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-12;
+  color: var(--color-text-muted);
+  font-size: $font-size-sm;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-12;
+  color: var(--color-error);
+  font-size: $font-size-sm;
+}

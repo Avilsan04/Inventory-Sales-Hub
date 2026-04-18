@@ -1,29 +1,61 @@
-.statsRow {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: $spacing-4;
-
-  @media (max-width: $breakpoint-lg) { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: $breakpoint-sm) { grid-template-columns: 1fr; }
 }
 
-.statTitle {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: var(--color-muted-foreground);
-  text-transform: uppercase;
+.eyebrow {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
   letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: $spacing-1;
 }
 
-.statValue {
+.title {
   font-size: $font-size-2xl;
   font-weight: $font-weight-bold;
-  color: var(--color-foreground);
-  margin-top: $spacing-1;
+  color: var(--color-text-primary);
+  margin: 0;
 }
 
-.statIcon {
-  width: $size-5;
-  height: $size-5;
-  color: var(--color-primary);
+.subtitle {
+  font-size: $font-size-base;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+.tableCard {
+  overflow: hidden;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.searchBox {
+  flex: 1;
+  max-width: 320px;
+}
+
+.mono {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
 }

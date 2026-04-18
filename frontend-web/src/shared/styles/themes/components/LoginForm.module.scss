@@ -1,33 +1,36 @@
-
-.card {
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-6;
   width: 100%;
+  max-width: 400px;
 }
 
-.cardLogo {
+.brand {
   display: flex;
   align-items: center;
-  gap: $spacing-2;
-  padding: $spacing-6 $spacing-6 0;
+  gap: $spacing-3;
 }
 
-.cardLogoIcon {
-  width: $size-5;
-  height: $size-5;
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.cardLogoName {
-  font-size: $font-size-sm;
+.brandName {
+  font-size: $font-size-base;
   font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
   letter-spacing: $letter-spacing-tight;
 }
 
+.card {
+  width: 100%;
+  padding-top: $spacing-8 !important;
+  padding-bottom: $spacing-8 !important;
+  gap: $spacing-6 !important;
+}
+
 .content {
   display: flex;
   flex-direction: column;
-  gap: $spacing-4;
+  gap: $spacing-5;
 }
 
 .field {
@@ -46,20 +49,37 @@
   text-align: center;
 }
 
-.options {
+.passwordWrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: $spacing-4;
 }
 
-.rememberMe {
-  display: flex;
+.passwordInput {
+  width: 100%;
+  padding-right: $size-9 !important;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: $spacing-3;
+  display: inline-flex;
   align-items: center;
-  gap: $spacing-2;
-  font-size: $font-size-sm;
-  color: var(--color-text-secondary);
+  justify-content: center;
+  background: none;
+  border: none;
   cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 0;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .forgotPassword {
@@ -77,96 +97,27 @@
 
 .footer {
   flex-direction: column;
+  gap: $spacing-3;
 }
 
 .submitButton {
   width: 100%;
   gap: $spacing-2;
-  background: linear-gradient(to right, var(--color-primary), $color-dark-primary) !important;
-  border-color: transparent !important;
-  transition: opacity $duration-fast ease, transform $duration-fast ease;
-
-  &:hover:not(:disabled) {
-    opacity: 0.9;
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.98);
-  }
 }
 
-// ── Social Auth Section ───────────────────────────────────────────────
-
-.socialSection {
-  padding: 0 $spacing-6 $spacing-6;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-4;
-}
-
-.socialDivider {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-}
-
-.socialDividerLine {
-  flex: 1;
-  height: $border-width-base;
-  background-color: var(--color-border);
-}
-
-.socialDividerText {
-  font-size: $font-size-xs;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-.socialButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $spacing-3;
-}
-
-.googleButton,
-.githubButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $spacing-2;
-  padding: $spacing-2 $spacing-3;
-  border-radius: $border-radius-lg;
+.signupLink {
   font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.signupAnchor {
+  color: var(--color-primary);
   font-weight: $font-weight-medium;
-  cursor: pointer;
-  transition: background-color $duration-fast ease, box-shadow $duration-fast ease;
-
-  svg {
-    flex-shrink: 0;
-  }
-}
-
-.googleButton {
-  background-color: var(--color-bg-primary);
-  border: $border-width-base solid var(--color-border);
-  color: var(--color-text-primary);
+  text-decoration: none;
 
   &:hover {
-    background-color: var(--color-bg-secondary);
-  }
-}
-
-.githubButton {
-  background-color: $color-github-bg;
-  border: $border-width-base solid transparent;
-  color: $color-github-text;
-
-  svg {
-    width: $size-4;
-    height: $size-4;
-  }
-
-  &:hover {
-    background-color: $color-github-bg-hover;
+    text-decoration: underline;
   }
 }

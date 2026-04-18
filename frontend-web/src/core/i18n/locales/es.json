@@ -18,7 +18,8 @@
     "switchLanguage": "Cambiar idioma",
     "errorLoadingData": "No se pudieron obtener los datos. Inténtalo de nuevo.",
     "openMenu": "Abrir menú",
-    "status": "Estado"
+    "status": "Estado",
+    "export": "Exportar"
   },
   "nav": {
     "home": "Inicio",
@@ -33,7 +34,20 @@
     "notifications": "Notificaciones",
     "reports": "Reportes",
     "settings": "Configuración",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "orders": "Pedidos",
+    "shipments": "Envíos"
+  },
+  "topbar": {
+    "subtitle": {
+      "dashboard": "Vista general en tiempo real de ventas y stock",
+      "inventory": "Gestiona niveles de stock y umbrales de reposición",
+      "orders": "Seguimiento de pedidos, envíos y devoluciones",
+      "customers": "Cuentas e historial de compras",
+      "suppliers": "Gestión de la red de proveedores",
+      "analytics": "Visión general del rendimiento del negocio",
+      "settings": "Preferencias de cuenta y sistema"
+    }
   },
   "sidebar": {
     "storage": "Almacenamiento",
@@ -65,7 +79,9 @@
     "orContinueWith": "o continuar con",
     "continueWithGoogle": "Google",
     "continueWithGithub": "GitHub",
-    "enterCredentials": "Accede a tu panel en segundos"
+    "enterCredentials": "Accede a tu panel en segundos",
+    "newToIsh": "¿Nuevo en Inventory Sales Hub?",
+    "createAccount": "Crear una cuenta"
   },
   "login": {
     "brandTitle": "Control total de tu negocio.",
@@ -73,13 +89,31 @@
   },
   "dashboard": {
     "title": "Panel de control",
-    "welcome": "Bienvenido de nuevo",
+    "welcome": "Buenos días",
+    "headerSubtitle": "Esto es lo que está pasando en tu negocio hoy.",
     "vsLastMonth": "vs mes anterior",
     "stats": {
       "totalProducts": "Total de productos",
       "monthlySales": "Ventas mensuales",
       "activeOrders": "Pedidos activos",
-      "lowStock": "Stock bajo"
+      "lowStock": "Stock bajo",
+      "newCustomers": "Nuevos clientes"
+    },
+    "recentOrders": {
+      "title": "Pedidos recientes",
+      "subtitle": "Últimas 24 horas",
+      "viewAll": "Ver todos"
+    },
+    "lowStock": {
+      "title": "Stock bajo",
+      "subtitle": "Por debajo del umbral de reposición",
+      "reorderAll": "Reponer todo"
+    },
+    "cols": {
+      "order": "Pedido",
+      "items": "Artículos",
+      "total": "Total",
+      "status": "Estado"
     },
     "recentActivity": {
       "title": "Actividad reciente",
@@ -100,10 +134,20 @@
     "addProduct": "Agregar producto",
     "editProduct": "Editar producto",
     "productName": "Nombre del producto",
+    "name": "Producto",
+    "quantity": "Cantidad",
     "sku": "SKU",
     "price": "Precio",
     "stock": "Stock",
     "category": "Categoría",
+    "allProducts": "Todos los productos",
+    "lowStockTab": "Stock bajo",
+    "outOfStockTab": "Sin stock",
+    "exportCsv": "Exportar CSV",
+    "reorderAt": "Reponer en",
+    "status_IN_STOCK": "En stock",
+    "status_LOW_STOCK": "Stock bajo",
+    "status_OUT_OF_STOCK": "Sin stock",
     "status": {
       "active": "Activo",
       "inactive": "Inactivo",
@@ -127,10 +171,14 @@
     "items": "Artículos",
     "total": "Total",
     "date": "Fecha",
+    "orderId": "Pedido",
+    "searchPlaceholder": "Buscar pedidos o clientes…",
     "status": {
       "pending": "Pendiente",
       "completed": "Completado",
-      "cancelled": "Cancelado"
+      "cancelled": "Cancelado",
+      "shipped": "Enviado",
+      "processing": "Procesando"
     }
   },
   "customers": {
@@ -140,7 +188,12 @@
     "name": "Nombre",
     "email": "Correo electrónico",
     "phone": "Teléfono",
-    "address": "Dirección"
+    "address": "Dirección",
+    "contact": "Contacto",
+    "orders": "Pedidos",
+    "lifetimeValue": "Valor total",
+    "searchPlaceholder": "Buscar clientes…",
+    "addCustomer": "Añadir cliente"
   },
   "employees": {
     "title": "Empleados",

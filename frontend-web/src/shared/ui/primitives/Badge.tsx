@@ -8,44 +8,44 @@ type BadgeVariant =
   | 'secondary'
   | 'destructive'
   | 'outline'
-  | 'success';
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'neutral';
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
+  showDot?: boolean;
   asChild?: boolean;
 }
 
-const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  (
-    {
-      className,
-      variant = 'default',
-      asChild = false,
-      ...props
-    },
-    ref
-  ): React.ReactElement => {
-    const Comp = (asChild ? Slot : 'span') as unknown as React.ElementType;
+const VARIANT_CLASS: Record<BadgeVariant, string> = {
+  default:     'variantDefault',
+  secondary:   'variantSecondary',
+  destructive: 'variantDestructive',
+  outline:     'variantOutline',
+  success:     'variantSuccess',
+  warning:     'variantWarning',
+  info:        'variantInfo',
+  neutral:     'variantNeutral',
+};
 
-    const getVariantClass = (v: BadgeVariant): string => {
-      const map: Record<BadgeVariant, string> = {
-        default: styles['variantDefault'] ?? '',
-        secondary: styles['variantSecondary'] ?? '',
-        destructive: styles['variantDestructive'] ?? '',
-        outline: styles['variantOutline'] ?? '',
-        success: styles['variantSuccess'] ?? '',
-      };
-      return map[v];
-    };
+const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ className, variant = 'default', showDot = false, asChild = false, children, ...props }, ref): React.ReactElement => {
+    const Comp = (asChild ? Slot : 'span') as unknown as React.ElementType;
+    const variantClass = styles[VARIANT_CLASS[variant]] ?? '';
 
     return (
       <Comp
         ref={ref}
-        className={cn(styles['badge'], getVariantClass(variant), className)}
+        className={cn(styles['badge'], variantClass, className)}
         {...props}
-      />
+      >
+        {showDot && <span className={cn(styles['dot'], styles[`dot-${variant}`])} aria-hidden="true" />}
+        {children}
+      </Comp>
     );
-  }
+  },
 );
 
 Badge.displayName = 'Badge';

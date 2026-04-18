@@ -8,8 +8,26 @@
 
 .header {
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-4;
+}
+
+.eyebrow {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: $spacing-1;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
   gap: $spacing-2;
+  flex-shrink: 0;
 }
 
 .title {
@@ -87,6 +105,128 @@
   color: var(--color-muted-foreground);
   margin-top: $spacing-1;
   margin-bottom: 0;
+}
+
+// ── Lower content grid (recent orders + low stock) ──────────────────────
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Overrides Card defaults for table/list panels (no extra padding/gap)
+.panel {
+  overflow: hidden;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.panelTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.panelSubtitle {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: $spacing-1 0 0;
+}
+
+.panelFooter {
+  padding: $spacing-3 $spacing-5;
+  border-top: 1px solid var(--color-border);
+}
+
+.mono {
+  font-family: $font-family-mono;
+}
+
+.trendUp {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-success;
+}
+
+.trendDown {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $color-error;
+}
+
+// Low stock panel rows
+.lowStockList {
+  display: flex;
+  flex-direction: column;
+}
+
+.lowStockItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-3 $spacing-5;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.lowStockMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.lowStockName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lowStockSku {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin-top: $spacing-1;
+}
+
+.lowStockCount {
+  text-align: right;
+}
+
+.lowStockQty {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-warning;
+}
+
+.lowStockThreshold {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
 }
 
 // ── State containers ─────────────────────────────────────────────────────

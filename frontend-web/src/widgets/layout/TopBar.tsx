@@ -1,57 +1,45 @@
 import * as React from 'react';
-import {
-  MenuIcon,
-  SearchIcon,
-  BellIcon,
-  SunIcon,
-  MoonIcon,
-  UserIcon,
-  SettingsIcon,
-  LogOutIcon,
-} from 'lucide-react';
+import { BellIcon, LogOutIcon, SearchIcon } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
-import { useTheme } from '@shared/hooks/useTheme';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useRoutingAdapter } from '@adapters/useRoutingAdapter';
-import { useLogout, useAuthMe } from '@features/auth';
-import { Input, Avatar, AvatarFallback, Badge } from '@shared/ui/primitives';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@shared/ui/composed';
-import { cn } from '@shared/lib/cn';
+import { useLogout } from '@features/auth';
+import { Input } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 
-export interface TopBarProps {
-  onMenuToggle: () => void;
+interface PageMeta {
+  titleKey: string;
+  subtitleKey: string;
 }
 
-export function TopBar({ onMenuToggle }: TopBarProps): React.ReactElement {
-  const { theme, toggleTheme } = useTheme();
-  const { translate: t } = useTranslationAdapter();
-  const { navigateTo } = useRoutingAdapter();
-  const logout = useLogout();
-  const { data: user } = useAuthMe();
+const PAGE_META: Record<string, PageMeta> = {
+  [APP_ROUTES.DASHBOARD]: { titleKey: 'nav.dashboard',  subtitleKey: 'topbar.subtitle.dashboard'  },
+  [APP_ROUTES.INVENTORY]: { titleKey: 'nav.inventory',  subtitleKey: 'topbar.subtitle.inventory'  },
+  [APP_ROUTES.SALES]:     { titleKey: 'nav.orders',     subtitleKey: 'topbar.subtitle.orders'     },
+  [APP_ROUTES.CUSTOMERS]: { titleKey: 'nav.customers',  subtitleKey: 'topbar.subtitle.customers'  },
+  [APP_ROUTES.SUPPLIERS]: { titleKey: 'nav.suppliers',  subtitleKey: 'topbar.subtitle.suppliers'  },
+  [APP_ROUTES.ANALYTICS]: { titleKey: 'nav.analytics',  subtitleKey: 'topbar.subtitle.analytics'  },
+  [APP_ROUTES.SETTINGS]:  { titleKey: 'nav.settings',   subtitleKey: 'topbar.subtitle.settings'   },
+};
 
-  const initials = user ? user.username.slice(0, 2).toUpperCase() : '..';
+export function TopBar(): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+  const logout = useLogout();
+  const { pathname } = useLocation();
+
+  const meta = PAGE_META[pathname] ?? { titleKey: 'common.appName', subtitleKey: '' };
 
   return (
     <header className={styles['topbar']}>
-      <div className={styles['topbarLeft']}>
-        <button
-          type="button"
-          className={cn(styles['iconBtn'], styles['menuBtn'])}
-          onClick={onMenuToggle}
-          aria-label={t('common.openMenu')}
-        >
-          <MenuIcon aria-hidden="true" />
-        </button>
+      <div className={styles['topbarTitle']}>
+        <span className={styles['pageTitle']}>{t(meta.titleKey)}</span>
+        {meta.subtitleKey && (
+          <span className={styles['pageSubtitle']}>{t(meta.subtitleKey)}</span>
+        )}
+      </div>
 
+      <div className={styles['topbarSearch']}>
         <div className={styles['searchWrapper']}>
           <SearchIcon className={styles['searchIcon']} aria-hidden="true" />
           <Input
@@ -63,7 +51,7 @@ export function TopBar({ onMenuToggle }: TopBarProps): React.ReactElement {
         </div>
       </div>
 
-      <div className={styles['topbarRight']}>
+      <div className={styles['topbarActions']}>
         <div className={styles['notifWrapper']}>
           <button
             type="button"
@@ -72,63 +60,17 @@ export function TopBar({ onMenuToggle }: TopBarProps): React.ReactElement {
           >
             <BellIcon aria-hidden="true" />
           </button>
-          <Badge
-            variant="destructive"
-            className={styles['notifBadge']}
-            aria-label="3 unread notifications"
-          >
-            3
-          </Badge>
+          <span className={styles['notifDot']} aria-label="3 unread notifications" />
         </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className={styles['avatarBtn']}
-              aria-label={t('nav.profile')}
-            >
-              <Avatar>
-                <AvatarFallback className={styles['avatarFallback']}>
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>{user?.username ?? t('nav.profile')}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={(): void => { navigateTo(APP_ROUTES.PROFILE); }}
-            >
-              <UserIcon aria-hidden="true" />
-              {t('nav.profile')}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={(): void => { navigateTo(APP_ROUTES.SETTINGS); }}
-            >
-              <SettingsIcon aria-hidden="true" />
-              {t('nav.settings')}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" onClick={logout}>
-              <LogOutIcon aria-hidden="true" />
-              {t('auth.logout')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
 
         <button
           type="button"
           className={styles['iconBtn']}
-          onClick={toggleTheme}
-          aria-label={t('common.toggleTheme')}
-          title={t('common.toggleTheme')}
+          onClick={logout}
+          aria-label={t('auth.logout')}
+          title={t('auth.logout')}
         >
-          {theme === 'dark'
-            ? <SunIcon aria-hidden="true" />
-            : <MoonIcon aria-hidden="true" />
-          }
+          <LogOutIcon aria-hidden="true" />
         </button>
       </div>
     </header>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 56" width="300" height="56" aria-label="Inventory Sales Hub">
+  <defs>
+    <linearGradient id="ish-face2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2563eb"></stop>
+      <stop offset="1" stop-color="#1d4ed8"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <rect x="0" y="6" width="44" height="44" rx="10" fill="url(#ish-face2)"></rect>
+  <rect x="0.5" y="6.5" width="43" height="43" rx="9.5" fill="none" stroke="#ffffff" stroke-opacity="0.14"></rect>
+  <g stroke="#ffffff" stroke-width="1.1" stroke-linejoin="round">
+    
+    <path d="M7 34 L13 31 L19 34 L13 37 Z" fill="#ffffff" fill-opacity="0.95"></path>
+    <path d="M7 34 L7 40 L13 43 L13 37 Z" fill="#ffffff" fill-opacity="0.55"></path>
+    <path d="M19 34 L19 40 L13 43 L13 37 Z" fill="#ffffff" fill-opacity="0.75"></path>
+    
+    <path d="M15 26 L22 23 L29 26 L22 29 Z" fill="#ffffff" fill-opacity="0.95"></path>
+    <path d="M15 26 L15 34 L22 37 L22 29 Z" fill="#ffffff" fill-opacity="0.55"></path>
+    <path d="M29 26 L29 34 L22 37 L22 29 Z" fill="#ffffff" fill-opacity="0.75"></path>
+    
+    <path d="M25 17 L31 14 L37 17 L31 20 Z" fill="#ffffff" fill-opacity="0.95"></path>
+    <path d="M25 17 L25 23 L31 26 L31 20 Z" fill="#ffffff" fill-opacity="0.55"></path>
+    <path d="M37 17 L37 23 L31 26 L31 20 Z" fill="#ffffff" fill-opacity="0.75"></path>
+  </g>
+  <circle cx="35" cy="13" r="1.7" fill="#22d3ee"></circle>
+
+  
+  <text x="56" y="32" font-family="Inter, -apple-system, sans-serif" font-weight="700" font-size="18" fill="#0f172a" letter-spacing="-0.4">Inventory</text>
+  <text x="152" y="32" font-family="Inter, -apple-system, sans-serif" font-weight="400" font-size="18" fill="#475569" letter-spacing="-0.4">Sales Hub</text>
+  <line x1="56" y1="40" x2="240" y2="40" stroke="#e2e8f0" stroke-width="1"></line>
+  <text x="56" y="50" font-family="&#39;JetBrains Mono&#39;, monospace" font-weight="500" font-size="9" fill="#94a3b8" letter-spacing="2">STOCK · ORDERS · SALES</text>
+</svg>

@@ -1,33 +1,22 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  PackageIcon,
   LayoutDashboardIcon,
-  BoxesIcon,
+  PackageIcon,
   ShoppingCartIcon,
   UsersIcon,
-  UserCogIcon,
   TruckIcon,
-  BarChart3Icon,
-  BellIcon,
+  SettingsIcon,
 } from 'lucide-react';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { Progress } from '@shared/ui/primitives';
+import { useAuthMe } from '@features/auth';
+import { Avatar, AvatarFallback, BrandMark } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/Sidebar.module.scss';
 
-type NavIconKey =
-  | 'dashboard'
-  | 'inventory'
-  | 'products'
-  | 'sales'
-  | 'customers'
-  | 'employees'
-  | 'suppliers'
-  | 'analytics'
-  | 'notifications';
+type NavIconKey = 'dashboard' | 'inventory' | 'orders' | 'customers' | 'shipments' | 'settings';
 
 interface NavItem {
   to: string;
@@ -36,31 +25,35 @@ interface NavItem {
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
-  { to: APP_ROUTES.DASHBOARD,     labelKey: 'nav.dashboard',     iconKey: 'dashboard'     },
-  { to: APP_ROUTES.INVENTORY,     labelKey: 'nav.inventory',     iconKey: 'inventory'     },
-  { to: APP_ROUTES.PRODUCTS,      labelKey: 'nav.products',      iconKey: 'products'      },
-  { to: APP_ROUTES.SALES,         labelKey: 'nav.sales',         iconKey: 'sales'         },
-  { to: APP_ROUTES.CUSTOMERS,     labelKey: 'nav.customers',     iconKey: 'customers'     },
-  { to: APP_ROUTES.EMPLOYEES,     labelKey: 'nav.employees',     iconKey: 'employees'     },
-  { to: APP_ROUTES.SUPPLIERS,     labelKey: 'nav.suppliers',     iconKey: 'suppliers'     },
-  { to: APP_ROUTES.ANALYTICS,     labelKey: 'nav.analytics',     iconKey: 'analytics'     },
-  { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
+  { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard',  iconKey: 'dashboard'  },
+  { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory',  iconKey: 'inventory'  },
+  { to: APP_ROUTES.SALES,     labelKey: 'nav.orders',     iconKey: 'orders'     },
+  { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers',  iconKey: 'customers'  },
+  { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments',  iconKey: 'shipments'  },
 ] as const;
 
-const STORAGE_USED = 68;
+const FOOTER_NAV: readonly NavItem[] = [
+  { to: APP_ROUTES.SETTINGS, labelKey: 'nav.settings', iconKey: 'settings' },
+] as const;
 
 function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
   switch (iconKey) {
-    case 'dashboard':     return <LayoutDashboardIcon aria-hidden="true" />;
-    case 'inventory':     return <BoxesIcon           aria-hidden="true" />;
-    case 'products':      return <PackageIcon         aria-hidden="true" />;
-    case 'sales':         return <ShoppingCartIcon    aria-hidden="true" />;
-    case 'customers':     return <UsersIcon           aria-hidden="true" />;
-    case 'employees':     return <UserCogIcon         aria-hidden="true" />;
-    case 'suppliers':     return <TruckIcon           aria-hidden="true" />;
-    case 'analytics':     return <BarChart3Icon       aria-hidden="true" />;
-    case 'notifications': return <BellIcon            aria-hidden="true" />;
+    case 'dashboard':  return <LayoutDashboardIcon aria-hidden="true" />;
+    case 'inventory':  return <PackageIcon         aria-hidden="true" />;
+    case 'orders':     return <ShoppingCartIcon    aria-hidden="true" />;
+    case 'customers':  return <UsersIcon           aria-hidden="true" />;
+    case 'shipments':  return <TruckIcon           aria-hidden="true" />;
+    case 'settings':   return <SettingsIcon        aria-hidden="true" />;
   }
+}
+
+function initials(name: string): string {
+  return name
+    .split(' ')
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
 }
 
 export interface SidebarProps {
@@ -70,6 +63,9 @@ export interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { data: user } = useAuthMe();
+
+  const userInitials = user ? initials(user.username) : '..';
 
   return (
     <>
@@ -84,7 +80,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
         aria-label="Main Navigation"
       >
         <div className={styles['brand']}>
-          <PackageIcon className={styles['brandIcon']} aria-hidden="true" />
+          <BrandMark size={32} />
           <span className={styles['brandName']}>{t('common.appName')}</span>
         </div>
 
@@ -100,9 +96,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
                   }
                   onClick={onClose}
                 >
-                  <span className={styles['navIcon']}>
-                    {renderNavIcon(item.iconKey)}
-                  </span>
+                  <span className={styles['navIcon']}>{renderNavIcon(item.iconKey)}</span>
                   <span>{t(item.labelKey)}</span>
                 </NavLink>
               </li>
@@ -110,13 +104,35 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
           </ul>
         </nav>
 
-        <div className={styles['storageFooter']}>
-          <div className={styles['storageHeader']}>
-            <span className={styles['storageLabel']}>{t('sidebar.storage')}</span>
-            <span className={styles['storagePercent']}>{STORAGE_USED}%</span>
+        <div className={styles['footerNav']}>
+          <ul className={styles['navList']} role="list">
+            {FOOTER_NAV.map((item) => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  className={({ isActive }): string =>
+                    cn(styles['navItem'], isActive && styles['navItemActive'])
+                  }
+                  onClick={onClose}
+                >
+                  <span className={styles['navIcon']}>{renderNavIcon(item.iconKey)}</span>
+                  <span>{t(item.labelKey)}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={styles['userFooter']}>
+          <Avatar>
+            <AvatarFallback>{userInitials}</AvatarFallback>
+          </Avatar>
+          <div className={styles['userInfo']}>
+            <div className={styles['userName']}>{user?.username ?? '—'}</div>
+            {user?.email !== undefined && (
+              <div className={styles['userEmail']}>{user.email}</div>
+            )}
           </div>
-          <Progress value={STORAGE_USED} aria-label={t('sidebar.storage')} />
-          <p className={styles['storageSubtext']}>{t('sidebar.storageDetail')}</p>
         </div>
       </aside>
     </>

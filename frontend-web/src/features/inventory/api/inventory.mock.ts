@@ -5,7 +5,7 @@ import type { InventoryItem, InventoryMovement } from '@entities/inventory';
 // Generate strict, valid UUIDs for the mock data
 const mockInventory: InventoryItem[] = [
     {
-        id: '550e8400-e29b-41d4-a716-446655440000', // Valid UUID
+        id: '550e8400-e29b-41d4-a716-446655440000',
         sku: 'LAP-PRO-16',
         name: 'MacBook Pro 16" M3 Max',
         description: 'Apple Silicon laptop for professionals',
@@ -13,10 +13,12 @@ const mockInventory: InventoryItem[] = [
         price: 3499.99,
         currency: 'USD',
         status: 'IN_STOCK',
+        category: 'Laptops',
+        reorderThreshold: 10,
         lastUpdated: new Date().toISOString(),
     },
     {
-        id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', // Valid UUID
+        id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
         sku: 'KEY-MECH-01',
         name: 'Keychron Q1 Pro',
         description: 'Wireless custom mechanical keyboard',
@@ -24,16 +26,20 @@ const mockInventory: InventoryItem[] = [
         price: 199.00,
         currency: 'USD',
         status: 'LOW_STOCK',
+        category: 'Peripherals',
+        reorderThreshold: 5,
         lastUpdated: new Date(Date.now() - 86400000).toISOString(),
     },
     {
-        id: '123e4567-e89b-12d3-a456-426614174000', // Valid UUID
+        id: '123e4567-e89b-12d3-a456-426614174000',
         sku: 'MOU-MX-M3',
         name: 'Logitech MX Master 3S',
         quantity: 0,
         price: 99.99,
         currency: 'USD',
         status: 'OUT_OF_STOCK',
+        category: 'Peripherals',
+        reorderThreshold: 8,
         lastUpdated: new Date(Date.now() - 172800000).toISOString(),
     }
 ];

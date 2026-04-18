@@ -15,3 +15,4 @@ export { Skeleton } from './Skeleton';
 export { Spinner } from './Spinner';
 export { Switch } from './Switch';
 export { Textarea } from './Textarea';
+export { BrandMark } from './BrandMark';

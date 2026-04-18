@@ -18,7 +18,8 @@
     "switchLanguage": "Switch language",
     "errorLoadingData": "Unable to retrieve data. Please try again.",
     "openMenu": "Open menu",
-    "status": "Status"
+    "status": "Status",
+    "export": "Export"
   },
   "nav": {
     "home": "Home",
@@ -33,7 +34,20 @@
     "notifications": "Notifications",
     "reports": "Reports",
     "settings": "Settings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "orders": "Orders",
+    "shipments": "Shipments"
+  },
+  "topbar": {
+    "subtitle": {
+      "dashboard": "Real-time overview of sales and stock",
+      "inventory": "Manage stock levels and reorder thresholds",
+      "orders": "Track orders, shipments, returns",
+      "customers": "Accounts and purchase history",
+      "suppliers": "Supplier network management",
+      "analytics": "Business performance overview",
+      "settings": "Account and system preferences"
+    }
   },
   "sidebar": {
     "storage": "Storage Used",
@@ -65,7 +79,9 @@
     "registerError": "Registration failed. Please try again.",
     "orContinueWith": "or continue with",
     "continueWithGoogle": "Google",
-    "continueWithGithub": "GitHub"
+    "continueWithGithub": "GitHub",
+    "newToIsh": "New to Inventory Sales Hub?",
+    "createAccount": "Create an account"
   },
   "login": {
     "brandTitle": "Total control of your business.",
@@ -73,13 +89,31 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome back",
+    "welcome": "Good morning",
+    "headerSubtitle": "Here's what's happening with your business today.",
     "vsLastMonth": "vs last month",
     "stats": {
       "totalProducts": "Total products",
       "monthlySales": "Monthly sales",
       "activeOrders": "Active orders",
-      "lowStock": "Low stock"
+      "lowStock": "Low stock",
+      "newCustomers": "New customers"
+    },
+    "recentOrders": {
+      "title": "Recent orders",
+      "subtitle": "Last 24 hours",
+      "viewAll": "View all"
+    },
+    "lowStock": {
+      "title": "Low stock",
+      "subtitle": "Below reorder threshold",
+      "reorderAll": "Reorder all"
+    },
+    "cols": {
+      "order": "Order",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status"
     },
     "recentActivity": {
       "title": "Recent activity",
@@ -100,10 +134,20 @@
     "addProduct": "Add product",
     "editProduct": "Edit product",
     "productName": "Product name",
+    "name": "Product",
+    "quantity": "Quantity",
     "sku": "SKU",
     "price": "Price",
     "stock": "Stock",
     "category": "Category",
+    "allProducts": "All products",
+    "lowStockTab": "Low stock",
+    "outOfStockTab": "Out of stock",
+    "reorderAt": "Reorder at",
+    "exportCsv": "Export CSV",
+    "status_IN_STOCK": "In stock",
+    "status_LOW_STOCK": "Low stock",
+    "status_OUT_OF_STOCK": "Out of stock",
     "status": {
       "active": "Active",
       "inactive": "Inactive",
@@ -127,10 +171,14 @@
     "items": "Items",
     "total": "Total",
     "date": "Date",
+    "orderId": "Order",
+    "searchPlaceholder": "Search orders or customers…",
     "status": {
       "pending": "Pending",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "shipped": "Shipped",
+      "processing": "Processing"
     }
   },
   "customers": {
@@ -140,7 +188,12 @@
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
-    "address": "Address"
+    "address": "Address",
+    "contact": "Contact",
+    "orders": "Orders",
+    "lifetimeValue": "Lifetime value",
+    "searchPlaceholder": "Search customers…",
+    "addCustomer": "Add customer"
   },
   "employees": {
     "title": "Employees",

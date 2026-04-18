@@ -1,20 +1,37 @@
 import * as React from 'react';
-import { TrendingUpIcon, ShoppingCartIcon, CheckCircle2Icon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useSales, useSaleSummary } from '@features/sales';
-import { Skeleton, Badge } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardAction, CardContent, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
+import { useSales } from '@features/sales';
+import { useTopCustomers } from '@features/analytics';
+import { Skeleton, Badge, Button, Input } from '@shared/ui/primitives';
+import {
+  Card,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@shared/ui/composed';
 import type { BadgeVariant } from '@shared/ui/primitives';
-import styles from '@shared/styles/themes/pages/PageBase.module.scss';
-import statsStyles from '@shared/styles/themes/pages/Sales.module.scss';
+import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
+import styles from '@shared/styles/themes/pages/Sales.module.scss';
 
 type SaleStatus = 'pending' | 'completed' | 'cancelled';
 
 function statusVariant(status: SaleStatus): BadgeVariant {
   const map: Record<SaleStatus, BadgeVariant> = {
-    pending: 'secondary',
-    completed: 'success',
-    cancelled: 'destructive',
+    pending:   'warning',
+    completed: 'info',
+    cancelled: 'neutral',
+  };
+  return map[status];
+}
+
+function statusLabel(status: SaleStatus, t: (k: string) => string): string {
+  const map: Record<SaleStatus, string> = {
+    completed: t('sales.status.shipped'),
+    pending:   t('sales.status.processing'),
+    cancelled: t('sales.status.cancelled'),
   };
   return map[status];
 }
@@ -23,129 +40,126 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString();
 }
 
+function shortId(id: string): string {
+  const parts = id.split('-');
+  if (parts.length >= 2) {
+    return `${parts[0] ?? ''}-${parts[1] ?? ''}`;
+  }
+  return id.slice(0, 12);
+}
+
 const SKELETON_ROWS = 5;
 
 export function SalesPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data: sales, isLoading, isError } = useSales();
-  const { data: summary, isLoading: summaryLoading } = useSaleSummary();
+  const { data: topCustomers } = useTopCustomers();
 
-  const statsLoaded = !isLoading && !summaryLoading;
+  const [search, setSearch] = React.useState('');
+
+  const customerMap = React.useMemo(() => {
+    const map = new Map<string, string>();
+    topCustomers?.forEach((c) => { map.set(c.customerId, c.customerName); });
+    return map;
+  }, [topCustomers]);
+
+  const filtered = React.useMemo(() => {
+    if (!sales) return [];
+    if (!search) return sales;
+    const q = search.toLowerCase();
+    return sales.filter(
+      (s) => s.id.toLowerCase().includes(q) || (s.customerId ?? '').toLowerCase().includes(q),
+    );
+  }, [sales, search]);
 
   if (isError) {
     return (
-      <div className={styles['errorContainer']} role="alert" aria-live="assertive">
+      <div className={pageStyles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
       </div>
     );
   }
 
-  const completedCount = summary?.byStatus?.find((s) => s.status === 'completed')?.count ?? 0;
-
   return (
-    <div className={styles['page']}>
-      <header className={styles['header']}>
-        <h1 className={styles['title']}>{t('sales.title')}</h1>
-        <p className={styles['subtitle']}>{t('sales.orderHistory')}</p>
+    <div className={pageStyles['page']}>
+      <header className={styles['pageHeader']}>
+        <div>
+          <span className={styles['eyebrow']}>SALES</span>
+          <h1 className={styles['title']}>{t('nav.orders')}</h1>
+          <p className={styles['subtitle']}>{t('sales.orderHistory')}</p>
+        </div>
+        <div className={styles['headerActions']}>
+          <Button variant="outline" size="sm">{t('common.export')}</Button>
+          <Button size="sm">{`+ ${t('sales.newSale')}`}</Button>
+        </div>
       </header>
 
-      <section className={statsStyles['statsRow']} aria-label="Sales statistics">
-        <Card>
-          <CardHeader>
-            <CardTitle className={statsStyles['statTitle']}>{t('sales.revenue')}</CardTitle>
-            <CardAction>
-              <span className={statsStyles['statIcon']}><TrendingUpIcon aria-hidden="true" /></span>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <div className={statsStyles['statValue']}>
-              {statsLoaded
-                ? `${summary?.currency ?? ''} ${summary?.totalRevenue.toLocaleString() ?? '0'}`
-                : <Skeleton style={{ height: '2rem', width: '6rem' }} />}
+      <section className={pageStyles['content']}>
+        <Card className={styles['tableCard']}>
+          <div className={styles['controls']}>
+            <div className={styles['searchBox']}>
+              <Input
+                type="search"
+                placeholder={t('sales.searchPlaceholder')}
+                value={search}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearch(e.target.value); }}
+                aria-label={t('common.search')}
+              />
             </div>
-          </CardContent>
-        </Card>
+            <Button variant="outline" size="sm">{t('common.filter')}</Button>
+          </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className={statsStyles['statTitle']}>{t('sales.totalOrders')}</CardTitle>
-            <CardAction>
-              <span className={statsStyles['statIcon']}><ShoppingCartIcon aria-hidden="true" /></span>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <div className={statsStyles['statValue']}>
-              {statsLoaded
-                ? (summary?.totalSales ?? 0)
-                : <Skeleton style={{ height: '2rem', width: '4rem' }} />}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className={statsStyles['statTitle']}>{t('sales.completed')}</CardTitle>
-            <CardAction>
-              <span className={statsStyles['statIcon']}><CheckCircle2Icon aria-hidden="true" /></span>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <div className={statsStyles['statValue']}>
-              {statsLoaded
-                ? completedCount
-                : <Skeleton style={{ height: '2rem', width: '4rem' }} />}
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className={styles['content']}>
-        <Card>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('sales.date')}</TableHead>
-                  <TableHead>{t('common.status')}</TableHead>
-                  <TableHead>{t('sales.items')}</TableHead>
-                  <TableHead>{t('sales.total')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading
-                  ? Array.from({ length: SKELETON_ROWS }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell colSpan={4}>
-                          <Skeleton style={{ height: '1.25rem', width: '100%' }} />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('sales.orderId')}</TableHead>
+                <TableHead>{t('sales.customer')}</TableHead>
+                <TableHead>{t('sales.date')}</TableHead>
+                <TableHead>{t('common.status')}</TableHead>
+                <TableHead>{t('sales.items')}</TableHead>
+                <TableHead>{t('sales.total')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading
+                ? Array.from({ length: SKELETON_ROWS }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell colSpan={6}>
+                        <Skeleton style={{ height: '1.25rem', width: '100%' }} />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : filtered.length === 0
+                  ? (
+                    <TableRow>
+                      <TableCell colSpan={6}>
+                        <div className={pageStyles['placeholderContainer']}>
+                          <p className={pageStyles['placeholder']}>{t('common.noData')}</p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                  : filtered.map((s) => (
+                      <TableRow key={s.id}>
+                        <TableCell className={styles['mono']}>{shortId(s.id)}</TableCell>
+                        <TableCell>
+                          {s.customerId
+                            ? (customerMap.get(s.customerId) ?? shortId(s.customerId))
+                            : '—'}
                         </TableCell>
+                        <TableCell>{formatDate(s.createdAt)}</TableCell>
+                        <TableCell>
+                          <Badge variant={statusVariant(s.status as SaleStatus)} showDot>
+                            {statusLabel(s.status as SaleStatus, t)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{s.items.length}</TableCell>
+                        <TableCell>{s.currency} {s.total.toFixed(2)}</TableCell>
                       </TableRow>
                     ))
-                  : !sales || sales.length === 0
-                    ? (
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <div className={styles['placeholderContainer']}>
-                            <p className={styles['placeholder']}>{t('common.noData')}</p>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )
-                    : sales.map((s) => (
-                        <TableRow key={s.id}>
-                          <TableCell>{formatDate(s.createdAt)}</TableCell>
-                          <TableCell>
-                            <Badge variant={statusVariant(s.status as SaleStatus)}>
-                              {t(`sales.status.${s.status}`)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{s.items.length}</TableCell>
-                          <TableCell>{s.currency} {s.total.toFixed(2)}</TableCell>
-                        </TableRow>
-                      ))
-                }
-              </TableBody>
-            </Table>
-          </CardContent>
+              }
+            </TableBody>
+          </Table>
         </Card>
       </section>
     </div>

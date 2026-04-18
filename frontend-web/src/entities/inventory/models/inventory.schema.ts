@@ -9,6 +9,8 @@ export const inventoryItemSchema = z.object({
   price: z.number().nonnegative('Price cannot be negative'),
   currency: z.string().length(3).default('USD'),
   status: z.enum(['IN_STOCK', 'LOW_STOCK', 'OUT_OF_STOCK']),
+  category: z.string().optional(),
+  reorderThreshold: z.number().int().nonnegative().optional(),
   lastUpdated: z.iso.datetime({ message: 'Must be a valid ISO datetime string' }),
 });
 

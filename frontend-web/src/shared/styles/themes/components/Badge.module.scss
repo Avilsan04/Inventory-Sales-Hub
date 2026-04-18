@@ -2,48 +2,72 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
-  border: $border-width-base solid transparent;
-  padding: $spacing-1 $spacing-2;
+  border-radius: var(--radius-full);
+  border: none;
+  padding: 3px 9px;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   width: fit-content;
   white-space: nowrap;
   flex-shrink: 0;
   gap: $spacing-1;
-  overflow: hidden;
-  transition: color $duration-fast ease, box-shadow $duration-fast ease;
+  line-height: 1.4;
+}
 
-  svg {
-    width: $size-3;
-    height: $size-3;
-    pointer-events: none;
-  }
+// ── Status dot ──────────────────────────────────────────────
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
 }
 
 // ── Variants ───────────────────────────────────────────────
 .variantDefault {
-  background-color: var(--color-primary);
-  color: var(--color-primary-foreground);
+  background-color: $color-primary;
+  color: $color-primary-foreground;
+  .dot { background-color: $color-primary-foreground; }
 }
 
 .variantSecondary {
-  background-color: var(--color-secondary-bg);
-  color: var(--color-secondary-foreground);
+  background-color: $color-bg-tertiary;
+  color: $color-text-secondary;
+  .dot { background-color: $color-text-muted; }
 }
 
 .variantDestructive {
-  background-color: var(--color-destructive);
-  color: var(--color-destructive-foreground);
+  background-color: $color-destructive;
+  color: #ffffff;
+  .dot { background-color: #ffffff; }
 }
 
 .variantOutline {
-  border-color: var(--color-border);
-  color: var(--color-foreground);
+  border: $border-width-base solid $color-border;
+  color: $color-text-secondary;
   background-color: transparent;
+  .dot { background-color: $color-text-muted; }
 }
 
 .variantSuccess {
-  background-color: var(--color-accent);
-  color: var(--color-accent-foreground);
+  background-color: #dcfce7;
+  color: #15803d;
+  .dot { background-color: #16a34a; }
+}
+
+.variantWarning {
+  background-color: #fef3c7;
+  color: #b45309;
+  .dot { background-color: #d97706; }
+}
+
+.variantInfo {
+  background-color: $color-primary-light;
+  color: $color-primary-hover;
+  .dot { background-color: $color-primary; }
+}
+
+.variantNeutral {
+  background-color: $color-bg-tertiary;
+  color: $color-text-secondary;
+  .dot { background-color: $color-text-muted; }
 }

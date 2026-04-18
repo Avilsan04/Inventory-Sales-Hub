@@ -8,10 +8,6 @@ import { TopBar } from './TopBar';
 export function Layout(): React.ReactElement {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
-  const openSidebar = React.useCallback((): void => {
-    setIsSidebarOpen(true);
-  }, []);
-
   const closeSidebar = React.useCallback((): void => {
     setIsSidebarOpen(false);
   }, []);
@@ -21,7 +17,7 @@ export function Layout(): React.ReactElement {
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       <div className={styles['mainArea']}>
-        <TopBar onMenuToggle={openSidebar} />
+        <TopBar />
 
         <main className={styles['main']}>
           <Outlet />

@@ -5,7 +5,6 @@
   z-index: 30;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: $spacing-4;
   height: $navbar-height;
   padding: 0 $spacing-6;
@@ -15,38 +14,41 @@
   flex-shrink: 0;
 }
 
-// ── Left section ────────────────────────────────────────────────────────
-.topbarLeft {
+// ── Left: page title + subtitle ─────────────────────────────────────────
+.topbarTitle {
   display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
   min-width: 0;
 }
 
-// ── Right section ───────────────────────────────────────────────────────
-.topbarRight {
+.pageTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.pageSubtitle {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+// ── Center: search ──────────────────────────────────────────────────────
+.topbarSearch {
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: $spacing-2;
-  flex-shrink: 0;
+  justify-content: center;
+  min-width: 0;
 }
 
-// ── Hamburger — mobile only ─────────────────────────────────────────────
-.menuBtn {
-  display: inline-flex;
-
-  @media (min-width: $breakpoint-lg) {
-    display: none;
-  }
-}
-
-// ── Search ──────────────────────────────────────────────────────────────
 .searchWrapper {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1;
+  width: 100%;
   max-width: $container-2xs;
 }
 
@@ -63,6 +65,14 @@
 .searchInput {
   padding-left: $size-9 !important;
   width: 100%;
+}
+
+// ── Right: actions ──────────────────────────────────────────────────────
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-shrink: 0;
 }
 
 // ── Icon button base ────────────────────────────────────────────────────
@@ -90,46 +100,19 @@
   }
 }
 
-// ── Notification badge ──────────────────────────────────────────────────
+// ── Notification dot ────────────────────────────────────────────────────
 .notifWrapper {
   position: relative;
 }
 
-.notifBadge {
-  position: absolute !important;
-  top: 0 !important;
-  right: 0 !important;
-  transform: translate(35%, -35%) !important;
-  min-width: $size-4 !important;
-  height: $size-4 !important;
-  padding: 0 $spacing-1 !important;
-  font-size: $font-size-2xs !important;
-  line-height: $size-4 !important;
-  pointer-events: none;
-}
-
-// ── Avatar trigger button ────────────────────────────────────────────────
-.avatarBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+.notifDot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
   border-radius: var(--radius-full);
-  flex-shrink: 0;
-
-  &:focus-visible {
-    outline: $border-width-focus solid var(--color-primary);
-    outline-offset: $border-width-focus;
-  }
-}
-
-// ── Avatar initials ─────────────────────────────────────────────────────
-.avatarFallback {
-  background-color: var(--color-primary) !important;
-  color: var(--color-primary-foreground) !important;
-  font-size: $font-size-xs !important;
-  font-weight: $font-weight-semibold !important;
+  background-color: $color-error;
+  border: 2px solid var(--color-background);
+  pointer-events: none;
 }

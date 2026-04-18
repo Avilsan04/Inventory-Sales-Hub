@@ -27,14 +27,12 @@
   border-right: $border-width-base solid var(--color-sidebar-border);
   overflow: hidden;
 
-  // Desktop: sticky within its grid column, always visible
   @media (min-width: $breakpoint-lg) {
     position: sticky;
     top: 0;
     height: $height-screen;
   }
 
-  // Mobile: fixed, hidden off-screen by default
   @media (max-width: #{$breakpoint-lg - 1px}) {
     position: fixed;
     top: 0;
@@ -62,13 +60,6 @@
   flex-shrink: 0;
 }
 
-.brandIcon {
-  width: $size-6;
-  height: $size-6;
-  color: var(--color-sidebar-primary);
-  flex-shrink: 0;
-}
-
 .brandName {
   font-size: $font-size-sm;
   font-weight: $font-weight-semibold;
@@ -84,6 +75,12 @@
   flex: 1;
   overflow-y: auto;
   padding: $spacing-4 $spacing-3;
+}
+
+.footerNav {
+  padding: $spacing-2 $spacing-3;
+  border-top: $border-width-base solid var(--color-sidebar-border);
+  flex-shrink: 0;
 }
 
 .navList {
@@ -114,12 +111,13 @@
 }
 
 .navItemActive {
-  background-color: var(--color-sidebar-primary);
-  color: var(--color-sidebar-primary-foreground);
+  background-color: $color-primary-light;
+  color: $color-primary-hover;
+  font-weight: $font-weight-semibold;
 
   &:hover {
-    background-color: var(--color-sidebar-primary);
-    color: var(--color-sidebar-primary-foreground);
+    background-color: $color-primary-light;
+    color: $color-primary-hover;
   }
 }
 
@@ -129,36 +127,36 @@
   flex-shrink: 0;
 }
 
-// ── Storage footer ──────────────────────────────────────────────────────
-.storageFooter {
+// ── User footer ─────────────────────────────────────────────────────────
+.userFooter {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
   padding: $spacing-4;
   border-top: $border-width-base solid var(--color-sidebar-border);
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-2;
   flex-shrink: 0;
 }
 
-.storageHeader {
+.userInfo {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: $spacing-1;
+  min-width: 0;
 }
 
-.storageLabel {
-  font-size: $font-size-xs;
+.userName {
+  font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   color: var(--color-sidebar-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.storagePercent {
-  font-size: $font-size-xs;
-  font-weight: $font-weight-semibold;
-  color: var(--color-sidebar-primary);
-}
-
-.storageSubtext {
+.userEmail {
   font-size: $font-size-xs;
   color: var(--color-muted-foreground);
-  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
