@@ -1,0 +1,27 @@
+// ── Shell Grid ──────────────────────────────────────────────────────────
+// sidebar column (fixed width) + content column (fills remaining space)
+.layout {
+  display: grid;
+  grid-template-columns: $sidebar-width 1fr;
+  min-height: $height-screen;
+
+  // On mobile the sidebar is position:fixed and not in the grid flow
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Right column: topbar + scrollable content ───────────────────────────
+.mainArea {
+  display: flex;
+  flex-direction: column;
+  min-height: $height-screen;
+  overflow: hidden;
+}
+
+// overflow-y:auto here, NOT on .layout — keeps position:sticky sidebar working
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-6;
+}

@@ -1,0 +1,69 @@
+.tableWrapper {
+  overflow: hidden;
+}
+
+.skuCell {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
+.nameCell {
+  font-weight: $font-weight-medium;
+}
+
+.categoryCell {
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+}
+
+.numCell {
+  text-align: right;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+}
+
+.priceCell {
+  text-align: right;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+}
+
+.reorderCell {
+  color: var(--color-text-muted);
+}
+
+.stockLow {
+  color: var(--color-warning);
+  font-weight: $font-weight-medium;
+}
+
+.stockOut {
+  color: var(--color-error);
+  font-weight: $font-weight-medium;
+}
+
+.dotsHead,
+.dotsCell {
+  width: $size-9;
+  padding: 0;
+}
+
+.dotsBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $size-8;
+  height: $size-8;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: background-color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-muted);
+    color: var(--color-text-primary);
+  }
+}

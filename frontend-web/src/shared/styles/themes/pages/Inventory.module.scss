@@ -1,0 +1,140 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  min-height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-6;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.eyebrow {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: $spacing-1;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+// Table card without default card padding/gap
+.tableCard {
+  overflow: hidden;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-3 $spacing-4;
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  flex: 0 0 auto;
+  width: 280px;
+}
+
+.tabs {
+  display: flex;
+  gap: $spacing-1;
+  flex: 1;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-3;
+  border: none;
+  border-radius: $border-radius-base;
+  cursor: pointer;
+  font-family: $font-family-base;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  background: transparent;
+  transition: background-color 120ms, color 120ms;
+
+  &:hover {
+    background: var(--color-bg-tertiary);
+  }
+}
+
+.tabActive {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+.tabCount {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  opacity: 0.75;
+}
+
+.tableFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 $spacing-4;
+  border-top: 1px solid var(--color-border);
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.pagination {
+  display: flex;
+  gap: $spacing-1;
+}
+
+.placeholderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-12;
+  color: var(--color-text-muted);
+  font-size: $font-size-sm;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-12;
+  color: var(--color-error);
+  font-size: $font-size-sm;
+}

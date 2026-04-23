@@ -1,0 +1,29 @@
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-lg) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: $breakpoint-sm) { grid-template-columns: 1fr; }
+}
+
+.statTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wider;
+}
+
+.statValue {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-foreground);
+  margin-top: $spacing-1;
+}
+
+.statIcon {
+  width: $size-5;
+  height: $size-5;
+  color: var(--color-primary);
+}

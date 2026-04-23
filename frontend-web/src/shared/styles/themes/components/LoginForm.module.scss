@@ -1,0 +1,123 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-6;
+  width: 100%;
+  max-width: 400px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.brandName {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  letter-spacing: $letter-spacing-tight;
+}
+
+.card {
+  width: 100%;
+  padding-top: $spacing-8 !important;
+  padding-bottom: $spacing-8 !important;
+  gap: $spacing-6 !important;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.error {
+  padding: $spacing-3;
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, var(--color-destructive) 10%, transparent);
+  border: $border-width-base solid var(--color-destructive);
+  color: var(--color-destructive);
+  font-size: $font-size-sm;
+  text-align: center;
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  width: 100%;
+  padding-right: $size-9 !important;
+}
+
+.eyeBtn {
+  position: absolute;
+  right: $spacing-3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 0;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.forgotPassword {
+  font-size: $font-size-sm;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footer {
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.submitButton {
+  width: 100%;
+  gap: $spacing-2;
+}
+
+.signupLink {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.signupAnchor {
+  color: var(--color-primary);
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

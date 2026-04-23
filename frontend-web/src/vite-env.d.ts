@@ -1,5 +1,10 @@
 /// <reference types="vite/client" />
 
+declare module '*.module.scss' {
+  const classes: Record<string, string>;
+  export default classes;
+}
+
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
 }

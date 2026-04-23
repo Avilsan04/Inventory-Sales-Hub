@@ -1,0 +1,120 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  min-height: 100%;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+// ── Notification list ────────────────────────────────────────────────────
+.notifList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.notifItem {
+  display: flex;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  border: $border-width-base solid var(--color-border);
+  transition: background $duration-fast ease;
+}
+
+.notifItemUnread {
+  background: var(--color-bg-primary);
+  border-color: var(--color-primary);
+}
+
+.notifIcon {
+  flex-shrink: 0;
+  width: $size-5;
+  height: $size-5;
+  margin-top: $spacing-1;
+}
+
+.notifBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.notifMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  margin-top: $spacing-1;
+}
+
+.notifTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.notifMessage {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+// ── Type icon colors ─────────────────────────────────────────────────────
+.notifInfo    { color: var(--color-primary); }
+.notifWarning { color: var(--color-warning); }
+.notifError   { color: var(--color-error); }
+.notifSuccess { color: var(--color-success); }
+
+// ── State containers ─────────────────────────────────────────────────────
+.placeholderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: $min-section-height;
+}
+
+.placeholder {
+  color: var(--color-text-muted);
+  font-size: $font-size-sm;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: $min-section-height;
+  color: var(--color-error);
+  font-size: $font-size-sm;
+}

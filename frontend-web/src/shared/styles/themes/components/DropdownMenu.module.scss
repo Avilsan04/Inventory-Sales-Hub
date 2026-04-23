@@ -1,0 +1,172 @@
+.dropdownContent {
+  z-index: 50;
+  min-width: $dropdown-min-width;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  padding: $spacing-1;
+  box-shadow: var(--shadow-base);
+  animation: contentShow $duration-fast ease-out;
+}
+
+.dropdownItem {
+  position: relative;
+  display: flex;
+  cursor: default;
+  align-items: center;
+  gap: $spacing-2;
+  border-radius: var(--radius-sm);
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  outline: none;
+  user-select: none;
+
+  &:focus,
+  &[data-highlighted] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  &[data-disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &[data-inset='true'] {
+    padding-left: $spacing-8;
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+    pointer-events: none;
+    flex-shrink: 0;
+    color: var(--color-muted-foreground);
+  }
+}
+
+.dropdownItemDestructive {
+  color: var(--color-destructive);
+
+  &:focus,
+  &[data-highlighted] {
+    background-color: color-mix(in srgb, var(--color-destructive) 10%, transparent);
+    color: var(--color-destructive);
+  }
+
+  svg {
+    color: var(--color-destructive);
+  }
+}
+
+.dropdownCheckboxItem {
+  position: relative;
+  display: flex;
+  cursor: default;
+  align-items: center;
+  gap: $spacing-2;
+  border-radius: var(--radius-sm);
+  padding: $spacing-1 $spacing-2 $spacing-1 $spacing-8;
+  font-size: $font-size-sm;
+  outline: none;
+  user-select: none;
+
+  &:focus,
+  &[data-highlighted] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  &[data-disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+.dropdownRadioItem {
+  @extend .dropdownCheckboxItem;
+}
+
+.dropdownItemIndicator {
+  position: absolute;
+  left: $spacing-2;
+  display: flex;
+  width: $size-3-5;
+  height: $size-3-5;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
+.dropdownLabel {
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  &[data-inset='true'] {
+    padding-left: $spacing-8;
+  }
+}
+
+.dropdownSeparator {
+  margin: $spacing-1 (-$spacing-1);
+  height: $border-width-base;
+  background-color: var(--color-border);
+}
+
+.dropdownShortcut {
+  margin-left: auto;
+  font-size: $font-size-xs;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-muted-foreground);
+}
+
+.dropdownSubTrigger {
+  display: flex;
+  cursor: default;
+  align-items: center;
+  gap: $spacing-2;
+  border-radius: var(--radius-sm);
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  outline: none;
+  user-select: none;
+
+  &:focus,
+  &[data-highlighted],
+  &[data-state='open'] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+    flex-shrink: 0;
+    pointer-events: none;
+    color: var(--color-muted-foreground);
+
+    &:last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.dropdownSubContent {
+  z-index: 50;
+  min-width: $dropdown-min-width;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  padding: $spacing-1;
+  box-shadow: var(--shadow-lg);
+  animation: contentShow $duration-fast ease-out;
+}

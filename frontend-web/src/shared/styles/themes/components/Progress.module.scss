@@ -1,0 +1,17 @@
+.progress {
+  position: relative;
+  height: $size-2;
+  width: 100%;
+  overflow: hidden;
+  border-radius: $border-radius-full;
+  background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.progressIndicator {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  background-color: var(--color-primary);
+  transform: var(--radix-progress-indicator-transform);
+  transition: transform $duration-slower ease;
+}

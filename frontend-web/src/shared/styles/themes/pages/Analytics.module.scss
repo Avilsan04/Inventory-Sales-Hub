@@ -1,0 +1,98 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  min-height: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+// ── KPI grid ────────────────────────────────────────────────────────────
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-lg) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: $breakpoint-sm) { grid-template-columns: 1fr; }
+}
+
+.kpiTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wider;
+}
+
+.kpiValue {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-foreground);
+  margin-top: $spacing-1;
+}
+
+.kpiSkeleton {
+  height: $size-8;
+  width: $size-24;
+  border-radius: var(--radius-md);
+}
+
+.kpiIcon {
+  width: $size-5;
+  height: $size-5;
+  color: var(--color-primary);
+}
+
+.kpiTrend {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  margin-top: $spacing-1;
+  margin-bottom: 0;
+}
+
+// ── Sections ────────────────────────────────────────────────────────────
+.sectionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-lg) { grid-template-columns: 1fr; }
+}
+
+// ── State containers ─────────────────────────────────────────────────────
+.placeholderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: $min-section-height;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: $min-section-height;
+  color: var(--color-error);
+  font-size: $font-size-sm;
+}

@@ -1,0 +1,42 @@
+.checkbox {
+  height: $size-4;
+  width: $size-4;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: $border-width-base solid var(--color-primary);
+  background-color: transparent;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  cursor: pointer;
+  transition: background-color $duration-fast ease, border-color $duration-fast ease, box-shadow $duration-fast ease;
+
+  &:focus-visible {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &[data-state='checked'],
+  &[data-state='indeterminate'] {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    border-color: var(--color-primary);
+  }
+}
+
+.checkboxIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: $size-3;
+    height: $size-3;
+    color: currentColor;
+  }
+}

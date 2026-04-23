@@ -1,1 +1,4 @@
-// Global context providers will be registered here
+// Strictly export ONLY the providers.
+export { ThemeProvider } from './ThemeProvider';
+export { GlobalErrorBoundary } from './ErrorBoundary';
+export { QueryProvider } from './QueryProvider';

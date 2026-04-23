@@ -1,0 +1,69 @@
+// Component-scoped constant: tabs list visual inset (not a semantic spacing value)
+$_tabs-list-padding: 3px;
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.tabsList {
+  display: inline-flex;
+  height: $size-9;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-muted);
+  color: var(--color-muted-foreground);
+  padding: $_tabs-list-padding;
+}
+
+.tabsTrigger {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-1;
+  height: calc(100% - #{$border-width-base});
+  border-radius: var(--radius-md);
+  border: $border-width-base solid transparent;
+  background: transparent;
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  color: var(--color-foreground);
+  transition: color $duration-fast ease, box-shadow $duration-fast ease, background-color $duration-fast ease;
+
+  &:focus-visible {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &[data-state='active'] {
+    background-color: var(--color-background);
+    box-shadow: var(--shadow-sm);
+    color: var(--color-foreground);
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+}
+
+.tabsContent {
+  flex: 1;
+  outline: none;
+}

@@ -1,0 +1,98 @@
+// Shared page-level layout utilities.
+// Imported by all app pages for common structural patterns.
+
+.loading {
+  display: grid;
+  place-items: center;
+  height: 50vh;
+}
+
+.appLoading {
+  display: grid;
+  place-items: center;
+  height: $height-screen;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  min-height: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: $font-size-base;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($card-min-width, 1fr));
+  gap: $spacing-4;
+}
+
+.statTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wider;
+}
+
+.statValue {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-foreground);
+  margin-top: $spacing-1;
+}
+
+.statIcon {
+  width: $size-5;
+  height: $size-5;
+  color: var(--color-primary);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.placeholderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: $min-section-height;
+}
+
+.placeholder {
+  color: var(--color-text-muted);
+  font-size: $font-size-sm;
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: $min-section-height;
+  color: var(--color-error);
+  font-size: $font-size-sm;
+}

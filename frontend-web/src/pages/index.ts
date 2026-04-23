@@ -1,0 +1,12 @@
+export { DashboardPage } from './dashboard';
+export { LandingPage } from './landing';
+export { LoginPage } from './login';
+export { RegisterPage } from './register';
+export { InventoryPage } from './inventory';
+export { ProductsPage } from './products';
+export { SalesPage } from './sales';
+export { CustomersPage } from './customers';
+export { EmployeesPage } from './employees';
+export { SuppliersPage } from './suppliers';
+export { AnalyticsPage } from './analytics';
+export { NotificationsPage } from './notifications';

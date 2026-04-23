@@ -1,0 +1,56 @@
+.input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: $size-9;
+  padding: $spacing-1 $spacing-3;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-input);
+  background-color: transparent;
+  font-size: $font-size-base;
+  font-family: inherit;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  transition: color $duration-fast ease, box-shadow $duration-fast ease, border-color $duration-fast ease;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-sm;
+  }
+
+  &::placeholder {
+    color: var(--color-muted-foreground);
+  }
+
+  &::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  // File input styling
+  &[type='file'] {
+    color: var(--color-foreground);
+  }
+
+  &[type='file']::file-selector-button {
+    display: inline-flex;
+    height: $size-7;
+    border: 0;
+    background-color: transparent;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: var(--color-foreground);
+    cursor: pointer;
+  }
+}

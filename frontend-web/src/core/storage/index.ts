@@ -1,2 +1,2 @@
 export { tokenStorage } from './tokenStorage';
-export type { AuthTokens } from './tokenStorage';
+export type { ITokenStorage } from './ITokenStorage';

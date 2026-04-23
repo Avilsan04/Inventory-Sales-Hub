@@ -4,9 +4,9 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  username: string;
-  email: string;
-  password: string;
+  readonly username: string;
+  readonly email: string;
+  readonly password: string;
 }
 
 export interface UserResponse {
@@ -17,5 +17,36 @@ export interface UserResponse {
 }
 
 export interface LoginResponse {
+  token: string;
+}
+
+export interface UserProfile {
+  id: number;
+  username: string;
+  email: string;
+  role: 'admin' | 'manager' | 'staff';
+  createdAt: string;
+}
+
+export interface UpdateProfileRequest {
+  username?: string;
+  email?: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+export interface RefreshTokenResponse {
   token: string;
 }

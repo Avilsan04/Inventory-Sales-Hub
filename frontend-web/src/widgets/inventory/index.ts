@@ -1,0 +1,1 @@
+export { InventoryTableWidget } from './InventoryTableWidget';

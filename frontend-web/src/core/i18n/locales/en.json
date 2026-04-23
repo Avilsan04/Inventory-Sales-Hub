@@ -1,0 +1,311 @@
+{
+  "common": {
+    "appName": "Inventory Sales Hub",
+    "loading": "Loading...",
+    "error": "Error",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search products, orders, customers...",
+    "filter": "Filter",
+    "toggleTheme": "Toggle theme",
+    "noData": "No data available",
+    "scrollToTop": "Scroll to top",
+    "close": "Close",
+    "switchLanguage": "Switch language",
+    "errorLoadingData": "Unable to retrieve data. Please try again.",
+    "openMenu": "Open menu",
+    "status": "Status",
+    "export": "Export"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "products": "Products",
+    "sales": "Sales",
+    "customers": "Customers",
+    "employees": "Employees",
+    "suppliers": "Suppliers",
+    "analytics": "Analytics",
+    "notifications": "Notifications",
+    "reports": "Reports",
+    "settings": "Settings",
+    "profile": "Profile",
+    "orders": "Orders",
+    "shipments": "Shipments"
+  },
+  "topbar": {
+    "subtitle": {
+      "dashboard": "Real-time overview of sales and stock",
+      "inventory": "Manage stock levels and reorder thresholds",
+      "orders": "Track orders, shipments, returns",
+      "customers": "Accounts and purchase history",
+      "suppliers": "Supplier network management",
+      "analytics": "Business performance overview",
+      "settings": "Account and system preferences"
+    }
+  },
+  "sidebar": {
+    "storage": "Storage Used",
+    "storageDetail": "68% of 100GB"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "username": "Username",
+    "usernamePlaceholder": "johndoe",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "loginSubtitle": "Enter your credentials to continue",
+    "registerSubtitle": "Join thousands of teams already using the platform",
+    "welcomeBack": "Welcome back",
+    "createAccount": "Create Account",
+    "enterCredentials": "Access your panel in seconds",
+    "emailPlaceholder": "email@example.com",
+    "passwordPlaceholder": "••••••••",
+    "alreadyHaveAccount": "Already have an account?",
+    "invalidCredentials": "Invalid credentials. Please try again.",
+    "validationError": "Please fill in all fields correctly.",
+    "passwordMismatch": "Passwords do not match.",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "registerError": "Registration failed. Please try again.",
+    "orContinueWith": "or continue with",
+    "continueWithGoogle": "Google",
+    "continueWithGithub": "GitHub",
+    "newToIsh": "New to Inventory Sales Hub?",
+    "createAccount": "Create an account"
+  },
+  "login": {
+    "brandTitle": "Total control of your business.",
+    "brandSubtitle": "Manage inventory, sales and analytics on one intelligent platform."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Good morning",
+    "headerSubtitle": "Here's what's happening with your business today.",
+    "vsLastMonth": "vs last month",
+    "stats": {
+      "totalProducts": "Total products",
+      "monthlySales": "Monthly sales",
+      "activeOrders": "Active orders",
+      "lowStock": "Low stock",
+      "newCustomers": "New customers"
+    },
+    "recentOrders": {
+      "title": "Recent orders",
+      "subtitle": "Last 24 hours",
+      "viewAll": "View all"
+    },
+    "lowStock": {
+      "title": "Low stock",
+      "subtitle": "Below reorder threshold",
+      "reorderAll": "Reorder all"
+    },
+    "cols": {
+      "order": "Order",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status"
+    },
+    "recentActivity": {
+      "title": "Recent activity",
+      "noActivity": "No recent activity"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "newProduct": "New product",
+      "newSale": "New sale",
+      "viewReports": "View reports"
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "subtitle": "Monitor and manage your stock levels",
+    "products": "Products",
+    "categories": "Categories",
+    "addProduct": "Add product",
+    "editProduct": "Edit product",
+    "productName": "Product name",
+    "name": "Product",
+    "quantity": "Quantity",
+    "sku": "SKU",
+    "price": "Price",
+    "stock": "Stock",
+    "category": "Category",
+    "allProducts": "All products",
+    "lowStockTab": "Low stock",
+    "outOfStockTab": "Out of stock",
+    "reorderAt": "Reorder at",
+    "exportCsv": "Export CSV",
+    "status_IN_STOCK": "In stock",
+    "status_LOW_STOCK": "Low stock",
+    "status_OUT_OF_STOCK": "Out of stock",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "lowStock": "Low stock",
+      "outOfStock": "Out of stock"
+    }
+  },
+  "products": {
+    "subtitle": "Browse and manage your product catalog",
+    "totalProducts": "Total products",
+    "totalCategories": "Categories"
+  },
+  "sales": {
+    "title": "Sales",
+    "newSale": "New sale",
+    "orderHistory": "Order history",
+    "revenue": "Revenue",
+    "totalOrders": "Total orders",
+    "completed": "Completed",
+    "customer": "Customer",
+    "items": "Items",
+    "total": "Total",
+    "date": "Date",
+    "orderId": "Order",
+    "searchPlaceholder": "Search orders or customers…",
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "shipped": "Shipped",
+      "processing": "Processing"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "subtitle": "Manage your customer relationships",
+    "totalCustomers": "Total customers",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "contact": "Contact",
+    "orders": "Orders",
+    "lifetimeValue": "Lifetime value",
+    "searchPlaceholder": "Search customers…",
+    "addCustomer": "Add customer"
+  },
+  "employees": {
+    "title": "Employees",
+    "subtitle": "Manage your team members and roles",
+    "totalEmployees": "Total employees",
+    "activeEmployees": "Active",
+    "adminCount": "Admins",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "staff": "Staff"
+    }
+  },
+  "suppliers": {
+    "title": "Suppliers",
+    "subtitle": "Manage your supplier network",
+    "totalSuppliers": "Total suppliers",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "contactPerson": "Contact person"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Business performance overview",
+    "totalRevenue": "Total revenue",
+    "totalOrders": "Total orders",
+    "totalCustomers": "Total customers",
+    "totalProducts": "Total products",
+    "vsLastMonth": "vs last month",
+    "topProducts": "Top products",
+    "topCustomers": "Top customers",
+    "lowStockAlerts": "Low stock alerts",
+    "col": {
+      "product": "Product",
+      "sku": "SKU",
+      "sold": "Units sold",
+      "revenue": "Revenue",
+      "customer": "Customer",
+      "orders": "Orders",
+      "spent": "Total spent",
+      "item": "Item",
+      "qty": "Qty",
+      "threshold": "Threshold"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Your alerts and system updates",
+    "unread": "{{count}} unread",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications yet",
+    "types": {
+      "info": "Info",
+      "warning": "Warning",
+      "error": "Error",
+      "success": "Success"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "minLength": "Minimum {{min}} characters required",
+    "maxLength": "Maximum {{max}} characters allowed"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Inventory Management Platform",
+      "titleLine1": "Manage Your Inventory with ",
+      "titleAccent": "Precision & Speed",
+      "description": "The all-in-one platform to track products, analyze sales and protect your business, easily and efficiently.",
+      "cta": "Get started free",
+      "secondaryCta": "View demo",
+      "stat1": { "value": "+12,000", "label": "products managed" },
+      "stat2": { "value": "+3,200", "label": "sales today" },
+      "stat3": { "value": "99.9%", "label": "uptime" }
+    },
+    "features": {
+      "title": "Everything you need to optimize your inventory and sales",
+      "subtitle": "The all-in-one platform to track products, analyze sales and protect your business.",
+      "inventory": {
+        "title": "Smart Inventory",
+        "description": "Precise, real-time tracking of every product in your inventory."
+      },
+      "dashboards": {
+        "title": "Interactive Dashboards",
+        "description": "Visualize sales, inventory and performance with clear charts and detailed reports."
+      },
+      "alerts": {
+        "title": "Automated Alerts",
+        "description": "Receive instant notifications about low stock and sales trends."
+      },
+      "security": {
+        "title": "Enterprise Security",
+        "description": "Advanced data protection and access control for teams."
+      }
+    },
+    "analytics": {
+      "title": "Advanced sales analytics",
+      "description": "Get real-time insights to make data-driven decisions and grow your sales."
+    },
+    "trusted": {
+      "title": "Thousands of businesses trust our Hub"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    }
+  }
+}

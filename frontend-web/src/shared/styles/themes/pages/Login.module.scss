@@ -1,0 +1,61 @@
+// ── Login Page ─────────────────────────────────────────────────────────
+// Centered card on a professional SaaS-style background:
+// dot grid + two subtle radial glows stacked via CSS background-image layers.
+
+// ── Layout-scoped constants ────────────────────────────────────────────
+$_page-bg:        #f0f4ff;
+$_form-max-width: 32rem;
+$_dot-color:      rgba(100 130 200 / 0.08);
+$_dot-size:       26px;
+$_glow-a:         rgba(90 110 255 / 0.10);   // bottom-left accent
+$_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
+
+// ── Page Shell ─────────────────────────────────────────────────────────
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: $height-screen;
+
+  // Base color (fallback + dark-mode override target)
+  background-color: $_page-bg;
+
+  // Three stacked layers: bottom-left glow · top-right glow · dot grid
+  background-image:
+    radial-gradient(circle at 22% 88%, $_glow-a 0%, transparent 42%),
+    radial-gradient(circle at 82% 8%,  $_glow-b 0%, transparent 38%),
+    radial-gradient(circle, $_dot-color 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, $_dot-size $_dot-size;
+
+  position: relative;
+  overflow: hidden;
+
+  :global([data-theme='dark']) & {
+    background-color: var(--color-bg-primary);
+    background-image:
+      radial-gradient(circle at 22% 88%, rgba(90 110 255 / 0.07) 0%, transparent 42%),
+      radial-gradient(circle at 82% 8%,  rgba(60 140 255 / 0.05) 0%, transparent 38%),
+      radial-gradient(circle, rgba(255 255 255 / 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, $_dot-size $_dot-size;
+  }
+}
+
+// ── Theme Toggle ───────────────────────────────────────────────────────
+
+.themeToggle {
+  position: absolute;
+  top: $spacing-4;
+  right: $spacing-4;
+  z-index: 1;
+}
+
+// ── Form Container ─────────────────────────────────────────────────────
+
+.container {
+  width: 100%;
+  max-width: $_form-max-width;
+  padding: 0 $spacing-4;
+  position: relative;
+  z-index: 1;
+}

@@ -1,0 +1,162 @@
+// ── Mobile overlay ──────────────────────────────────────────────────────
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background-color: var(--color-overlay);
+  opacity: 0;
+  transition: opacity $duration-base ease;
+  pointer-events: none;
+
+  @media (min-width: $breakpoint-lg) {
+    display: none;
+  }
+}
+
+.overlayVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+// ── Sidebar panel ───────────────────────────────────────────────────────
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: $sidebar-width;
+  background-color: var(--color-sidebar);
+  border-right: $border-width-base solid var(--color-sidebar-border);
+  overflow: hidden;
+
+  @media (min-width: $breakpoint-lg) {
+    position: sticky;
+    top: 0;
+    height: $height-screen;
+  }
+
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: $height-screen;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform $duration-slow ease;
+  }
+}
+
+.sidebarOpen {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    transform: translateX(0);
+  }
+}
+
+// ── Brand ───────────────────────────────────────────────────────────────
+.brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-5 $spacing-4;
+  border-bottom: $border-width-base solid var(--color-sidebar-border);
+  flex-shrink: 0;
+}
+
+.brandName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-sidebar-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: $letter-spacing-tight;
+}
+
+// ── Navigation ──────────────────────────────────────────────────────────
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-4 $spacing-3;
+}
+
+.footerNav {
+  padding: $spacing-2 $spacing-3;
+  border-top: $border-width-base solid var(--color-sidebar-border);
+  flex-shrink: 0;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: 0;
+  margin: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-2 $spacing-3;
+  border-radius: var(--radius-md);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-sidebar-foreground);
+  text-decoration: none;
+  transition: background-color $duration-fast ease, color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-sidebar-accent);
+    color: var(--color-sidebar-accent-foreground);
+  }
+}
+
+.navItemActive {
+  background-color: $color-primary-light;
+  color: $color-primary-hover;
+  font-weight: $font-weight-semibold;
+
+  &:hover {
+    background-color: $color-primary-light;
+    color: $color-primary-hover;
+  }
+}
+
+.navIcon {
+  width: $size-4;
+  height: $size-4;
+  flex-shrink: 0;
+}
+
+// ── User footer ─────────────────────────────────────────────────────────
+.userFooter {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  border-top: $border-width-base solid var(--color-sidebar-border);
+  flex-shrink: 0;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  min-width: 0;
+}
+
+.userName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-sidebar-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userEmail {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

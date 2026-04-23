@@ -1,0 +1,141 @@
+.toastViewport {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  max-height: $height-screen;
+  width: 100%;
+  flex-direction: column-reverse;
+  padding: $spacing-4;
+
+  @media (min-width: $breakpoint-sm) {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    flex-direction: column;
+    max-width: $container-toast;
+  }
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  padding: $spacing-6;
+  padding-right: $spacing-8;
+  box-shadow: var(--shadow-lg);
+  transition: transform $duration-slower ease, opacity $duration-slower ease;
+
+  &[data-state='open'] {
+    animation: slideInFromBottom $duration-slower ease-out;
+  }
+
+  &[data-state='closed'] {
+    opacity: 0;
+  }
+}
+
+.toastDefault {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+.toastDestructive {
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
+  border-color: var(--color-destructive);
+}
+
+.toastAction {
+  display: inline-flex;
+  height: $size-8;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background-color: transparent;
+  padding: 0 $spacing-3;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: background-color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-secondary-bg);
+  }
+
+  &:focus-visible {
+    outline: $border-width-focus solid var(--color-ring);
+    outline-offset: $border-width-focus;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .toastDestructive & {
+    border-color: color-mix(in srgb, var(--color-text-inverse) 40%, transparent);
+
+    &:hover {
+      background-color: var(--color-destructive);
+      border-color: color-mix(in srgb, var(--color-destructive) 30%, transparent);
+    }
+  }
+}
+
+.toastClose {
+  position: absolute;
+  right: $spacing-2;
+  top: $spacing-2;
+  border-radius: var(--radius-md);
+  padding: $spacing-1;
+  color: inherit;
+  opacity: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity $duration-fast ease;
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: $border-width-focus solid var(--color-ring);
+  }
+
+  .toast:hover & {
+    opacity: 1;
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
+.toastContent {
+  display: grid;
+  gap: $spacing-1;
+}
+
+.toastTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+}
+
+.toastDescription {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+}

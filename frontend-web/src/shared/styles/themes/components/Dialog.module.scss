@@ -1,0 +1,90 @@
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: var(--color-overlay);
+  animation: overlayShow $duration-base ease-out;
+}
+
+.dialogContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 50;
+  display: grid;
+  width: 100%;
+  max-width: calc(100% - #{$size-8});
+  transform: translate(-50%, -50%);
+  gap: $spacing-4;
+  border-radius: var(--radius-lg);
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-background);
+  padding: $spacing-6;
+  box-shadow: var(--shadow-lg);
+  animation: zoomIn95 $duration-base ease-out;
+
+  @media (min-width: $breakpoint-sm) {
+    max-width: $container-dialog;
+  }
+}
+
+.dialogClose {
+  position: absolute;
+  top: $spacing-4;
+  right: $spacing-4;
+  border-radius: var(--radius-sm);
+  opacity: 0.7;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-1;
+  transition: opacity $duration-fast ease;
+  color: inherit;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: $border-width-focus solid var(--color-ring);
+    outline-offset: $border-width-focus;
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
+.dialogHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  text-align: center;
+
+  @media (min-width: $breakpoint-sm) {
+    text-align: left;
+  }
+}
+
+.dialogFooter {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: $spacing-2;
+
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+.dialogTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-none;
+}
+
+.dialogDescription {
+  font-size: $font-size-sm;
+  color: var(--color-muted-foreground);
+}

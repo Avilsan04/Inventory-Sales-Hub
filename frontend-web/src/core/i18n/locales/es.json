@@ -1,0 +1,311 @@
+{
+  "common": {
+    "appName": "Inventory Sales Hub",
+    "loading": "Cargando...",
+    "error": "Error",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar productos, pedidos, clientes...",
+    "filter": "Filtrar",
+    "toggleTheme": "Cambiar tema",
+    "noData": "No hay datos disponibles",
+    "scrollToTop": "Ir al inicio",
+    "close": "Cerrar",
+    "switchLanguage": "Cambiar idioma",
+    "errorLoadingData": "No se pudieron obtener los datos. Inténtalo de nuevo.",
+    "openMenu": "Abrir menú",
+    "status": "Estado",
+    "export": "Exportar"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "inventory": "Inventario",
+    "products": "Productos",
+    "sales": "Ventas",
+    "customers": "Clientes",
+    "employees": "Empleados",
+    "suppliers": "Proveedores",
+    "analytics": "Analíticas",
+    "notifications": "Notificaciones",
+    "reports": "Reportes",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "orders": "Pedidos",
+    "shipments": "Envíos"
+  },
+  "topbar": {
+    "subtitle": {
+      "dashboard": "Vista general en tiempo real de ventas y stock",
+      "inventory": "Gestiona niveles de stock y umbrales de reposición",
+      "orders": "Seguimiento de pedidos, envíos y devoluciones",
+      "customers": "Cuentas e historial de compras",
+      "suppliers": "Gestión de la red de proveedores",
+      "analytics": "Visión general del rendimiento del negocio",
+      "settings": "Preferencias de cuenta y sistema"
+    }
+  },
+  "sidebar": {
+    "storage": "Almacenamiento",
+    "storageDetail": "68% de 100GB"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "username": "Nombre de usuario",
+    "usernamePlaceholder": "juanperez",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "rememberMe": "Recordarme",
+    "loginSubtitle": "Ingresa tus credenciales para continuar",
+    "registerSubtitle": "Únete a miles de equipos que ya usan la plataforma",
+    "welcomeBack": "Bienvenido de nuevo",
+    "createAccount": "Crear cuenta",
+    "emailPlaceholder": "correo@ejemplo.com",
+    "passwordPlaceholder": "••••••••",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "invalidCredentials": "Credenciales inválidas. Por favor, intenta de nuevo.",
+    "validationError": "Por favor, completa todos los campos correctamente.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "registerError": "El registro falló. Por favor, inténtalo de nuevo.",
+    "orContinueWith": "o continuar con",
+    "continueWithGoogle": "Google",
+    "continueWithGithub": "GitHub",
+    "enterCredentials": "Accede a tu panel en segundos",
+    "newToIsh": "¿Nuevo en Inventory Sales Hub?",
+    "createAccount": "Crear una cuenta"
+  },
+  "login": {
+    "brandTitle": "Control total de tu negocio.",
+    "brandSubtitle": "Gestiona inventario, ventas y analíticas en una sola plataforma inteligente."
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "welcome": "Buenos días",
+    "headerSubtitle": "Esto es lo que está pasando en tu negocio hoy.",
+    "vsLastMonth": "vs mes anterior",
+    "stats": {
+      "totalProducts": "Total de productos",
+      "monthlySales": "Ventas mensuales",
+      "activeOrders": "Pedidos activos",
+      "lowStock": "Stock bajo",
+      "newCustomers": "Nuevos clientes"
+    },
+    "recentOrders": {
+      "title": "Pedidos recientes",
+      "subtitle": "Últimas 24 horas",
+      "viewAll": "Ver todos"
+    },
+    "lowStock": {
+      "title": "Stock bajo",
+      "subtitle": "Por debajo del umbral de reposición",
+      "reorderAll": "Reponer todo"
+    },
+    "cols": {
+      "order": "Pedido",
+      "items": "Artículos",
+      "total": "Total",
+      "status": "Estado"
+    },
+    "recentActivity": {
+      "title": "Actividad reciente",
+      "noActivity": "Sin actividad reciente"
+    },
+    "quickActions": {
+      "title": "Acciones rápidas",
+      "newProduct": "Nuevo producto",
+      "newSale": "Nueva venta",
+      "viewReports": "Ver reportes"
+    }
+  },
+  "inventory": {
+    "title": "Inventario",
+    "subtitle": "Monitoriza y gestiona tus niveles de stock",
+    "products": "Productos",
+    "categories": "Categorías",
+    "addProduct": "Agregar producto",
+    "editProduct": "Editar producto",
+    "productName": "Nombre del producto",
+    "name": "Producto",
+    "quantity": "Cantidad",
+    "sku": "SKU",
+    "price": "Precio",
+    "stock": "Stock",
+    "category": "Categoría",
+    "allProducts": "Todos los productos",
+    "lowStockTab": "Stock bajo",
+    "outOfStockTab": "Sin stock",
+    "exportCsv": "Exportar CSV",
+    "reorderAt": "Reponer en",
+    "status_IN_STOCK": "En stock",
+    "status_LOW_STOCK": "Stock bajo",
+    "status_OUT_OF_STOCK": "Sin stock",
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "lowStock": "Stock bajo",
+      "outOfStock": "Sin stock"
+    }
+  },
+  "products": {
+    "subtitle": "Explora y gestiona tu catálogo de productos",
+    "totalProducts": "Total de productos",
+    "totalCategories": "Categorías"
+  },
+  "sales": {
+    "title": "Ventas",
+    "newSale": "Nueva venta",
+    "orderHistory": "Historial de pedidos",
+    "revenue": "Ingresos",
+    "totalOrders": "Total de pedidos",
+    "completed": "Completados",
+    "customer": "Cliente",
+    "items": "Artículos",
+    "total": "Total",
+    "date": "Fecha",
+    "orderId": "Pedido",
+    "searchPlaceholder": "Buscar pedidos o clientes…",
+    "status": {
+      "pending": "Pendiente",
+      "completed": "Completado",
+      "cancelled": "Cancelado",
+      "shipped": "Enviado",
+      "processing": "Procesando"
+    }
+  },
+  "customers": {
+    "title": "Clientes",
+    "subtitle": "Gestiona tus relaciones con clientes",
+    "totalCustomers": "Total de clientes",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "contact": "Contacto",
+    "orders": "Pedidos",
+    "lifetimeValue": "Valor total",
+    "searchPlaceholder": "Buscar clientes…",
+    "addCustomer": "Añadir cliente"
+  },
+  "employees": {
+    "title": "Empleados",
+    "subtitle": "Gestiona los miembros y roles de tu equipo",
+    "totalEmployees": "Total de empleados",
+    "activeEmployees": "Activos",
+    "adminCount": "Administradores",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "role": "Rol",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "roles": {
+      "admin": "Administrador",
+      "manager": "Gestor",
+      "staff": "Personal"
+    }
+  },
+  "suppliers": {
+    "title": "Proveedores",
+    "subtitle": "Gestiona tu red de proveedores",
+    "totalSuppliers": "Total de proveedores",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "contactPerson": "Persona de contacto"
+  },
+  "analytics": {
+    "title": "Analíticas",
+    "subtitle": "Resumen de rendimiento del negocio",
+    "totalRevenue": "Ingresos totales",
+    "totalOrders": "Pedidos totales",
+    "totalCustomers": "Total de clientes",
+    "totalProducts": "Total de productos",
+    "vsLastMonth": "vs mes anterior",
+    "topProducts": "Productos destacados",
+    "topCustomers": "Clientes destacados",
+    "lowStockAlerts": "Alertas de stock bajo",
+    "col": {
+      "product": "Producto",
+      "sku": "SKU",
+      "sold": "Unidades vendidas",
+      "revenue": "Ingresos",
+      "customer": "Cliente",
+      "orders": "Pedidos",
+      "spent": "Total gastado",
+      "item": "Artículo",
+      "qty": "Cant.",
+      "threshold": "Umbral"
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "subtitle": "Tus alertas y actualizaciones del sistema",
+    "unread": "{{count}} sin leer",
+    "markAllRead": "Marcar todo como leído",
+    "noNotifications": "No hay notificaciones",
+    "types": {
+      "info": "Info",
+      "warning": "Aviso",
+      "error": "Error",
+      "success": "Éxito"
+    }
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Correo electrónico inválido",
+    "minLength": "Mínimo {{min}} caracteres requeridos",
+    "maxLength": "Máximo {{max}} caracteres permitidos"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Plataforma de Gestión de Inventario",
+      "titleLine1": "Gestiona tu Inventario con ",
+      "titleAccent": "Precisión y Velocidad",
+      "description": "La plataforma todo-en-uno para rastrear productos, analizar ventas y proteger tu negocio, de manera fácil y eficiente.",
+      "cta": "Empieza gratis",
+      "secondaryCta": "Ver demo",
+      "stat1": { "value": "+12.000", "label": "productos gestionados" },
+      "stat2": { "value": "+3.200", "label": "ventas hoy" },
+      "stat3": { "value": "99.9%", "label": "uptime" }
+    },
+    "features": {
+      "title": "Todo lo que necesitas para optimizar tu inventario y ventas",
+      "subtitle": "La plataforma todo-en-uno para rastrear productos, analizar ventas y proteger tu negocio.",
+      "inventory": {
+        "title": "Inventario Inteligente",
+        "description": "Rastreo preciso y en tiempo real de cada producto en tu inventario."
+      },
+      "dashboards": {
+        "title": "Dashboards Interactivos",
+        "description": "Visualiza las ventas, el inventario y el rendimiento con gráficas claras e informes detallados."
+      },
+      "alerts": {
+        "title": "Alertas Automatizadas",
+        "description": "Recibe notificaciones instantáneas sobre bajo stock y tendencias de ventas."
+      },
+      "security": {
+        "title": "Seguridad Empresarial",
+        "description": "Protección avanzada de datos y control de acceso para equipos."
+      }
+    },
+    "analytics": {
+      "title": "Análisis avanzado de ventas",
+      "description": "Obtén información en tiempo real para tomar decisiones basadas en datos y aumentar tus ventas."
+    },
+    "trusted": {
+      "title": "Miles de negocios confían en nuestro Hub"
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    }
+  }
+}

@@ -1,0 +1,36 @@
+.textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: $textarea-min-height;
+  padding: $spacing-2 $spacing-3;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-input);
+  background-color: transparent;
+  font-size: $font-size-base;
+  font-family: inherit;
+  color: inherit;
+  box-shadow: var(--shadow-xs);
+  outline: none;
+  resize: vertical;
+  transition: color $duration-fast ease, box-shadow $duration-fast ease, border-color $duration-fast ease;
+
+  @media (min-width: $breakpoint-md) {
+    font-size: $font-size-sm;
+  }
+
+  &::placeholder {
+    color: var(--color-muted-foreground);
+  }
+
+  &:focus-visible {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
