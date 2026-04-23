@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "rnscreens_autolinked_build",
+		"source" : "C:/Users/valen/Documents/GitHub/Inventory-Sales-Hub/frontend-mobile/node_modules/react-native-screens/android/src/main/jni"
+	}
+}
