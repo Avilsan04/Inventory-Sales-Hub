@@ -25,9 +25,15 @@ export default function RegisterScreen({ navigation }: Props) {
     }
     setLoading(true);
     try {
+      // El registro devuelve directamente los datos del usuario + tokens
       const response = await authApi.register({ username, email, password });
-      await tokenStorage.saveToken(response.token);
-      setUser({ id: response.id, username: response.username, email: response.email, token: response.token });
+      await tokenStorage.saveToken(response.accessToken);
+      setUser({
+        id: response.id,
+        username: response.username,
+        email: response.email,
+        token: response.accessToken,
+      });
     } catch {
       Alert.alert('Error', 'No se pudo crear la cuenta');
     } finally {

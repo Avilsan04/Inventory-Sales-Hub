@@ -24,9 +24,18 @@ export default function LoginScreen({ navigation }: Props) {
     }
     setLoading(true);
     try {
+      // 1. Login → obtenemos los tokens
       const response = await authApi.login({ email, password });
-      await tokenStorage.saveToken(response.token);
-      setUser({ id: 0, username: email, email, token: response.token });
+      await tokenStorage.saveToken(response.accessToken);
+
+      // 2. Con el token ya guardado, obtenemos el perfil real del usuario
+      const profile = await authApi.getMe();
+      setUser({
+        id: profile.id,
+        username: profile.username,
+        email: profile.email,
+        token: response.accessToken,
+      });
     } catch {
       Alert.alert('Error', 'Credenciales incorrectas');
     } finally {
