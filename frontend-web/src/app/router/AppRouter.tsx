@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from '@widgets';
 import { ProtectedRoute } from './guards/ProtectedRoute';
 import { PublicRoute } from './guards/PublicRoute';
@@ -65,6 +65,10 @@ const SettingsPage = React.lazy(() =>
   import('@pages/settings/SettingsPage').then(module => ({ default: module.SettingsPage }))
 );
 
+const NotFoundPage = React.lazy(() =>
+  import('@pages/not-found/NotFoundPage').then(module => ({ default: module.NotFoundPage }))
+);
+
 /**
  * Registers global HTTP interceptors (e.g., 401 Unauthorized handling).
  * Uses the routing adapter to maintain architectural purity.
@@ -128,8 +132,8 @@ export function AppRouter(): React.ReactElement {
             </Route>
           </Route>
 
-          {/* Fallback Catch-all */}
-          <Route path="*" element={<Navigate to={APP_ROUTES.LANDING} replace />} />
+          {/* 404 */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </React.Suspense>
     </BrowserRouter>

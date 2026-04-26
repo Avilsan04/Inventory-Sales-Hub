@@ -1,0 +1,46 @@
+.fieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fieldRowLast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 0;
+}
+
+.labelStack {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.labelTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+}
+
+.labelTitleDanger {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: var(--color-destructive);
+}
+
+.labelDesc {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
+.langButtons {
+  display: flex;
+  gap: $spacing-2;
+}
+
+.tabsHeader {
+  margin-bottom: $spacing-6;
+}

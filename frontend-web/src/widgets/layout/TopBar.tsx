@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useLogout } from '@features/auth';
+import { useNotifications } from '@features/notifications';
 import { Input } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
@@ -29,6 +30,8 @@ export function TopBar(): React.ReactElement {
   const { pathname } = useLocation();
 
   const meta = PAGE_META[pathname] ?? { titleKey: 'common.appName', subtitleKey: '' };
+  const { data: notifications } = useNotifications();
+  const unreadCount = notifications?.filter((n) => !n.isRead).length ?? 0;
 
   return (
     <header className={styles['topbar']}>
@@ -60,7 +63,15 @@ export function TopBar(): React.ReactElement {
           >
             <BellIcon aria-hidden="true" />
           </button>
-          <span className={styles['notifDot']} aria-label="3 unread notifications" />
+          {unreadCount > 0 && (
+            <span
+              className={styles['notifDot']}
+              aria-label={`${String(unreadCount)} unread notifications`}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.625rem', fontWeight: 700, color: '#fff' }}
+            >
+              {unreadCount > 9 ? '9+' : String(unreadCount)}
+            </span>
+          )}
         </div>
 
         <button

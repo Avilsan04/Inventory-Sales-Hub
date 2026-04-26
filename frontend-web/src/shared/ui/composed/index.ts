@@ -105,3 +105,10 @@ export {
   TooltipContent,
   TooltipProvider,
 } from './Tooltip';
+
+export { RevenueAreaChart } from './RevenueAreaChart';
+export { SalesDonutChart, type StatusSlice } from './SalesDonutChart';
+export { TopProductsBarChart } from './TopProductsBarChart';
+export { SparklineChart } from './SparklineChart';
+export { FormField, type FormFieldProps } from './FormField';
+export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog';

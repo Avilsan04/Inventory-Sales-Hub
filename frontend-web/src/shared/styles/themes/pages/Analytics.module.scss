@@ -78,6 +78,47 @@
   @media (max-width: $breakpoint-lg) { grid-template-columns: 1fr; }
 }
 
+// ── Charts ────────────────────────────────────────────────────────────────
+.chartSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.chartTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.chartSubtitle {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: $spacing-1 0 0;
+}
+
+.chartLegend {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.chartLegendItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.chartLegendDot {
+  width: $size-2;
+  height: $size-2;
+  border-radius: 50%;
+}
+
 // ── State containers ─────────────────────────────────────────────────────
 .placeholderContainer {
   display: flex;

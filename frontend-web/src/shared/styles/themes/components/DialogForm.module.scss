@@ -1,0 +1,83 @@
+// Shared layout primitives for forms rendered inside Dialog components.
+// All dialogs import this single module — avoids repeating flex/grid declarations.
+
+$short-col: 5rem;         // ~80px — currency / short inputs
+$qty-col: 3.75rem;        // ~60px — quantity field
+$price-col: 5.5rem;       // ~88px — unit price field
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-3 0;
+}
+
+.bodyScroll {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-3 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.fieldPadding {
+  padding: $spacing-3 0;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2;
+}
+
+.gridPriceShort {
+  display: grid;
+  grid-template-columns: 1fr $short-col;
+  gap: $spacing-2;
+}
+
+.gridQtyPriceShort {
+  display: grid;
+  grid-template-columns: 1fr 1fr $short-col;
+  gap: $spacing-2;
+}
+
+// 4-col row for sale item: product | qty | price | delete
+.saleItemRow {
+  display: grid;
+  grid-template-columns: 1fr $qty-col $price-col auto;
+  gap: $spacing-1;
+  margin-bottom: $spacing-2;
+  align-items: end;
+}
+
+.activeRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.infoText {
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-2;
+  color: var(--color-text-primary);
+}
+
+.errorBanner {
+  font-size: $font-size-xs;
+  color: var(--color-destructive);
+  margin: 0 0 $spacing-2;
+}
+
+// Delete button in sale item row needs top margin only on first row
+// (first row has labels above, rest don't)
+.deleteBtn { align-self: end; }
+.deleteBtnFirst { align-self: end; margin-top: 1.375rem; }
