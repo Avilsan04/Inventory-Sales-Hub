@@ -1,20 +1,36 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
-import type { LoginResponse, UserProfile, UserResponse } from '../models';
+import type { LoginRequest, LoginResponse, UserProfile, UserResponse } from '../models';
+import mockData from '@app/mock/mock-data.json';
+
+type MockUserType = 'admin' | 'customer' | 'test';
+
+let _activeUser: MockUserType = 'admin';
+
+const CREDENTIAL_MAP: Record<string, MockUserType> = {
+    'admin@ish.dev':   'admin',
+    'cliente@ish.dev': 'customer',
+    'test@ish.dev':    'test',
+};
+
+const { auth } = mockData;
 
 export const authHandlers = [
-    http.post(`${API_BASE_URL}/auth/login`, async () => {
+    http.post(`${API_BASE_URL}/auth/login`, async ({ request }) => {
         await delay(1000);
-        return HttpResponse.json<LoginResponse>({ token: 'mock-jwt-token-777' });
+        const body = await request.json() as LoginRequest;
+        _activeUser = CREDENTIAL_MAP[body.email] ?? 'admin';
+        return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });
     }),
 
     http.post(`${API_BASE_URL}/auth/register`, async () => {
         await delay(1000);
+        const profile = auth.profiles.admin;
         return HttpResponse.json<UserResponse>({
-            id: 1,
-            username: 'mockuser',
-            email: 'mock@example.com',
-            token: 'mock-register-jwt-token-888',
+            id: profile.id,
+            username: profile.username,
+            email: profile.email,
+            token: auth.registerToken,
         });
     }),
 
@@ -25,18 +41,12 @@ export const authHandlers = [
 
     http.get(`${API_BASE_URL}/auth/me`, async () => {
         await delay(400);
-        return HttpResponse.json<UserProfile>({
-            id: 1,
-            username: 'mockuser',
-            email: 'mock@example.com',
-            role: 'admin',
-            createdAt: '2025-01-01T00:00:00.000Z',
-        });
+        return HttpResponse.json<UserProfile>(auth.profiles[_activeUser] as UserProfile);
     }),
 
     http.post(`${API_BASE_URL}/auth/refresh`, async () => {
         await delay(300);
-        return HttpResponse.json<LoginResponse>({ token: 'mock-refreshed-jwt-token-999' });
+        return HttpResponse.json<LoginResponse>({ token: auth.refreshToken });
     }),
 
     http.post(`${API_BASE_URL}/auth/forgot-password`, async () => {
@@ -52,12 +62,11 @@ export const authHandlers = [
     http.patch(`${API_BASE_URL}/auth/me`, async ({ request }) => {
         await delay(500);
         const body = await request.json() as Partial<UserProfile>;
+        const current = auth.profiles[_activeUser];
         return HttpResponse.json<UserProfile>({
-            id: 1,
-            username: body.username ?? 'mockuser',
-            email: body.email ?? 'mock@example.com',
-            role: 'admin',
-            createdAt: '2025-01-01T00:00:00.000Z',
+            ...current as UserProfile,
+            username: body.username ?? current.username,
+            email: body.email ?? current.email,
         });
     }),
 

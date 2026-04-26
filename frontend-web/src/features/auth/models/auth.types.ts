@@ -24,7 +24,7 @@ export interface UserProfile {
   id: number;
   username: string;
   email: string;
-  role: 'admin' | 'manager' | 'staff';
+  role: 'admin' | 'manager' | 'staff' | 'customer' | 'test';
   createdAt: string;
 }
 

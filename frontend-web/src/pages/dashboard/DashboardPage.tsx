@@ -56,8 +56,17 @@ function saleStatusVariant(status: string): BadgeVariant {
     return map[status as SaleStatus];
 }
 
-function shortId(id: string): string {
-    return id.length > 12 ? `${id.slice(0, 8)}…` : id;
+function formatCurrency(amount: number, currency: string): string {
+    return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(amount);
+}
+
+function orderId(id: string): string {
+    return id.startsWith('ORD-') ? `#${id}` : `#${id.slice(0, 8)}`;
 }
 
 export function DashboardPage(): React.ReactElement {
@@ -90,7 +99,7 @@ export function DashboardPage(): React.ReactElement {
     const kpiCards: KpiCardData[] = [
         {
             titleKey: 'dashboard.stats.monthlySales',
-            value: kpi ? `${kpi.currency} ${kpi.totalRevenue.toLocaleString()}` : '0',
+            value: kpi ? formatCurrency(kpi.totalRevenue, kpi.currency) : '—',
             iconKey: 'sales',
             trend: kpi ? `${kpi.revenueGrowth >= 0 ? '+' : ''}${String(kpi.revenueGrowth)}%` : undefined,
             trendUp: (kpi?.revenueGrowth ?? 0) >= 0,
@@ -228,15 +237,15 @@ export function DashboardPage(): React.ReactElement {
                                     )
                                     : recentSales.map((s) => (
                                         <TableRow key={s.id}>
-                                            <TableCell className={styles['mono']}>{shortId(s.id)}</TableCell>
+                                            <TableCell className={styles['mono']}>{orderId(s.id)}</TableCell>
                                             <TableCell>
                                                 {s.customerId
-                                                    ? (customerMap.get(s.customerId) ?? shortId(s.customerId))
+                                                    ? (customerMap.get(s.customerId) ?? `#${s.customerId.slice(0, 8)}`)
                                                     : '—'}
                                             </TableCell>
                                             <TableCell>{s.items.length}</TableCell>
                                             <TableCell className={styles['mono']}>
-                                                {s.currency} {s.total.toFixed(2)}
+                                                {formatCurrency(s.total, s.currency)}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge variant={saleStatusVariant(s.status)} showDot>

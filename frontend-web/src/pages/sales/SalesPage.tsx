@@ -33,13 +33,20 @@ function statusLabel(status: SaleStatus, t: (k: string) => string): string {
 }
 
 function formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString();
+    return iso.slice(0, 10); // YYYY-MM-DD
 }
 
-function shortId(id: string): string {
-    const parts = id.split('-');
-    if (parts.length >= 2) return `${parts[0] ?? ''}-${parts[1] ?? ''}`;
-    return id.slice(0, 12);
+function formatCurrency(amount: number, currency: string): string {
+    return new Intl.NumberFormat('en-GB', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(amount);
+}
+
+function orderId(id: string): string {
+    return id.startsWith('ORD-') ? `#${id}` : `#${id.slice(0, 8)}`;
 }
 
 const SKELETON_ROWS = 5;
@@ -55,7 +62,7 @@ export function SalesPage(): React.ReactElement {
     const handleExport = (): void => {
         exportToCsv(
             (sales ?? []).map((s) => ({
-                id: shortId(s.id),
+                id: orderId(s.id),
                 customer: s.customerId ? (customerMap.get(s.customerId) ?? s.customerId) : '',
                 date: formatDate(s.createdAt),
                 status: s.status,
@@ -153,18 +160,18 @@ export function SalesPage(): React.ReactElement {
                                     )
                                     : filtered.map((s) => (
                                         <TableRow key={s.id}>
-                                            <TableCell className={styles['mono']}>{shortId(s.id)}</TableCell>
+                                            <TableCell className={styles['mono']}>{orderId(s.id)}</TableCell>
                                             <TableCell>
-                                                {s.customerId ? (customerMap.get(s.customerId) ?? shortId(s.customerId)) : '—'}
+                                                {s.customerId ? (customerMap.get(s.customerId) ?? `#${s.customerId.slice(0, 8)}`) : '—'}
                                             </TableCell>
-                                            <TableCell>{formatDate(s.createdAt)}</TableCell>
+                                            <TableCell className={styles['mono']}>{formatDate(s.createdAt)}</TableCell>
                                             <TableCell>
                                                 <Badge variant={statusVariant(s.status as SaleStatus)} showDot>
                                                     {statusLabel(s.status as SaleStatus, t)}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>{s.items.length}</TableCell>
-                                            <TableCell>{s.currency} {s.total.toFixed(2)}</TableCell>
+                                            <TableCell className={styles['mono']}>{formatCurrency(s.total, s.currency)}</TableCell>
                                             <TableCell>
                                                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                                     <Button variant="ghost" size="icon-sm" onClick={() => { setEditSale(s); }}>

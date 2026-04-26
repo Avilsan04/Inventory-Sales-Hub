@@ -10,3 +10,4 @@ export { useChangePassword } from './useChangePassword';
 export { useForgotPassword } from './useForgotPassword';
 export { useResetPassword } from './useResetPassword';
 export { useLogout } from './useLogout';
+export { useEffectiveRole } from './useEffectiveRole';

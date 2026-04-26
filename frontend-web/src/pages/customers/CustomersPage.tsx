@@ -18,6 +18,10 @@ function initials(name: string): string {
     return name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 }
 
+function formatEur(amount: number): string {
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(amount);
+}
+
 export function CustomersPage(): React.ReactElement {
     const { translate: t } = useTranslationAdapter();
     const { data, isLoading, isError } = useCustomers();
@@ -130,7 +134,7 @@ export function CustomersPage(): React.ReactElement {
                                             {meta ? <span className={styles['metaValue']}>{meta.totalOrders}</span> : <span className={styles['metaMuted']}>—</span>}
                                         </TableCell>
                                         <TableCell>
-                                            {meta ? <span className={styles['metaValue']}>${meta.totalSpent.toLocaleString()}</span> : <span className={styles['metaMuted']}>—</span>}
+                                            {meta ? <span className={styles['metaValue']}>{formatEur(meta.totalSpent)}</span> : <span className={styles['metaMuted']}>—</span>}
                                         </TableCell>
                                         <TableCell>
                                             <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>

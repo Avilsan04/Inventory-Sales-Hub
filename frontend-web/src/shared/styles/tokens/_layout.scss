@@ -65,7 +65,7 @@ $min-section-height: 12rem;  // Empty/error state container min height
 $card-min-width: 14rem;      // Min card width for auto-fill stats grids
 
 // Transition durations — single source of truth
-$duration-fast:   0.15s;    // Micro-interactions: hover, focus, color changes
-$duration-base:   0.2s;     // General state transitions: overlays, theme
-$duration-slow:   0.25s;    // Deliberate motion: sliding panels
+$duration-fast:   0.12s;    // Micro-interactions: hover, focus, color changes
+$duration-base:   0.18s;    // General state transitions: overlays, theme
+$duration-slow:   0.28s;    // Deliberate motion: sliding panels
 $duration-slower: 0.3s;     // Pronounced motion: toasts, progress bars

@@ -66,8 +66,8 @@
   box-shadow: var(--shadow-xs);
 
   &:hover {
-    background-color: var(--color-accent);
-    color: var(--color-accent-foreground);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-foreground);
   }
 }
 
@@ -76,7 +76,8 @@
   color: var(--color-secondary-foreground);
 
   &:hover {
-    opacity: 0.8;
+    background-color: var(--color-muted);
+    color: var(--color-secondary-foreground);
   }
 }
 

@@ -5,7 +5,7 @@ export { authApi } from './api';
 export { LoginForm, RegisterForm } from './components';
 
 // Hooks / Presenters
-export { useAuthPresenter, useRegisterPresenter, useLogout, useAuthMe } from './hooks';
+export { useAuthPresenter, useRegisterPresenter, useLogout, useAuthMe, useEffectiveRole } from './hooks';
 export type { IAuthPresenter, IRegisterPresenter, RegisterFormData } from './hooks';
 
 // Models / Types

@@ -37,6 +37,13 @@ export const saleSummarySchema = z.object({
   })).optional(),
 });
 
+const shippingDetailsSchema = z.object({
+  address: z.string().min(5),
+  contactName: z.string().min(1),
+  contactPhone: z.string().min(6),
+  notes: z.string().optional(),
+});
+
 export const createSaleSchema = z.object({
   customerId: z.uuid().optional(),
   items: z.array(z.object({
@@ -45,6 +52,8 @@ export const createSaleSchema = z.object({
     unitPrice: z.number().nonnegative(),
   })).min(1),
   currency: z.string().length(3).default('USD'),
+  shippingDetails: shippingDetailsSchema.optional(),
+  paymentMethod: z.enum(['credit_card', 'bank_transfer', 'cash_on_delivery']).optional(),
 });
 
 export const updateSaleStatusSchema = z.object({ status: saleStatusSchema });

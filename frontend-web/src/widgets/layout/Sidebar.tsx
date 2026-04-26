@@ -11,6 +11,7 @@ import {
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthMe } from '@features/auth';
+import { useEffectiveRole } from '@features/auth/hooks/useEffectiveRole';
 import { Avatar, AvatarFallback, BrandMark } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
@@ -30,6 +31,11 @@ const NAV_ITEMS: readonly NavItem[] = [
   { to: APP_ROUTES.SALES,     labelKey: 'nav.orders',     iconKey: 'orders'     },
   { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers',  iconKey: 'customers'  },
   { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments',  iconKey: 'shipments'  },
+] as const;
+
+const CUSTOMER_NAV_ITEMS: readonly NavItem[] = [
+  { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
+  { to: APP_ROUTES.SALES,     labelKey: 'nav.orders',    iconKey: 'orders'    },
 ] as const;
 
 const FOOTER_NAV: readonly NavItem[] = [
@@ -64,6 +70,12 @@ export interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data: user } = useAuthMe();
+  const effectiveRole = useEffectiveRole();
+
+  const navItems = React.useMemo(
+    () => (effectiveRole === 'customer' ? CUSTOMER_NAV_ITEMS : NAV_ITEMS),
+    [effectiveRole],
+  );
 
   const userInitials = user ? initials(user.username) : '..';
 
@@ -86,7 +98,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
 
         <nav className={styles['nav']}>
           <ul className={styles['navList']} role="list">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink
                   to={item.to}

@@ -66,3 +66,19 @@
   font-size: $font-size-sm;
   color: var(--color-muted-foreground);
 }
+
+// ── Semantic cell modifiers ─────────────────────────────────
+.tableCellMono {
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+}
+
+.tableCellNumeric {
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+}
+
+.tableHeadNumeric {
+  text-align: right;
+}

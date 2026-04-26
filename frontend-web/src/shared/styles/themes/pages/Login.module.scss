@@ -59,3 +59,117 @@ $_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
   position: relative;
   z-index: 1;
 }
+
+// ── Wide container for quick-access layout ─────────────────────────────
+
+.wideContainer {
+  width: 100%;
+  max-width: 600px;
+  padding: 0 $spacing-4;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-6;
+}
+
+// ── Quick access section ───────────────────────────────────────────────
+
+.quickAccess {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.quickAccessTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-muted);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wider;
+}
+
+.accessCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-3;
+}
+
+.accessCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-4 $spacing-3;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-card-bg);
+  border: $border-width-base solid var(--color-border);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.accessCardIcon {
+  font-size: $font-size-2xl;
+  line-height: 1;
+}
+
+.accessCardRole {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+}
+
+.accessCardDesc {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: $line-height-tight;
+}
+
+.accessCardBtn {
+  margin-top: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+  min-height: $spacing-5;
+}
+
+// ── Divider ────────────────────────────────────────────────────────────
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  width: 100%;
+  color: var(--color-text-muted);
+  font-size: $font-size-sm;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: $border-width-base;
+    background-color: var(--color-border);
+  }
+}
