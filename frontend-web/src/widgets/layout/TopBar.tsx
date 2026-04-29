@@ -67,7 +67,6 @@ export function TopBar(): React.ReactElement {
             <span
               className={styles['notifDot']}
               aria-label={`${String(unreadCount)} unread notifications`}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.625rem', fontWeight: 700, color: '#fff' }}
             >
               {unreadCount > 9 ? '9+' : String(unreadCount)}
             </span>

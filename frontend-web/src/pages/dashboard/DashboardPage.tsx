@@ -178,7 +178,7 @@ export function DashboardPage(): React.ReactElement {
                                 </p>
                             )}
                             {kpiLoaded && card.sparkData && card.sparkData.length > 0 && (
-                                <div style={{ marginTop: 12 }}>
+                                <div className={styles['sparklineWrapper']}>
                                     <SparklineChart data={card.sparkData} color={card.sparkColor} height={36} />
                                 </div>
                             )}
@@ -223,14 +223,14 @@ export function DashboardPage(): React.ReactElement {
                                 ? Array.from({ length: 4 }).map((_, i) => (
                                     <TableRow key={i}>
                                         <TableCell colSpan={5}>
-                                            <Skeleton style={{ height: '1.25rem', width: '100%' }} />
+                                            <Skeleton className={styles['skeletonRow']} />
                                         </TableCell>
                                     </TableRow>
                                 ))
                                 : recentSales.length === 0
                                     ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} style={{ textAlign: 'center', color: 'var(--color-text-muted)' }}>
+                                            <TableCell colSpan={5} className={styles['emptyCell']}>
                                                 {t('common.noData')}
                                             </TableCell>
                                         </TableRow>
@@ -272,13 +272,13 @@ export function DashboardPage(): React.ReactElement {
                         {alertsLoading
                             ? Array.from({ length: 3 }).map((_, i) => (
                                 <div key={i} className={styles['lowStockItem']}>
-                                    <Skeleton style={{ height: '2.5rem', flex: 1 }} />
+                                    <Skeleton className={styles['skeletonCard']} />
                                 </div>
                             ))
                             : !alerts || alerts.length === 0
                                 ? (
                                     <div className={styles['lowStockItem']}>
-                                        <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>
+                                        <p className={styles['mutedSm']}>
                                             {t('common.noData')}
                                         </p>
                                     </div>

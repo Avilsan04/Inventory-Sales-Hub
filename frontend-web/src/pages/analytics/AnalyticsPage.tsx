@@ -195,7 +195,7 @@ export function AnalyticsPage(): React.ReactElement {
                                 {prodsLoading ? (
                                     Array.from({ length: 3 }).map((_, i) => (
                                         <TableRow key={i}>
-                                            <TableCell colSpan={4}><Skeleton style={{ height: '1.25rem' }} /></TableCell>
+                                            <TableCell colSpan={4}><Skeleton className={styles['skeletonRow']} /></TableCell>
                                         </TableRow>
                                     ))
                                 ) : !topProds || topProds.length === 0 ? (
@@ -234,7 +234,7 @@ export function AnalyticsPage(): React.ReactElement {
                                 {custsLoading ? (
                                     Array.from({ length: 3 }).map((_, i) => (
                                         <TableRow key={i}>
-                                            <TableCell colSpan={3}><Skeleton style={{ height: '1.25rem' }} /></TableCell>
+                                            <TableCell colSpan={3}><Skeleton className={styles['skeletonRow']} /></TableCell>
                                         </TableRow>
                                     ))
                                 ) : !topCusts || topCusts.length === 0 ? (
@@ -275,7 +275,7 @@ export function AnalyticsPage(): React.ReactElement {
                             {alertsLoading ? (
                                 Array.from({ length: 3 }).map((_, i) => (
                                     <TableRow key={i}>
-                                        <TableCell colSpan={4}><Skeleton style={{ height: '1.25rem' }} /></TableCell>
+                                        <TableCell colSpan={4}><Skeleton className={styles['skeletonRow']} /></TableCell>
                                     </TableRow>
                                 ))
                             ) : !alerts || alerts.length === 0 ? (

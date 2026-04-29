@@ -14,13 +14,14 @@
   display: grid;
   grid-template-rows: auto auto;
   align-items: start;
-  gap: $spacing-2;
+  gap: $spacing-3;
   padding: 0 $spacing-6;
 }
 
 .cardTitle {
+  font-size: $font-size-2xl;
   font-weight: $font-weight-semibold;
-  line-height: $line-height-none;
+  line-height: $line-height-heading;
 }
 
 .cardDescription {

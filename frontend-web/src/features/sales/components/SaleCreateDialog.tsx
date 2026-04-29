@@ -406,10 +406,10 @@ export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElem
         <div className={styles['body']}>
             <p className={styles['sectionTitle']}>{t('sales.checkout.confirmTitle')}</p>
 
-            {formValues.items.filter((it) => it.productId).map((it, i) => {
+            {formValues.items.filter((it) => it.productId).map((it) => {
                 const pName = products?.find((p) => p.id === it.productId)?.name ?? it.productId;
                 return (
-                    <div key={i} className={styles['summaryRow']}>
+                    <div key={it.productId} className={styles['summaryRow']}>
                         <span className={styles['summaryLabel']}>{pName} × {it.quantity}</span>
                         <span className={styles['summaryValue']}>{(it.quantity * it.unitPrice).toFixed(2)} {formValues.currency}</span>
                     </div>

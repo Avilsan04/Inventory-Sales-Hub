@@ -41,7 +41,7 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
       </div>
 
       <Card className={styles['card']}>
-        <form onSubmit={handleFormSubmit} noValidate>
+        <form onSubmit={handleFormSubmit} noValidate className={styles['form']}>
           <CardHeader>
             <CardTitle>{translate('auth.login')}</CardTitle>
             <CardDescription>{translate('auth.loginSubtitle')}</CardDescription>

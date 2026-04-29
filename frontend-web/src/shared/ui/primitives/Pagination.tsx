@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { Button } from './Button';
+import styles from '@shared/styles/themes/components/Pagination.module.scss';
 
 interface PaginationProps {
     page: number;
@@ -10,7 +11,7 @@ interface PaginationProps {
 
 export function Pagination({ page, pageCount, onPageChange }: PaginationProps): React.ReactElement {
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className={styles.root}>
             <Button
                 variant="outline"
                 size="sm"
@@ -21,7 +22,7 @@ export function Pagination({ page, pageCount, onPageChange }: PaginationProps): 
                 <ChevronLeftIcon size={14} />
                 Previous
             </Button>
-            <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', minWidth: '4rem', textAlign: 'center' }}>
+            <span className={styles.pageInfo}>
                 {page} / {Math.max(pageCount, 1)}
             </span>
             <Button

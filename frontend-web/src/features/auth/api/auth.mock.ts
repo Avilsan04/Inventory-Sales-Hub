@@ -1,9 +1,9 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
-import type { LoginRequest, LoginResponse, UserProfile, UserResponse } from '../models';
+import type { LoginRequest, LoginResponse, RegisterRequest, UserProfile, UserResponse } from '../models';
 import mockData from '@app/mock/mock-data.json';
 
-type MockUserType = 'admin' | 'customer' | 'test';
+type MockUserType = 'admin' | 'customer' | 'test' | 'company';
 
 let _activeUser: MockUserType = 'admin';
 
@@ -23,14 +23,18 @@ export const authHandlers = [
         return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });
     }),
 
-    http.post(`${API_BASE_URL}/auth/register`, async () => {
+    http.post(`${API_BASE_URL}/auth/register`, async ({ request }) => {
         await delay(1000);
-        const profile = auth.profiles.admin;
+        const body = await request.json() as RegisterRequest;
+        const roleMap: Partial<Record<string, MockUserType>> = { admin: 'admin', company: 'company' };
+        const profileKey: MockUserType = roleMap[body.role ?? ''] ?? 'customer';
+        const profile = auth.profiles[profileKey];
+        _activeUser = profileKey;
         return HttpResponse.json<UserResponse>({
             id: profile.id,
-            username: profile.username,
-            email: profile.email,
-            token: auth.registerToken,
+            username: body.username,
+            email: body.email,
+            token: auth.tokens[profileKey],
         });
     }),
 

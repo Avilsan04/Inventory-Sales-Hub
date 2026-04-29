@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-type ViewRole = 'admin' | 'customer';
+export type ViewRole = 'admin' | 'customer' | 'company';
 
 interface ViewModeContextValue {
     viewAs: ViewRole;

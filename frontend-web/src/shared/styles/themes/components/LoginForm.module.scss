@@ -24,7 +24,12 @@
   width: 100%;
   padding-top: $spacing-8 !important;
   padding-bottom: $spacing-8 !important;
-  gap: $spacing-6 !important;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
 }
 
 .content {

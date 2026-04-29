@@ -119,16 +119,16 @@ export function AppRouter(): React.ReactElement {
           {/* Protected Layer — application shell */}
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
-              {/* Customer-accessible routes */}
+              {/* Customer/company-accessible routes */}
               <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
               <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
+              <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
               <Route path={APP_ROUTES.PROFILE} element={<ProfilePage />} />
               <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
 
               {/* Admin/staff/test-only routes */}
               <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
                 <Route path={APP_ROUTES.INVENTORY} element={<InventoryPage />} />
-                <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
                 <Route path={APP_ROUTES.CUSTOMERS} element={<CustomersPage />} />
                 <Route path={APP_ROUTES.EMPLOYEES} element={<EmployeesPage />} />
                 <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />

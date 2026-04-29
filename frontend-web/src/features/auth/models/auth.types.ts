@@ -3,10 +3,21 @@ export interface LoginRequest {
   password: string;
 }
 
+export type RegisterRole = 'customer' | 'admin' | 'company';
+
 export interface RegisterRequest {
   readonly username: string;
   readonly email: string;
   readonly password: string;
+  readonly role?: RegisterRole;
+  // admin fields
+  readonly fullName?: string;
+  readonly adminCode?: string;
+  // company fields
+  readonly companyName?: string;
+  readonly cif?: string;
+  readonly legalRepresentative?: string;
+  readonly phone?: string;
 }
 
 export interface UserResponse {
@@ -24,7 +35,7 @@ export interface UserProfile {
   id: number;
   username: string;
   email: string;
-  role: 'admin' | 'manager' | 'staff' | 'customer' | 'test';
+  role: 'admin' | 'manager' | 'staff' | 'customer' | 'test' | 'company';
   createdAt: string;
 }
 

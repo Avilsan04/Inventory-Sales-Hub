@@ -2,16 +2,48 @@ import * as React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useViewMode } from '@features/auth/context/ViewModeContext';
+import type { ViewRole } from '@features/auth/context/ViewModeContext';
 import { APP_ROUTES } from '@shared/config/routes';
 import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/TestModeBanner.module.scss';
 
-const CUSTOMER_ROUTES = new Set<string>([
-    APP_ROUTES.DASHBOARD,
-    APP_ROUTES.SALES,
-    APP_ROUTES.PROFILE,
-    APP_ROUTES.SETTINGS,
-]);
+interface RoleConfig {
+    readonly role: ViewRole;
+    readonly labelKey: string;
+    readonly icon: string;
+    readonly allowedRoutes?: Set<string>; // undefined = unrestricted
+}
+
+const ROLE_CONFIGS: ReadonlyArray<RoleConfig> = [
+    {
+        role: 'admin',
+        labelKey: 'common.viewAsAdmin',
+        icon: '🛡️',
+    },
+    {
+        role: 'customer',
+        labelKey: 'common.viewAsCustomer',
+        icon: '🛍️',
+        allowedRoutes: new Set([
+            APP_ROUTES.DASHBOARD,
+            APP_ROUTES.SALES,
+            APP_ROUTES.PROFILE,
+            APP_ROUTES.SETTINGS,
+        ]),
+    },
+    {
+        role: 'company',
+        labelKey: 'common.viewAsCompany',
+        icon: '🏢',
+        allowedRoutes: new Set([
+            APP_ROUTES.DASHBOARD,
+            APP_ROUTES.PRODUCTS,
+            APP_ROUTES.SALES,
+            APP_ROUTES.PROFILE,
+            APP_ROUTES.SETTINGS,
+        ]),
+    },
+];
 
 export function TestModeBanner(): React.ReactElement {
     const { translate: t } = useTranslationAdapter();
@@ -19,21 +51,18 @@ export function TestModeBanner(): React.ReactElement {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
-    const switchToCustomer = React.useCallback((): void => {
-        setViewAs('customer');
-        if (!CUSTOMER_ROUTES.has(pathname)) {
+    const handleSwitch = React.useCallback((role: ViewRole): void => {
+        const config = ROLE_CONFIGS.find((c) => c.role === role);
+        setViewAs(role);
+        if (config?.allowedRoutes !== undefined && !config.allowedRoutes.has(pathname)) {
             void navigate(APP_ROUTES.DASHBOARD, { replace: true });
         }
     }, [setViewAs, navigate, pathname]);
 
-    const switchToAdmin = React.useCallback((): void => {
-        setViewAs('admin');
-    }, [setViewAs]);
-
     return (
         <div className={styles['banner']} role="status" aria-live="polite">
             <span className={styles['label']}>
-                ⚡ {t('common.testModeBanner')}
+                {t('common.testModeBanner')}
             </span>
 
             <span className={styles['viewingAs']}>
@@ -41,22 +70,17 @@ export function TestModeBanner(): React.ReactElement {
             </span>
 
             <div className={styles['toggle']}>
-                <button
-                    type="button"
-                    className={cn(styles['toggleBtn'], viewAs === 'admin' && styles['toggleBtnActive'])}
-                    onClick={switchToAdmin}
-                    disabled={viewAs === 'admin'}
-                >
-                    🛡️ {t('common.viewAsAdmin')}
-                </button>
-                <button
-                    type="button"
-                    className={cn(styles['toggleBtn'], viewAs === 'customer' && styles['toggleBtnActive'])}
-                    onClick={switchToCustomer}
-                    disabled={viewAs === 'customer'}
-                >
-                    🛍️ {t('common.viewAsCustomer')}
-                </button>
+                {ROLE_CONFIGS.map(({ role, labelKey, icon }) => (
+                    <button
+                        key={role}
+                        type="button"
+                        className={cn(styles['toggleBtn'], viewAs === role && styles['toggleBtnActive'])}
+                        onClick={() => { handleSwitch(role); }}
+                        disabled={viewAs === role}
+                    >
+                        {icon} {t(labelKey)}
+                    </button>
+                ))}
             </div>
         </div>
     );

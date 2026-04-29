@@ -38,6 +38,12 @@ const CUSTOMER_NAV_ITEMS: readonly NavItem[] = [
   { to: APP_ROUTES.SALES,     labelKey: 'nav.orders',    iconKey: 'orders'    },
 ] as const;
 
+const COMPANY_NAV_ITEMS: readonly NavItem[] = [
+  { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
+  { to: APP_ROUTES.PRODUCTS,  labelKey: 'nav.products',  iconKey: 'inventory' },
+  { to: APP_ROUTES.SALES,     labelKey: 'nav.orders',    iconKey: 'orders'    },
+] as const;
+
 const FOOTER_NAV: readonly NavItem[] = [
   { to: APP_ROUTES.SETTINGS, labelKey: 'nav.settings', iconKey: 'settings' },
 ] as const;
@@ -72,10 +78,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { data: user } = useAuthMe();
   const effectiveRole = useEffectiveRole();
 
-  const navItems = React.useMemo(
-    () => (effectiveRole === 'customer' ? CUSTOMER_NAV_ITEMS : NAV_ITEMS),
-    [effectiveRole],
-  );
+  const navItems = React.useMemo(() => {
+    if (effectiveRole === 'customer') return CUSTOMER_NAV_ITEMS;
+    if (effectiveRole === 'company')  return COMPANY_NAV_ITEMS;
+    return NAV_ITEMS;
+  }, [effectiveRole]);
 
   const userInitials = user ? initials(user.username) : '..';
 

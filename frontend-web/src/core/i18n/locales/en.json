@@ -20,10 +20,11 @@
     "openMenu": "Open menu",
     "status": "Status",
     "export": "Export",
-    "testModeBanner": "Test mode — Mock data active",
+    "testModeBanner": "⚡ Test mode — Mock data active",
     "viewingAs": "Viewing as",
     "viewAsAdmin": "Admin",
-    "viewAsCustomer": "Customer"
+    "viewAsCustomer": "Customer",
+    "viewAsCompany": "Company"
   },
   "nav": {
     "home": "Home",
@@ -94,7 +95,29 @@
     "testLabel": "Test User",
     "testDesc": "All features, mock data",
     "enterAs": "Enter as {{role}}",
-    "orManual": "or sign in manually"
+    "orManual": "or sign in manually",
+    "registerTitleCustomer": "Create your account",
+    "registerSubtitleCustomer": "Access your orders and manage your profile easily",
+    "registerTitleAdmin": "Administrator account",
+    "registerSubtitleAdmin": "Full management of inventory, sales and your team",
+    "registerTitleCompany": "Register your company",
+    "registerSubtitleCompany": "Manage your business inventory and sales from a single panel",
+    "tabUser": "User",
+    "tabAdmin": "Administrator",
+    "tabCompany": "Company",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "John Doe",
+    "adminCode": "Admin code",
+    "adminCodePlaceholder": "••••••••",
+    "companyName": "Company name",
+    "companyNamePlaceholder": "Acme Ltd.",
+    "cif": "CIF / VAT number",
+    "cifPlaceholder": "B12345678",
+    "legalRepresentative": "Legal representative",
+    "legalRepresentativePlaceholder": "Maria Garcia",
+    "legalEmail": "Representative email",
+    "phone": "Contact phone",
+    "phonePlaceholder": "+34 600 000 000"
   },
   "login": {
     "brandTitle": "Total control of your business.",
@@ -343,7 +366,7 @@
       "titleAccent": "Precision & Speed",
       "description": "The all-in-one platform to track products, analyze sales and protect your business, easily and efficiently.",
       "cta": "Get started free",
-      "secondaryCta": "View demo",
+      "secondaryCta": "Test mode",
       "stat1": { "value": "+12,000", "label": "products managed" },
       "stat2": { "value": "+3,200", "label": "sales today" },
       "stat3": { "value": "99.9%", "label": "uptime" }

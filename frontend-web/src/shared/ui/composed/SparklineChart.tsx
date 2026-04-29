@@ -17,7 +17,7 @@ export function SparklineChart({ data, color = 'primary', height = 40 }: Props):
         primary: colors.color1,
         success: colors.color2,
         warning: colors.color3,
-        danger: '#ef4444',
+        danger: colors.destructive,
     };
 
     const stroke = colorMap[color];

@@ -20,10 +20,11 @@
     "openMenu": "Abrir menú",
     "status": "Estado",
     "export": "Exportar",
-    "testModeBanner": "Modo test — Datos mock activos",
+    "testModeBanner": "⚡ Modo test — Datos mock activos",
     "viewingAs": "Viendo como",
     "viewAsAdmin": "Admin",
-    "viewAsCustomer": "Cliente"
+    "viewAsCustomer": "Cliente",
+    "viewAsCompany": "Empresa"
   },
   "nav": {
     "home": "Inicio",
@@ -94,7 +95,29 @@
     "testLabel": "Usuario de prueba",
     "testDesc": "Todas las funciones, datos mock",
     "enterAs": "Entrar como {{role}}",
-    "orManual": "o accede manualmente"
+    "orManual": "o accede manualmente",
+    "registerTitleCustomer": "Crea tu cuenta",
+    "registerSubtitleCustomer": "Accede a tus pedidos y gestiona tu perfil fácilmente",
+    "registerTitleAdmin": "Cuenta de administrador",
+    "registerSubtitleAdmin": "Gestión completa de inventario, ventas y equipo",
+    "registerTitleCompany": "Registra tu empresa",
+    "registerSubtitleCompany": "Gestiona el inventario y las ventas de tu negocio desde un único panel",
+    "tabUser": "Usuario",
+    "tabAdmin": "Administrador",
+    "tabCompany": "Empresa",
+    "fullName": "Nombre completo",
+    "fullNamePlaceholder": "Juan Pérez",
+    "adminCode": "Código de administrador",
+    "adminCodePlaceholder": "••••••••",
+    "companyName": "Nombre de la empresa",
+    "companyNamePlaceholder": "Acme S.L.",
+    "cif": "CIF / NIF",
+    "cifPlaceholder": "B12345678",
+    "legalRepresentative": "Representante legal",
+    "legalRepresentativePlaceholder": "María García López",
+    "legalEmail": "Correo del representante",
+    "phone": "Teléfono de contacto",
+    "phonePlaceholder": "+34 600 000 000"
   },
   "login": {
     "brandTitle": "Control total de tu negocio.",
@@ -343,7 +366,7 @@
       "titleAccent": "Precisión y Velocidad",
       "description": "La plataforma todo-en-uno para rastrear productos, analizar ventas y proteger tu negocio, de manera fácil y eficiente.",
       "cta": "Empieza gratis",
-      "secondaryCta": "Ver demo",
+      "secondaryCta": "Modo prueba",
       "stat1": { "value": "+12.000", "label": "productos gestionados" },
       "stat2": { "value": "+3.200", "label": "ventas hoy" },
       "stat3": { "value": "99.9%", "label": "uptime" }

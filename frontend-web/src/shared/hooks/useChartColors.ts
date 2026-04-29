@@ -7,6 +7,7 @@ export interface ChartColors {
     color3: string;
     color4: string;
     color5: string;
+    destructive: string;
     border: string;
     textMuted: string;
     cardBg: string;
@@ -24,6 +25,7 @@ export function useChartColors(): ChartColors {
             color3: get('--color-chart-3'),
             color4: get('--color-chart-4'),
             color5: get('--color-chart-5'),
+            destructive: get('--color-destructive'),
             border: get('--color-border'),
             textMuted: get('--color-text-muted'),
             cardBg: isDark ? get('--color-card') : get('--color-card'),

@@ -144,7 +144,7 @@ export function SalesPage(): React.ReactElement {
                                 ? Array.from({ length: SKELETON_ROWS }).map((_, i) => (
                                     <TableRow key={i}>
                                         <TableCell colSpan={7}>
-                                            <Skeleton style={{ height: '1.25rem', width: '100%' }} />
+                                            <Skeleton className={styles['skeletonRow']} />
                                         </TableCell>
                                     </TableRow>
                                 ))

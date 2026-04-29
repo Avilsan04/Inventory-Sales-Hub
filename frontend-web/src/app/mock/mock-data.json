@@ -3,12 +3,14 @@
     "profiles": {
       "admin":    { "id": 1, "username": "Lucía Fernández", "email": "admin@ish.dev",    "role": "admin",    "createdAt": "2024-03-01T10:00:00.000Z" },
       "customer": { "id": 2, "username": "Carlos Vega",      "email": "cliente@ish.dev", "role": "customer", "createdAt": "2024-05-20T10:00:00.000Z" },
-      "test":     { "id": 3, "username": "Test User",         "email": "test@ish.dev",    "role": "test",     "createdAt": "2025-01-01T10:00:00.000Z" }
+      "test":     { "id": 3, "username": "Test User",         "email": "test@ish.dev",    "role": "test",     "createdAt": "2025-01-01T10:00:00.000Z" },
+      "company":  { "id": 4, "username": "Acme S.L.",          "email": "empresa@ish.dev", "role": "company",  "createdAt": "2025-02-15T10:00:00.000Z" }
     },
     "tokens": {
       "admin":    "mock-token-admin-001",
       "customer": "mock-token-customer-002",
-      "test":     "mock-token-test-003"
+      "test":     "mock-token-test-003",
+      "company":  "mock-token-company-004"
     },
     "refreshToken": "mock-refreshed-jwt-token-999",
     "registerToken": "mock-register-jwt-token-888"

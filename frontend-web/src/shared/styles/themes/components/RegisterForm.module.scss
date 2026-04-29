@@ -2,6 +2,12 @@
   width: 100%;
 }
 
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
 .content {
   display: flex;
   flex-direction: column;

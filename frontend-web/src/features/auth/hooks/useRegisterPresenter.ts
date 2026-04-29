@@ -1,21 +1,29 @@
-// @features/auth/hooks/useRegisterPresenter.ts
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import type { RegisterRequest } from '../models/auth.types';
+import type { RegisterRequest, RegisterRole } from '../models/auth.types';
 import type { IAuthService } from '../services/IAuthService';
 import { AUTH_VALIDATION_RULES } from '../models/auth.constants';
 
-// Architectural Correction: Strict Immutability
 export interface RegisterFormData {
   readonly username: string;
   readonly email: string;
   readonly password: string;
   readonly confirmPassword: string;
+  // admin
+  readonly fullName: string;
+  readonly adminCode: string;
+  // company
+  readonly companyName: string;
+  readonly cif: string;
+  readonly legalRepresentative: string;
+  readonly legalEmail: string;
+  readonly phone: string;
 }
 
 export interface IRegisterPresenterProps {
   readonly onSuccess: () => void;
   readonly authService: IAuthService;
+  readonly role: RegisterRole;
 }
 
 export interface IRegisterPresenter {
@@ -30,6 +38,7 @@ export interface IRegisterPresenter {
 export function useRegisterPresenter({
   onSuccess,
   authService,
+  role,
 }: IRegisterPresenterProps): IRegisterPresenter {
   const { translate } = useTranslationAdapter();
 
@@ -40,26 +49,47 @@ export function useRegisterPresenter({
     email: '',
     password: '',
     confirmPassword: '',
+    fullName: '',
+    adminCode: '',
+    companyName: '',
+    cif: '',
+    legalRepresentative: '',
+    legalEmail: '',
+    phone: '',
   });
 
   const isFormValid = React.useMemo((): boolean => {
-    return (
+    const passwordsOk =
+      formData.password.length >= AUTH_VALIDATION_RULES.MIN_PASSWORD_LENGTH &&
+      formData.password === formData.confirmPassword;
+
+    if (role === 'company') {
+      return (
+        passwordsOk &&
+        formData.companyName.trim().length > 0 &&
+        formData.cif.trim().length > 0 &&
+        formData.legalRepresentative.trim().length > 0 &&
+        formData.legalEmail.trim().length > 0 &&
+        formData.phone.trim().length > 0
+      );
+    }
+
+    const base =
       formData.username.trim().length >= AUTH_VALIDATION_RULES.MIN_USERNAME_LENGTH &&
       formData.email.trim().length > 0 &&
-      formData.password.length >= AUTH_VALIDATION_RULES.MIN_PASSWORD_LENGTH &&
-      formData.password === formData.confirmPassword
-    );
-  }, [formData]);
+      passwordsOk;
+
+    if (role === 'admin') {
+      return base && formData.fullName.trim().length > 0 && formData.adminCode.trim().length > 0;
+    }
+    return base;
+  }, [formData, role]);
 
   const handleInputChange = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const { name, value } = e.target;
-
-      // Architectural Correction: Never sanitize passwords. 
-      // Only sanitize non-credential inputs.
-      const isPasswordField = name === 'password' || name === 'confirmPassword';
-      const sanitizedValue = isPasswordField ? value : value.replace(/[<>]/g, '');
-
+      const isSecret = name === 'password' || name === 'confirmPassword' || name === 'adminCode';
+      const sanitizedValue = isSecret ? value : value.replace(/[<>]/g, '');
       setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
       setError(null);
     },
@@ -82,11 +112,31 @@ export function useRegisterPresenter({
       setIsLoading(true);
       setError(null);
 
-      const registerData: RegisterRequest = {
-        username: formData.username.trim(),
-        email: formData.email.trim(),
-        password: formData.password,
-      };
+      let registerData: RegisterRequest;
+
+      if (role === 'company') {
+        registerData = {
+          username: formData.companyName.trim(),
+          email: formData.legalEmail.trim(),
+          password: formData.password,
+          role,
+          companyName: formData.companyName.trim(),
+          cif: formData.cif.trim(),
+          legalRepresentative: formData.legalRepresentative.trim(),
+          phone: formData.phone.trim(),
+        };
+      } else {
+        registerData = {
+          username: formData.username.trim(),
+          email: formData.email.trim(),
+          password: formData.password,
+          role,
+          ...(role === 'admin' && {
+            fullName: formData.fullName.trim(),
+            adminCode: formData.adminCode.trim(),
+          }),
+        };
+      }
 
       try {
         await authService.register(registerData);
@@ -99,7 +149,7 @@ export function useRegisterPresenter({
         setIsLoading(false);
       }
     },
-    [formData, onSuccess, isFormValid, translate, authService]
+    [formData, onSuccess, isFormValid, translate, authService, role]
   );
 
   return {

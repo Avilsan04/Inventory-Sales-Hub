@@ -252,3 +252,19 @@
   color: var(--color-error);
   font-size: $font-size-sm;
 }
+
+
+.sparklineWrapper { margin-top: $spacing-3; }
+
+.emptyCell {
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.mutedSm {
+  color: var(--color-text-muted);
+  font-size: $font-size-sm;
+}
+
+.skeletonRow { height: $spacing-5; width: 100%; }
+.skeletonCard { height: $spacing-10; flex: 1; }

@@ -91,7 +91,7 @@ export function InventoryPage(): React.ReactElement {
     }
 
     if (isError) {
-        console.error('Inventory fetch error:', error);
+        console.error('[Telemetry] Inventory fetch error:', error);
         return (
             <div className={styles['errorContainer']} role="alert" aria-live="assertive">
                 <p>{t('common.errorLoadingData')}</p>
