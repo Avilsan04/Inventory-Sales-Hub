@@ -15,7 +15,10 @@ export type TopCustomer = z.infer<typeof topCustomerSchema>;
 export type InventoryValue = z.infer<typeof inventoryValueSchema>;
 export type LowStockAlert = z.infer<typeof lowStockAlertSchema>;
 
+export type AnalyticsPeriod = '7d' | '30d' | '90d' | '12m';
+
 export interface SalesAnalyticsParams {
+  period?: AnalyticsPeriod;
   from?: string;
   to?: string;
   groupBy?: 'day' | 'week' | 'month';

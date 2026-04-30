@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
 import '@assets/styles/main.scss';
 import './core/i18n';
+import './core/config/env';
 
 async function bootstrapApplication(): Promise<void> {
   try {
@@ -11,14 +12,17 @@ async function bootstrapApplication(): Promise<void> {
       const { worker } = await import('./app/mock/browser');
       await worker.start({
         serviceWorker: {
-          url: '/mockServiceWorker.js'
+          url: '/mockServiceWorker.js',
         },
-        onUnhandledRequest: 'bypass'
+        onUnhandledRequest: 'bypass',
       });
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown bootstrap error';
-    console.error('[Bootstrap Exception] Critical failure during application startup:', errorMessage);
+    console.error(
+      '[Bootstrap Exception] Critical failure during application startup:',
+      errorMessage
+    );
     // Note: Do not block execution in DEV if mocking fails, unless strict simulation is required.
   }
 

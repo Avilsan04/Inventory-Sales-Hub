@@ -41,7 +41,15 @@
     "settings": "Settings",
     "profile": "Profile",
     "orders": "Orders",
-    "shipments": "Shipments"
+    "shipments": "Shipments",
+    "tenants": "Organizations",
+    "catalog": "Catalog",
+    "myOrders": "My Orders",
+    "section": {
+      "overview": "OVERVIEW",
+      "operations": "OPERATIONS",
+      "system": "SYSTEM"
+    }
   },
   "topbar": {
     "subtitle": {
@@ -190,7 +198,9 @@
       "inactive": "Inactive",
       "lowStock": "Low stock",
       "outOfStock": "Out of stock"
-    }
+    },
+    "emptyTitle": "No products in inventory",
+    "emptyDescription": "Start adding products to track your stock levels"
   },
   "products": {
     "subtitle": "Browse and manage your product catalog",
@@ -267,7 +277,9 @@
       "orderPlaced": "Order placed!",
       "orderPlacedDesc": "Your order has been created successfully.",
       "itemsError": "Add at least one item"
-    }
+    },
+    "emptyTitle": "No sales recorded",
+    "emptyDescription": "Create your first sale to start tracking revenue"
   },
   "customers": {
     "title": "Customers",
@@ -281,7 +293,9 @@
     "orders": "Orders",
     "lifetimeValue": "Lifetime value",
     "searchPlaceholder": "Search customers…",
-    "addCustomer": "Add customer"
+    "addCustomer": "Add customer",
+    "emptyTitle": "No customers registered",
+    "emptyDescription": "Add your first customer to start tracking relationships"
   },
   "employees": {
     "title": "Employees",
@@ -400,6 +414,47 @@
     },
     "footer": {
       "rights": "All rights reserved."
+    }
+  },
+  "catalog": {
+    "title": "Product Catalog",
+    "subtitle": "Browse available products and add them to your cart.",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "addToCart": "Add to cart",
+    "addMore": "In cart",
+    "cart": "Cart",
+    "emptyCart": "Your cart is empty.",
+    "total": "Total",
+    "checkout": "Checkout",
+    "clearCart": "Clear cart",
+    "emptyTitle": "No products found",
+    "emptyDescription": "Try adjusting your search."
+  },
+  "myOrders": {
+    "title": "My Orders",
+    "subtitle": "Track your order history and status.",
+    "emptyTitle": "No orders yet",
+    "emptyDescription": "Your placed orders will appear here."
+  },
+  "admin": {
+    "title": "Tenant Management",
+    "subtitle": "Manage all platform tenants and their subscriptions.",
+    "tenant": "Tenant",
+    "plan": "Plan",
+    "status": "Status",
+    "users": "Users",
+    "createdAt": "Created",
+    "activate": "Activate",
+    "suspend": "Suspend",
+    "impersonate": "Impersonate",
+    "impersonationActive": "You are impersonating a tenant. All actions are performed on their behalf.",
+    "exitImpersonation": "Exit impersonation",
+    "metrics": {
+      "totalTenants": "Total Tenants",
+      "activeTenants": "Active",
+      "suspendedTenants": "Suspended",
+      "mrr": "MRR"
     }
   }
 }

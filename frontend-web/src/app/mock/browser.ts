@@ -8,15 +8,17 @@ import { employeeHandlers } from '@features/employees/api/employees.mock';
 import { supplierHandlers } from '@features/suppliers/api/suppliers.mock';
 import { analyticsHandlers } from '@features/analytics/api/analytics.mock';
 import { notificationHandlers } from '@features/notifications/api/notifications.mock';
+import { adminHandlers } from '@features/admin/api/admin.mock';
 
 export const worker = setupWorker(
-    ...authHandlers,
-    ...inventoryHandlers,
-    ...productHandlers,
-    ...customerHandlers,
-    ...salesHandlers,
-    ...employeeHandlers,
-    ...supplierHandlers,
-    ...analyticsHandlers,
-    ...notificationHandlers,
+  ...authHandlers,
+  ...inventoryHandlers,
+  ...productHandlers,
+  ...customerHandlers,
+  ...salesHandlers,
+  ...employeeHandlers,
+  ...supplierHandlers,
+  ...analyticsHandlers,
+  ...notificationHandlers,
+  ...adminHandlers
 );

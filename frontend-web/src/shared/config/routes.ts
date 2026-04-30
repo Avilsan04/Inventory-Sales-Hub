@@ -13,6 +13,9 @@ export const APP_ROUTES = {
   NOTIFICATIONS: '/notifications',
   PROFILE: '/profile',
   SETTINGS: '/settings',
+  ADMIN_TENANTS: '/admin/tenants',
+  CATALOG: '/catalog',
+  MY_ORDERS: '/my-orders',
 } as const;
 
-export type AppRoute = typeof APP_ROUTES[keyof typeof APP_ROUTES];
+export type AppRoute = (typeof APP_ROUTES)[keyof typeof APP_ROUTES];

@@ -18,17 +18,29 @@ const mapConfig = (config?: HttpRequestConfig): AxiosRequestConfig => ({
   signal: config?.signal,
 });
 
-// Architectural Correction: Strict signature returning a cleanup function
 export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
-  const reqInterceptorId = setupRequestInterceptor(axiosInstance, () => tokenStorage.getToken());
+  const reqInterceptorId = setupRequestInterceptor(
+    axiosInstance,
+    () => tokenStorage.getToken(),
+    () => sessionStorage.getItem('impersonation_token')
+  );
 
-  const resInterceptorId = setupResponseInterceptor(axiosInstance, () => {
-    // Centralize token destruction logic here before firing the navigation event
-    tokenStorage.removeToken();
-    onUnauthorized();
-  });
+  const resInterceptorId = setupResponseInterceptor(
+    axiosInstance,
+    async () => {
+      const response = await axiosInstance.post<{ token: string }>('/auth/refresh');
+      const newToken = response.data.token;
+      // Preserve token location: save to localStorage if it was there, else sessionStorage
+      const usedLocalStorage = !!localStorage.getItem('auth_token');
+      tokenStorage.saveToken(newToken, usedLocalStorage);
+      return newToken;
+    },
+    () => {
+      tokenStorage.removeToken();
+      onUnauthorized();
+    }
+  );
 
-  // Return the Teardown function to prevent Axios listener leaks
   return (): void => {
     axiosInstance.interceptors.request.eject(reqInterceptorId);
     axiosInstance.interceptors.response.eject(resInterceptorId);

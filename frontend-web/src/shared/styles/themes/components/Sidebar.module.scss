@@ -92,6 +92,33 @@
   margin: 0;
 }
 
+// ── Nav group (section wrapper) ─────────────────────────────────────────
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+
+  & + & {
+    margin-top: $spacing-4;
+  }
+}
+
+// ── Section label ────────────────────────────────────────────────────────
+.navSectionLabel {
+  display: block;
+  padding: 0 $spacing-3;
+  margin-bottom: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-muted-foreground);
+  letter-spacing: $letter-spacing-wider;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
 .navItem {
   display: flex;
   align-items: center;
@@ -102,7 +129,9 @@
   font-weight: $font-weight-medium;
   color: var(--color-sidebar-foreground);
   text-decoration: none;
-  transition: background-color $duration-fast ease, color $duration-fast ease;
+  transition:
+    background-color $duration-fast ease,
+    color $duration-fast ease;
 
   &:hover {
     background-color: var(--color-sidebar-accent);

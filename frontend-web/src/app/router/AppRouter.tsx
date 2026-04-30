@@ -11,63 +11,77 @@ import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const LandingPage = React.lazy(() =>
-  import('@pages/landing/LandingPage').then(module => ({ default: module.LandingPage }))
+  import('@pages/landing/LandingPage').then((module) => ({ default: module.LandingPage }))
 );
 
 const LoginPage = React.lazy(() =>
-  import('@pages/login/LoginPage').then(module => ({ default: module.LoginPage }))
+  import('@pages/login/LoginPage').then((module) => ({ default: module.LoginPage }))
 );
 
 const RegisterPage = React.lazy(() =>
-  import('@pages/register/RegisterPage').then(module => ({ default: module.RegisterPage }))
+  import('@pages/register/RegisterPage').then((module) => ({ default: module.RegisterPage }))
 );
 
 const DashboardPage = React.lazy(() =>
-  import('@pages/dashboard/DashboardPage').then(module => ({ default: module.DashboardPage }))
+  import('@pages/dashboard/DashboardPage').then((module) => ({ default: module.DashboardPage }))
 );
 
 const InventoryPage = React.lazy(() =>
-  import('@pages/inventory/InventoryPage').then(module => ({ default: module.InventoryPage }))
+  import('@pages/inventory/InventoryPage').then((module) => ({ default: module.InventoryPage }))
 );
 
 const ProductsPage = React.lazy(() =>
-  import('@pages/products/ProductsPage').then(module => ({ default: module.ProductsPage }))
+  import('@pages/products/ProductsPage').then((module) => ({ default: module.ProductsPage }))
 );
 
 const SalesPage = React.lazy(() =>
-  import('@pages/sales/SalesPage').then(module => ({ default: module.SalesPage }))
+  import('@pages/sales/SalesPage').then((module) => ({ default: module.SalesPage }))
 );
 
 const CustomersPage = React.lazy(() =>
-  import('@pages/customers/CustomersPage').then(module => ({ default: module.CustomersPage }))
+  import('@pages/customers/CustomersPage').then((module) => ({ default: module.CustomersPage }))
 );
 
 const EmployeesPage = React.lazy(() =>
-  import('@pages/employees/EmployeesPage').then(module => ({ default: module.EmployeesPage }))
+  import('@pages/employees/EmployeesPage').then((module) => ({ default: module.EmployeesPage }))
 );
 
 const SuppliersPage = React.lazy(() =>
-  import('@pages/suppliers/SuppliersPage').then(module => ({ default: module.SuppliersPage }))
+  import('@pages/suppliers/SuppliersPage').then((module) => ({ default: module.SuppliersPage }))
 );
 
 const AnalyticsPage = React.lazy(() =>
-  import('@pages/analytics/AnalyticsPage').then(module => ({ default: module.AnalyticsPage }))
+  import('@pages/analytics/AnalyticsPage').then((module) => ({ default: module.AnalyticsPage }))
 );
 
 const NotificationsPage = React.lazy(() =>
-  import('@pages/notifications/NotificationsPage').then(module => ({ default: module.NotificationsPage }))
+  import('@pages/notifications/NotificationsPage').then((module) => ({
+    default: module.NotificationsPage,
+  }))
 );
 
 const ProfilePage = React.lazy(() =>
-  import('@pages/profile/ProfilePage').then(module => ({ default: module.ProfilePage }))
+  import('@pages/profile/ProfilePage').then((module) => ({ default: module.ProfilePage }))
 );
 
 const SettingsPage = React.lazy(() =>
-  import('@pages/settings/SettingsPage').then(module => ({ default: module.SettingsPage }))
+  import('@pages/settings/SettingsPage').then((module) => ({ default: module.SettingsPage }))
 );
 
 const NotFoundPage = React.lazy(() =>
-  import('@pages/not-found/NotFoundPage').then(module => ({ default: module.NotFoundPage }))
+  import('@pages/not-found/NotFoundPage').then((module) => ({ default: module.NotFoundPage }))
+);
+
+const TenantsPage = React.lazy(() =>
+  import('@pages/admin/TenantsPage').then((module) => ({ default: module.TenantsPage }))
+);
+
+const CatalogPage = React.lazy(() =>
+  import('@pages/catalog/CatalogPage').then((module) => ({ default: module.CatalogPage }))
+);
+
+const MyOrdersPage = React.lazy(() =>
+  import('@pages/my-orders/MyOrdersPage').then((module) => ({ default: module.MyOrdersPage }))
 );
 
 /**
@@ -125,6 +139,8 @@ export function AppRouter(): React.ReactElement {
               <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
               <Route path={APP_ROUTES.PROFILE} element={<ProfilePage />} />
               <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
+              <Route path={APP_ROUTES.CATALOG} element={<CatalogPage />} />
+              <Route path={APP_ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
 
               {/* Admin/staff/test-only routes */}
               <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
@@ -134,6 +150,11 @@ export function AppRouter(): React.ReactElement {
                 <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
                 <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
                 <Route path={APP_ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
+              </Route>
+
+              {/* Super admin routes */}
+              <Route element={<RoleRoute allowedRoles={['admin']} />}>
+                <Route path={APP_ROUTES.ADMIN_TENANTS} element={<TenantsPage />} />
               </Route>
             </Route>
           </Route>

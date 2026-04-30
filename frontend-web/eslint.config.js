@@ -21,7 +21,7 @@ export default tseslint.config(
         clearTimeout: 'readonly',
       },
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -33,7 +33,8 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/explicit-function-return-type': 'error', // Enforced for architectural boundary clarity
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
     },
   },
   // Environment override for WEB

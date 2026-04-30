@@ -1,4 +1,13 @@
-export type { DashboardKpi, SalesPeriod, TopProduct, TopCustomer, InventoryValue, LowStockAlert, SalesAnalyticsParams } from './models/analytics.types';
+export type {
+  DashboardKpi,
+  SalesPeriod,
+  TopProduct,
+  TopCustomer,
+  InventoryValue,
+  LowStockAlert,
+  SalesAnalyticsParams,
+  AnalyticsPeriod,
+} from './models/analytics.types';
 export {
   dashboardKpiSchema,
   salesAnalyticsSchema,

@@ -70,8 +70,8 @@
 }
 
 .kpiTitle {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
+  font-size: 11px;
+  font-weight: $font-weight-semibold;
   color: var(--color-muted-foreground);
   text-transform: uppercase;
   letter-spacing: $letter-spacing-wider;
@@ -82,6 +82,8 @@
   font-weight: $font-weight-bold;
   color: var(--color-foreground);
   margin-top: $spacing-1;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .kpiSkeleton {
@@ -127,14 +129,14 @@
 
 .panelHeader {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   padding: $spacing-4 $spacing-5;
   border-bottom: 1px solid var(--color-border);
 }
 
 .panelTitle {
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
   font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
   margin: 0;
@@ -253,8 +255,9 @@
   font-size: $font-size-sm;
 }
 
-
-.sparklineWrapper { margin-top: $spacing-3; }
+.sparklineWrapper {
+  margin-top: $spacing-3;
+}
 
 .emptyCell {
   text-align: center;
@@ -266,5 +269,55 @@
   font-size: $font-size-sm;
 }
 
-.skeletonRow { height: $spacing-5; width: 100%; }
-.skeletonCard { height: $spacing-10; flex: 1; }
+.skeletonRow {
+  height: $spacing-5;
+  width: 100%;
+}
+.skeletonCard {
+  height: $spacing-10;
+  flex: 1;
+}
+
+.colHead {
+  text-align: right;
+}
+
+.colCell {
+  text-align: right;
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+}
+
+// ── Period selector ──────────────────────────────────────────────────────
+.periodSelector {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+}
+
+.periodBtn {
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    color $duration-fast ease,
+    background-color $duration-fast ease,
+    border-color $duration-fast ease;
+  font-family: $font-family-base;
+
+  &:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-secondary);
+  }
+}
+
+.periodBtnActive {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-border);
+}

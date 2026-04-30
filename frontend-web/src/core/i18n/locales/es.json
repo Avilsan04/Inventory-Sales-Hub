@@ -41,7 +41,15 @@
     "settings": "Configuración",
     "profile": "Perfil",
     "orders": "Pedidos",
-    "shipments": "Envíos"
+    "shipments": "Envíos",
+    "tenants": "Organizaciones",
+    "catalog": "Catálogo",
+    "myOrders": "Mis Pedidos",
+    "section": {
+      "overview": "RESUMEN",
+      "operations": "OPERACIONES",
+      "system": "SISTEMA"
+    }
   },
   "topbar": {
     "subtitle": {
@@ -190,7 +198,9 @@
       "inactive": "Inactivo",
       "lowStock": "Stock bajo",
       "outOfStock": "Sin stock"
-    }
+    },
+    "emptyTitle": "Sin productos en inventario",
+    "emptyDescription": "Empieza añadiendo productos para controlar tu stock"
   },
   "products": {
     "subtitle": "Explora y gestiona tu catálogo de productos",
@@ -267,7 +277,9 @@
       "cancelled": "Cancelado",
       "shipped": "Enviado",
       "processing": "Procesando"
-    }
+    },
+    "emptyTitle": "Sin ventas registradas",
+    "emptyDescription": "Crea tu primera venta para empezar a registrar ingresos"
   },
   "customers": {
     "title": "Clientes",
@@ -281,7 +293,9 @@
     "orders": "Pedidos",
     "lifetimeValue": "Valor total",
     "searchPlaceholder": "Buscar clientes…",
-    "addCustomer": "Añadir cliente"
+    "addCustomer": "Añadir cliente",
+    "emptyTitle": "Sin clientes registrados",
+    "emptyDescription": "Añade tu primer cliente para gestionar las relaciones"
   },
   "employees": {
     "title": "Empleados",
@@ -400,6 +414,47 @@
     },
     "footer": {
       "rights": "Todos los derechos reservados."
+    }
+  },
+  "catalog": {
+    "title": "Catálogo de Productos",
+    "subtitle": "Explora los productos disponibles y añádelos a tu carrito.",
+    "inStock": "Disponible",
+    "outOfStock": "Sin stock",
+    "addToCart": "Añadir al carrito",
+    "addMore": "En carrito",
+    "cart": "Carrito",
+    "emptyCart": "Tu carrito está vacío.",
+    "total": "Total",
+    "checkout": "Pagar",
+    "clearCart": "Vaciar carrito",
+    "emptyTitle": "No se encontraron productos",
+    "emptyDescription": "Intenta ajustar tu búsqueda."
+  },
+  "myOrders": {
+    "title": "Mis Pedidos",
+    "subtitle": "Consulta el historial y estado de tus pedidos.",
+    "emptyTitle": "Sin pedidos todavía",
+    "emptyDescription": "Tus pedidos realizados aparecerán aquí."
+  },
+  "admin": {
+    "title": "Gestión de Tenants",
+    "subtitle": "Administra todos los tenants de la plataforma y sus suscripciones.",
+    "tenant": "Tenant",
+    "plan": "Plan",
+    "status": "Estado",
+    "users": "Usuarios",
+    "createdAt": "Alta",
+    "activate": "Activar",
+    "suspend": "Suspender",
+    "impersonate": "Impersonar",
+    "impersonationActive": "Estás impersonando a un tenant. Todas las acciones se realizan en su nombre.",
+    "exitImpersonation": "Salir de impersonación",
+    "metrics": {
+      "totalTenants": "Total Tenants",
+      "activeTenants": "Activos",
+      "suspendedTenants": "Suspendidos",
+      "mrr": "MRR"
     }
   }
 }

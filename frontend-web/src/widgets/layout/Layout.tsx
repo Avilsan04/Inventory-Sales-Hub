@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { useAuthMe } from '@features/auth';
+import { ImpersonationBanner } from '@features/admin';
 import styles from '@shared/styles/themes/components/Layout.module.scss';
 import { Sidebar } from './Sidebar';
 import { TestModeBanner } from './TestModeBanner';
@@ -20,6 +21,7 @@ export function Layout(): React.ReactElement {
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       <div className={styles['mainArea']}>
+        <ImpersonationBanner />
         {user?.role === 'test' && <TestModeBanner />}
         <TopBar />
 
