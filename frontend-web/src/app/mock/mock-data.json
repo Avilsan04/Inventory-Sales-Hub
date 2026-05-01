@@ -1351,7 +1351,8 @@
       "status": "IN_STOCK",
       "category": "Lighting",
       "reorderThreshold": 40,
-      "lastUpdated": "2025-10-04T07:00:00.000Z"
+      "lastUpdated": "2025-10-04T07:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/421/300/225"
     },
     {
       "id": "inv-002-0000-0000-0000-000000000002",
@@ -1364,7 +1365,8 @@
       "status": "LOW_STOCK",
       "category": "Desk",
       "reorderThreshold": 20,
-      "lastUpdated": "2025-10-03T08:00:00.000Z"
+      "lastUpdated": "2025-10-03T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/738/300/225"
     },
     {
       "id": "inv-003-0000-0000-0000-000000000003",
@@ -1377,7 +1379,8 @@
       "status": "IN_STOCK",
       "category": "Peripherals",
       "reorderThreshold": 25,
-      "lastUpdated": "2025-10-02T08:00:00.000Z"
+      "lastUpdated": "2025-10-02T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1102/300/225"
     },
     {
       "id": "inv-004-0000-0000-0000-000000000004",
@@ -1390,7 +1393,8 @@
       "status": "LOW_STOCK",
       "category": "Furniture",
       "reorderThreshold": 15,
-      "lastUpdated": "2025-10-01T08:00:00.000Z"
+      "lastUpdated": "2025-10-01T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1420/300/225"
     },
     {
       "id": "inv-005-0000-0000-0000-000000000005",
@@ -1403,7 +1407,8 @@
       "status": "LOW_STOCK",
       "category": "Accessories",
       "reorderThreshold": 40,
-      "lastUpdated": "2025-09-29T08:00:00.000Z"
+      "lastUpdated": "2025-09-29T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/309/300/225"
     },
     {
       "id": "inv-006-0000-0000-0000-000000000006",
@@ -1416,7 +1421,8 @@
       "status": "OUT_OF_STOCK",
       "category": "Desk",
       "reorderThreshold": 30,
-      "lastUpdated": "2025-09-28T08:00:00.000Z"
+      "lastUpdated": "2025-09-28T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1881/300/225"
     },
     {
       "id": "inv-007-0000-0000-0000-000000000007",
@@ -1429,7 +1435,8 @@
       "status": "IN_STOCK",
       "category": "Decor",
       "reorderThreshold": 10,
-      "lastUpdated": "2025-09-27T08:00:00.000Z"
+      "lastUpdated": "2025-09-27T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/2044/300/225"
     },
     {
       "id": "inv-008-0000-0000-0000-000000000008",
@@ -1442,7 +1449,8 @@
       "status": "IN_STOCK",
       "category": "Furniture",
       "reorderThreshold": 5,
-      "lastUpdated": "2025-09-26T08:00:00.000Z"
+      "lastUpdated": "2025-09-26T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/3102/300/225"
     },
     {
       "id": "inv-009-0000-0000-0000-000000000009",
@@ -1455,7 +1463,8 @@
       "status": "IN_STOCK",
       "category": "Desk",
       "reorderThreshold": 10,
-      "lastUpdated": "2025-09-25T08:00:00.000Z"
+      "lastUpdated": "2025-09-25T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/512/300/225"
     },
     {
       "id": "inv-010-0000-0000-0000-000000000010",
@@ -1468,7 +1477,8 @@
       "status": "IN_STOCK",
       "category": "Furniture",
       "reorderThreshold": 8,
-      "lastUpdated": "2025-09-24T08:00:00.000Z"
+      "lastUpdated": "2025-09-24T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/620/300/225"
     },
     {
       "id": "inv-011-0000-0000-0000-000000000011",
@@ -1481,7 +1491,8 @@
       "status": "LOW_STOCK",
       "category": "Accessories",
       "reorderThreshold": 12,
-      "lastUpdated": "2025-09-23T08:00:00.000Z"
+      "lastUpdated": "2025-09-23T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/811/300/225"
     },
     {
       "id": "inv-012-0000-0000-0000-000000000012",
@@ -1494,7 +1505,8 @@
       "status": "IN_STOCK",
       "category": "Accessories",
       "reorderThreshold": 20,
-      "lastUpdated": "2025-09-22T08:00:00.000Z"
+      "lastUpdated": "2025-09-22T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/925/300/225"
     },
     {
       "id": "inv-013-0000-0000-0000-000000000013",
@@ -1507,7 +1519,8 @@
       "status": "IN_STOCK",
       "category": "Desk",
       "reorderThreshold": 10,
-      "lastUpdated": "2025-09-21T08:00:00.000Z"
+      "lastUpdated": "2025-09-21T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1033/300/225"
     },
     {
       "id": "inv-014-0000-0000-0000-000000000014",
@@ -1520,7 +1533,8 @@
       "status": "OUT_OF_STOCK",
       "category": "Accessories",
       "reorderThreshold": 15,
-      "lastUpdated": "2025-09-20T08:00:00.000Z"
+      "lastUpdated": "2025-09-20T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1215/300/225"
     },
     {
       "id": "inv-015-0000-0000-0000-000000000015",
@@ -1533,7 +1547,8 @@
       "status": "IN_STOCK",
       "category": "Lighting",
       "reorderThreshold": 20,
-      "lastUpdated": "2025-09-19T08:00:00.000Z"
+      "lastUpdated": "2025-09-19T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1340/300/225"
     },
     {
       "id": "inv-016-0000-0000-0000-000000000016",
@@ -1546,7 +1561,8 @@
       "status": "IN_STOCK",
       "category": "Furniture",
       "reorderThreshold": 4,
-      "lastUpdated": "2025-09-18T08:00:00.000Z"
+      "lastUpdated": "2025-09-18T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1560/300/225"
     },
     {
       "id": "inv-017-0000-0000-0000-000000000017",
@@ -1559,7 +1575,8 @@
       "status": "LOW_STOCK",
       "category": "Desk",
       "reorderThreshold": 8,
-      "lastUpdated": "2025-09-17T08:00:00.000Z"
+      "lastUpdated": "2025-09-17T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1672/300/225"
     },
     {
       "id": "inv-018-0000-0000-0000-000000000018",
@@ -1572,7 +1589,8 @@
       "status": "OUT_OF_STOCK",
       "category": "Accessories",
       "reorderThreshold": 10,
-      "lastUpdated": "2025-09-16T08:00:00.000Z"
+      "lastUpdated": "2025-09-16T08:00:00.000Z",
+      "imageUrl": "https://picsum.photos/seed/1790/300/225"
     }
   ],
 

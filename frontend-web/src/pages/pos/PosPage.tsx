@@ -225,7 +225,11 @@ export function PosPage(): React.ReactElement {
                   }}
                 >
                   <div className={styles['productIconWrap']}>
-                    <PackageIcon size={32} aria-hidden="true" />
+                    {item.imageUrl ? (
+                      <img src={item.imageUrl} alt={item.name} className={styles['productImg']} />
+                    ) : (
+                      <PackageIcon size={32} aria-hidden="true" />
+                    )}
                   </div>
                   <p className={styles['productName']}>{item.name}</p>
                   <p className={styles['productSku']}>{item.sku}</p>

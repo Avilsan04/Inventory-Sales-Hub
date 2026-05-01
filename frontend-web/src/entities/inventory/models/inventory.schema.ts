@@ -12,6 +12,7 @@ export const inventoryItemSchema = z.object({
   category: z.string().optional(),
   reorderThreshold: z.number().int().nonnegative().optional(),
   lastUpdated: z.iso.datetime({ message: 'Must be a valid ISO datetime string' }),
+  imageUrl: z.url().optional(),
 });
 
 export const inventoryListSchema = z.array(inventoryItemSchema);
