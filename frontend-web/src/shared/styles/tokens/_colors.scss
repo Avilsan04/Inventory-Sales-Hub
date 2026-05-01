@@ -14,6 +14,14 @@ $color-success: #16a34a;
 $color-warning: #d97706;
 $color-error: #dc2626;
 
+// ── Soft semantic surfaces (badges / pills) ──────────────────────
+$color-success-bg: #dcfce7;
+$color-success-fg: #15803d;
+$color-warning-bg: #fef3c7;
+$color-warning-fg: #b45309;
+$color-info-bg: #dbeafe;
+$color-info-fg: #1d4ed8;
+
 // ── Semantic backgrounds (light) ────────────────────────────────
 $color-bg-primary: #ffffff;
 $color-bg-secondary: #f8fafc;
@@ -52,11 +60,11 @@ $color-ring: #2563eb;
 $color-overlay: rgba(0, 0, 0, 0.5);
 
 // ── Third-party brand colors ─────────────────────────────────────
-$color-github-bg:       #24292f;
+$color-github-bg: #24292f;
 $color-github-bg-hover: #32383f;
-$color-github-text:     #ffffff;
+$color-github-text: #ffffff;
 
-// ── Sidebar colors (light) ──────────────────────────────────────
+// ── Sidebar colors (theme-aware) ─────────────────────────────────
 $color-sidebar-bg: #f8fafc;
 $color-sidebar-foreground: #0f172a;
 $color-sidebar-primary: #2563eb;
@@ -65,6 +73,8 @@ $color-sidebar-accent: #f1f5f9;
 $color-sidebar-accent-foreground: #0f172a;
 $color-sidebar-border: #e2e8f0;
 $color-sidebar-ring: #2563eb;
+$color-sidebar-active-bg: #dbeafe;
+$color-sidebar-active-fg: #1d4ed8;
 
 // ── Chart colors (light) ────────────────────────────────────────
 $color-chart-1: #2563eb;
@@ -119,3 +129,14 @@ $color-dark-chart-2: #22c55e;
 $color-dark-chart-3: #f59e0b;
 $color-dark-chart-4: #06b6d4;
 $color-dark-chart-5: #8b5cf6;
+
+// ── Dark semantic soft surfaces ─────────────────────────────────
+$color-dark-success-bg: #14532d;
+$color-dark-success-fg: #86efac;
+$color-dark-warning-bg: #451a03;
+$color-dark-warning-fg: #fcd34d;
+
+// ── Test mode (orange, static across themes) ────────────────────
+$color-test-bg: rgba(251, 146, 60, 0.1);
+$color-test-border: rgba(251, 146, 60, 0.25);
+$color-test-fg: #f97316;

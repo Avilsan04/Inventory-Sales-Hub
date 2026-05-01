@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Layout } from '@widgets';
+import { AdminLayout, CompanyLayout, ClientLayout } from '@widgets';
+import { useEffectiveRole } from '@features/auth';
 import { ProtectedRoute } from './guards/ProtectedRoute';
 import { PublicRoute } from './guards/PublicRoute';
 import { RoleRoute } from './guards/RoleRoute';
 import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
 import { setupHttpEvents } from '@core/http';
+import { clearAuthCache } from '@core/api/queryClient';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
@@ -84,6 +86,17 @@ const MyOrdersPage = React.lazy(() =>
   import('@pages/my-orders/MyOrdersPage').then((module) => ({ default: module.MyOrdersPage }))
 );
 
+function RoleLayout(): React.ReactElement {
+  const role = useEffectiveRole();
+  if (role === 'admin' || role === 'manager' || role === 'staff' || role === 'test') {
+    return <AdminLayout />;
+  }
+  if (role === 'company') {
+    return <CompanyLayout />;
+  }
+  return <ClientLayout />;
+}
+
 /**
  * Registers global HTTP interceptors (e.g., 401 Unauthorized handling).
  * Uses the routing adapter to maintain architectural purity.
@@ -99,6 +112,7 @@ function HttpInterceptorSetup(): null {
   React.useEffect(() => {
     // Architectural Requirement: Execute setup and retain the cleanup function
     const cleanup = setupHttpEvents(() => {
+      clearAuthCache();
       navigateRef.current(APP_ROUTES.LOGIN, true);
     });
 
@@ -132,7 +146,7 @@ export function AppRouter(): React.ReactElement {
 
           {/* Protected Layer — application shell */}
           <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
+            <Route element={<RoleLayout />}>
               {/* Customer/company-accessible routes */}
               <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
               <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
@@ -145,12 +159,22 @@ export function AppRouter(): React.ReactElement {
               {/* Admin/staff/test-only routes */}
               <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
                 <Route path={APP_ROUTES.INVENTORY} element={<InventoryPage />} />
-                <Route path={APP_ROUTES.CUSTOMERS} element={<CustomersPage />} />
                 <Route path={APP_ROUTES.EMPLOYEES} element={<EmployeesPage />} />
                 <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
-                <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
-                <Route path={APP_ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
               </Route>
+
+              {/* Admin/staff/company routes */}
+              <Route
+                element={
+                  <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test', 'company']} />
+                }
+              >
+                <Route path={APP_ROUTES.CUSTOMERS} element={<CustomersPage />} />
+                <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+              </Route>
+
+              {/* All authenticated users */}
+              <Route path={APP_ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
 
               {/* Super admin routes */}
               <Route element={<RoleRoute allowedRoles={['admin']} />}>

@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { CheckIcon } from 'lucide-react';
 import { PlusIcon, TrashIcon } from 'lucide-react';
 import { useCreateSale } from '@features/sales';
-import { useCustomers } from '@features/customers';
-import { useProducts } from '@features/products';
+import type { Customer } from '@entities/customer';
+import type { Product } from '@entities/product';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
@@ -164,15 +164,20 @@ function Stepper({
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  customers: Customer[];
+  products: Product[];
 }
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
+export function SaleCreateDialog({
+  open,
+  onOpenChange,
+  customers,
+  products,
+}: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateSale();
-  const { data: customers } = useCustomers();
-  const { data: products } = useProducts();
 
   const [step, setStep] = React.useState(0);
 
@@ -278,7 +283,7 @@ export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElem
                   <SelectValue placeholder={t('sales.checkout.walkIn')} />
                 </SelectTrigger>
                 <SelectContent>
-                  {customers?.map((c) => (
+                  {customers.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
                       {c.name}
                     </SelectItem>
@@ -319,7 +324,7 @@ export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElem
                       value={f.value}
                       onValueChange={(v: string) => {
                         f.onChange(v);
-                        const prod = products?.find((p) => p.id === v);
+                        const prod = products.find((p) => p.id === v);
                         if (prod !== undefined) {
                           setValue(`items.${index}.unitPrice`, prod.price);
                         }
@@ -329,7 +334,7 @@ export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElem
                         <SelectValue placeholder={t('sales.checkout.selectProduct')} />
                       </SelectTrigger>
                       <SelectContent>
-                        {products?.map((p) => (
+                        {products.map((p) => (
                           <SelectItem key={p.id} value={p.id}>
                             {p.name}
                           </SelectItem>
@@ -510,7 +515,7 @@ export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElem
   );
 
   const formValues = watch();
-  const selectedCustomerName = customers?.find((c) => c.id === formValues.customerId)?.name;
+  const selectedCustomerName = customers.find((c) => c.id === formValues.customerId)?.name;
   const paymentLabel = PAYMENT_OPTIONS.find((o) => o.method === formValues.paymentMethod);
   const maskedCard = formValues.cardNumber
     ? t('sales.checkout.maskedCard', { last4: formValues.cardNumber.replace(/\s/g, '').slice(-4) })
@@ -523,7 +528,7 @@ export function SaleCreateDialog({ open, onOpenChange }: Props): React.ReactElem
       {formValues.items
         .filter((it) => it.productId)
         .map((it) => {
-          const pName = products?.find((p) => p.id === it.productId)?.name ?? it.productId;
+          const pName = products.find((p) => p.id === it.productId)?.name ?? it.productId;
           return (
             <div key={it.productId} className={styles['summaryRow']}>
               <span className={styles['summaryLabel']}>

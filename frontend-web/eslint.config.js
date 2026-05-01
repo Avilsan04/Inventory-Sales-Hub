@@ -4,6 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import boundaries from 'eslint-plugin-boundaries';
 
 export default tseslint.config(
   { ignores: ['dist', 'build', 'node_modules', '.expo', 'android', 'ios', 'public'] },
@@ -56,5 +57,45 @@ export default tseslint.config(
     rules: {
       'react-refresh/only-export-components': 'off',
     }
+  },
+  // FSD layer boundary enforcement
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    plugins: { boundaries },
+    settings: {
+      'boundaries/elements': [
+        { type: 'app',      pattern: 'src/app/**'      },
+        { type: 'pages',    pattern: 'src/pages/**'    },
+        { type: 'widgets',  pattern: 'src/widgets/**'  },
+        { type: 'features', pattern: 'src/features/**' },
+        { type: 'entities', pattern: 'src/entities/**' },
+        { type: 'shared',   pattern: 'src/shared/**'   },
+        { type: 'core',     pattern: 'src/core/**'     },
+      ],
+      'boundaries/resolve-aliases': {
+        '@app':      { path: './src/app'      },
+        '@pages':    { path: './src/pages'    },
+        '@widgets':  { path: './src/widgets'  },
+        '@features': { path: './src/features' },
+        '@entities': { path: './src/entities' },
+        '@shared':   { path: './src/shared'   },
+        '@adapters': { path: './src/shared/adapters' },
+        '@core':     { path: './src/core'     },
+      },
+    },
+    rules: {
+      'boundaries/dependencies': ['error', {
+        default: 'disallow',
+        rules: [
+          { from: 'app',      allow: ['pages', 'widgets', 'features', 'entities', 'shared', 'core'] },
+          { from: 'pages',    allow: ['widgets', 'features', 'entities', 'shared', 'core'] },
+          { from: 'widgets',  allow: ['features', 'entities', 'shared', 'core'] },
+          { from: 'features', allow: ['entities', 'shared', 'core'] },
+          { from: 'entities', allow: ['shared'] },
+          { from: 'shared',   allow: ['core'] },
+          { from: 'core',     allow: [] },
+        ],
+      }],
+    },
   }
 );

@@ -1,2 +1,5 @@
 #!/usr/bin/env sh
-cd frontend-web && node ../node_modules/vitest/vitest.mjs run
+cd frontend-web
+node ../node_modules/.bin/lint-staged
+node ../node_modules/.bin/tsc --noEmit
+node ../node_modules/vitest/vitest.mjs run

@@ -44,3 +44,140 @@
 .tabsHeader {
   margin-bottom: $spacing-6;
 }
+
+// ── Field row with icon ─────────────────────────────────────────────
+.fieldRowLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+// ── Dark mode icon glow ─────────────────────────────────────────────
+.darkModeIconWrap {
+  width: $size-10;
+  height: $size-10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background-color: #1e293b;
+  box-shadow: var(--shadow-glow-blue-sm);
+  flex-shrink: 0;
+  color: #7dd3fc;
+}
+
+// ── Theme preview cards ─────────────────────────────────────────────
+.themeCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-4;
+  margin-top: $spacing-4;
+  padding-bottom: $spacing-2;
+}
+
+.themeCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-2;
+  cursor: pointer;
+}
+
+.themePreview {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  overflow: hidden;
+  display: flex;
+  transition:
+    border-color $duration-fast ease,
+    box-shadow $duration-fast ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+.themePreviewActive {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 3px $color-primary-light;
+}
+
+.themePreviewSidebar {
+  width: 30%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.themePreviewContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+}
+
+.themePreviewRow {
+  height: 6px;
+  border-radius: 3px;
+  width: 100%;
+
+  &:first-child {
+    width: 60%;
+  }
+}
+
+// Light preview
+.previewLight {
+  .themePreviewSidebar {
+    background: #f8fafc;
+  }
+  .themePreviewContent {
+    background: #ffffff;
+  }
+  .themePreviewRow {
+    background: #e2e8f0;
+  }
+  .themePreviewRow:first-child {
+    background: #cbd5e1;
+  }
+}
+
+// Dark preview
+.previewDark {
+  .themePreviewSidebar {
+    background: #0f1117;
+  }
+  .themePreviewContent {
+    background: #0f172a;
+  }
+  .themePreviewRow {
+    background: #334155;
+  }
+  .themePreviewRow:first-child {
+    background: #475569;
+  }
+}
+
+// Accent preview
+.previewAccent {
+  .themePreviewSidebar {
+    background: #1e3a8a;
+  }
+  .themePreviewContent {
+    background: #0f172a;
+  }
+  .themePreviewRow {
+    background: #334155;
+  }
+  .themePreviewRow:first-child {
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+  }
+}
+
+.themeLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+}

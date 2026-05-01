@@ -61,7 +61,7 @@
 }
 
 .brandName {
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
   font-weight: $font-weight-semibold;
   color: var(--color-sidebar-foreground);
   white-space: nowrap;
@@ -74,11 +74,11 @@
 .nav {
   flex: 1;
   overflow-y: auto;
-  padding: $spacing-4 $spacing-3;
+  padding: $spacing-4 0;
 }
 
 .footerNav {
-  padding: $spacing-2 $spacing-3;
+  padding: $spacing-2 0;
   border-top: $border-width-base solid var(--color-sidebar-border);
   flex-shrink: 0;
 }
@@ -99,18 +99,19 @@
   gap: $spacing-1;
 
   & + & {
-    margin-top: $spacing-4;
+    margin-top: $spacing-5;
   }
 }
 
 // ── Section label ────────────────────────────────────────────────────────
 .navSectionLabel {
   display: block;
-  padding: 0 $spacing-3;
-  margin-bottom: $spacing-1;
+  padding: 0 $spacing-4;
+  margin-bottom: $spacing-2;
+  margin-top: $spacing-1;
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  color: var(--color-muted-foreground);
+  color: var(--color-text-muted);
   letter-spacing: $letter-spacing-wider;
   text-transform: uppercase;
   white-space: nowrap;
@@ -123,7 +124,7 @@
   display: flex;
   align-items: center;
   gap: $spacing-3;
-  padding: $spacing-2 $spacing-3;
+  padding: $spacing-2 $spacing-4;
   border-radius: var(--radius-md);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
@@ -136,24 +137,41 @@
   &:hover {
     background-color: var(--color-sidebar-accent);
     color: var(--color-sidebar-accent-foreground);
+
+    .navIcon {
+      color: var(--color-sidebar-foreground);
+    }
   }
 }
 
 .navItemActive {
-  background-color: $color-primary-light;
-  color: $color-primary-hover;
+  background-color: var(--color-sidebar-active-bg);
+  color: var(--color-sidebar-active-fg);
   font-weight: $font-weight-semibold;
 
+  .navIcon {
+    color: var(--color-sidebar-active-fg);
+  }
+
   &:hover {
-    background-color: $color-primary-light;
-    color: $color-primary-hover;
+    background-color: var(--color-sidebar-active-bg);
+    color: var(--color-sidebar-active-fg);
+
+    .navIcon {
+      color: var(--color-sidebar-active-fg);
+    }
   }
 }
 
 .navIcon {
-  width: $size-4;
-  height: $size-4;
+  width: $size-5;
+  height: $size-5;
   flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: color $duration-fast ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // ── User footer ─────────────────────────────────────────────────────────
@@ -164,6 +182,19 @@
   padding: $spacing-4;
   border-top: $border-width-base solid var(--color-sidebar-border);
   flex-shrink: 0;
+}
+
+.roleBadge {
+  display: inline-block;
+  padding: 1px $spacing-2;
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-hover;
+  background-color: $color-primary-light;
+  border-radius: $radius-sm;
+  letter-spacing: $letter-spacing-wider;
+  text-transform: uppercase;
+  margin-bottom: $spacing-1;
 }
 
 .userInfo {

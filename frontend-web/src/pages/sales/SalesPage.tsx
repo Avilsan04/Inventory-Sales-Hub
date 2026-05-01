@@ -17,7 +17,7 @@ import {
   TableCell,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
-import { SaleCreateDialog } from '@features/sales/components/SaleCreateDialog';
+import { SaleCreateWidget } from '@widgets';
 import { SaleStatusDialog } from '@features/sales/components/SaleStatusDialog';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { Sale } from '@entities/sale';
@@ -236,7 +236,7 @@ export function SalesPage(): React.ReactElement {
         </SectionErrorBoundary>
       </section>
 
-      <SaleCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <SaleCreateWidget open={createOpen} onOpenChange={setCreateOpen} />
       <SaleStatusDialog
         sale={editSale}
         open={editSale !== null}

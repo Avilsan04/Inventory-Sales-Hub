@@ -2,15 +2,19 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboardIcon,
-  PackageIcon,
-  ShoppingCartIcon,
+  TrendingUpIcon,
+  WarehouseIcon,
+  TagIcon,
+  ReceiptIcon,
   UsersIcon,
-  Users2Icon,
-  TruckIcon,
-  SettingsIcon,
-  BuildingIcon,
-  BarChart2Icon,
+  BriefcaseIcon,
+  FactoryIcon,
   BellIcon,
+  Building2Icon,
+  SlidersHorizontalIcon,
+  LayoutGridIcon,
+  ClipboardListIcon,
+  UserRoundIcon,
 } from 'lucide-react';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -23,15 +27,19 @@ import styles from '@shared/styles/themes/components/Sidebar.module.scss';
 
 type NavIconKey =
   | 'dashboard'
+  | 'analytics'
   | 'inventory'
-  | 'orders'
+  | 'products'
+  | 'sales'
+  | 'myOrders'
+  | 'catalog'
   | 'customers'
   | 'employees'
   | 'shipments'
-  | 'settings'
+  | 'notifications'
   | 'tenants'
-  | 'analytics'
-  | 'notifications';
+  | 'settings'
+  | 'profile';
 
 interface NavItem {
   to: string;
@@ -56,7 +64,7 @@ const ADMIN_NAV_GROUPS: readonly NavGroup[] = [
     labelKey: 'nav.section.operations',
     items: [
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
-      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'orders' },
+      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
@@ -83,7 +91,7 @@ const STAFF_NAV_GROUPS: readonly NavGroup[] = [
     labelKey: 'nav.section.operations',
     items: [
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
-      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'orders' },
+      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
@@ -99,10 +107,24 @@ const STAFF_NAV_GROUPS: readonly NavGroup[] = [
 
 const COMPANY_NAV_GROUPS: readonly NavGroup[] = [
   {
+    labelKey: 'nav.section.overview',
     items: [
       { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
-      { to: APP_ROUTES.PRODUCTS, labelKey: 'nav.products', iconKey: 'inventory' },
-      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'orders' },
+      { to: APP_ROUTES.ANALYTICS, labelKey: 'nav.analytics', iconKey: 'analytics' },
+    ],
+  },
+  {
+    labelKey: 'nav.section.operations',
+    items: [
+      { to: APP_ROUTES.PRODUCTS, labelKey: 'nav.products', iconKey: 'products' },
+      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
+      { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
+    ],
+  },
+  {
+    labelKey: 'nav.section.system',
+    items: [
+      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
     ],
   },
 ] as const;
@@ -111,40 +133,59 @@ const CUSTOMER_NAV_GROUPS: readonly NavGroup[] = [
   {
     items: [
       { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
-      { to: APP_ROUTES.CATALOG, labelKey: 'nav.catalog', iconKey: 'inventory' },
-      { to: APP_ROUTES.MY_ORDERS, labelKey: 'nav.myOrders', iconKey: 'orders' },
+      { to: APP_ROUTES.CATALOG, labelKey: 'nav.catalog', iconKey: 'catalog' },
+      { to: APP_ROUTES.MY_ORDERS, labelKey: 'nav.myOrders', iconKey: 'myOrders' },
+      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
     ],
   },
 ] as const;
 
 const FOOTER_NAV_GROUP: NavGroup = {
-  items: [{ to: APP_ROUTES.SETTINGS, labelKey: 'nav.settings', iconKey: 'settings' }],
+  items: [
+    { to: APP_ROUTES.PROFILE, labelKey: 'nav.profile', iconKey: 'profile' },
+    { to: APP_ROUTES.SETTINGS, labelKey: 'nav.settings', iconKey: 'settings' },
+  ],
 };
 
 function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
   switch (iconKey) {
     case 'dashboard':
       return <LayoutDashboardIcon aria-hidden="true" />;
+    case 'analytics':
+      return <TrendingUpIcon aria-hidden="true" />;
     case 'inventory':
-      return <PackageIcon aria-hidden="true" />;
-    case 'orders':
-      return <ShoppingCartIcon aria-hidden="true" />;
+      return <WarehouseIcon aria-hidden="true" />;
+    case 'products':
+      return <TagIcon aria-hidden="true" />;
+    case 'sales':
+      return <ReceiptIcon aria-hidden="true" />;
+    case 'myOrders':
+      return <ClipboardListIcon aria-hidden="true" />;
+    case 'catalog':
+      return <LayoutGridIcon aria-hidden="true" />;
     case 'customers':
       return <UsersIcon aria-hidden="true" />;
     case 'employees':
-      return <Users2Icon aria-hidden="true" />;
+      return <BriefcaseIcon aria-hidden="true" />;
     case 'shipments':
-      return <TruckIcon aria-hidden="true" />;
-    case 'settings':
-      return <SettingsIcon aria-hidden="true" />;
-    case 'tenants':
-      return <BuildingIcon aria-hidden="true" />;
-    case 'analytics':
-      return <BarChart2Icon aria-hidden="true" />;
+      return <FactoryIcon aria-hidden="true" />;
     case 'notifications':
       return <BellIcon aria-hidden="true" />;
+    case 'tenants':
+      return <Building2Icon aria-hidden="true" />;
+    case 'settings':
+      return <SlidersHorizontalIcon aria-hidden="true" />;
+    case 'profile':
+      return <UserRoundIcon aria-hidden="true" />;
   }
 }
+
+const ROLE_LABELS: Record<string, string> = {
+  admin: 'Admin',
+  staff: 'Staff',
+  company: 'Company',
+  customer: 'Customer',
+};
 
 function initials(name: string): string {
   return name
@@ -240,6 +281,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
           </Avatar>
           <div className={styles['userInfo']}>
             <div className={styles['userName']}>{user?.username ?? '—'}</div>
+            {effectiveRole !== undefined && (
+              <span className={styles['roleBadge']}>
+                {ROLE_LABELS[effectiveRole] ?? effectiveRole}
+              </span>
+            )}
             {user?.email !== undefined && <div className={styles['userEmail']}>{user.email}</div>}
           </div>
         </div>

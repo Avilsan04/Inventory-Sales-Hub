@@ -26,48 +26,64 @@
 .variantDefault {
   background-color: $color-primary;
   color: $color-primary-foreground;
-  .dot { background-color: $color-primary-foreground; }
+  .dot {
+    background-color: $color-primary-foreground;
+  }
 }
 
 .variantSecondary {
   background-color: $color-bg-tertiary;
   color: $color-text-secondary;
-  .dot { background-color: $color-text-muted; }
+  .dot {
+    background-color: $color-text-muted;
+  }
 }
 
 .variantDestructive {
   background-color: $color-destructive;
-  color: #ffffff;
-  .dot { background-color: #ffffff; }
+  color: $color-destructive-foreground;
+  .dot {
+    background-color: $color-destructive-foreground;
+  }
 }
 
 .variantOutline {
   border: $border-width-base solid $color-border;
   color: $color-text-secondary;
   background-color: transparent;
-  .dot { background-color: $color-text-muted; }
+  .dot {
+    background-color: $color-text-muted;
+  }
 }
 
 .variantSuccess {
-  background-color: #dcfce7;
-  color: #15803d;
-  .dot { background-color: #16a34a; }
+  background-color: var(--color-success-bg);
+  color: var(--color-success-fg);
+  .dot {
+    background-color: var(--color-success);
+  }
 }
 
 .variantWarning {
-  background-color: #fef3c7;
-  color: #b45309;
-  .dot { background-color: #d97706; }
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-fg);
+  .dot {
+    background-color: var(--color-warning);
+  }
 }
 
 .variantInfo {
   background-color: $color-primary-light;
   color: $color-primary-hover;
-  .dot { background-color: $color-primary; }
+  .dot {
+    background-color: $color-primary;
+  }
 }
 
 .variantNeutral {
   background-color: $color-bg-tertiary;
   color: $color-text-secondary;
-  .dot { background-color: $color-text-muted; }
+  .dot {
+    background-color: $color-text-muted;
+  }
 }

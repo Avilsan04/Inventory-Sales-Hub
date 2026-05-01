@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Outlet } from 'react-router-dom';
-
-import { ImpersonationBanner } from '@features/admin';
 import styles from '@shared/styles/themes/components/Layout.module.scss';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 
-export function Layout(): React.ReactElement {
+export function CompanyLayout(): React.ReactElement {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const closeSidebar = React.useCallback((): void => {
@@ -18,7 +16,6 @@ export function Layout(): React.ReactElement {
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       <div className={styles['mainArea']}>
-        <ImpersonationBanner />
         <TopBar />
 
         <main className={styles['main']}>
