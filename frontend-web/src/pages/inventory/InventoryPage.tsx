@@ -121,7 +121,6 @@ export function InventoryPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div className={styles['headerText']}>
-          <span className={styles['eyebrow']}>CATALOG</span>
           <h1 className={styles['title']}>{t('inventory.title')}</h1>
           <p className={styles['subtitle']}>{t('inventory.subtitle')}</p>
         </div>

@@ -12,49 +12,56 @@ $color-secondary-hover: #475569;
 
 $color-success: #16a34a;
 $color-warning: #d97706;
-$color-error: #dc2626;
+$color-error: #ba1a1a;
 
 // ── Soft semantic surfaces (badges / pills) ──────────────────────
 $color-success-bg: #dcfce7;
 $color-success-fg: #15803d;
 $color-warning-bg: #fef3c7;
 $color-warning-fg: #b45309;
-$color-info-bg: #dbeafe;
-$color-info-fg: #1d4ed8;
+$color-info-bg: #dce9ff;
+$color-info-fg: #0b1c30;
 
 // ── Semantic backgrounds (light) ────────────────────────────────
 $color-bg-primary: #ffffff;
-$color-bg-secondary: #f8fafc;
-$color-bg-tertiary: #f1f5f9;
+$color-bg-secondary: #f8f9ff;
+$color-bg-tertiary: #e5eeff;
 
 // ── Text colors (light) ─────────────────────────────────────────
-$color-text-primary: #0f172a;
-$color-text-secondary: #475569;
-$color-text-muted: #94a3b8;
+$color-text-primary: #0b1c30;
+$color-text-secondary: #45464d;
+$color-text-muted: #76777d;
 $color-text-inverse: #ffffff;
 
 // ── Border & focus (light) ──────────────────────────────────────
-$color-border: #e2e8f0;
+$color-border: #c6c6cd;
 $color-border-focus: #2563eb;
 
 // ── Extended semantic tokens (light) ────────────────────────────
 $color-accent: #16a34a;
 $color-accent-foreground: #052e16;
 
-$color-destructive: #dc2626;
+$color-destructive: #ba1a1a;
 $color-destructive-foreground: #ffffff;
 
-$color-muted-bg: #f1f5f9;
-$color-muted-foreground: #64748b;
+$color-muted-bg: #e5eeff;
+$color-muted-foreground: #45464d;
 
 $color-card-bg: #ffffff;
-$color-card-foreground: #0f172a;
+$color-card-foreground: #0b1c30;
 
 $color-popover-bg: #ffffff;
-$color-popover-foreground: #0f172a;
+$color-popover-foreground: #0b1c30;
 
-$color-input-bg: #e2e8f0;
+$color-input-bg: #e5eeff;
 $color-ring: #2563eb;
+
+// ── Surface levels (Stitch Material tokens) ──────────────────────
+$color-surface-high: #dce9ff;
+$color-surface-highest: #d3e4fe;
+$color-error-container: #ffdad6;
+$color-on-error-container: #93000a;
+$color-primary-on-container: #1e40af;
 
 // ── Overlay ─────────────────────────────────────────────────────
 $color-overlay: rgba(0, 0, 0, 0.5);
@@ -64,17 +71,18 @@ $color-github-bg: #24292f;
 $color-github-bg-hover: #32383f;
 $color-github-text: #ffffff;
 
-// ── Sidebar colors (theme-aware) ─────────────────────────────────
-$color-sidebar-bg: #f8fafc;
-$color-sidebar-foreground: #0f172a;
+// ── Sidebar colors (always dark — slate-900 base) ────────────────
+$color-sidebar-bg: #0f172a;
+$color-sidebar-foreground: #f8fafc;
+$color-sidebar-nav-inactive: #94a3b8;
 $color-sidebar-primary: #2563eb;
 $color-sidebar-primary-foreground: #ffffff;
-$color-sidebar-accent: #f1f5f9;
-$color-sidebar-accent-foreground: #0f172a;
-$color-sidebar-border: #e2e8f0;
+$color-sidebar-accent: #1e293b;
+$color-sidebar-accent-foreground: #ffffff;
+$color-sidebar-border: #1e293b;
 $color-sidebar-ring: #2563eb;
-$color-sidebar-active-bg: #dbeafe;
-$color-sidebar-active-fg: #1d4ed8;
+$color-sidebar-active-bg: #2563eb;
+$color-sidebar-active-fg: #ffffff;
 
 // ── Chart colors (light) ────────────────────────────────────────
 $color-chart-1: #2563eb;
@@ -84,9 +92,9 @@ $color-chart-4: #0891b2;
 $color-chart-5: #7c3aed;
 
 // ── Dark theme color overrides ──────────────────────────────────
-$color-dark-primary: #3b82f6;
-$color-dark-primary-hover: #60a5fa;
-$color-dark-primary-light: #1e3a5f;
+$color-dark-primary: #60a5fa;
+$color-dark-primary-hover: #93c5fd;
+$color-dark-primary-light: #1e3a8a;
 $color-dark-primary-foreground: #fafafa;
 $color-dark-secondary: #94a3b8;
 $color-dark-secondary-hover: #cbd5e1;
@@ -103,8 +111,8 @@ $color-dark-text-secondary: #cbd5e1;
 $color-dark-text-muted: #64748b;
 $color-dark-text-inverse: #0f172a;
 $color-dark-border: #334155;
-$color-dark-border-focus: #3b82f6;
-$color-dark-ring: #3b82f6;
+$color-dark-border-focus: #60a5fa;
+$color-dark-ring: #60a5fa;
 $color-dark-input: #334155;
 $color-dark-accent: #22c55e;
 $color-dark-accent-foreground: #052e16;
@@ -118,13 +126,13 @@ $color-dark-popover: #1e293b;
 $color-dark-popover-foreground: #f8fafc;
 $color-dark-sidebar: #0c1222;
 $color-dark-sidebar-foreground: #f8fafc;
-$color-dark-sidebar-primary: #3b82f6;
+$color-dark-sidebar-primary: #60a5fa;
 $color-dark-sidebar-primary-foreground: #fafafa;
 $color-dark-sidebar-accent: #1e293b;
 $color-dark-sidebar-accent-foreground: #f8fafc;
 $color-dark-sidebar-border: #334155;
-$color-dark-sidebar-ring: #3b82f6;
-$color-dark-chart-1: #3b82f6;
+$color-dark-sidebar-ring: #60a5fa;
+$color-dark-chart-1: #60a5fa;
 $color-dark-chart-2: #22c55e;
 $color-dark-chart-3: #f59e0b;
 $color-dark-chart-4: #06b6d4;

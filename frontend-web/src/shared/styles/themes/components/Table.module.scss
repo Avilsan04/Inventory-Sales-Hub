@@ -12,6 +12,10 @@
 }
 
 .tableHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
   tr {
     background-color: var(--color-bg-secondary);
     border-bottom: $border-width-base solid var(--color-border);

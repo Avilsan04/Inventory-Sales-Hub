@@ -45,6 +45,7 @@
     "tenants": "Organizations",
     "catalog": "Catalog",
     "myOrders": "My Orders",
+    "pos": "Point of Sale",
     "section": {
       "overview": "OVERVIEW",
       "operations": "OPERATIONS",
@@ -436,6 +437,14 @@
     "subtitle": "Track your order history and status.",
     "emptyTitle": "No orders yet",
     "emptyDescription": "Your placed orders will appear here."
+  },
+  "settings": {
+    "nav": {
+      "appearance": "Appearance",
+      "language": "Language",
+      "notifications": "Notifications",
+      "account": "Account"
+    }
   },
   "admin": {
     "title": "Tenant Management",

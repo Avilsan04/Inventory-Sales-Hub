@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const customerSchema = z.object({
-  id: z.uuid(),
+  id: z.string().min(1),
   name: z.string().min(1),
   email: z.email(),
   phone: z.string().optional(),
@@ -11,5 +11,9 @@ export const customerSchema = z.object({
 });
 
 export const customerListSchema = z.array(customerSchema);
-export const createCustomerSchema = customerSchema.omit({ id: true, createdAt: true, updatedAt: true });
+export const createCustomerSchema = customerSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
 export const updateCustomerSchema = createCustomerSchema;

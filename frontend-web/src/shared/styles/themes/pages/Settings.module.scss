@@ -1,3 +1,75 @@
+// ── 3:9 layout ───────────────────────────────────────────────────────────────
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: $spacing-6;
+  align-items: start;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Secondary nav ─────────────────────────────────────────────────────────────
+.nav {
+  position: sticky;
+  top: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: $spacing-2;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  background-color: var(--color-card);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border-radius: $radius-lg;
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color $duration-fast ease,
+    color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-surface-high);
+    color: var(--color-text-primary);
+  }
+}
+
+.navItemActive {
+  background-color: var(--color-surface-high);
+  color: var(--color-primary);
+
+  .navIcon {
+    color: var(--color-primary);
+  }
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+// ── Content panel ─────────────────────────────────────────────────────────────
+.content {
+  min-width: 0;
+}
+
+// ── Field rows ────────────────────────────────────────────────────────────────
 .fieldRow {
   display: flex;
   align-items: center;
@@ -41,18 +113,14 @@
   gap: $spacing-2;
 }
 
-.tabsHeader {
-  margin-bottom: $spacing-6;
-}
-
-// ── Field row with icon ─────────────────────────────────────────────
+// ── Field row with icon ───────────────────────────────────────────────────────
 .fieldRowLeft {
   display: flex;
   align-items: center;
   gap: $spacing-3;
 }
 
-// ── Dark mode icon glow ─────────────────────────────────────────────
+// ── Dark mode icon glow ───────────────────────────────────────────────────────
 .darkModeIconWrap {
   width: $size-10;
   height: $size-10;
@@ -66,7 +134,7 @@
   color: #7dd3fc;
 }
 
-// ── Theme preview cards ─────────────────────────────────────────────
+// ── Theme preview cards ───────────────────────────────────────────────────────
 .themeCards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

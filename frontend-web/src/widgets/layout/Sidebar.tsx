@@ -15,12 +15,13 @@ import {
   LayoutGridIcon,
   ClipboardListIcon,
   UserRoundIcon,
+  PlusIcon,
+  StoreIcon,
 } from 'lucide-react';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe } from '@features/auth';
 import { useEffectiveRole } from '@features/auth/hooks/useEffectiveRole';
-import { Avatar, AvatarFallback, BrandMark } from '@shared/ui/primitives';
+import { BrandMark } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/Sidebar.module.scss';
@@ -31,6 +32,7 @@ type NavIconKey =
   | 'inventory'
   | 'products'
   | 'sales'
+  | 'pos'
   | 'myOrders'
   | 'catalog'
   | 'customers'
@@ -65,6 +67,7 @@ const ADMIN_NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
       { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
+      { to: APP_ROUTES.POS, labelKey: 'nav.pos', iconKey: 'pos' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
@@ -92,6 +95,7 @@ const STAFF_NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
       { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
+      { to: APP_ROUTES.POS, labelKey: 'nav.pos', iconKey: 'pos' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
@@ -118,6 +122,7 @@ const COMPANY_NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { to: APP_ROUTES.PRODUCTS, labelKey: 'nav.products', iconKey: 'products' },
       { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
+      { to: APP_ROUTES.POS, labelKey: 'nav.pos', iconKey: 'pos' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
     ],
   },
@@ -159,6 +164,8 @@ function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
       return <TagIcon aria-hidden="true" />;
     case 'sales':
       return <ReceiptIcon aria-hidden="true" />;
+    case 'pos':
+      return <StoreIcon aria-hidden="true" />;
     case 'myOrders':
       return <ClipboardListIcon aria-hidden="true" />;
     case 'catalog':
@@ -178,22 +185,6 @@ function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
     case 'profile':
       return <UserRoundIcon aria-hidden="true" />;
   }
-}
-
-const ROLE_LABELS: Record<string, string> = {
-  admin: 'Admin',
-  staff: 'Staff',
-  company: 'Company',
-  customer: 'Customer',
-};
-
-function initials(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
 }
 
 interface NavGroupSectionProps {
@@ -236,7 +227,6 @@ export interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: user } = useAuthMe();
   const effectiveRole = useEffectiveRole();
 
   const navGroups = React.useMemo((): readonly NavGroup[] => {
@@ -246,7 +236,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
     return STAFF_NAV_GROUPS;
   }, [effectiveRole]);
 
-  const userInitials = user ? initials(user.username) : '..';
+  const showAddProduct = effectiveRole === 'admin' || effectiveRole === 'staff';
 
   return (
     <>
@@ -262,8 +252,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
       >
         <div className={styles['brand']}>
           <BrandMark size={32} />
-          <span className={styles['brandName']}>{t('common.appName')}</span>
+          <div className={styles['brandText']}>
+            <span className={styles['brandName']}>{t('common.appName')}</span>
+            <span className={styles['brandSub']}>Enterprise Suite</span>
+          </div>
         </div>
+
+        {showAddProduct && (
+          <div className={styles['ctaWrapper']}>
+            <NavLink to={APP_ROUTES.INVENTORY} className={styles['cta']} onClick={onClose}>
+              <PlusIcon className={styles['ctaIcon']} aria-hidden="true" />
+              Add Product
+            </NavLink>
+          </div>
+        )}
 
         <nav className={styles['nav']}>
           {navGroups.map((group, idx) => (
@@ -273,21 +275,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
 
         <div className={styles['footerNav']}>
           <NavGroupSection group={FOOTER_NAV_GROUP} t={t} onClose={onClose} />
-        </div>
-
-        <div className={styles['userFooter']}>
-          <Avatar>
-            <AvatarFallback>{userInitials}</AvatarFallback>
-          </Avatar>
-          <div className={styles['userInfo']}>
-            <div className={styles['userName']}>{user?.username ?? '—'}</div>
-            {effectiveRole !== undefined && (
-              <span className={styles['roleBadge']}>
-                {ROLE_LABELS[effectiveRole] ?? effectiveRole}
-              </span>
-            )}
-            {user?.email !== undefined && <div className={styles['userEmail']}>{user.email}</div>}
-          </div>
         </div>
       </aside>
     </>

@@ -82,6 +82,10 @@ const CatalogPage = React.lazy(() =>
   import('@pages/catalog/CatalogPage').then((module) => ({ default: module.CatalogPage }))
 );
 
+const PosPage = React.lazy(() =>
+  import('@pages/pos/PosPage').then((module) => ({ default: module.PosPage }))
+);
+
 const MyOrdersPage = React.lazy(() =>
   import('@pages/my-orders/MyOrdersPage').then((module) => ({ default: module.MyOrdersPage }))
 );
@@ -171,6 +175,7 @@ export function AppRouter(): React.ReactElement {
               >
                 <Route path={APP_ROUTES.CUSTOMERS} element={<CustomersPage />} />
                 <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+                <Route path={APP_ROUTES.POS} element={<PosPage />} />
               </Route>
 
               {/* All authenticated users */}

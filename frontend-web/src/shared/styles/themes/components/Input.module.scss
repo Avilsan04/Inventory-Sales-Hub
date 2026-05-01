@@ -6,13 +6,16 @@
   padding: $spacing-1 $spacing-3;
   border-radius: var(--radius-md);
   border: $border-width-base solid var(--color-input);
-  background-color: transparent;
+  background-color: var(--color-bg-primary);
   font-size: $font-size-base;
   font-family: inherit;
   color: inherit;
   box-shadow: var(--shadow-xs);
   outline: none;
-  transition: color $duration-fast ease, box-shadow $duration-fast ease, border-color $duration-fast ease;
+  transition:
+    color $duration-fast ease,
+    box-shadow $duration-fast ease,
+    border-color $duration-fast ease;
 
   @media (min-width: $breakpoint-md) {
     font-size: $font-size-sm;

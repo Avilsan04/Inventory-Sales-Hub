@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BellIcon, LogOutIcon, SearchIcon } from 'lucide-react';
+import { BellIcon, HelpCircleIcon, LayoutGridIcon, LogOutIcon, SearchIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -11,21 +11,6 @@ import { Input } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
-
-interface PageMeta {
-  titleKey: string;
-  subtitleKey: string;
-}
-
-const PAGE_META: Record<string, PageMeta> = {
-  [APP_ROUTES.DASHBOARD]: { titleKey: 'nav.dashboard', subtitleKey: 'topbar.subtitle.dashboard' },
-  [APP_ROUTES.INVENTORY]: { titleKey: 'nav.inventory', subtitleKey: 'topbar.subtitle.inventory' },
-  [APP_ROUTES.SALES]: { titleKey: 'nav.orders', subtitleKey: 'topbar.subtitle.orders' },
-  [APP_ROUTES.CUSTOMERS]: { titleKey: 'nav.customers', subtitleKey: 'topbar.subtitle.customers' },
-  [APP_ROUTES.SUPPLIERS]: { titleKey: 'nav.suppliers', subtitleKey: 'topbar.subtitle.suppliers' },
-  [APP_ROUTES.ANALYTICS]: { titleKey: 'nav.analytics', subtitleKey: 'topbar.subtitle.analytics' },
-  [APP_ROUTES.SETTINGS]: { titleKey: 'nav.settings', subtitleKey: 'topbar.subtitle.settings' },
-};
 
 interface RoleConfig {
   readonly role: ViewRole;
@@ -69,7 +54,6 @@ export function TopBar(): React.ReactElement {
   const { data: user } = useAuthMe();
   const { viewAs, setViewAs } = useViewMode();
 
-  const meta = PAGE_META[pathname] ?? { titleKey: 'common.appName', subtitleKey: '' };
   const { data: notifications } = useNotifications();
   const unreadCount = notifications?.filter((n) => !n.isRead).length ?? 0;
   const isTest = user?.role === 'test';
@@ -87,11 +71,6 @@ export function TopBar(): React.ReactElement {
 
   return (
     <header className={styles['topbar']}>
-      <div className={styles['topbarTitle']}>
-        <span className={styles['pageTitle']}>{t(meta.titleKey)}</span>
-        {meta.subtitleKey && <span className={styles['pageSubtitle']}>{t(meta.subtitleKey)}</span>}
-      </div>
-
       <div className={styles['topbarSearch']}>
         {isTest && <span className={styles['testBanner']}>⚡ Test Mode · Viendo como:</span>}
         <div className={styles['searchWrapper']}>
@@ -124,6 +103,14 @@ export function TopBar(): React.ReactElement {
             ))}
           </div>
         )}
+
+        <button type="button" className={styles['iconBtn']} aria-label="Ayuda">
+          <HelpCircleIcon aria-hidden="true" />
+        </button>
+
+        <button type="button" className={styles['iconBtn']} aria-label="Apps">
+          <LayoutGridIcon aria-hidden="true" />
+        </button>
 
         <div className={styles['notifWrapper']}>
           <button type="button" className={styles['iconBtn']} aria-label={t('nav.notifications')}>

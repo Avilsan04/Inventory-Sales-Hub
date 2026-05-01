@@ -19,7 +19,7 @@ export const salesPeriodSchema = z.object({
 export const salesAnalyticsSchema = z.array(salesPeriodSchema);
 
 export const topProductSchema = z.object({
-  productId: z.uuid(),
+  productId: z.string().min(1),
   productName: z.string(),
   sku: z.string(),
   totalSold: z.number().int().nonnegative(),
@@ -29,7 +29,7 @@ export const topProductSchema = z.object({
 export const topProductsSchema = z.array(topProductSchema);
 
 export const topCustomerSchema = z.object({
-  customerId: z.uuid(),
+  customerId: z.string().min(1),
   customerName: z.string(),
   email: z.email(),
   totalOrders: z.number().int().nonnegative(),
@@ -42,15 +42,17 @@ export const inventoryValueSchema = z.object({
   totalItems: z.number().int().nonnegative(),
   totalValue: z.number().nonnegative(),
   currency: z.string().length(3).default('USD'),
-  byStatus: z.array(z.object({
-    status: z.string(),
-    count: z.number().int().nonnegative(),
-    value: z.number().nonnegative(),
-  })),
+  byStatus: z.array(
+    z.object({
+      status: z.string(),
+      count: z.number().int().nonnegative(),
+      value: z.number().nonnegative(),
+    })
+  ),
 });
 
 export const lowStockAlertSchema = z.object({
-  itemId: z.uuid(),
+  itemId: z.string().min(1),
   sku: z.string(),
   name: z.string(),
   currentQuantity: z.number().int().nonnegative(),

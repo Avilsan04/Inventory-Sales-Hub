@@ -16,6 +16,7 @@ export const APP_ROUTES = {
   ADMIN_TENANTS: '/admin/tenants',
   CATALOG: '/catalog',
   MY_ORDERS: '/my-orders',
+  POS: '/pos',
 } as const;
 
 export type AppRoute = (typeof APP_ROUTES)[keyof typeof APP_ROUTES];

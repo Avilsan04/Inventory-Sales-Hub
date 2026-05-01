@@ -4,7 +4,6 @@
   display: grid;
   grid-template-columns: $sidebar-width 1fr;
   min-height: $height-screen;
-
   // On mobile the sidebar is position:fixed and not in the grid flow
   @media (max-width: #{$breakpoint-lg - 1px}) {
     grid-template-columns: 1fr;
@@ -24,4 +23,21 @@
   flex: 1;
   overflow-y: auto;
   padding: $spacing-6;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: $border-radius-full;
+
+    &:hover {
+      background: var(--color-text-muted);
+    }
+  }
 }

@@ -65,6 +65,7 @@
   --color-sidebar: #{$color-sidebar-bg};
   --color-sidebar-fg: #{$color-sidebar-foreground};
   --color-sidebar-foreground: #{$color-sidebar-foreground};
+  --color-sidebar-nav-inactive: #{$color-sidebar-nav-inactive};
   --color-sidebar-primary: #{$color-sidebar-primary};
   --color-sidebar-primary-foreground: #{$color-sidebar-primary-foreground};
   --color-sidebar-accent: #{$color-sidebar-accent};
@@ -73,6 +74,13 @@
   --color-sidebar-ring: #{$color-sidebar-ring};
   --color-sidebar-active-bg: #{$color-sidebar-active-bg};
   --color-sidebar-active-fg: #{$color-sidebar-active-fg};
+
+  // ── Surface levels ────────────────────────────────────────────
+  --color-surface-high: #{$color-surface-high};
+  --color-surface-highest: #{$color-surface-highest};
+  --color-error-container: #{$color-error-container};
+  --color-on-error-container: #{$color-on-error-container};
+  --color-primary-on-container: #{$color-primary-on-container};
 
   // ── Charts ────────────────────────────────────────────────────
   --color-chart-1: #{$color-chart-1};

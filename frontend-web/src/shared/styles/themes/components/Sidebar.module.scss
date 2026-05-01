@@ -60,14 +60,65 @@
   flex-shrink: 0;
 }
 
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .brandName {
   font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
-  color: var(--color-sidebar-foreground);
+  font-weight: $font-weight-bold;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: $letter-spacing-tight;
+  line-height: 1.2;
+}
+
+.brandSub {
+  font-size: $font-size-xs;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── CTA button (Add Product) ────────────────────────────────────────────
+.ctaWrapper {
+  padding: $spacing-3 $spacing-4;
+  flex-shrink: 0;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-md;
+  background-color: var(--color-sidebar-primary);
+  color: #ffffff;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+    color: #ffffff;
+  }
+}
+
+.ctaIcon {
+  width: $size-4;
+  height: $size-4;
+  flex-shrink: 0;
 }
 
 // ── Navigation ──────────────────────────────────────────────────────────
@@ -75,6 +126,11 @@
   flex: 1;
   overflow-y: auto;
   padding: $spacing-4 0;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .footerNav {
@@ -111,7 +167,7 @@
   margin-top: $spacing-1;
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  color: var(--color-text-muted);
+  color: #64748b;
   letter-spacing: $letter-spacing-wider;
   text-transform: uppercase;
   white-space: nowrap;
@@ -128,18 +184,19 @@
   border-radius: var(--radius-md);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: var(--color-sidebar-foreground);
+  color: var(--color-sidebar-nav-inactive);
   text-decoration: none;
+  position: relative;
   transition:
     background-color $duration-fast ease,
     color $duration-fast ease;
 
   &:hover {
     background-color: var(--color-sidebar-accent);
-    color: var(--color-sidebar-accent-foreground);
+    color: #ffffff;
 
     .navIcon {
-      color: var(--color-sidebar-foreground);
+      color: #ffffff;
     }
   }
 }
@@ -148,6 +205,17 @@
   background-color: var(--color-sidebar-active-bg);
   color: var(--color-sidebar-active-fg);
   font-weight: $font-weight-semibold;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 3px;
+    border-radius: 0 $radius-sm $radius-sm 0;
+    background-color: var(--color-sidebar-primary);
+  }
 
   .navIcon {
     color: var(--color-sidebar-active-fg);
@@ -167,56 +235,9 @@
   width: $size-5;
   height: $size-5;
   flex-shrink: 0;
-  color: var(--color-text-muted);
+  color: #64748b;
   transition: color $duration-fast ease;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-// ── User footer ─────────────────────────────────────────────────────────
-.userFooter {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  padding: $spacing-4;
-  border-top: $border-width-base solid var(--color-sidebar-border);
-  flex-shrink: 0;
-}
-
-.roleBadge {
-  display: inline-block;
-  padding: 1px $spacing-2;
-  font-size: $font-size-2xs;
-  font-weight: $font-weight-semibold;
-  color: $color-primary-hover;
-  background-color: $color-primary-light;
-  border-radius: $radius-sm;
-  letter-spacing: $letter-spacing-wider;
-  text-transform: uppercase;
-  margin-bottom: $spacing-1;
-}
-
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-1;
-  min-width: 0;
-}
-
-.userName {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: var(--color-sidebar-foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.userEmail {
-  font-size: $font-size-xs;
-  color: var(--color-muted-foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

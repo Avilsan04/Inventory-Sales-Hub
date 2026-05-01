@@ -45,6 +45,7 @@
     "tenants": "Organizaciones",
     "catalog": "Catálogo",
     "myOrders": "Mis Pedidos",
+    "pos": "Punto de Venta",
     "section": {
       "overview": "RESUMEN",
       "operations": "OPERACIONES",
@@ -436,6 +437,14 @@
     "subtitle": "Consulta el historial y estado de tus pedidos.",
     "emptyTitle": "Sin pedidos todavía",
     "emptyDescription": "Tus pedidos realizados aparecerán aquí."
+  },
+  "settings": {
+    "nav": {
+      "appearance": "Apariencia",
+      "language": "Idioma",
+      "notifications": "Notificaciones",
+      "account": "Cuenta"
+    }
   },
   "admin": {
     "title": "Gestión de Tenants",

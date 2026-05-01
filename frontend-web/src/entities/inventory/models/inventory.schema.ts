@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const inventoryItemSchema = z.object({
-  id: z.uuid({ message: 'Invalid entity ID format' }),
+  id: z.string().min(1),
   sku: z.string().min(3, 'SKU must be at least 3 characters').max(50),
   name: z.string().min(1, 'Product name is required'),
   description: z.string().optional(),
@@ -32,8 +32,8 @@ export const stockAdjustmentSchema = z.object({
 });
 
 export const inventoryMovementSchema = z.object({
-  id: z.uuid(),
-  inventoryItemId: z.uuid(),
+  id: z.string().min(1),
+  inventoryItemId: z.string().min(1),
   type: z.enum(['in', 'out', 'adjustment']),
   quantity: z.number().int(),
   previousQuantity: z.number().int().nonnegative(),

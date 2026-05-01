@@ -14,33 +14,13 @@
   flex-shrink: 0;
 }
 
-// ── Left: page title + subtitle ─────────────────────────────────────────
-.topbarTitle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  min-width: 0;
-}
-
-.pageTitle {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-primary);
-  white-space: nowrap;
-}
-
-.pageSubtitle {
-  font-size: $font-size-xs;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
 // ── Center: search ──────────────────────────────────────────────────────
 .topbarSearch {
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: $spacing-3;
   min-width: 0;
 }
 
