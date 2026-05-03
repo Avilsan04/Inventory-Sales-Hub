@@ -4,41 +4,43 @@ import { inventoryKeys } from './useInventory';
 import type { InventoryItem, CreateInventoryItemDTO } from '@entities/inventory';
 
 export function useCreateInventoryItem(): UseMutationResult<
-    InventoryItem,
-    Error,
-    CreateInventoryItemDTO,
-    { previousInventory: InventoryItem[] }
+  InventoryItem,
+  Error,
+  CreateInventoryItemDTO,
+  { previousInventory: InventoryItem[] }
 > {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: inventoryApi.createItem,
+  return useMutation({
+    mutationFn: inventoryApi.createItem,
 
-        onMutate: async (newItemDTO) => {
-            await queryClient.cancelQueries({ queryKey: inventoryKeys.lists() });
+    onMutate: async (newItemDTO) => {
+      await queryClient.cancelQueries({ queryKey: inventoryKeys.lists() });
 
-            const previousInventory = queryClient.getQueryData<InventoryItem[]>(inventoryKeys.lists()) ?? [];
-            const optimisticItem: InventoryItem = {
-                ...newItemDTO,
-                id: crypto.randomUUID(),
-                lastUpdated: new Date().toISOString(),
-            };
+      const previousInventory =
+        queryClient.getQueryData<InventoryItem[]>(inventoryKeys.lists()) ?? [];
+      const optimisticItem: InventoryItem = {
+        ...newItemDTO,
+        id: crypto.randomUUID(),
+        isActive: true,
+        lastUpdated: new Date().toISOString(),
+      };
 
-            queryClient.setQueryData<InventoryItem[]>(inventoryKeys.lists(), (old) => {
-                return old ? [...old, optimisticItem] : [optimisticItem];
-            });
+      queryClient.setQueryData<InventoryItem[]>(inventoryKeys.lists(), (old) => {
+        return old ? [...old, optimisticItem] : [optimisticItem];
+      });
 
-            return { previousInventory };
-        },
+      return { previousInventory };
+    },
 
-        onError: (_error, _newItem, context) => {
-            if (context?.previousInventory) {
-                queryClient.setQueryData(inventoryKeys.lists(), context.previousInventory);
-            }
-        },
+    onError: (_error, _newItem, context) => {
+      if (context?.previousInventory) {
+        queryClient.setQueryData(inventoryKeys.lists(), context.previousInventory);
+      }
+    },
 
-        onSettled: () => {
-            void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
-        },
-    });
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
+    },
+  });
 }

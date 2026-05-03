@@ -11,22 +11,21 @@ import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useInventory } from '@features/inventory';
 import { useCustomers } from '@features/customers';
 import { useCreateSale } from '@features/sales';
+import { useCartStore } from '@features/sales/stores/cartStore';
+import { useCashSession } from '@features/sales/hooks/useCashSession';
+import { useEffectiveRole, PermissionGuard } from '@features/auth';
+import { hasPermission } from '@shared/lib/permissions';
+import { SaleReceiptDialog } from '@features/sales/components/SaleReceiptDialog';
+import { OpenCashSessionDialog } from '@features/sales/components/OpenCashSessionDialog';
+import { CloseCashSessionDialog } from '@features/sales/components/CloseCashSessionDialog';
 import type { PaymentMethod } from '@features/sales/models/checkout.types';
+import type { Sale } from '@entities/sale';
 import { toast } from '@shared/hooks/useToast';
-import { Input, Spinner, Badge } from '@shared/ui/primitives';
+import { Input, Spinner, Badge, Button } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
-
-interface CartItem {
-  productId: string;
-  productName: string;
-  sku: string;
-  unitPrice: number;
-  currency: string;
-  quantity: number;
-}
 
 const PAYMENT_OPTIONS: Array<{
   id: PaymentMethod;
@@ -56,11 +55,24 @@ export function PosPage(): React.ReactElement {
   const { data: customers } = useCustomers();
   const { mutate: createSale, isPending: isCreating } = useCreateSale();
 
-  const [cart, setCart] = React.useState<CartItem[]>([]);
-  const [customerId, setCustomerId] = React.useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('cash_on_delivery');
+  const {
+    items: cart,
+    customerId,
+    paymentMethod,
+    addItem,
+    changeQty,
+    clearCart,
+    setCustomer,
+    setPaymentMethod,
+  } = useCartStore();
+  const { data: cashSession, isLoading: isSessionLoading } = useCashSession();
+  const role = useEffectiveRole();
+
   const [search, setSearch] = React.useState('');
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+  const [completedSale, setCompletedSale] = React.useState<Sale | null>(null);
+  const [openSessionDialog, setOpenSessionDialog] = React.useState(false);
+  const [closeSessionDialog, setCloseSessionDialog] = React.useState(false);
 
   const categories = React.useMemo((): string[] => {
     if (!inventory) return [];
@@ -88,32 +100,14 @@ export function PosPage(): React.ReactElement {
   const currency = cart[0]?.currency ?? 'EUR';
 
   const addToCart = (item: InventoryItem): void => {
-    setCart((prev) => {
-      const existing = prev.find((c) => c.productId === item.id);
-      if (existing) {
-        if (existing.quantity >= item.quantity) return prev;
-        return prev.map((c) => (c.productId === item.id ? { ...c, quantity: c.quantity + 1 } : c));
-      }
-      return [
-        ...prev,
-        {
-          productId: item.id,
-          productName: item.name,
-          sku: item.sku,
-          unitPrice: item.price,
-          currency: item.currency,
-          quantity: 1,
-        },
-      ];
+    addItem({
+      productId: item.id,
+      productName: item.name,
+      sku: item.sku,
+      unitPrice: item.price,
+      currency: item.currency,
+      maxStock: item.quantity,
     });
-  };
-
-  const changeQty = (productId: string, delta: number): void => {
-    setCart((prev) =>
-      prev
-        .map((c) => (c.productId === productId ? { ...c, quantity: c.quantity + delta } : c))
-        .filter((c) => c.quantity > 0)
-    );
   };
 
   const handleCheckout = (): void => {
@@ -130,13 +124,9 @@ export function PosPage(): React.ReactElement {
         })),
       },
       {
-        onSuccess: () => {
-          toast({
-            title: t('sales.checkout.orderPlaced'),
-            description: t('sales.checkout.orderPlacedDesc'),
-          });
-          setCart([]);
-          setCustomerId(null);
+        onSuccess: (sale) => {
+          clearCart();
+          setCompletedSale(sale);
         },
         onError: (err) => {
           toast({ title: t('common.error'), description: err.message, variant: 'destructive' });
@@ -159,7 +149,60 @@ export function PosPage(): React.ReactElement {
         <div className={styles['headerTitle']}>
           <h1 className={styles['title']}>{t('nav.pos')}</h1>
         </div>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          {cashSession?.status === 'open' ? (
+            <>
+              <span style={{ fontSize: '0.75rem', color: 'var(--color-muted-foreground)' }}>
+                Session open
+              </span>
+              <PermissionGuard permission="close:cash-session">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setCloseSessionDialog(true);
+                  }}
+                >
+                  Close shift
+                </Button>
+              </PermissionGuard>
+            </>
+          ) : (
+            hasPermission(role, 'open:cash-session') && (
+              <Button
+                size="sm"
+                onClick={() => {
+                  setOpenSessionDialog(true);
+                }}
+              >
+                Open shift
+              </Button>
+            )
+          )}
+        </div>
       </header>
+
+      {!isSessionLoading && !cashSession && hasPermission(role, 'open:cash-session') && (
+        <div
+          style={{
+            background: 'var(--color-muted)',
+            borderRadius: '0.5rem',
+            padding: '2rem',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ marginBottom: '1rem', color: 'var(--color-muted-foreground)' }}>
+            No active cash session. Open a shift to start selling.
+          </p>
+          <Button
+            onClick={() => {
+              setOpenSessionDialog(true);
+            }}
+          >
+            Open shift
+          </Button>
+        </div>
+      )}
 
       <div className={styles['splitPanel']}>
         {/* Left: product browser */}
@@ -326,7 +369,7 @@ export function PosPage(): React.ReactElement {
               className={styles['customerSelect']}
               value={customerId ?? ''}
               onChange={(e) => {
-                setCustomerId(e.target.value !== '' ? e.target.value : null);
+                setCustomer(e.target.value !== '' ? e.target.value : null);
               }}
               aria-label={t('sales.checkout.customerOptional')}
             >
@@ -369,6 +412,24 @@ export function PosPage(): React.ReactElement {
           </div>
         </aside>
       </div>
+
+      <SaleReceiptDialog
+        sale={completedSale}
+        open={completedSale !== null}
+        onOpenChange={(open) => {
+          if (!open) setCompletedSale(null);
+        }}
+      />
+
+      <OpenCashSessionDialog open={openSessionDialog} onOpenChange={setOpenSessionDialog} />
+
+      {cashSession && (
+        <CloseCashSessionDialog
+          session={cashSession}
+          open={closeSessionDialog}
+          onOpenChange={setCloseSessionDialog}
+        />
+      )}
     </div>
   );
 }

@@ -6,4 +6,6 @@ export {
   useTopCustomers,
   useInventoryValue,
   useLowStockAlerts,
+  useCashFlow,
+  useWasteAlerts,
 } from './hooks/useAnalytics';

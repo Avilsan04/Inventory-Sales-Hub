@@ -24,6 +24,16 @@ const RegisterPage = React.lazy(() =>
   import('@pages/register/RegisterPage').then((module) => ({ default: module.RegisterPage }))
 );
 
+const ForgotPasswordPage = React.lazy(() =>
+  import('@pages/login/ForgotPasswordPage').then((module) => ({
+    default: module.ForgotPasswordPage,
+  }))
+);
+
+const ResetPasswordPage = React.lazy(() =>
+  import('@pages/login/ResetPasswordPage').then((module) => ({ default: module.ResetPasswordPage }))
+);
+
 const DashboardPage = React.lazy(() =>
   import('@pages/dashboard/DashboardPage').then((module) => ({ default: module.DashboardPage }))
 );
@@ -146,6 +156,8 @@ export function AppRouter(): React.ReactElement {
           <Route element={<PublicRoute />}>
             <Route path={APP_ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={APP_ROUTES.REGISTER} element={<RegisterPage />} />
+            <Route path={APP_ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+            <Route path={APP_ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
           </Route>
 
           {/* Protected Layer — application shell */}

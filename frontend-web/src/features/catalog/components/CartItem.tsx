@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MinusIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { Button } from '@shared/ui/primitives';
+import { formatCurrency } from '@shared/lib/formatCurrency';
 import { useCart } from '../hooks/useCart';
 import type { CartItem as CartItemType } from '../hooks/useCart';
 
@@ -34,9 +35,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
           {item.name}
         </div>
         <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-          {new Intl.NumberFormat('en-GB', { style: 'currency', currency: item.currency }).format(
-            item.price
-          )}
+          {formatCurrency(item.price, item.currency)}
         </div>
       </div>
 
@@ -69,9 +68,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
       </div>
 
       <div style={{ fontWeight: 600, fontSize: '0.875rem', minWidth: '4rem', textAlign: 'right' }}>
-        {new Intl.NumberFormat('en-GB', { style: 'currency', currency: item.currency }).format(
-          item.price * item.quantity
-        )}
+        {formatCurrency(item.price * item.quantity, item.currency)}
       </div>
 
       <Button

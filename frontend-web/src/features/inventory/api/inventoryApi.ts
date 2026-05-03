@@ -49,6 +49,6 @@ export const inventoryApi = {
   },
 
   deleteItem: async (id: string): Promise<void> => {
-    await httpClient.delete<unknown>(`/inventory/${id}`);
+    await httpClient.patch<unknown>(`/inventory/${id}`, { is_active: false });
   },
 };

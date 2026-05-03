@@ -5,7 +5,7 @@ import { useCustomers, useDeleteCustomer } from '@features/customers';
 import { useTopCustomers } from '@features/analytics';
 import { toast } from '@shared/hooks/useToast';
 import { useDebounce } from '@shared/hooks';
-import { Spinner, Button, Input, Avatar, AvatarFallback } from '@shared/ui/primitives';
+import { Skeleton, Button, Input, Avatar, AvatarFallback } from '@shared/ui/primitives';
 import {
   Card,
   Table,
@@ -85,14 +85,6 @@ export function CustomersPage(): React.ReactElement {
     });
   };
 
-  if (isPending) {
-    return (
-      <div className={styles['placeholderContainer']} aria-busy="true" aria-live="polite">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
@@ -144,7 +136,15 @@ export function CustomersPage(): React.ReactElement {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.length === 0 ? (
+              {isPending ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell colSpan={5}>
+                      <Skeleton style={{ height: '2rem', width: '100%' }} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : filtered.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5}>
                     <EmptyState

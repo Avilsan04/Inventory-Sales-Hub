@@ -5,7 +5,8 @@ import axios from 'axios';
 export function setupRequestInterceptor(
   client: AxiosInstance,
   getToken: () => string | null,
-  getImpersonationToken: () => string | null = () => null
+  getImpersonationToken: () => string | null = () => null,
+  getTenantId: () => string | null = () => null
 ): number {
   return client.interceptors.request.use(
     (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
@@ -16,6 +17,10 @@ export function setupRequestInterceptor(
       const impersonationToken = getImpersonationToken();
       if (impersonationToken !== null) {
         config.headers.set('X-Impersonation-Token', impersonationToken);
+      }
+      const tenantId = getTenantId();
+      if (tenantId !== null) {
+        config.headers.set('X-Tenant-ID', tenantId);
       }
       return config;
     },

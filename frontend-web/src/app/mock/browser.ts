@@ -9,6 +9,8 @@ import { supplierHandlers } from '@features/suppliers/api/suppliers.mock';
 import { analyticsHandlers } from '@features/analytics/api/analytics.mock';
 import { notificationHandlers } from '@features/notifications/api/notifications.mock';
 import { adminHandlers } from '@features/admin/api/admin.mock';
+import { cashSessionHandlers } from '@features/sales/api/cashSession.mock';
+import { auditHandlers } from '@features/audit/api/audit.mock';
 
 export const worker = setupWorker(
   ...authHandlers,
@@ -16,9 +18,11 @@ export const worker = setupWorker(
   ...productHandlers,
   ...customerHandlers,
   ...salesHandlers,
+  ...cashSessionHandlers,
   ...employeeHandlers,
   ...supplierHandlers,
   ...analyticsHandlers,
   ...notificationHandlers,
-  ...adminHandlers
+  ...adminHandlers,
+  ...auditHandlers
 );

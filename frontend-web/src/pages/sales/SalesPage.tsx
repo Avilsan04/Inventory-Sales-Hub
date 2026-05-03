@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PencilIcon, ShoppingCartIcon } from 'lucide-react';
 import { exportToCsv } from '@shared/lib/exportCsv';
+import { formatCurrency } from '@shared/lib/formatCurrency';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSales } from '@features/sales';
 import { useTopCustomers } from '@features/analytics';
@@ -19,6 +20,7 @@ import {
 import { SectionErrorBoundary } from '@app/providers';
 import { SaleCreateWidget } from '@widgets';
 import { SaleStatusDialog } from '@features/sales/components/SaleStatusDialog';
+import { SaleDetailDrawer } from '@features/sales/components/SaleDetailDrawer';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { Sale } from '@entities/sale';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
@@ -46,15 +48,6 @@ function statusLabel(status: SaleStatus, t: (k: string) => string): string {
 
 function formatDate(iso: string): string {
   return iso.slice(0, 10); // YYYY-MM-DD
-}
-
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
 }
 
 function orderId(id: string): string {
@@ -87,6 +80,7 @@ export function SalesPage(): React.ReactElement {
     );
   };
   const [editSale, setEditSale] = React.useState<Sale | null>(null);
+  const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
 
   const customerMap = React.useMemo(() => {
     const map = new Map<string, string>();
@@ -215,12 +209,12 @@ export function SalesPage(): React.ReactElement {
                         {formatCurrency(s.total, s.currency)}
                       </TableCell>
                       <TableCell>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
                           <Button
                             variant="ghost"
                             size="icon-sm"
                             onClick={() => {
-                              setEditSale(s);
+                              setDetailSale(s);
                             }}
                           >
                             <PencilIcon size={14} />
@@ -243,6 +237,18 @@ export function SalesPage(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setEditSale(null);
         }}
+      />
+      <SaleDetailDrawer
+        sale={detailSale}
+        open={detailSale !== null}
+        onOpenChange={(open) => {
+          if (!open) setDetailSale(null);
+        }}
+        customerName={
+          detailSale?.customerId !== undefined
+            ? (customerMap.get(detailSale.customerId) ?? undefined)
+            : undefined
+        }
       />
     </div>
   );

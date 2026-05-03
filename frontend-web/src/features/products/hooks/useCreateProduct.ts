@@ -21,6 +21,7 @@ export function useCreateProduct(): UseMutationResult<
       const optimisticProduct: Product = {
         ...dto,
         id: crypto.randomUUID(),
+        isActive: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };

@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from '@core/config';
 import { tokenStorage } from '../storage/tokenStorage';
+import { tenantStorage } from '../storage/tenantStorage';
 import { setupRequestInterceptor, setupResponseInterceptor } from './interceptors';
 import type { HttpClient, HttpRequestConfig } from './http.types';
 
@@ -22,7 +23,8 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
   const reqInterceptorId = setupRequestInterceptor(
     axiosInstance,
     () => tokenStorage.getToken(),
-    () => sessionStorage.getItem('impersonation_token')
+    () => sessionStorage.getItem('impersonation_token'),
+    () => tenantStorage.getTenantId()
   );
 
   const resInterceptorId = setupResponseInterceptor(

@@ -6,8 +6,20 @@ import {
   topCustomersSchema,
   inventoryValueSchema,
   lowStockAlertsSchema,
+  cashFlowSchema,
+  wasteAlertsSchema,
 } from '@entities/analytics';
-import type { DashboardKpi, SalesPeriod, TopProduct, TopCustomer, InventoryValue, LowStockAlert, SalesAnalyticsParams } from '@entities/analytics';
+import type {
+  DashboardKpi,
+  SalesPeriod,
+  TopProduct,
+  TopCustomer,
+  InventoryValue,
+  LowStockAlert,
+  CashFlowEntry,
+  WasteAlert,
+  SalesAnalyticsParams,
+} from '@entities/analytics';
 
 export const analyticsApi = {
   getDashboard: async (): Promise<DashboardKpi> => {
@@ -16,7 +28,9 @@ export const analyticsApi = {
   },
 
   getSalesAnalytics: async (params?: SalesAnalyticsParams): Promise<SalesPeriod[]> => {
-    const res = await httpClient.get<unknown>('/analytics/sales', { params: params as Record<string, unknown> });
+    const res = await httpClient.get<unknown>('/analytics/sales', {
+      params: params as Record<string, unknown>,
+    });
     return salesAnalyticsSchema.parse(res);
   },
 
@@ -38,5 +52,15 @@ export const analyticsApi = {
   getLowStockAlerts: async (): Promise<LowStockAlert[]> => {
     const res = await httpClient.get<unknown>('/analytics/low-stock-alerts');
     return lowStockAlertsSchema.parse(res);
+  },
+
+  getCashFlow: async (): Promise<CashFlowEntry[]> => {
+    const res = await httpClient.get<unknown>('/analytics/cash-flow');
+    return cashFlowSchema.parse(res);
+  },
+
+  getWasteAlerts: async (): Promise<WasteAlert[]> => {
+    const res = await httpClient.get<unknown>('/analytics/waste-alerts');
+    return wasteAlertsSchema.parse(res);
   },
 };

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Badge } from '@shared/ui/primitives';
+import { formatCurrency } from '@shared/lib/formatCurrency';
 import { useCart } from '../hooks/useCart';
 import type { Product } from '@entities/product';
 
@@ -68,9 +69,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         }}
       >
         <span style={{ fontWeight: 700, fontSize: '1.125rem' }}>
-          {new Intl.NumberFormat('en-GB', { style: 'currency', currency: product.currency }).format(
-            product.price
-          )}
+          {formatCurrency(product.price, product.currency)}
         </span>
         <Button
           size="sm"

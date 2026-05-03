@@ -24,7 +24,9 @@
     "viewingAs": "Viendo como",
     "viewAsAdmin": "Admin",
     "viewAsCustomer": "Cliente",
-    "viewAsCompany": "Empresa"
+    "viewAsCompany": "Empresa",
+    "all": "Todos",
+    "viewAll": "Ver todos"
   },
   "nav": {
     "home": "Inicio",
@@ -170,7 +172,11 @@
       "newProduct": "Nuevo producto",
       "newSale": "Nueva venta",
       "viewReports": "Ver reportes"
-    }
+    },
+    "exportReport": "Exportar Informe",
+    "weeklySales": "Tendencia Semanal de Ventas",
+    "salesByStatus": "Ventas por Estado",
+    "recentTransactions": "Transacciones Recientes"
   },
   "inventory": {
     "title": "Inventario",
@@ -443,7 +449,8 @@
       "appearance": "Apariencia",
       "language": "Idioma",
       "notifications": "Notificaciones",
-      "account": "Cuenta"
+      "account": "Cuenta",
+      "company": "Perfil de Empresa"
     }
   },
   "admin": {

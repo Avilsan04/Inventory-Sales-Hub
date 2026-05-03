@@ -2,6 +2,7 @@ import * as React from 'react';
 import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon, PencilIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useEmployees } from '@features/employees';
+import { PermissionGuard } from '@features/auth';
 import { Spinner, Badge, Button } from '@shared/ui/primitives';
 import {
   Card,
@@ -9,6 +10,7 @@ import {
   CardTitle,
   CardAction,
   CardContent,
+  EmptyState,
   Table,
   TableHeader,
   TableBody,
@@ -19,6 +21,7 @@ import {
 import { SectionErrorBoundary } from '@app/providers';
 import { EmployeeCreateDialog } from '@features/employees/components/EmployeeCreateDialog';
 import { EmployeeEditDialog } from '@features/employees/components/EmployeeEditDialog';
+import { AuditLogPanel } from '@widgets/audit';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { Employee } from '@entities/employee';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
@@ -68,14 +71,16 @@ export function EmployeesPage(): React.ReactElement {
           <h1 className={styles['title']}>{t('employees.title')}</h1>
           <p className={styles['subtitle']}>{t('employees.subtitle')}</p>
         </div>
-        <Button
-          size="sm"
-          onClick={() => {
-            setCreateOpen(true);
-          }}
-        >
-          + Add Employee
-        </Button>
+        <PermissionGuard permission="create:employee">
+          <Button
+            size="sm"
+            onClick={() => {
+              setCreateOpen(true);
+            }}
+          >
+            + Add Employee
+          </Button>
+        </PermissionGuard>
       </header>
 
       <section className={statsStyles['statsRow']} aria-label="Employee statistics">
@@ -142,9 +147,17 @@ export function EmployeesPage(): React.ReactElement {
                   {data.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5}>
-                        <div className={styles['placeholderContainer']}>
-                          <p className={styles['placeholder']}>{t('common.noData')}</p>
-                        </div>
+                        <EmptyState
+                          icon={<UserCogIcon size={24} />}
+                          title={t('employees.emptyTitle')}
+                          description={t('employees.emptyDescription')}
+                          action={{
+                            label: '+ Add Employee',
+                            onClick: (): void => {
+                              setCreateOpen(true);
+                            },
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -184,6 +197,15 @@ export function EmployeesPage(): React.ReactElement {
           </Card>
         </SectionErrorBoundary>
       </section>
+
+      <PermissionGuard permission="view:audit">
+        <div style={{ marginTop: '1.5rem' }}>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem' }}>
+            Audit Log
+          </h3>
+          <AuditLogPanel entityType="employee" />
+        </div>
+      </PermissionGuard>
 
       <EmployeeCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
       <EmployeeEditDialog

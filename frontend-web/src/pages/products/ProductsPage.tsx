@@ -2,7 +2,9 @@ import * as React from 'react';
 import { PackageIcon, TagIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useProducts, useCategories, useDeleteProduct } from '@features/products';
+import { PermissionGuard } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
+import { formatCurrency } from '@shared/lib/formatCurrency';
 import { Skeleton, Button } from '@shared/ui/primitives';
 import {
   Card,
@@ -64,14 +66,16 @@ export function ProductsPage(): React.ReactElement {
           <h1 className={styles['title']}>{t('nav.products')}</h1>
           <p className={styles['subtitle']}>{t('products.subtitle')}</p>
         </div>
-        <Button
-          size="sm"
-          onClick={() => {
-            setCreateOpen(true);
-          }}
-        >
-          {`+ ${t('inventory.addProduct')}`}
-        </Button>
+        <PermissionGuard permission="create:product">
+          <Button
+            size="sm"
+            onClick={() => {
+              setCreateOpen(true);
+            }}
+          >
+            {`+ ${t('inventory.addProduct')}`}
+          </Button>
+        </PermissionGuard>
       </header>
 
       <section className={styles['statsRow']} aria-label="Product statistics">
@@ -147,30 +151,32 @@ export function ProductsPage(): React.ReactElement {
                       <TableRow key={p.id}>
                         <TableCell>{p.name}</TableCell>
                         <TableCell>{p.sku}</TableCell>
-                        <TableCell>
-                          {p.currency} {p.price.toFixed(2)}
-                        </TableCell>
+                        <TableCell>{formatCurrency(p.price, p.currency)}</TableCell>
                         <TableCell>{p.category?.name ?? '—'}</TableCell>
                         <TableCell>
                           <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => {
-                                setEditProduct(p);
-                              }}
-                            >
-                              <PencilIcon size={14} />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => {
-                                setDeleteId(p.id);
-                              }}
-                            >
-                              <TrashIcon size={14} />
-                            </Button>
+                            <PermissionGuard permission="create:product">
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => {
+                                  setEditProduct(p);
+                                }}
+                              >
+                                <PencilIcon size={14} />
+                              </Button>
+                            </PermissionGuard>
+                            <PermissionGuard permission="delete:product">
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => {
+                                  setDeleteId(p.id);
+                                }}
+                              >
+                                <TrashIcon size={14} />
+                              </Button>
+                            </PermissionGuard>
                           </div>
                         </TableCell>
                       </TableRow>

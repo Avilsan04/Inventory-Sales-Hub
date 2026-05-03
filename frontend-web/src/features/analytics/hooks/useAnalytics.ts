@@ -7,6 +7,8 @@ import type {
   TopCustomer,
   InventoryValue,
   LowStockAlert,
+  CashFlowEntry,
+  WasteAlert,
   SalesAnalyticsParams,
 } from '@entities/analytics';
 
@@ -18,6 +20,8 @@ export const analyticsKeys = {
   topCustomers: () => [...analyticsKeys.all, 'top-customers'] as const,
   inventoryValue: () => [...analyticsKeys.all, 'inventory-value'] as const,
   lowStockAlerts: () => [...analyticsKeys.all, 'low-stock-alerts'] as const,
+  cashFlow: () => [...analyticsKeys.all, 'cash-flow'] as const,
+  wasteAlerts: () => [...analyticsKeys.all, 'waste-alerts'] as const,
 };
 
 export function useDashboardKpi(): UseQueryResult<DashboardKpi> {
@@ -65,5 +69,21 @@ export function useLowStockAlerts(): UseQueryResult<LowStockAlert[]> {
     queryKey: analyticsKeys.lowStockAlerts(),
     queryFn: analyticsApi.getLowStockAlerts,
     staleTime: 30_000,
+  });
+}
+
+export function useCashFlow(): UseQueryResult<CashFlowEntry[]> {
+  return useQuery({
+    queryKey: analyticsKeys.cashFlow(),
+    queryFn: analyticsApi.getCashFlow,
+    staleTime: 300_000,
+  });
+}
+
+export function useWasteAlerts(): UseQueryResult<WasteAlert[]> {
+  return useQuery({
+    queryKey: analyticsKeys.wasteAlerts(),
+    queryFn: analyticsApi.getWasteAlerts,
+    staleTime: 300_000,
   });
 }

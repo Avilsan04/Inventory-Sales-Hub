@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateProduct, useCategories } from '@features/products';
+import { toCents } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import {
   Dialog,
@@ -58,7 +59,7 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
 
   const onSubmit = (data: FormValues): void => {
     mutate(
-      { ...data, categoryId: data.categoryId ?? undefined },
+      { ...data, price: toCents(data.price), categoryId: data.categoryId ?? undefined },
       {
         onSuccess: () => {
           toast({ title: 'Product created' });

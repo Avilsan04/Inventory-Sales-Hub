@@ -39,7 +39,6 @@
     "refreshToken": "mock-refreshed-jwt-token-999",
     "registerToken": "mock-register-jwt-token-888"
   },
-
   "customers": [
     {
       "id": "cust-001-0000-0000-0000-000000000001",
@@ -204,13 +203,12 @@
       "updatedAt": "2025-07-18T08:00:00.000Z"
     }
   ],
-
   "sales": [
     {
       "id": "ORD-2014",
       "customerId": "cust-001-0000-0000-0000-000000000001",
       "status": "completed",
-      "total": 1260.0,
+      "total": 126000,
       "currency": "EUR",
       "createdAt": "2025-10-04T08:30:00.000Z",
       "updatedAt": "2025-10-04T10:15:00.000Z",
@@ -221,8 +219,8 @@
           "productId": "prod-002",
           "productName": "Monitor stand",
           "quantity": 5,
-          "unitPrice": 89.0,
-          "subtotal": 445.0
+          "unitPrice": 8900,
+          "subtotal": 44500
         },
         {
           "id": "si-ORD-2014-02",
@@ -230,8 +228,8 @@
           "productId": "prod-004",
           "productName": "Oak shelf · 80cm",
           "quantity": 3,
-          "unitPrice": 142.0,
-          "subtotal": 426.0
+          "unitPrice": 14200,
+          "subtotal": 42600
         },
         {
           "id": "si-ORD-2014-03",
@@ -239,8 +237,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 1,
-          "unitPrice": 389.0,
-          "subtotal": 389.0
+          "unitPrice": 38900,
+          "subtotal": 38900
         }
       ]
     },
@@ -248,7 +246,7 @@
       "id": "ORD-2013",
       "customerId": "cust-002-0000-0000-0000-000000000002",
       "status": "pending",
-      "total": 1797.0,
+      "total": 179700,
       "currency": "EUR",
       "createdAt": "2025-10-04T07:00:00.000Z",
       "updatedAt": "2025-10-04T07:00:00.000Z",
@@ -259,8 +257,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 10,
-          "unitPrice": 34.5,
-          "subtotal": 345.0
+          "unitPrice": 3450,
+          "subtotal": 34500
         },
         {
           "id": "si-ORD-2013-02",
@@ -268,8 +266,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 3,
-          "unitPrice": 129.0,
-          "subtotal": 387.0
+          "unitPrice": 12900,
+          "subtotal": 38700
         },
         {
           "id": "si-ORD-2013-03",
@@ -277,8 +275,8 @@
           "productId": "prod-002",
           "productName": "Monitor stand",
           "quantity": 2,
-          "unitPrice": 89.0,
-          "subtotal": 178.0
+          "unitPrice": 8900,
+          "subtotal": 17800
         },
         {
           "id": "si-ORD-2013-04",
@@ -286,8 +284,8 @@
           "productId": "prod-005",
           "productName": "Cable organizer",
           "quantity": 20,
-          "unitPrice": 14.5,
-          "subtotal": 290.0
+          "unitPrice": 1450,
+          "subtotal": 29000
         },
         {
           "id": "si-ORD-2013-05",
@@ -295,8 +293,8 @@
           "productId": "prod-006",
           "productName": "Leather desk pad",
           "quantity": 4,
-          "unitPrice": 48.0,
-          "subtotal": 192.0
+          "unitPrice": 4800,
+          "subtotal": 19200
         },
         {
           "id": "si-ORD-2013-06",
@@ -304,8 +302,8 @@
           "productId": "prod-012",
           "productName": "Mesh pen organizer",
           "quantity": 15,
-          "unitPrice": 12.0,
-          "subtotal": 180.0
+          "unitPrice": 1200,
+          "subtotal": 18000
         },
         {
           "id": "si-ORD-2013-07",
@@ -313,8 +311,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 5,
-          "unitPrice": 45.0,
-          "subtotal": 225.0
+          "unitPrice": 4500,
+          "subtotal": 22500
         }
       ]
     },
@@ -322,7 +320,7 @@
       "id": "ORD-2012",
       "customerId": "cust-004-0000-0000-0000-000000000004",
       "status": "pending",
-      "total": 89.0,
+      "total": 8900,
       "currency": "EUR",
       "createdAt": "2025-10-03T16:45:00.000Z",
       "updatedAt": "2025-10-03T16:45:00.000Z",
@@ -333,8 +331,8 @@
           "productId": "prod-002",
           "productName": "Monitor stand",
           "quantity": 1,
-          "unitPrice": 89.0,
-          "subtotal": 89.0
+          "unitPrice": 8900,
+          "subtotal": 8900
         }
       ]
     },
@@ -342,7 +340,7 @@
       "id": "ORD-2011",
       "customerId": "cust-003-0000-0000-0000-000000000003",
       "status": "completed",
-      "total": 5412.5,
+      "total": 541250,
       "currency": "EUR",
       "createdAt": "2025-10-03T09:00:00.000Z",
       "updatedAt": "2025-10-03T11:30:00.000Z",
@@ -353,8 +351,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 15,
-          "unitPrice": 34.5,
-          "subtotal": 517.5
+          "unitPrice": 3450,
+          "subtotal": 51750
         },
         {
           "id": "si-ORD-2011-02",
@@ -362,8 +360,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 6,
-          "unitPrice": 129.0,
-          "subtotal": 774.0
+          "unitPrice": 12900,
+          "subtotal": 77400
         },
         {
           "id": "si-ORD-2011-03",
@@ -371,8 +369,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 4,
-          "unitPrice": 79.0,
-          "subtotal": 316.0
+          "unitPrice": 7900,
+          "subtotal": 31600
         },
         {
           "id": "si-ORD-2011-04",
@@ -380,8 +378,8 @@
           "productId": "prod-010",
           "productName": "Desk divider panel",
           "quantity": 3,
-          "unitPrice": 56.0,
-          "subtotal": 168.0
+          "unitPrice": 5600,
+          "subtotal": 16800
         },
         {
           "id": "si-ORD-2011-05",
@@ -389,8 +387,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 6,
-          "unitPrice": 38.0,
-          "subtotal": 228.0
+          "unitPrice": 3800,
+          "subtotal": 22800
         },
         {
           "id": "si-ORD-2011-06",
@@ -398,8 +396,8 @@
           "productId": "prod-012",
           "productName": "Mesh pen organizer",
           "quantity": 20,
-          "unitPrice": 12.0,
-          "subtotal": 240.0
+          "unitPrice": 1200,
+          "subtotal": 24000
         },
         {
           "id": "si-ORD-2011-07",
@@ -407,8 +405,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 4,
-          "unitPrice": 45.0,
-          "subtotal": 180.0
+          "unitPrice": 4500,
+          "subtotal": 18000
         },
         {
           "id": "si-ORD-2011-08",
@@ -416,8 +414,8 @@
           "productId": "prod-014",
           "productName": "Cable tray · Under desk",
           "quantity": 5,
-          "unitPrice": 28.0,
-          "subtotal": 140.0
+          "unitPrice": 2800,
+          "subtotal": 14000
         },
         {
           "id": "si-ORD-2011-09",
@@ -425,8 +423,8 @@
           "productId": "prod-015",
           "productName": "Desk lamp · Clip",
           "quantity": 10,
-          "unitPrice": 24.0,
-          "subtotal": 240.0
+          "unitPrice": 2400,
+          "subtotal": 24000
         },
         {
           "id": "si-ORD-2011-10",
@@ -434,8 +432,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 2,
-          "unitPrice": 185.0,
-          "subtotal": 370.0
+          "unitPrice": 18500,
+          "subtotal": 37000
         },
         {
           "id": "si-ORD-2011-11",
@@ -443,8 +441,8 @@
           "productId": "prod-018",
           "productName": "Cork notice board",
           "quantity": 8,
-          "unitPrice": 36.0,
-          "subtotal": 288.0
+          "unitPrice": 3600,
+          "subtotal": 28800
         },
         {
           "id": "si-ORD-2011-12",
@@ -452,8 +450,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 3,
-          "unitPrice": 389.0,
-          "subtotal": 1167.0
+          "unitPrice": 38900,
+          "subtotal": 116700
         }
       ]
     },
@@ -461,7 +459,7 @@
       "id": "ORD-2010",
       "customerId": "cust-005-0000-0000-0000-000000000005",
       "status": "cancelled",
-      "total": 312.0,
+      "total": 31200,
       "currency": "EUR",
       "createdAt": "2025-10-02T14:20:00.000Z",
       "updatedAt": "2025-10-03T08:00:00.000Z",
@@ -472,8 +470,8 @@
           "productId": "prod-005",
           "productName": "Cable organizer",
           "quantity": 12,
-          "unitPrice": 14.5,
-          "subtotal": 174.0
+          "unitPrice": 1450,
+          "subtotal": 17400
         },
         {
           "id": "si-ORD-2010-02",
@@ -481,8 +479,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 6,
-          "unitPrice": 34.5,
-          "subtotal": 207.0
+          "unitPrice": 3450,
+          "subtotal": 20700
         }
       ]
     },
@@ -490,7 +488,7 @@
       "id": "ORD-2009",
       "customerId": "cust-006-0000-0000-0000-000000000006",
       "status": "completed",
-      "total": 614.0,
+      "total": 61400,
       "currency": "EUR",
       "createdAt": "2025-10-02T10:00:00.000Z",
       "updatedAt": "2025-10-02T13:45:00.000Z",
@@ -501,8 +499,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 8,
-          "unitPrice": 34.5,
-          "subtotal": 276.0
+          "unitPrice": 3450,
+          "subtotal": 27600
         },
         {
           "id": "si-ORD-2009-02",
@@ -510,8 +508,8 @@
           "productId": "prod-012",
           "productName": "Mesh pen organizer",
           "quantity": 12,
-          "unitPrice": 12.0,
-          "subtotal": 144.0
+          "unitPrice": 1200,
+          "subtotal": 14400
         },
         {
           "id": "si-ORD-2009-03",
@@ -519,8 +517,8 @@
           "productId": "prod-018",
           "productName": "Cork notice board",
           "quantity": 3,
-          "unitPrice": 36.0,
-          "subtotal": 108.0
+          "unitPrice": 3600,
+          "subtotal": 10800
         },
         {
           "id": "si-ORD-2009-04",
@@ -528,8 +526,8 @@
           "productId": "prod-007",
           "productName": "Potted plant · Medium",
           "quantity": 5,
-          "unitPrice": 22.0,
-          "subtotal": 110.0
+          "unitPrice": 2200,
+          "subtotal": 11000
         },
         {
           "id": "si-ORD-2009-05",
@@ -537,8 +535,8 @@
           "productId": "prod-015",
           "productName": "Desk lamp · Clip",
           "quantity": 4,
-          "unitPrice": 24.0,
-          "subtotal": 96.0
+          "unitPrice": 2400,
+          "subtotal": 9600
         }
       ]
     },
@@ -546,7 +544,7 @@
       "id": "ORD-2008",
       "customerId": "cust-001-0000-0000-0000-000000000001",
       "status": "completed",
-      "total": 267.0,
+      "total": 26700,
       "currency": "EUR",
       "createdAt": "2025-10-01T11:30:00.000Z",
       "updatedAt": "2025-10-01T14:00:00.000Z",
@@ -557,8 +555,8 @@
           "productId": "prod-005",
           "productName": "Cable organizer",
           "quantity": 10,
-          "unitPrice": 14.5,
-          "subtotal": 145.0
+          "unitPrice": 1450,
+          "subtotal": 14500
         },
         {
           "id": "si-ORD-2008-02",
@@ -566,8 +564,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 2,
-          "unitPrice": 45.0,
-          "subtotal": 90.0
+          "unitPrice": 4500,
+          "subtotal": 9000
         }
       ]
     },
@@ -575,7 +573,7 @@
       "id": "ORD-2007",
       "customerId": "cust-002-0000-0000-0000-000000000002",
       "status": "completed",
-      "total": 824.0,
+      "total": 82400,
       "currency": "EUR",
       "createdAt": "2025-09-30T08:15:00.000Z",
       "updatedAt": "2025-09-30T10:30:00.000Z",
@@ -586,8 +584,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 4,
-          "unitPrice": 79.0,
-          "subtotal": 316.0
+          "unitPrice": 7900,
+          "subtotal": 31600
         },
         {
           "id": "si-ORD-2007-02",
@@ -595,8 +593,8 @@
           "productId": "prod-006",
           "productName": "Leather desk pad",
           "quantity": 6,
-          "unitPrice": 48.0,
-          "subtotal": 288.0
+          "unitPrice": 4800,
+          "subtotal": 28800
         },
         {
           "id": "si-ORD-2007-03",
@@ -604,8 +602,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 2,
-          "unitPrice": 38.0,
-          "subtotal": 76.0
+          "unitPrice": 3800,
+          "subtotal": 7600
         },
         {
           "id": "si-ORD-2007-04",
@@ -613,8 +611,8 @@
           "productId": "prod-010",
           "productName": "Desk divider panel",
           "quantity": 2,
-          "unitPrice": 56.0,
-          "subtotal": 112.0
+          "unitPrice": 5600,
+          "subtotal": 11200
         }
       ]
     },
@@ -622,7 +620,7 @@
       "id": "ORD-2006",
       "customerId": "cust-003-0000-0000-0000-000000000003",
       "status": "completed",
-      "total": 2178.0,
+      "total": 217800,
       "currency": "EUR",
       "createdAt": "2025-09-28T09:30:00.000Z",
       "updatedAt": "2025-09-28T12:15:00.000Z",
@@ -633,8 +631,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 4,
-          "unitPrice": 389.0,
-          "subtotal": 1556.0
+          "unitPrice": 38900,
+          "subtotal": 155600
         },
         {
           "id": "si-ORD-2006-02",
@@ -642,8 +640,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 2,
-          "unitPrice": 185.0,
-          "subtotal": 370.0
+          "unitPrice": 18500,
+          "subtotal": 37000
         },
         {
           "id": "si-ORD-2006-03",
@@ -651,8 +649,8 @@
           "productId": "prod-017",
           "productName": "Monitor stand with drawer",
           "quantity": 1,
-          "unitPrice": 115.0,
-          "subtotal": 115.0
+          "unitPrice": 11500,
+          "subtotal": 11500
         },
         {
           "id": "si-ORD-2006-04",
@@ -660,8 +658,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 2,
-          "unitPrice": 34.5,
-          "subtotal": 69.0
+          "unitPrice": 3450,
+          "subtotal": 6900
         },
         {
           "id": "si-ORD-2006-05",
@@ -669,8 +667,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 1,
-          "unitPrice": 79.0,
-          "subtotal": 79.0
+          "unitPrice": 7900,
+          "subtotal": 7900
         },
         {
           "id": "si-ORD-2006-06",
@@ -678,8 +676,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 2,
-          "unitPrice": 38.0,
-          "subtotal": 76.0
+          "unitPrice": 3800,
+          "subtotal": 7600
         }
       ]
     },
@@ -687,7 +685,7 @@
       "id": "ORD-2005",
       "customerId": "cust-007-0000-0000-0000-000000000007",
       "status": "pending",
-      "total": 444.0,
+      "total": 44400,
       "currency": "EUR",
       "createdAt": "2025-09-27T15:00:00.000Z",
       "updatedAt": "2025-09-27T15:00:00.000Z",
@@ -698,8 +696,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 2,
-          "unitPrice": 129.0,
-          "subtotal": 258.0
+          "unitPrice": 12900,
+          "subtotal": 25800
         },
         {
           "id": "si-ORD-2005-02",
@@ -707,8 +705,8 @@
           "productId": "prod-002",
           "productName": "Monitor stand",
           "quantity": 1,
-          "unitPrice": 89.0,
-          "subtotal": 89.0
+          "unitPrice": 8900,
+          "subtotal": 8900
         },
         {
           "id": "si-ORD-2005-03",
@@ -716,8 +714,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 3,
-          "unitPrice": 45.0,
-          "subtotal": 135.0
+          "unitPrice": 4500,
+          "subtotal": 13500
         }
       ]
     },
@@ -725,7 +723,7 @@
       "id": "ORD-2004",
       "customerId": "cust-004-0000-0000-0000-000000000004",
       "status": "cancelled",
-      "total": 145.0,
+      "total": 14500,
       "currency": "EUR",
       "createdAt": "2025-09-25T10:00:00.000Z",
       "updatedAt": "2025-09-26T09:00:00.000Z",
@@ -736,8 +734,8 @@
           "productId": "prod-018",
           "productName": "Cork notice board",
           "quantity": 2,
-          "unitPrice": 36.0,
-          "subtotal": 72.0
+          "unitPrice": 3600,
+          "subtotal": 7200
         },
         {
           "id": "si-ORD-2004-02",
@@ -745,8 +743,8 @@
           "productId": "prod-012",
           "productName": "Mesh pen organizer",
           "quantity": 5,
-          "unitPrice": 12.0,
-          "subtotal": 60.0
+          "unitPrice": 1200,
+          "subtotal": 6000
         }
       ]
     },
@@ -754,7 +752,7 @@
       "id": "ORD-2003",
       "customerId": "cust-008-0000-0000-0000-000000000008",
       "status": "completed",
-      "total": 1623.0,
+      "total": 162300,
       "currency": "EUR",
       "createdAt": "2025-09-24T08:00:00.000Z",
       "updatedAt": "2025-09-24T11:20:00.000Z",
@@ -765,8 +763,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 2,
-          "unitPrice": 389.0,
-          "subtotal": 778.0
+          "unitPrice": 38900,
+          "subtotal": 77800
         },
         {
           "id": "si-ORD-2003-02",
@@ -774,8 +772,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 1,
-          "unitPrice": 185.0,
-          "subtotal": 185.0
+          "unitPrice": 18500,
+          "subtotal": 18500
         },
         {
           "id": "si-ORD-2003-03",
@@ -783,8 +781,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 6,
-          "unitPrice": 34.5,
-          "subtotal": 207.0
+          "unitPrice": 3450,
+          "subtotal": 20700
         },
         {
           "id": "si-ORD-2003-04",
@@ -792,8 +790,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 2,
-          "unitPrice": 129.0,
-          "subtotal": 258.0
+          "unitPrice": 12900,
+          "subtotal": 25800
         },
         {
           "id": "si-ORD-2003-05",
@@ -801,8 +799,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 1,
-          "unitPrice": 79.0,
-          "subtotal": 79.0
+          "unitPrice": 7900,
+          "subtotal": 7900
         },
         {
           "id": "si-ORD-2003-06",
@@ -810,8 +808,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 2,
-          "unitPrice": 38.0,
-          "subtotal": 76.0
+          "unitPrice": 3800,
+          "subtotal": 7600
         },
         {
           "id": "si-ORD-2003-07",
@@ -819,8 +817,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 1,
-          "unitPrice": 45.0,
-          "subtotal": 45.0
+          "unitPrice": 4500,
+          "subtotal": 4500
         },
         {
           "id": "si-ORD-2003-08",
@@ -828,8 +826,8 @@
           "productId": "prod-018",
           "productName": "Cork notice board",
           "quantity": 3,
-          "unitPrice": 36.0,
-          "subtotal": 108.0
+          "unitPrice": 3600,
+          "subtotal": 10800
         }
       ]
     },
@@ -837,7 +835,7 @@
       "id": "ORD-2002",
       "customerId": "cust-001-0000-0000-0000-000000000001",
       "status": "completed",
-      "total": 3733.5,
+      "total": 373350,
       "currency": "EUR",
       "createdAt": "2025-09-22T09:00:00.000Z",
       "updatedAt": "2025-09-22T14:30:00.000Z",
@@ -848,8 +846,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 5,
-          "unitPrice": 389.0,
-          "subtotal": 1945.0
+          "unitPrice": 38900,
+          "subtotal": 194500
         },
         {
           "id": "si-ORD-2002-02",
@@ -857,8 +855,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 3,
-          "unitPrice": 185.0,
-          "subtotal": 555.0
+          "unitPrice": 18500,
+          "subtotal": 55500
         },
         {
           "id": "si-ORD-2002-03",
@@ -866,8 +864,8 @@
           "productId": "prod-017",
           "productName": "Monitor stand with drawer",
           "quantity": 2,
-          "unitPrice": 115.0,
-          "subtotal": 230.0
+          "unitPrice": 11500,
+          "subtotal": 23000
         },
         {
           "id": "si-ORD-2002-04",
@@ -875,8 +873,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 8,
-          "unitPrice": 34.5,
-          "subtotal": 276.0
+          "unitPrice": 3450,
+          "subtotal": 27600
         },
         {
           "id": "si-ORD-2002-05",
@@ -884,8 +882,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 2,
-          "unitPrice": 129.0,
-          "subtotal": 258.0
+          "unitPrice": 12900,
+          "subtotal": 25800
         },
         {
           "id": "si-ORD-2002-06",
@@ -893,8 +891,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 1,
-          "unitPrice": 79.0,
-          "subtotal": 79.0
+          "unitPrice": 7900,
+          "subtotal": 7900
         },
         {
           "id": "si-ORD-2002-07",
@@ -902,8 +900,8 @@
           "productId": "prod-004",
           "productName": "Oak shelf · 80cm",
           "quantity": 2,
-          "unitPrice": 142.0,
-          "subtotal": 284.0
+          "unitPrice": 14200,
+          "subtotal": 28400
         },
         {
           "id": "si-ORD-2002-08",
@@ -911,8 +909,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 1,
-          "unitPrice": 38.0,
-          "subtotal": 38.0
+          "unitPrice": 3800,
+          "subtotal": 3800
         },
         {
           "id": "si-ORD-2002-09",
@@ -920,8 +918,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 1,
-          "unitPrice": 45.0,
-          "subtotal": 45.0
+          "unitPrice": 4500,
+          "subtotal": 4500
         },
         {
           "id": "si-ORD-2002-10",
@@ -929,8 +927,8 @@
           "productId": "prod-006",
           "productName": "Leather desk pad",
           "quantity": 2,
-          "unitPrice": 48.0,
-          "subtotal": 96.0
+          "unitPrice": 4800,
+          "subtotal": 9600
         }
       ]
     },
@@ -938,7 +936,7 @@
       "id": "ORD-2001",
       "customerId": "cust-005-0000-0000-0000-000000000005",
       "status": "completed",
-      "total": 418.5,
+      "total": 41850,
       "currency": "EUR",
       "createdAt": "2025-09-20T11:00:00.000Z",
       "updatedAt": "2025-09-20T13:45:00.000Z",
@@ -949,8 +947,8 @@
           "productId": "prod-005",
           "productName": "Cable organizer",
           "quantity": 12,
-          "unitPrice": 14.5,
-          "subtotal": 174.0
+          "unitPrice": 1450,
+          "subtotal": 17400
         },
         {
           "id": "si-ORD-2001-02",
@@ -958,8 +956,8 @@
           "productId": "prod-015",
           "productName": "Desk lamp · Clip",
           "quantity": 6,
-          "unitPrice": 24.0,
-          "subtotal": 144.0
+          "unitPrice": 2400,
+          "subtotal": 14400
         },
         {
           "id": "si-ORD-2001-03",
@@ -967,8 +965,8 @@
           "productId": "prod-012",
           "productName": "Mesh pen organizer",
           "quantity": 8,
-          "unitPrice": 12.0,
-          "subtotal": 96.0
+          "unitPrice": 1200,
+          "subtotal": 9600
         },
         {
           "id": "si-ORD-2001-04",
@@ -976,8 +974,8 @@
           "productId": "prod-007",
           "productName": "Potted plant · Medium",
           "quantity": 4,
-          "unitPrice": 22.0,
-          "subtotal": 88.0
+          "unitPrice": 2200,
+          "subtotal": 8800
         }
       ]
     },
@@ -985,7 +983,7 @@
       "id": "ORD-2000",
       "customerId": "cust-006-0000-0000-0000-000000000006",
       "status": "pending",
-      "total": 386.5,
+      "total": 38650,
       "currency": "EUR",
       "createdAt": "2025-09-18T14:00:00.000Z",
       "updatedAt": "2025-09-18T14:00:00.000Z",
@@ -996,8 +994,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 5,
-          "unitPrice": 34.5,
-          "subtotal": 172.5
+          "unitPrice": 3450,
+          "subtotal": 17250
         },
         {
           "id": "si-ORD-2000-02",
@@ -1005,8 +1003,8 @@
           "productId": "prod-012",
           "productName": "Mesh pen organizer",
           "quantity": 10,
-          "unitPrice": 12.0,
-          "subtotal": 120.0
+          "unitPrice": 1200,
+          "subtotal": 12000
         },
         {
           "id": "si-ORD-2000-03",
@@ -1014,8 +1012,8 @@
           "productId": "prod-018",
           "productName": "Cork notice board",
           "quantity": 2,
-          "unitPrice": 36.0,
-          "subtotal": 72.0
+          "unitPrice": 3600,
+          "subtotal": 7200
         }
       ]
     },
@@ -1023,7 +1021,7 @@
       "id": "ORD-1999",
       "customerId": "cust-009-0000-0000-0000-000000000009",
       "status": "completed",
-      "total": 785.0,
+      "total": 78500,
       "currency": "EUR",
       "createdAt": "2025-09-15T09:30:00.000Z",
       "updatedAt": "2025-09-15T12:00:00.000Z",
@@ -1034,8 +1032,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 1,
-          "unitPrice": 389.0,
-          "subtotal": 389.0
+          "unitPrice": 38900,
+          "subtotal": 38900
         },
         {
           "id": "si-ORD-1999-02",
@@ -1043,8 +1041,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 2,
-          "unitPrice": 79.0,
-          "subtotal": 158.0
+          "unitPrice": 7900,
+          "subtotal": 15800
         },
         {
           "id": "si-ORD-1999-03",
@@ -1052,8 +1050,8 @@
           "productId": "prod-002",
           "productName": "Monitor stand",
           "quantity": 1,
-          "unitPrice": 89.0,
-          "subtotal": 89.0
+          "unitPrice": 8900,
+          "subtotal": 8900
         },
         {
           "id": "si-ORD-1999-04",
@@ -1061,8 +1059,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 2,
-          "unitPrice": 45.0,
-          "subtotal": 90.0
+          "unitPrice": 4500,
+          "subtotal": 9000
         },
         {
           "id": "si-ORD-1999-05",
@@ -1070,8 +1068,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 1,
-          "unitPrice": 34.5,
-          "subtotal": 34.5
+          "unitPrice": 3450,
+          "subtotal": 3450
         }
       ]
     },
@@ -1079,7 +1077,7 @@
       "id": "ORD-1998",
       "customerId": "cust-002-0000-0000-0000-000000000002",
       "status": "completed",
-      "total": 1458.0,
+      "total": 145800,
       "currency": "EUR",
       "createdAt": "2025-09-12T08:00:00.000Z",
       "updatedAt": "2025-09-12T11:00:00.000Z",
@@ -1090,8 +1088,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 2,
-          "unitPrice": 389.0,
-          "subtotal": 778.0
+          "unitPrice": 38900,
+          "subtotal": 77800
         },
         {
           "id": "si-ORD-1998-02",
@@ -1099,8 +1097,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 1,
-          "unitPrice": 185.0,
-          "subtotal": 185.0
+          "unitPrice": 18500,
+          "subtotal": 18500
         },
         {
           "id": "si-ORD-1998-03",
@@ -1108,8 +1106,8 @@
           "productId": "prod-017",
           "productName": "Monitor stand with drawer",
           "quantity": 2,
-          "unitPrice": 115.0,
-          "subtotal": 230.0
+          "unitPrice": 11500,
+          "subtotal": 23000
         },
         {
           "id": "si-ORD-1998-04",
@@ -1117,8 +1115,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 4,
-          "unitPrice": 34.5,
-          "subtotal": 138.0
+          "unitPrice": 3450,
+          "subtotal": 13800
         },
         {
           "id": "si-ORD-1998-05",
@@ -1126,8 +1124,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 1,
-          "unitPrice": 129.0,
-          "subtotal": 129.0
+          "unitPrice": 12900,
+          "subtotal": 12900
         },
         {
           "id": "si-ORD-1998-06",
@@ -1135,8 +1133,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 2,
-          "unitPrice": 38.0,
-          "subtotal": 76.0
+          "unitPrice": 3800,
+          "subtotal": 7600
         },
         {
           "id": "si-ORD-1998-07",
@@ -1144,8 +1142,8 @@
           "productId": "prod-006",
           "productName": "Leather desk pad",
           "quantity": 2,
-          "unitPrice": 48.0,
-          "subtotal": 96.0
+          "unitPrice": 4800,
+          "subtotal": 9600
         }
       ]
     },
@@ -1153,7 +1151,7 @@
       "id": "ORD-1997",
       "customerId": "cust-003-0000-0000-0000-000000000003",
       "status": "cancelled",
-      "total": 185.0,
+      "total": 18500,
       "currency": "EUR",
       "createdAt": "2025-09-10T10:00:00.000Z",
       "updatedAt": "2025-09-11T09:00:00.000Z",
@@ -1164,8 +1162,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 1,
-          "unitPrice": 185.0,
-          "subtotal": 185.0
+          "unitPrice": 18500,
+          "subtotal": 18500
         }
       ]
     },
@@ -1173,7 +1171,7 @@
       "id": "ORD-1996",
       "customerId": "cust-010-0000-0000-0000-000000000010",
       "status": "completed",
-      "total": 1080.0,
+      "total": 108000,
       "currency": "EUR",
       "createdAt": "2025-09-08T09:00:00.000Z",
       "updatedAt": "2025-09-08T13:30:00.000Z",
@@ -1184,8 +1182,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 3,
-          "unitPrice": 129.0,
-          "subtotal": 387.0
+          "unitPrice": 12900,
+          "subtotal": 38700
         },
         {
           "id": "si-ORD-1996-02",
@@ -1193,8 +1191,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 2,
-          "unitPrice": 79.0,
-          "subtotal": 158.0
+          "unitPrice": 7900,
+          "subtotal": 15800
         },
         {
           "id": "si-ORD-1996-03",
@@ -1202,8 +1200,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 6,
-          "unitPrice": 34.5,
-          "subtotal": 207.0
+          "unitPrice": 3450,
+          "subtotal": 20700
         },
         {
           "id": "si-ORD-1996-04",
@@ -1211,8 +1209,8 @@
           "productId": "prod-011",
           "productName": "Anti-fatigue mat",
           "quantity": 3,
-          "unitPrice": 38.0,
-          "subtotal": 114.0
+          "unitPrice": 3800,
+          "subtotal": 11400
         },
         {
           "id": "si-ORD-1996-05",
@@ -1220,8 +1218,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 2,
-          "unitPrice": 45.0,
-          "subtotal": 90.0
+          "unitPrice": 4500,
+          "subtotal": 9000
         },
         {
           "id": "si-ORD-1996-06",
@@ -1229,8 +1227,8 @@
           "productId": "prod-018",
           "productName": "Cork notice board",
           "quantity": 3,
-          "unitPrice": 36.0,
-          "subtotal": 108.0
+          "unitPrice": 3600,
+          "subtotal": 10800
         }
       ]
     },
@@ -1238,7 +1236,7 @@
       "id": "ORD-1995",
       "customerId": "cust-001-0000-0000-0000-000000000001",
       "status": "completed",
-      "total": 2786.0,
+      "total": 278600,
       "currency": "EUR",
       "createdAt": "2025-09-05T08:30:00.000Z",
       "updatedAt": "2025-09-05T12:00:00.000Z",
@@ -1249,8 +1247,8 @@
           "productId": "prod-008",
           "productName": "Office chair · Ergonomic",
           "quantity": 4,
-          "unitPrice": 389.0,
-          "subtotal": 1556.0
+          "unitPrice": 38900,
+          "subtotal": 155600
         },
         {
           "id": "si-ORD-1995-02",
@@ -1258,8 +1256,8 @@
           "productId": "prod-016",
           "productName": "Filing cabinet · 2-drawer",
           "quantity": 2,
-          "unitPrice": 185.0,
-          "subtotal": 370.0
+          "unitPrice": 18500,
+          "subtotal": 37000
         },
         {
           "id": "si-ORD-1995-03",
@@ -1267,8 +1265,8 @@
           "productId": "prod-003",
           "productName": "Mechanical keyboard",
           "quantity": 2,
-          "unitPrice": 129.0,
-          "subtotal": 258.0
+          "unitPrice": 12900,
+          "subtotal": 25800
         },
         {
           "id": "si-ORD-1995-04",
@@ -1276,8 +1274,8 @@
           "productId": "prod-009",
           "productName": "Monitor arm · Dual",
           "quantity": 1,
-          "unitPrice": 79.0,
-          "subtotal": 79.0
+          "unitPrice": 7900,
+          "subtotal": 7900
         },
         {
           "id": "si-ORD-1995-05",
@@ -1285,8 +1283,8 @@
           "productId": "prod-006",
           "productName": "Leather desk pad",
           "quantity": 3,
-          "unitPrice": 48.0,
-          "subtotal": 144.0
+          "unitPrice": 4800,
+          "subtotal": 14400
         },
         {
           "id": "si-ORD-1995-06",
@@ -1294,8 +1292,8 @@
           "productId": "prod-004",
           "productName": "Oak shelf · 80cm",
           "quantity": 1,
-          "unitPrice": 142.0,
-          "subtotal": 142.0
+          "unitPrice": 14200,
+          "subtotal": 14200
         },
         {
           "id": "si-ORD-1995-07",
@@ -1303,8 +1301,8 @@
           "productId": "prod-001",
           "productName": "Desk lamp · Blue",
           "quantity": 3,
-          "unitPrice": 34.5,
-          "subtotal": 103.5
+          "unitPrice": 3450,
+          "subtotal": 10350
         },
         {
           "id": "si-ORD-1995-08",
@@ -1312,8 +1310,8 @@
           "productId": "prod-013",
           "productName": "Bamboo laptop stand",
           "quantity": 2,
-          "unitPrice": 45.0,
-          "subtotal": 90.0
+          "unitPrice": 4500,
+          "subtotal": 9000
         },
         {
           "id": "si-ORD-1995-09",
@@ -1321,24 +1319,34 @@
           "productId": "prod-002",
           "productName": "Monitor stand",
           "quantity": 1,
-          "unitPrice": 89.0,
-          "subtotal": 89.0
+          "unitPrice": 8900,
+          "subtotal": 8900
         }
       ]
     }
   ],
-
   "saleSummary": {
     "totalSales": 20,
     "totalRevenue": 25051.5,
     "currency": "EUR",
     "byStatus": [
-      { "status": "completed", "count": 15, "revenue": 22283.5 },
-      { "status": "pending", "count": 3, "revenue": 2627.5 },
-      { "status": "cancelled", "count": 2, "revenue": 330.0 }
+      {
+        "status": "completed",
+        "count": 15,
+        "revenue": 22283.5
+      },
+      {
+        "status": "pending",
+        "count": 3,
+        "revenue": 2627.5
+      },
+      {
+        "status": "cancelled",
+        "count": 2,
+        "revenue": 330
+      }
     ]
   },
-
   "inventory": [
     {
       "id": "inv-001-0000-0000-0000-000000000001",
@@ -1346,7 +1354,7 @@
       "name": "Desk lamp · Blue",
       "description": "Adjustable LED desk lamp with USB charging port, cool white light",
       "quantity": 142,
-      "price": 34.5,
+      "price": 3450,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Lighting",
@@ -1360,7 +1368,7 @@
       "name": "Monitor stand",
       "description": "Aluminum monitor riser with storage shelf and cable management",
       "quantity": 6,
-      "price": 89.0,
+      "price": 8900,
       "currency": "EUR",
       "status": "LOW_STOCK",
       "category": "Desk",
@@ -1374,7 +1382,7 @@
       "name": "Mechanical keyboard",
       "description": "TKL wireless mechanical keyboard with brown switches and backlight",
       "quantity": 58,
-      "price": 129.0,
+      "price": 12900,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Peripherals",
@@ -1388,7 +1396,7 @@
       "name": "Oak shelf · 80cm",
       "description": "Solid oak floating wall shelf with invisible wall brackets included",
       "quantity": 3,
-      "price": 142.0,
+      "price": 14200,
       "currency": "EUR",
       "status": "LOW_STOCK",
       "category": "Furniture",
@@ -1402,7 +1410,7 @@
       "name": "Cable organizer",
       "description": "Silicone cable management clips set of 10, desk edge mount",
       "quantity": 12,
-      "price": 14.5,
+      "price": 1450,
       "currency": "EUR",
       "status": "LOW_STOCK",
       "category": "Accessories",
@@ -1416,7 +1424,7 @@
       "name": "Leather desk pad",
       "description": "Full-grain leather desk mat 90×45cm with non-slip base, brown",
       "quantity": 0,
-      "price": 48.0,
+      "price": 4800,
       "currency": "EUR",
       "status": "OUT_OF_STOCK",
       "category": "Desk",
@@ -1430,7 +1438,7 @@
       "name": "Potted plant · Medium",
       "description": "Artificial succulent arrangement in ceramic pot, desktop size",
       "quantity": 24,
-      "price": 22.0,
+      "price": 2200,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Decor",
@@ -1444,7 +1452,7 @@
       "name": "Office chair · Ergonomic",
       "description": "Mesh back ergonomic chair with lumbar support and adjustable armrests",
       "quantity": 9,
-      "price": 389.0,
+      "price": 38900,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Furniture",
@@ -1458,7 +1466,7 @@
       "name": "Monitor arm · Dual",
       "description": "Full-motion dual monitor arm, VESA 75/100, max 9kg per arm",
       "quantity": 34,
-      "price": 79.0,
+      "price": 7900,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Desk",
@@ -1472,7 +1480,7 @@
       "name": "Desk divider panel",
       "description": "Acrylic transparent desk partition 60×45cm with clamp mount",
       "quantity": 15,
-      "price": 56.0,
+      "price": 5600,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Furniture",
@@ -1486,7 +1494,7 @@
       "name": "Anti-fatigue mat",
       "description": "Standing desk anti-fatigue mat 90×60cm, memory foam with beveled edges",
       "quantity": 4,
-      "price": 38.0,
+      "price": 3800,
       "currency": "EUR",
       "status": "LOW_STOCK",
       "category": "Accessories",
@@ -1500,7 +1508,7 @@
       "name": "Mesh pen organizer",
       "description": "5-compartment steel mesh desktop organizer with pen holder and tray",
       "quantity": 85,
-      "price": 12.0,
+      "price": 1200,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Accessories",
@@ -1514,7 +1522,7 @@
       "name": "Bamboo laptop stand",
       "description": "Adjustable bamboo laptop riser with 6 height levels, foldable design",
       "quantity": 22,
-      "price": 45.0,
+      "price": 4500,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Desk",
@@ -1528,7 +1536,7 @@
       "name": "Cable tray · Under desk",
       "description": "Under-desk cable management tray with mounting hardware, 60cm",
       "quantity": 0,
-      "price": 28.0,
+      "price": 2800,
       "currency": "EUR",
       "status": "OUT_OF_STOCK",
       "category": "Accessories",
@@ -1542,7 +1550,7 @@
       "name": "Desk lamp · Clip",
       "description": "Clip-on LED reading lamp with 10 brightness levels and flexible neck",
       "quantity": 48,
-      "price": 24.0,
+      "price": 2400,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Lighting",
@@ -1556,7 +1564,7 @@
       "name": "Filing cabinet · 2-drawer",
       "description": "Steel filing cabinet with 2 lockable drawers, A4 format, on wheels",
       "quantity": 7,
-      "price": 185.0,
+      "price": 18500,
       "currency": "EUR",
       "status": "IN_STOCK",
       "category": "Furniture",
@@ -1570,7 +1578,7 @@
       "name": "Monitor stand with drawer",
       "description": "MDF monitor riser with 2-drawer storage and mesh organizer slot",
       "quantity": 2,
-      "price": 115.0,
+      "price": 11500,
       "currency": "EUR",
       "status": "LOW_STOCK",
       "category": "Desk",
@@ -1584,7 +1592,7 @@
       "name": "Cork notice board",
       "description": "Natural cork notice board 90×60cm with aluminum frame and mounting kit",
       "quantity": 0,
-      "price": 36.0,
+      "price": 3600,
       "currency": "EUR",
       "status": "OUT_OF_STOCK",
       "category": "Accessories",
@@ -1593,7 +1601,6 @@
       "imageUrl": "https://picsum.photos/seed/1790/300/225"
     }
   ],
-
   "inventoryMovements": [
     {
       "id": "mov-001-0000-0000-0000-000000000001",
@@ -1656,10 +1663,9 @@
       "createdAt": "2025-09-28T08:00:00.000Z"
     }
   ],
-
   "analytics": {
     "dashboard": {
-      "totalRevenue": 48293.4,
+      "totalRevenue": 4829340,
       "totalOrders": 27,
       "totalCustomers": 18,
       "totalProducts": 18,
@@ -1668,18 +1674,66 @@
       "currency": "EUR"
     },
     "salesPeriod": [
-      { "period": "2024-10", "revenue": 3200, "orders": 9 },
-      { "period": "2024-11", "revenue": 4100, "orders": 12 },
-      { "period": "2024-12", "revenue": 5800, "orders": 16 },
-      { "period": "2025-01", "revenue": 4900, "orders": 13 },
-      { "period": "2025-02", "revenue": 6200, "orders": 17 },
-      { "period": "2025-03", "revenue": 7400, "orders": 21 },
-      { "period": "2025-04", "revenue": 8100, "orders": 23 },
-      { "period": "2025-05", "revenue": 6800, "orders": 19 },
-      { "period": "2025-06", "revenue": 9200, "orders": 26 },
-      { "period": "2025-07", "revenue": 10400, "orders": 30 },
-      { "period": "2025-08", "revenue": 11800, "orders": 34 },
-      { "period": "2025-09", "revenue": 14200, "orders": 38 }
+      {
+        "period": "2024-10",
+        "revenue": 320000,
+        "orders": 9
+      },
+      {
+        "period": "2024-11",
+        "revenue": 410000,
+        "orders": 12
+      },
+      {
+        "period": "2024-12",
+        "revenue": 580000,
+        "orders": 16
+      },
+      {
+        "period": "2025-01",
+        "revenue": 490000,
+        "orders": 13
+      },
+      {
+        "period": "2025-02",
+        "revenue": 620000,
+        "orders": 17
+      },
+      {
+        "period": "2025-03",
+        "revenue": 740000,
+        "orders": 21
+      },
+      {
+        "period": "2025-04",
+        "revenue": 810000,
+        "orders": 23
+      },
+      {
+        "period": "2025-05",
+        "revenue": 680000,
+        "orders": 19
+      },
+      {
+        "period": "2025-06",
+        "revenue": 920000,
+        "orders": 26
+      },
+      {
+        "period": "2025-07",
+        "revenue": 1040000,
+        "orders": 30
+      },
+      {
+        "period": "2025-08",
+        "revenue": 1180000,
+        "orders": 34
+      },
+      {
+        "period": "2025-09",
+        "revenue": 1420000,
+        "orders": 38
+      }
     ],
     "topProducts": [
       {
@@ -1687,35 +1741,35 @@
         "productName": "Office chair · Ergonomic",
         "sku": "SKU-3102-BLK",
         "totalSold": 38,
-        "revenue": 14782.0
+        "revenue": 1478200
       },
       {
         "productId": "inv-001-0000-0000-0000-000000000001",
         "productName": "Desk lamp · Blue",
         "sku": "SKU-0421-BLU",
         "totalSold": 248,
-        "revenue": 8556.0
+        "revenue": 855600
       },
       {
         "productId": "inv-003-0000-0000-0000-000000000003",
         "productName": "Mechanical keyboard",
         "sku": "SKU-1102-BLK",
         "totalSold": 52,
-        "revenue": 6708.0
+        "revenue": 670800
       },
       {
         "productId": "inv-004-0000-0000-0000-000000000004",
         "productName": "Oak shelf · 80cm",
         "sku": "SKU-1420-OAK",
         "totalSold": 29,
-        "revenue": 4118.0
+        "revenue": 411800
       },
       {
         "productId": "inv-002-0000-0000-0000-000000000002",
         "productName": "Monitor stand",
         "sku": "SKU-0738-GRY",
         "totalSold": 41,
-        "revenue": 3649.0
+        "revenue": 364900
       }
     ],
     "topCustomers": [
@@ -1724,52 +1778,64 @@
         "customerName": "Muebles Soler",
         "email": "elena@soler.com",
         "totalOrders": 24,
-        "totalSpent": 22104.0
+        "totalSpent": 2210400
       },
       {
         "customerId": "cust-001-0000-0000-0000-000000000001",
         "customerName": "Almacenes Torres",
         "email": "maria@torres.es",
         "totalOrders": 32,
-        "totalSpent": 18402.0
+        "totalSpent": 1840200
       },
       {
         "customerId": "cust-002-0000-0000-0000-000000000002",
         "customerName": "Distribuciones Vega",
         "email": "carlos@vega.com",
         "totalOrders": 18,
-        "totalSpent": 14220.0
+        "totalSpent": 1422000
       },
       {
         "customerId": "cust-005-0000-0000-0000-000000000005",
         "customerName": "Tienda Núñez",
         "email": "ana@nunez.shop",
         "totalOrders": 11,
-        "totalSpent": 3290.0
+        "totalSpent": 329000
       },
       {
         "customerId": "cust-006-0000-0000-0000-000000000006",
         "customerName": "Papelería Ibérica",
         "email": "jorge@iberica.es",
         "totalOrders": 9,
-        "totalSpent": 2710.0
+        "totalSpent": 271000
       },
       {
         "customerId": "cust-004-0000-0000-0000-000000000004",
         "customerName": "Ferretería Lúa",
         "email": "pablo@lua.es",
         "totalOrders": 6,
-        "totalSpent": 1820.0
+        "totalSpent": 182000
       }
     ],
     "inventoryValue": {
       "totalItems": 562,
-      "totalValue": 48320.5,
+      "totalValue": 4832050,
       "currency": "EUR",
       "byStatus": [
-        { "status": "IN_STOCK", "count": 10, "value": 44180.0 },
-        { "status": "LOW_STOCK", "count": 5, "value": 3640.5 },
-        { "status": "OUT_OF_STOCK", "count": 3, "value": 500.0 }
+        {
+          "status": "IN_STOCK",
+          "count": 10,
+          "value": 4418000
+        },
+        {
+          "status": "LOW_STOCK",
+          "count": 5,
+          "value": 364050
+        },
+        {
+          "status": "OUT_OF_STOCK",
+          "count": 3,
+          "value": 50000
+        }
       ]
     },
     "lowStockAlerts": [
@@ -1817,7 +1883,6 @@
       }
     ]
   },
-
   "employees": [
     {
       "id": "emp-001-0000-0000-0000-000000000001",
@@ -1928,7 +1993,6 @@
       "updatedAt": "2025-09-25T15:00:00.000Z"
     }
   ],
-
   "suppliers": [
     {
       "id": "supp-001-0000-0000-0000-000000000001",
@@ -2031,7 +2095,6 @@
       "updatedAt": "2025-07-15T09:00:00.000Z"
     }
   ],
-
   "notifications": [
     {
       "id": "notif-01-0000-0000-0000-000000000001",
@@ -2154,7 +2217,6 @@
       "createdAt": "2025-09-24T08:00:00.000Z"
     }
   ],
-
   "productCategories": [
     {
       "id": "cat-001-0000-0000-0000-000000000001",
@@ -2187,14 +2249,13 @@
       "description": "Plants, artwork, and decorative office items"
     }
   ],
-
   "products": [
     {
       "id": "prod-001-0000-0000-0000-000000000001",
       "sku": "SKU-0421-BLU",
       "name": "Desk lamp · Blue",
       "description": "Adjustable LED desk lamp with USB charging port, cool white light",
-      "price": 34.5,
+      "price": 3450,
       "currency": "EUR",
       "categoryId": "cat-001-0000-0000-0000-000000000001",
       "createdAt": "2024-09-01T10:00:00.000Z",
@@ -2205,7 +2266,7 @@
       "sku": "SKU-0738-GRY",
       "name": "Monitor stand",
       "description": "Aluminum monitor riser with storage shelf and cable management",
-      "price": 89.0,
+      "price": 8900,
       "currency": "EUR",
       "categoryId": "cat-002-0000-0000-0000-000000000002",
       "createdAt": "2024-09-01T10:00:00.000Z",
@@ -2216,7 +2277,7 @@
       "sku": "SKU-1102-BLK",
       "name": "Mechanical keyboard",
       "description": "TKL wireless mechanical keyboard with brown switches and backlight",
-      "price": 129.0,
+      "price": 12900,
       "currency": "EUR",
       "categoryId": "cat-003-0000-0000-0000-000000000003",
       "createdAt": "2024-10-01T10:00:00.000Z",
@@ -2227,7 +2288,7 @@
       "sku": "SKU-1420-OAK",
       "name": "Oak shelf · 80cm",
       "description": "Solid oak floating wall shelf with invisible wall brackets included",
-      "price": 142.0,
+      "price": 14200,
       "currency": "EUR",
       "categoryId": "cat-004-0000-0000-0000-000000000004",
       "createdAt": "2024-08-15T10:00:00.000Z",
@@ -2238,7 +2299,7 @@
       "sku": "SKU-0309-WHT",
       "name": "Cable organizer",
       "description": "Silicone cable management clips set of 10, desk edge mount",
-      "price": 14.5,
+      "price": 1450,
       "currency": "EUR",
       "categoryId": "cat-005-0000-0000-0000-000000000005",
       "createdAt": "2024-09-10T10:00:00.000Z",
@@ -2249,7 +2310,7 @@
       "sku": "SKU-1881-BRN",
       "name": "Leather desk pad",
       "description": "Full-grain leather desk mat 90×45cm with non-slip base, brown",
-      "price": 48.0,
+      "price": 4800,
       "currency": "EUR",
       "categoryId": "cat-002-0000-0000-0000-000000000002",
       "createdAt": "2024-10-15T10:00:00.000Z",
@@ -2260,7 +2321,7 @@
       "sku": "SKU-2044-GRN",
       "name": "Potted plant · Medium",
       "description": "Artificial succulent arrangement in ceramic pot, desktop size",
-      "price": 22.0,
+      "price": 2200,
       "currency": "EUR",
       "categoryId": "cat-006-0000-0000-0000-000000000006",
       "createdAt": "2024-11-01T10:00:00.000Z",
@@ -2271,7 +2332,7 @@
       "sku": "SKU-3102-BLK",
       "name": "Office chair · Ergonomic",
       "description": "Mesh back ergonomic chair with lumbar support and adjustable armrests",
-      "price": 389.0,
+      "price": 38900,
       "currency": "EUR",
       "categoryId": "cat-004-0000-0000-0000-000000000004",
       "createdAt": "2024-07-01T10:00:00.000Z",
@@ -2282,7 +2343,7 @@
       "sku": "SKU-0512-SLV",
       "name": "Monitor arm · Dual",
       "description": "Full-motion dual monitor arm, VESA 75/100, max 9kg per arm",
-      "price": 79.0,
+      "price": 7900,
       "currency": "EUR",
       "categoryId": "cat-002-0000-0000-0000-000000000002",
       "createdAt": "2024-09-20T10:00:00.000Z",
@@ -2293,7 +2354,7 @@
       "sku": "SKU-0620-WHT",
       "name": "Desk divider panel",
       "description": "Acrylic transparent desk partition 60×45cm with clamp mount",
-      "price": 56.0,
+      "price": 5600,
       "currency": "EUR",
       "categoryId": "cat-004-0000-0000-0000-000000000004",
       "createdAt": "2024-10-20T10:00:00.000Z",
@@ -2304,7 +2365,7 @@
       "sku": "SKU-0811-GRY",
       "name": "Anti-fatigue mat",
       "description": "Standing desk anti-fatigue mat 90×60cm, memory foam with beveled edges",
-      "price": 38.0,
+      "price": 3800,
       "currency": "EUR",
       "categoryId": "cat-005-0000-0000-0000-000000000005",
       "createdAt": "2024-11-10T10:00:00.000Z",
@@ -2315,7 +2376,7 @@
       "sku": "SKU-0925-BLU",
       "name": "Mesh pen organizer",
       "description": "5-compartment steel mesh desktop organizer with pen holder and tray",
-      "price": 12.0,
+      "price": 1200,
       "currency": "EUR",
       "categoryId": "cat-005-0000-0000-0000-000000000005",
       "createdAt": "2024-08-25T10:00:00.000Z",
@@ -2326,7 +2387,7 @@
       "sku": "SKU-1033-NAT",
       "name": "Bamboo laptop stand",
       "description": "Adjustable bamboo laptop riser with 6 height levels, foldable design",
-      "price": 45.0,
+      "price": 4500,
       "currency": "EUR",
       "categoryId": "cat-002-0000-0000-0000-000000000002",
       "createdAt": "2024-09-05T10:00:00.000Z",
@@ -2337,7 +2398,7 @@
       "sku": "SKU-1215-BLK",
       "name": "Cable tray · Under desk",
       "description": "Under-desk cable management tray with mounting hardware, 60cm",
-      "price": 28.0,
+      "price": 2800,
       "currency": "EUR",
       "categoryId": "cat-005-0000-0000-0000-000000000005",
       "createdAt": "2024-10-05T10:00:00.000Z",
@@ -2348,7 +2409,7 @@
       "sku": "SKU-1340-WHT",
       "name": "Desk lamp · Clip",
       "description": "Clip-on LED reading lamp with 10 brightness levels and flexible neck",
-      "price": 24.0,
+      "price": 2400,
       "currency": "EUR",
       "categoryId": "cat-001-0000-0000-0000-000000000001",
       "createdAt": "2024-11-15T10:00:00.000Z",
@@ -2359,7 +2420,7 @@
       "sku": "SKU-1560-GRY",
       "name": "Filing cabinet · 2-drawer",
       "description": "Steel filing cabinet with 2 lockable drawers, A4 format, on wheels",
-      "price": 185.0,
+      "price": 18500,
       "currency": "EUR",
       "categoryId": "cat-004-0000-0000-0000-000000000004",
       "createdAt": "2024-07-20T10:00:00.000Z",
@@ -2370,7 +2431,7 @@
       "sku": "SKU-1672-BLK",
       "name": "Monitor stand with drawer",
       "description": "MDF monitor riser with 2-drawer storage and mesh organizer slot",
-      "price": 115.0,
+      "price": 11500,
       "currency": "EUR",
       "categoryId": "cat-002-0000-0000-0000-000000000002",
       "createdAt": "2024-08-10T10:00:00.000Z",
@@ -2381,7 +2442,7 @@
       "sku": "SKU-1790-BEI",
       "name": "Cork notice board",
       "description": "Natural cork notice board 90×60cm with aluminum frame and mounting kit",
-      "price": 36.0,
+      "price": 3600,
       "currency": "EUR",
       "categoryId": "cat-005-0000-0000-0000-000000000005",
       "createdAt": "2024-09-15T10:00:00.000Z",

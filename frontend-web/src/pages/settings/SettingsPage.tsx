@@ -1,18 +1,25 @@
 import * as React from 'react';
-import { MoonIcon, GlobeIcon, BellIcon, UserIcon, SunIcon } from 'lucide-react';
+import { MoonIcon, GlobeIcon, BellIcon, UserIcon, SunIcon, BuildingIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useTheme } from '@shared/hooks/useTheme';
 import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
 import { useSettings } from '@shared/hooks/useSettings';
-import { Switch, Button } from '@shared/ui/primitives';
+import { useEffectiveRole } from '@features/auth';
+import { toast } from '@shared/hooks/useToast';
+import { Switch, Button, Input, Label } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
 import baseStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Settings.module.scss';
 
-type SettingsSection = 'appearance' | 'language' | 'notifications' | 'account';
+type SettingsSection = 'appearance' | 'language' | 'notifications' | 'account' | 'company';
 
-const NAV_ITEMS: Array<{ id: SettingsSection; labelKey: string; icon: React.ReactElement }> = [
+const NAV_ITEMS: Array<{
+  id: SettingsSection;
+  labelKey: string;
+  icon: React.ReactElement;
+  adminOnly?: boolean;
+}> = [
   {
     id: 'appearance',
     labelKey: 'settings.nav.appearance',
@@ -33,6 +40,12 @@ const NAV_ITEMS: Array<{ id: SettingsSection; labelKey: string; icon: React.Reac
     labelKey: 'settings.nav.account',
     icon: <UserIcon size={16} aria-hidden="true" />,
   },
+  {
+    id: 'company',
+    labelKey: 'settings.nav.company',
+    icon: <BuildingIcon size={16} aria-hidden="true" />,
+    adminOnly: true,
+  },
 ];
 
 export function SettingsPage(): React.ReactElement {
@@ -40,8 +53,14 @@ export function SettingsPage(): React.ReactElement {
   const { theme, setTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
   const { settings, updateSettings, resetSettings } = useSettings();
+  const role = useEffectiveRole();
+  const isAdminOrCompany = role === 'admin' || role === 'company' || role === 'manager';
 
   const [active, setActive] = React.useState<SettingsSection>('appearance');
+  const [companyName, setCompanyName] = React.useState('Inventory Sales Hub');
+  const [logoUrl, setLogoUrl] = React.useState('');
+  const [currency, setCurrency] = React.useState('EUR');
+  const [timezone, setTimezone] = React.useState('Europe/Madrid');
 
   return (
     <div className={baseStyles['page']}>
@@ -53,20 +72,22 @@ export function SettingsPage(): React.ReactElement {
       <div className={styles['layout']}>
         {/* Secondary nav */}
         <nav className={styles['nav']} aria-label="Settings sections">
-          {NAV_ITEMS.map(({ id, labelKey, icon }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => {
-                setActive(id);
-              }}
-              className={cn(styles['navItem'], active === id && styles['navItemActive'])}
-              aria-current={active === id ? 'page' : undefined}
-            >
-              <span className={styles['navIcon']}>{icon}</span>
-              <span>{t(labelKey)}</span>
-            </button>
-          ))}
+          {NAV_ITEMS.filter(({ adminOnly }) => !adminOnly || isAdminOrCompany).map(
+            ({ id, labelKey, icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  setActive(id);
+                }}
+                className={cn(styles['navItem'], active === id && styles['navItemActive'])}
+                aria-current={active === id ? 'page' : undefined}
+              >
+                <span className={styles['navIcon']}>{icon}</span>
+                <span>{t(labelKey)}</span>
+              </button>
+            )
+          )}
         </nav>
 
         {/* Content panel */}
@@ -227,6 +248,75 @@ export function SettingsPage(): React.ReactElement {
                     />
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+          )}
+
+          {active === 'company' && isAdminOrCompany && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('settings.nav.company')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  <div>
+                    <Label htmlFor="companyName">Company name</Label>
+                    <Input
+                      id="companyName"
+                      value={companyName}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setCompanyName(e.target.value);
+                      }}
+                      style={{ marginTop: '0.375rem' }}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="logoUrl">Logo URL</Label>
+                    <Input
+                      id="logoUrl"
+                      type="url"
+                      value={logoUrl}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setLogoUrl(e.target.value);
+                      }}
+                      placeholder="https://..."
+                      style={{ marginTop: '0.375rem' }}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="currency">Default currency</Label>
+                    <Input
+                      id="currency"
+                      value={currency}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setCurrency(e.target.value);
+                      }}
+                      maxLength={3}
+                      style={{ marginTop: '0.375rem', maxWidth: '8rem' }}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="timezone">Timezone</Label>
+                    <Input
+                      id="timezone"
+                      value={timezone}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setTimezone(e.target.value);
+                      }}
+                      style={{ marginTop: '0.375rem' }}
+                    />
+                  </div>
+                  <div>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        toast({ title: 'Company profile saved' });
+                      }}
+                    >
+                      Save changes
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           )}

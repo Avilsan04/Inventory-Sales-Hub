@@ -11,10 +11,11 @@ export const productSchema = z.object({
   sku: z.string().min(3).max(50),
   name: z.string().min(1),
   description: z.string().optional(),
-  price: z.number().nonnegative(),
+  price: z.number().int().nonnegative(),
   currency: z.string().length(3).default('USD'),
   categoryId: z.string().min(1).optional(),
   category: categorySchema.optional(),
+  isActive: z.boolean().default(true),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });
@@ -27,6 +28,7 @@ export const createProductSchema = productSchema.omit({
   createdAt: true,
   updatedAt: true,
   category: true,
+  isActive: true,
 });
 export const updateProductSchema = createProductSchema;
 export const createCategorySchema = categorySchema.omit({ id: true });

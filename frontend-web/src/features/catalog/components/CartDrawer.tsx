@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ShoppingCartIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
+import { formatCurrency } from '@shared/lib/formatCurrency';
 import {
   Sheet,
   SheetTrigger,
@@ -73,9 +74,7 @@ export function CartDrawer(): React.ReactElement {
           <SheetFooter style={{ flexDirection: 'column', gap: '0.75rem', padding: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
               <span>{t('catalog.total')}</span>
-              <span>
-                {new Intl.NumberFormat('en-GB', { style: 'currency', currency }).format(total)}
-              </span>
+              <span>{formatCurrency(total, currency)}</span>
             </div>
             <Button style={{ width: '100%' }}>{t('catalog.checkout')}</Button>
             <Button variant="ghost" size="sm" onClick={clearCart} style={{ width: '100%' }}>

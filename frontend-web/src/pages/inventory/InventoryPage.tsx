@@ -2,6 +2,8 @@ import * as React from 'react';
 import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useInventory, useDeleteInventoryItem } from '@features/inventory';
+import { PermissionGuard, useEffectiveRole } from '@features/auth';
+import { hasPermission } from '@shared/lib/permissions';
 import { toast } from '@shared/hooks/useToast';
 import { useDebounce } from '@shared/hooks';
 import { exportToCsv } from '@shared/lib/exportCsv';
@@ -9,9 +11,11 @@ import { Spinner, Button, Pagination, Input } from '@shared/ui/primitives';
 import { Card, ConfirmDialog, EmptyState } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
 import { InventoryTableWidget } from '@widgets/inventory';
+import { AuditLogPanel } from '@widgets/audit';
 import { InventoryCreateDialog } from '@features/inventory/components/InventoryCreateDialog';
 import { InventoryEditDialog } from '@features/inventory/components/InventoryEditDialog';
 import { StockAdjustDialog } from '@features/inventory/components/StockAdjustDialog';
+import { MovementsHistoryPanel } from '@features/inventory/components/MovementsHistoryPanel';
 import { cn } from '@shared/lib/cn';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Inventory.module.scss';
@@ -22,6 +26,7 @@ export function InventoryPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data, isPending, isError, error } = useInventory();
   const { mutate: deleteItem, isPending: isDeleting } = useDeleteInventoryItem();
+  const role = useEffectiveRole();
 
   const [search, setSearch] = React.useState('');
   const debouncedSearch = useDebounce(search);
@@ -33,6 +38,7 @@ export function InventoryPage(): React.ReactElement {
   const [editItem, setEditItem] = React.useState<InventoryItem | null>(null);
   const [adjustItem, setAdjustItem] = React.useState<InventoryItem | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
+  const [historyItem, setHistoryItem] = React.useState<InventoryItem | null>(null);
 
   const tabs: { id: StockTab; labelKey: string; count: number }[] = React.useMemo(() => {
     const all = data ?? [];
@@ -128,12 +134,14 @@ export function InventoryPage(): React.ReactElement {
           <Button variant="outline" size="sm" onClick={handleExport}>
             {t('inventory.exportCsv')}
           </Button>
-          <Button
-            size="sm"
-            onClick={() => {
-              setCreateOpen(true);
-            }}
-          >{`+ ${t('inventory.addProduct')}`}</Button>
+          <PermissionGuard permission="create:inventory">
+            <Button
+              size="sm"
+              onClick={() => {
+                setCreateOpen(true);
+              }}
+            >{`+ ${t('inventory.addProduct')}`}</Button>
+          </PermissionGuard>
         </div>
       </header>
 
@@ -191,14 +199,29 @@ export function InventoryPage(): React.ReactElement {
           ) : (
             <InventoryTableWidget
               data={paginated}
-              onEdit={(item) => {
-                setEditItem(item);
-              }}
-              onAdjustStock={(item) => {
-                setAdjustItem(item);
-              }}
-              onDelete={(id) => {
-                setDeleteId(id);
+              onEdit={
+                hasPermission(role, 'create:inventory')
+                  ? (item): void => {
+                      setEditItem(item);
+                    }
+                  : undefined
+              }
+              onAdjustStock={
+                hasPermission(role, 'adjust:stock')
+                  ? (item): void => {
+                      setAdjustItem(item);
+                    }
+                  : undefined
+              }
+              onDelete={
+                hasPermission(role, 'delete:product')
+                  ? (id): void => {
+                      setDeleteId(id);
+                    }
+                  : undefined
+              }
+              onViewHistory={(item) => {
+                setHistoryItem(item);
               }}
             />
           )}
@@ -214,6 +237,28 @@ export function InventoryPage(): React.ReactElement {
         </div>
       </Card>
 
+      <PermissionGuard permission="view:audit">
+        <Card className={styles['tableCard']} style={{ marginTop: '1rem' }}>
+          <div style={{ padding: '1rem 1rem 0' }}>
+            <h3
+              style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, marginBottom: '0.75rem' }}
+            >
+              Audit Log
+            </h3>
+          </div>
+          <div style={{ padding: '0 1rem 1rem' }}>
+            <AuditLogPanel entityType="inventory" />
+          </div>
+        </Card>
+      </PermissionGuard>
+
+      <MovementsHistoryPanel
+        item={historyItem}
+        open={historyItem !== null}
+        onOpenChange={(open) => {
+          if (!open) setHistoryItem(null);
+        }}
+      />
       <InventoryCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
       <InventoryEditDialog
         item={editItem}

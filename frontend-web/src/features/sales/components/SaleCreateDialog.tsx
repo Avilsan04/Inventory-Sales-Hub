@@ -25,6 +25,7 @@ import {
 import { Button, Input, Textarea, Label } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { MOCK_BANK_IBAN, type PaymentMethod } from '../models/checkout.types';
+import { formatCurrency, toCents, fromCents } from '@shared/lib/formatCurrency';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 
 // ── Validation helpers ───────────────────────────────────────────────────────
@@ -229,7 +230,7 @@ export function SaleCreateDialog({
         items: data.items.map((item) => ({
           productId: item.productId,
           quantity: item.quantity,
-          unitPrice: item.unitPrice,
+          unitPrice: toCents(item.unitPrice),
         })),
         currency: data.currency,
         shippingDetails: {
@@ -326,7 +327,7 @@ export function SaleCreateDialog({
                         f.onChange(v);
                         const prod = products.find((p) => p.id === v);
                         if (prod !== undefined) {
-                          setValue(`items.${index}.unitPrice`, prod.price);
+                          setValue(`items.${index}.unitPrice`, fromCents(prod.price));
                         }
                       }}
                     >
@@ -395,9 +396,7 @@ export function SaleCreateDialog({
 
       <div className={styles['runningTotal']}>
         <span>{t('sales.checkout.runningTotal')}</span>
-        <strong>
-          {runningTotal.toFixed(2)} {watch('currency')}
-        </strong>
+        <strong>{formatCurrency(toCents(runningTotal), watch('currency'), 'es-ES')}</strong>
       </div>
     </div>
   );
@@ -535,7 +534,7 @@ export function SaleCreateDialog({
                 {pName} × {it.quantity}
               </span>
               <span className={styles['summaryValue']}>
-                {(it.quantity * it.unitPrice).toFixed(2)} {formValues.currency}
+                {formatCurrency(toCents(it.quantity * it.unitPrice), formValues.currency, 'es-ES')}
               </span>
             </div>
           );

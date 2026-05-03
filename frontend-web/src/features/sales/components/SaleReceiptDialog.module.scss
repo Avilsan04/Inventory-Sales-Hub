@@ -1,0 +1,121 @@
+.dialogContent {
+  max-width: 400px;
+}
+
+.receipt {
+  font-size: $font-size-sm;
+  font-family: $font-family-mono;
+  color: var(--color-foreground);
+  padding: $spacing-4;
+}
+
+.receiptHeader {
+  text-align: center;
+  margin-bottom: $spacing-3;
+}
+
+.companyName {
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing-1;
+}
+
+.ticketId {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin: 0 0 $spacing-1;
+}
+
+.date {
+  color: var(--color-muted-foreground);
+  margin: 0;
+}
+
+.divider {
+  border-top: 1px dashed var(--color-border);
+  margin: $spacing-3 0;
+}
+
+.itemsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-xs;
+
+  th {
+    text-align: left;
+    padding-bottom: $spacing-1;
+    color: var(--color-muted-foreground);
+    font-weight: $font-weight-medium;
+  }
+
+  td {
+    padding: $spacing-1 0;
+  }
+}
+
+.colName {
+  width: 45%;
+  text-align: left;
+}
+
+.colQty {
+  width: 10%;
+  text-align: center;
+}
+
+.colPrice {
+  width: 20%;
+  text-align: right;
+}
+
+.colSubtotal {
+  width: 25%;
+  text-align: right;
+}
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-muted-foreground);
+}
+
+.totalRowFinal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+}
+
+.thanks {
+  text-align: center;
+  color: var(--color-muted-foreground);
+  margin: 0;
+  font-style: italic;
+  font-family: $font-family-base;
+}
+
+.noPrint {
+  /* hidden in print media */
+}
+
+@media print {
+  .noPrint {
+    display: none !important;
+  }
+
+  .dialogContent {
+    box-shadow: none;
+    border: none;
+    max-width: 100%;
+  }
+
+  .receipt {
+    padding: 0;
+  }
+}

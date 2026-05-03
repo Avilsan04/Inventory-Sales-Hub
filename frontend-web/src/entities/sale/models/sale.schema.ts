@@ -8,8 +8,8 @@ export const saleItemSchema = z.object({
   productId: z.string().min(1),
   productName: z.string(),
   quantity: z.number().int().positive(),
-  unitPrice: z.number().nonnegative(),
-  subtotal: z.number().nonnegative(),
+  unitPrice: z.number().int().nonnegative(),
+  subtotal: z.number().int().nonnegative(),
 });
 
 export const saleSchema = z.object({
@@ -17,7 +17,7 @@ export const saleSchema = z.object({
   customerId: z.string().min(1).optional(),
   employeeId: z.string().min(1).optional(),
   status: saleStatusSchema,
-  total: z.number().nonnegative(),
+  total: z.number().int().nonnegative(),
   currency: z.string().length(3).default('USD'),
   items: z.array(saleItemSchema).default([]),
   createdAt: z.iso.datetime(),
@@ -28,14 +28,14 @@ export const saleListSchema = z.array(saleSchema);
 
 export const saleSummarySchema = z.object({
   totalSales: z.number().int().nonnegative(),
-  totalRevenue: z.number().nonnegative(),
+  totalRevenue: z.number().int().nonnegative(),
   currency: z.string().length(3).default('USD'),
   byStatus: z
     .array(
       z.object({
         status: saleStatusSchema,
         count: z.number().int().nonnegative(),
-        revenue: z.number().nonnegative(),
+        revenue: z.number().int().nonnegative(),
       })
     )
     .optional(),
@@ -55,7 +55,7 @@ export const createSaleSchema = z.object({
       z.object({
         productId: z.string().min(1),
         quantity: z.number().int().positive(),
-        unitPrice: z.number().nonnegative(),
+        unitPrice: z.number().int().nonnegative(),
       })
     )
     .min(1),

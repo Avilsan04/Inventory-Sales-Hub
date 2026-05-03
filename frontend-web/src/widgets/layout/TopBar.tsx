@@ -113,7 +113,14 @@ export function TopBar(): React.ReactElement {
         </button>
 
         <div className={styles['notifWrapper']}>
-          <button type="button" className={styles['iconBtn']} aria-label={t('nav.notifications')}>
+          <button
+            type="button"
+            className={styles['iconBtn']}
+            aria-label={t('nav.notifications')}
+            onClick={() => {
+              void navigate(APP_ROUTES.NOTIFICATIONS);
+            }}
+          >
             <BellIcon aria-hidden="true" />
           </button>
           {unreadCount > 0 && (

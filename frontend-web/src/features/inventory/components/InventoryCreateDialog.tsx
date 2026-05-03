@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateInventoryItem } from '@features/inventory';
+import { toCents } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import {
   Dialog,
@@ -59,15 +60,18 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
   };
 
   const onSubmit = (data: FormValues): void => {
-    mutate(data, {
-      onSuccess: () => {
-        toast({ title: 'Item added to inventory' });
-        onClose();
-      },
-      onError: (err) => {
-        toast({ title: 'Failed to add item', description: err.message, variant: 'destructive' });
-      },
-    });
+    mutate(
+      { ...data, price: toCents(data.price) },
+      {
+        onSuccess: () => {
+          toast({ title: 'Item added to inventory' });
+          onClose();
+        },
+        onError: (err) => {
+          toast({ title: 'Failed to add item', description: err.message, variant: 'destructive' });
+        },
+      }
+    );
   };
 
   return (

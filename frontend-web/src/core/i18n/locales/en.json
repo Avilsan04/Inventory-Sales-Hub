@@ -24,7 +24,9 @@
     "viewingAs": "Viewing as",
     "viewAsAdmin": "Admin",
     "viewAsCustomer": "Customer",
-    "viewAsCompany": "Company"
+    "viewAsCompany": "Company",
+    "all": "All",
+    "viewAll": "View all"
   },
   "nav": {
     "home": "Home",
@@ -170,7 +172,11 @@
       "newProduct": "New product",
       "newSale": "New sale",
       "viewReports": "View reports"
-    }
+    },
+    "exportReport": "Export Report",
+    "weeklySales": "Weekly Sales Trend",
+    "salesByStatus": "Sales by Status",
+    "recentTransactions": "Recent Transactions"
   },
   "inventory": {
     "title": "Inventory",
@@ -443,7 +449,8 @@
       "appearance": "Appearance",
       "language": "Language",
       "notifications": "Notifications",
-      "account": "Account"
+      "account": "Account",
+      "company": "Company Profile"
     }
   },
   "admin": {

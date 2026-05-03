@@ -20,28 +20,36 @@ interface RegisterFormProps {
 }
 
 const ROLE_COPY: Record<RegisterRole, { titleKey: string; subtitleKey: string }> = {
-  customer: { titleKey: 'auth.registerTitleCustomer', subtitleKey: 'auth.registerSubtitleCustomer' },
-  admin:    { titleKey: 'auth.registerTitleAdmin',    subtitleKey: 'auth.registerSubtitleAdmin' },
-  company:  { titleKey: 'auth.registerTitleCompany',  subtitleKey: 'auth.registerSubtitleCompany' },
+  customer: {
+    titleKey: 'auth.registerTitleCustomer',
+    subtitleKey: 'auth.registerSubtitleCustomer',
+  },
+  admin: { titleKey: 'auth.registerTitleAdmin', subtitleKey: 'auth.registerSubtitleAdmin' },
+  company: { titleKey: 'auth.registerTitleCompany', subtitleKey: 'auth.registerSubtitleCompany' },
 };
 
 export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.ReactElement {
   const { translate } = useTranslationAdapter();
   const { authService } = useDependencies();
 
-  const { formData, isLoading, error, isFormValid, handleInputChange, handleSubmit } =
+  const { register, handleSubmit, errors, isLoading, error, isValid, onSubmit } =
     useRegisterPresenter({ onSuccess, authService, role });
 
-  const handleFormSubmit = React.useCallback(
-    (e: React.SyntheticEvent<HTMLFormElement>): void => {
-      void handleSubmit(e);
-    },
-    [handleSubmit]
-  );
+  const fieldError = (name: string): string | undefined => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+    const e = (errors as any)[name] as { message?: string } | undefined;
+    return e?.message;
+  };
 
   return (
     <Card className={styles.card}>
-      <form onSubmit={handleFormSubmit} noValidate className={styles.form}>
+      <form
+        onSubmit={(e: React.BaseSyntheticEvent) => {
+          void handleSubmit(onSubmit)(e);
+        }}
+        noValidate
+        className={styles.form}
+      >
         <CardHeader>
           <CardTitle>{translate(ROLE_COPY[role].titleKey)}</CardTitle>
           <CardDescription>{translate(ROLE_COPY[role].subtitleKey)}</CardDescription>
@@ -60,75 +68,81 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
                 <Label htmlFor="companyName">{translate('auth.companyName')}</Label>
                 <Input
                   id="companyName"
-                  name="companyName"
                   type="text"
                   placeholder={translate('auth.companyNamePlaceholder')}
-                  value={formData.companyName}
-                  onChange={handleInputChange}
                   autoComplete="organization"
-                  required
                   disabled={isLoading}
+                  {...register('companyName')}
                 />
+                {fieldError('companyName') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('companyName')}
+                  </span>
+                )}
               </div>
-
               <div className={styles.field}>
                 <Label htmlFor="cif">{translate('auth.cif')}</Label>
                 <Input
                   id="cif"
-                  name="cif"
                   type="text"
                   placeholder={translate('auth.cifPlaceholder')}
-                  value={formData.cif}
-                  onChange={handleInputChange}
                   autoComplete="off"
-                  required
                   disabled={isLoading}
+                  {...register('cif')}
                 />
+                {fieldError('cif') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('cif')}
+                  </span>
+                )}
               </div>
-
               <div className={styles.field}>
                 <Label htmlFor="legalRepresentative">{translate('auth.legalRepresentative')}</Label>
                 <Input
                   id="legalRepresentative"
-                  name="legalRepresentative"
                   type="text"
                   placeholder={translate('auth.legalRepresentativePlaceholder')}
-                  value={formData.legalRepresentative}
-                  onChange={handleInputChange}
                   autoComplete="name"
-                  required
                   disabled={isLoading}
+                  {...register('legalRepresentative')}
                 />
+                {fieldError('legalRepresentative') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('legalRepresentative')}
+                  </span>
+                )}
               </div>
-
               <div className={styles.field}>
                 <Label htmlFor="legalEmail">{translate('auth.legalEmail')}</Label>
                 <Input
                   id="legalEmail"
-                  name="legalEmail"
                   type="email"
                   placeholder={translate('auth.emailPlaceholder')}
-                  value={formData.legalEmail}
-                  onChange={handleInputChange}
                   autoComplete="email"
-                  required
                   disabled={isLoading}
+                  {...register('legalEmail')}
                 />
+                {fieldError('legalEmail') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('legalEmail')}
+                  </span>
+                )}
               </div>
-
               <div className={styles.field}>
                 <Label htmlFor="phone">{translate('auth.phone')}</Label>
                 <Input
                   id="phone"
-                  name="phone"
                   type="tel"
                   placeholder={translate('auth.phonePlaceholder')}
-                  value={formData.phone}
-                  onChange={handleInputChange}
                   autoComplete="tel"
-                  required
                   disabled={isLoading}
+                  {...register('phone')}
                 />
+                {fieldError('phone') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('phone')}
+                  </span>
+                )}
               </div>
             </>
           ) : (
@@ -138,46 +152,50 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
                   <Label htmlFor="fullName">{translate('auth.fullName')}</Label>
                   <Input
                     id="fullName"
-                    name="fullName"
                     type="text"
                     placeholder={translate('auth.fullNamePlaceholder')}
-                    value={formData.fullName}
-                    onChange={handleInputChange}
                     autoComplete="name"
-                    required
                     disabled={isLoading}
+                    {...register('fullName')}
                   />
+                  {fieldError('fullName') && (
+                    <span className={styles.fieldError} role="alert">
+                      {fieldError('fullName')}
+                    </span>
+                  )}
                 </div>
               )}
-
               <div className={styles.field}>
                 <Label htmlFor="username">{translate('auth.username')}</Label>
                 <Input
                   id="username"
-                  name="username"
                   type="text"
                   placeholder={translate('auth.usernamePlaceholder')}
-                  value={formData.username}
-                  onChange={handleInputChange}
                   autoComplete="username"
-                  required
                   disabled={isLoading}
+                  {...register('username')}
                 />
+                {fieldError('username') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('username')}
+                  </span>
+                )}
               </div>
-
               <div className={styles.field}>
                 <Label htmlFor="email">{translate('auth.email')}</Label>
                 <Input
                   id="email"
-                  name="email"
                   type="email"
                   placeholder={translate('auth.emailPlaceholder')}
-                  value={formData.email}
-                  onChange={handleInputChange}
                   autoComplete="email"
-                  required
                   disabled={isLoading}
+                  {...register('email')}
                 />
+                {fieldError('email') && (
+                  <span className={styles.fieldError} role="alert">
+                    {fieldError('email')}
+                  </span>
+                )}
               </div>
             </>
           )}
@@ -186,30 +204,34 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
             <Label htmlFor="password">{translate('auth.password')}</Label>
             <Input
               id="password"
-              name="password"
               type="password"
               placeholder={translate('auth.passwordPlaceholder')}
-              value={formData.password}
-              onChange={handleInputChange}
               autoComplete="new-password"
-              required
               disabled={isLoading}
+              {...register('password')}
             />
+            {fieldError('password') && (
+              <span className={styles.fieldError} role="alert">
+                {fieldError('password')}
+              </span>
+            )}
           </div>
 
           <div className={styles.field}>
             <Label htmlFor="confirmPassword">{translate('auth.confirmPassword')}</Label>
             <Input
               id="confirmPassword"
-              name="confirmPassword"
               type="password"
               placeholder={translate('auth.passwordPlaceholder')}
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
               autoComplete="new-password"
-              required
               disabled={isLoading}
+              {...register('confirmPassword')}
             />
+            {fieldError('confirmPassword') && (
+              <span className={styles.fieldError} role="alert">
+                {fieldError('confirmPassword')}
+              </span>
+            )}
           </div>
 
           {role === 'admin' && (
@@ -217,25 +239,23 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
               <Label htmlFor="adminCode">{translate('auth.adminCode')}</Label>
               <Input
                 id="adminCode"
-                name="adminCode"
                 type="password"
                 placeholder={translate('auth.adminCodePlaceholder')}
-                value={formData.adminCode}
-                onChange={handleInputChange}
                 autoComplete="off"
-                required
                 disabled={isLoading}
+                {...register('adminCode')}
               />
+              {fieldError('adminCode') && (
+                <span className={styles.fieldError} role="alert">
+                  {fieldError('adminCode')}
+                </span>
+              )}
             </div>
           )}
         </CardContent>
 
         <CardFooter className={styles.footer}>
-          <Button
-            type="submit"
-            disabled={!isFormValid || isLoading}
-            className={styles.submitButton}
-          >
+          <Button type="submit" disabled={!isValid || isLoading} className={styles.submitButton}>
             {isLoading ? <Spinner size="sm" /> : translate('auth.createAccount')}
           </Button>
         </CardFooter>
