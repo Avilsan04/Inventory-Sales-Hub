@@ -16,6 +16,21 @@ export interface UserResponse {
   token: string;
 }
 
+export interface UserProfile {
+  id: number;
+  username: string;
+  email: string;
+}
+
 export interface LoginResponse {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface RegisterResponse {
+  id: number;
+  username: string;
+  email: string;
+  accessToken: string;
+  refreshToken: string;
 }
