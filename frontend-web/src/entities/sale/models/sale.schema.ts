@@ -17,6 +17,11 @@ export const saleSchema = z.object({
   customerId: z.string().min(1).optional(),
   employeeId: z.string().min(1).optional(),
   status: saleStatusSchema,
+  subtotal: z.number().int().nonnegative().optional(),
+  discountPercent: z.number().min(0).max(100).default(0),
+  discountAmount: z.number().int().nonnegative().default(0),
+  taxPercent: z.number().min(0).max(100).default(0),
+  taxAmount: z.number().int().nonnegative().default(0),
   total: z.number().int().nonnegative(),
   currency: z.string().length(3).default('USD'),
   items: z.array(saleItemSchema).default([]),
@@ -60,6 +65,8 @@ export const createSaleSchema = z.object({
     )
     .min(1),
   currency: z.string().length(3).default('USD'),
+  discountPercent: z.number().min(0).max(100).default(0),
+  taxPercent: z.number().min(0).max(100).default(0),
   shippingDetails: shippingDetailsSchema.optional(),
   paymentMethod: z.enum(['credit_card', 'bank_transfer', 'cash_on_delivery']).optional(),
 });

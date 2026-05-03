@@ -86,12 +86,23 @@ export const salesHandlers = [
       subtotal: item.quantity * item.unitPrice,
     }));
 
-    const total = items.reduce((sum, i) => sum + i.subtotal, 0);
+    const subtotal = items.reduce((sum, i) => sum + i.subtotal, 0);
+    const discountPercent = body.discountPercent;
+    const taxPercent = body.taxPercent;
+    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const taxableBase = subtotal - discountAmount;
+    const taxAmount = Math.round(taxableBase * (taxPercent / 100));
+    const total = taxableBase + taxAmount;
 
     const newSale: Sale = {
       id: newId,
       customerId: body.customerId,
       status: 'pending',
+      subtotal,
+      discountPercent,
+      discountAmount,
+      taxPercent,
+      taxAmount,
       total,
       currency: body.currency,
       items,

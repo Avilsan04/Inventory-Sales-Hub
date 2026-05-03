@@ -7,15 +7,22 @@ import './core/config/env';
 
 async function bootstrapApplication(): Promise<void> {
   try {
-    // Architecture Correction: Use Vite's native environment variables
     if (import.meta.env.DEV) {
       const { worker } = await import('./app/mock/browser');
+      const { seed } = await import('./app/mock/seed');
+      const { db } = await import('./app/mock/db');
+      await seed(db);
       await worker.start({
-        serviceWorker: {
-          url: '/mockServiceWorker.js',
-        },
+        serviceWorker: { url: '/mockServiceWorker.js' },
         onUnhandledRequest: 'bypass',
       });
+    } else {
+      // Production: register real Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {
+          /* SW optional in prod */
+        });
+      }
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown bootstrap error';

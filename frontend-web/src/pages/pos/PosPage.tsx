@@ -13,6 +13,7 @@ import { useCustomers } from '@features/customers';
 import { useCreateSale } from '@features/sales';
 import { useCartStore } from '@features/sales/stores/cartStore';
 import { useCashSession } from '@features/sales/hooks/useCashSession';
+import { usePosKeyboard } from '@features/sales/hooks/usePosKeyboard';
 import { useEffectiveRole, PermissionGuard } from '@features/auth';
 import { hasPermission } from '@shared/lib/permissions';
 import { SaleReceiptDialog } from '@features/sales/components/SaleReceiptDialog';
@@ -24,6 +25,7 @@ import { toast } from '@shared/hooks/useToast';
 import { Input, Spinner, Badge, Button } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { formatCurrency } from '@shared/lib/formatCurrency';
+import { calculateSaleTotals } from '@shared/lib/saleCalculations';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
@@ -70,6 +72,16 @@ export function PosPage(): React.ReactElement {
 
   const [search, setSearch] = React.useState('');
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
+  const searchRef = React.useRef<HTMLInputElement | null>(null);
+  const [discountPercent, setDiscountPercent] = React.useState(0);
+  const [taxPercent, setTaxPercent] = React.useState(0);
+
+  usePosKeyboard({
+    searchRef,
+    onClearSearch: () => {
+      setSearch('');
+    },
+  });
   const [completedSale, setCompletedSale] = React.useState<Sale | null>(null);
   const [openSessionDialog, setOpenSessionDialog] = React.useState(false);
   const [closeSessionDialog, setCloseSessionDialog] = React.useState(false);
@@ -93,9 +105,9 @@ export function PosPage(): React.ReactElement {
     });
   }, [inventory, activeCategory, search]);
 
-  const total = React.useMemo(
-    () => cart.reduce((acc, i) => acc + i.unitPrice * i.quantity, 0),
-    [cart]
+  const saleTotals = React.useMemo(
+    () => calculateSaleTotals({ items: cart, discountPercent, taxPercent }),
+    [cart, discountPercent, taxPercent]
   );
   const currency = cart[0]?.currency ?? 'EUR';
 
@@ -117,6 +129,8 @@ export function PosPage(): React.ReactElement {
         customerId: customerId ?? undefined,
         currency,
         paymentMethod,
+        discountPercent,
+        taxPercent,
         items: cart.map((i) => ({
           productId: i.productId,
           quantity: i.quantity,
@@ -209,8 +223,9 @@ export function PosPage(): React.ReactElement {
         <div className={styles['products']}>
           <div className={styles['searchBar']}>
             <Input
+              ref={searchRef}
               type="search"
-              placeholder={`${t('common.search').split(',')[0]}…`}
+              placeholder={`${t('common.search').split(',')[0]}… (F2)`}
               value={search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setSearch(e.target.value);
@@ -259,6 +274,7 @@ export function PosPage(): React.ReactElement {
                   className={styles['productCard']}
                   role="button"
                   tabIndex={0}
+                  data-pos-product
                   aria-label={`${t('inventory.addProduct')}: ${item.name}`}
                   onClick={() => {
                     addToCart(item);
@@ -357,11 +373,77 @@ export function PosPage(): React.ReactElement {
             <div className={styles['totals']}>
               <div className={styles['totalRow']}>
                 <span>Subtotal</span>
-                <span>{formatCurrency(total, currency, 'es-ES')}</span>
+                <span>{formatCurrency(saleTotals.subtotal, currency, 'es-ES')}</span>
+              </div>
+              <div className={styles['totalRow']} style={{ alignItems: 'center' }}>
+                <label
+                  htmlFor="pos-discount"
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                >
+                  Descuento
+                </label>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <input
+                    id="pos-discount"
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={discountPercent}
+                    onChange={(e) => {
+                      setDiscountPercent(Number(e.target.value));
+                    }}
+                    style={{
+                      width: '3.5rem',
+                      padding: '0.125rem 0.25rem',
+                      border: '1px solid var(--color-border)',
+                      borderRadius: '0.25rem',
+                      fontSize: '0.75rem',
+                    }}
+                    aria-label="Discount %"
+                  />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--color-muted-foreground)' }}>
+                    %
+                  </span>
+                  <span>−{formatCurrency(saleTotals.discountAmount, currency, 'es-ES')}</span>
+                </span>
+              </div>
+              <div className={styles['totalRow']} style={{ alignItems: 'center' }}>
+                <label
+                  htmlFor="pos-tax"
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
+                >
+                  IVA
+                </label>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                  <input
+                    id="pos-tax"
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={taxPercent}
+                    onChange={(e) => {
+                      setTaxPercent(Number(e.target.value));
+                    }}
+                    style={{
+                      width: '3.5rem',
+                      padding: '0.125rem 0.25rem',
+                      border: '1px solid var(--color-border)',
+                      borderRadius: '0.25rem',
+                      fontSize: '0.75rem',
+                    }}
+                    aria-label="Tax %"
+                  />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--color-muted-foreground)' }}>
+                    %
+                  </span>
+                  <span>+{formatCurrency(saleTotals.taxAmount, currency, 'es-ES')}</span>
+                </span>
               </div>
               <div className={styles['totalRowFinal']}>
                 <span>Total</span>
-                <span>{formatCurrency(total, currency, 'es-ES')}</span>
+                <span>{formatCurrency(saleTotals.total, currency, 'es-ES')}</span>
               </div>
             </div>
 

@@ -23,6 +23,7 @@ import {
 import { SectionErrorBoundary } from '@app/providers';
 import { ProductCreateDialog } from '@features/products/components/ProductCreateDialog';
 import { ProductEditDialog } from '@features/products/components/ProductEditDialog';
+import { ProductCsvImportDialog } from '@features/products/components/ProductCsvImportDialog';
 import type { Product } from '@entities/product';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
@@ -35,6 +36,7 @@ export function ProductsPage(): React.ReactElement {
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [importOpen, setImportOpen] = React.useState(false);
   const [editProduct, setEditProduct] = React.useState<Product | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
 
@@ -67,14 +69,25 @@ export function ProductsPage(): React.ReactElement {
           <p className={styles['subtitle']}>{t('products.subtitle')}</p>
         </div>
         <PermissionGuard permission="create:product">
-          <Button
-            size="sm"
-            onClick={() => {
-              setCreateOpen(true);
-            }}
-          >
-            {`+ ${t('inventory.addProduct')}`}
-          </Button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setImportOpen(true);
+              }}
+            >
+              Import CSV
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                setCreateOpen(true);
+              }}
+            >
+              {`+ ${t('inventory.addProduct')}`}
+            </Button>
+          </div>
         </PermissionGuard>
       </header>
 
@@ -190,6 +203,7 @@ export function ProductsPage(): React.ReactElement {
       </section>
 
       <ProductCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <ProductCsvImportDialog open={importOpen} onOpenChange={setImportOpen} />
       <ProductEditDialog
         product={editProduct}
         open={editProduct !== null}

@@ -20,9 +20,26 @@ export const analyticsHandlers = [
     return HttpResponse.json<DashboardKpi>(analytics.dashboard as DashboardKpi);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/sales`, async () => {
+  http.get(`${API_BASE_URL}/analytics/sales`, async ({ request }) => {
     await delay(600);
-    return HttpResponse.json<SalesPeriod[]>(analytics.salesPeriod as SalesPeriod[]);
+    const url = new URL(request.url);
+    const from = url.searchParams.get('from');
+    const to = url.searchParams.get('to');
+    const period = url.searchParams.get('period');
+    let data = analytics.salesPeriod as SalesPeriod[];
+    if (from || to || period) {
+      const now = new Date();
+      let cutoff: Date | null = null;
+      if (period === '7d') cutoff = new Date(now.getTime() - 7 * 86400_000);
+      else if (period === '30d') cutoff = new Date(now.getTime() - 30 * 86400_000);
+      if (from && to) {
+        data = data.filter((p) => p.period >= from && p.period <= to);
+      } else if (cutoff) {
+        const cutoffStr = cutoff.toISOString().slice(0, 10);
+        data = data.filter((p) => !p.period || p.period >= cutoffStr);
+      }
+    }
+    return HttpResponse.json<SalesPeriod[]>(data);
   }),
 
   http.get(`${API_BASE_URL}/analytics/top-products`, async () => {

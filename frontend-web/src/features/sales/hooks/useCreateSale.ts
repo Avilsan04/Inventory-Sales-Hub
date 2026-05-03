@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 import { salesApi } from '../api/salesApi';
 import { saleKeys } from './useSales';
+import { calculateSaleTotals } from '@shared/lib/saleCalculations';
 import type { Sale, CreateSaleDTO } from '@entities/sale';
 
 export function useCreateSale(): UseMutationResult<
@@ -19,16 +20,27 @@ export function useCreateSale(): UseMutationResult<
 
       const previousSales = queryClient.getQueryData<Sale[]>(saleKeys.lists()) ?? [];
 
-      const optimisticTotal = dto.items.reduce(
-        (sum, item) => sum + item.quantity * item.unitPrice,
-        0
-      );
+      const {
+        subtotal,
+        discountAmount,
+        taxAmount,
+        total: optimisticTotal,
+      } = calculateSaleTotals({
+        items: dto.items,
+        discountPercent: dto.discountPercent,
+        taxPercent: dto.taxPercent,
+      });
 
       const optimisticSale: Sale = {
         id: crypto.randomUUID(),
         customerId: dto.customerId,
         employeeId: undefined,
         status: 'pending',
+        subtotal,
+        discountPercent: dto.discountPercent,
+        discountAmount,
+        taxPercent: dto.taxPercent,
+        taxAmount,
         total: optimisticTotal,
         currency: dto.currency,
         items: dto.items.map((item) => ({

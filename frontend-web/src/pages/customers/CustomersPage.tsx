@@ -2,7 +2,9 @@ import * as React from 'react';
 import { PencilIcon, TrashIcon, UsersIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCustomers, useDeleteCustomer } from '@features/customers';
+import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
+import { exportToCsv } from '@shared/lib/exportCsv';
 import { toast } from '@shared/hooks/useToast';
 import { useDebounce } from '@shared/hooks';
 import { Skeleton, Button, Input, Avatar, AvatarFallback } from '@shared/ui/primitives';
@@ -60,6 +62,22 @@ export function CustomersPage(): React.ReactElement {
     return map;
   }, [topCustomers]);
 
+  const handleExport = (): void => {
+    exportToCsv(
+      (data ?? []).map((c) => {
+        const meta = topMap.get(c.email);
+        return {
+          name: c.name,
+          email: c.email,
+          phone: c.phone ?? '',
+          orders: meta?.totalOrders ?? 0,
+          spent: meta?.totalSpent ?? 0,
+        };
+      }),
+      'customers'
+    );
+  };
+
   const filtered = React.useMemo(() => {
     if (!data) return [];
     if (!debouncedSearch) return data;
@@ -101,12 +119,19 @@ export function CustomersPage(): React.ReactElement {
           <h1 className={styles['title']}>{t('customers.title')}</h1>
           <p className={styles['subtitle']}>{t('customers.subtitle')}</p>
         </div>
-        <Button
-          size="sm"
-          onClick={() => {
-            setCreateOpen(true);
-          }}
-        >{`+ ${t('customers.addCustomer')}`}</Button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <PermissionGuard permission="export:csv">
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              {t('common.export')}
+            </Button>
+          </PermissionGuard>
+          <Button
+            size="sm"
+            onClick={() => {
+              setCreateOpen(true);
+            }}
+          >{`+ ${t('customers.addCustomer')}`}</Button>
+        </div>
       </header>
 
       <SectionErrorBoundary label="Customers">

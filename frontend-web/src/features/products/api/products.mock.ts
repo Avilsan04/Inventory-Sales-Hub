@@ -49,6 +49,8 @@ export const productHandlers = [
       price: body.price ?? 0,
       currency: body.currency ?? 'EUR',
       categoryId: body.categoryId,
+      parentId: body.parentId,
+      uom: body.uom ?? 'unit',
       isActive: true,
       createdAt: now,
       updatedAt: now,

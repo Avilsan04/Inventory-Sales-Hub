@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useCreateProduct, useCategories } from '@features/products';
+import { useCreateProduct, useCategories, useProducts } from '@features/products';
 import { toCents } from '@shared/lib/formatCurrency';
+import { UOM_OPTIONS } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
 import {
   Dialog,
@@ -28,6 +29,8 @@ const schema = z.object({
   price: z.number().nonnegative('Must be ≥ 0'),
   currency: z.string().length(3, 'Must be 3 characters'),
   categoryId: z.string().optional(),
+  uom: z.enum(['unit', 'kg', 'litre', 'box', 'pack']),
+  parentId: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -40,26 +43,36 @@ interface Props {
 export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
   const { mutate, isPending } = useCreateProduct();
   const { data: categories } = useCategories();
+  const { data: products } = useProducts();
+  const [isVariant, setIsVariant] = React.useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     control,
+    setValue,
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
-    defaultValues: { currency: 'USD', price: 0 },
+    defaultValues: { currency: 'USD', price: 0, uom: 'unit' },
   });
 
   const onClose = (): void => {
     reset();
+    setIsVariant(false);
     onOpenChange(false);
   };
 
   const onSubmit = (data: FormValues): void => {
     mutate(
-      { ...data, price: toCents(data.price), categoryId: data.categoryId ?? undefined },
+      {
+        ...data,
+        price: toCents(data.price),
+        categoryId: data.categoryId ?? undefined,
+        parentId: isVariant ? (data.parentId ?? undefined) : undefined,
+      },
       {
         onSuccess: () => {
           toast({ title: 'Product created' });
@@ -71,6 +84,8 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
       }
     );
   };
+
+  const parentProducts = (products ?? []).filter((p) => !p.parentId);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -84,6 +99,43 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
           }}
         >
           <div className={styles['body']}>
+            <label
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
+            >
+              <input
+                type="checkbox"
+                checked={isVariant}
+                onChange={(e) => {
+                  setIsVariant(e.target.checked);
+                  if (!e.target.checked) setValue('parentId', '');
+                }}
+              />
+              Es variante de otro producto
+            </label>
+
+            {isVariant && (
+              <FormField label="Producto padre" error={errors.parentId?.message}>
+                <Controller
+                  name="parentId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar producto padre" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {parentProducts.map((p) => (
+                          <SelectItem key={p.id} value={p.id}>
+                            {p.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </FormField>
+            )}
+
             <FormField label="Name" required error={errors.name?.message}>
               <Input {...register('name')} placeholder="Product name" />
             </FormField>
@@ -103,26 +155,48 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
-            <FormField label="Category" error={errors.categoryId?.message}>
-              <Controller
-                name="categoryId"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value ?? ''} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories?.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </FormField>
+            <div className={styles['gridPriceShort']}>
+              <FormField label="UOM" error={errors.uom?.message}>
+                <Controller
+                  name="uom"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {UOM_OPTIONS.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </FormField>
+              <FormField label="Category" error={errors.categoryId?.message}>
+                <Controller
+                  name="categoryId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories?.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </FormField>
+            </div>
             <FormField label="Description" error={errors.description?.message}>
               <Textarea {...register('description')} placeholder="Optional" rows={3} />
             </FormField>

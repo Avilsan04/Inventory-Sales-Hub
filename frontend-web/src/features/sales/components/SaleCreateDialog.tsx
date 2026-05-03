@@ -26,6 +26,7 @@ import { Button, Input, Textarea, Label } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { MOCK_BANK_IBAN, type PaymentMethod } from '../models/checkout.types';
 import { formatCurrency, toCents, fromCents } from '@shared/lib/formatCurrency';
+import { calculateSaleTotals } from '@shared/lib/saleCalculations';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 
 // ── Validation helpers ───────────────────────────────────────────────────────
@@ -67,6 +68,8 @@ const checkoutSchema = z
     customerId: z.string().optional(),
     currency: z.string().length(3, 'Must be 3 characters'),
     items: z.array(itemSchema).min(1, 'Add at least one item'),
+    discountPercent: z.number().min(0).max(100),
+    taxPercent: z.number().min(0).max(100),
     address: z.string().min(5, 'Minimum 5 characters'),
     contactName: z.string().min(1, 'Required'),
     contactPhone: z.string().min(6, 'Minimum 6 characters'),
@@ -197,6 +200,8 @@ export function SaleCreateDialog({
     defaultValues: {
       currency: 'EUR',
       items: [{ productId: '', quantity: 1, unitPrice: 0 }],
+      discountPercent: 0,
+      taxPercent: 0,
       paymentMethod: 'credit_card',
     },
   });
@@ -205,10 +210,20 @@ export function SaleCreateDialog({
 
   const watchedItems = watch('items');
   const watchedMethod = watch('paymentMethod');
+  const watchedDiscount = watch('discountPercent');
+  const watchedTax = watch('taxPercent');
 
-  const runningTotal = React.useMemo(
-    () => watchedItems.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0),
-    [watchedItems]
+  const saleTotals = React.useMemo(
+    () =>
+      calculateSaleTotals({
+        items: watchedItems.map((it) => ({
+          unitPrice: toCents(it.unitPrice),
+          quantity: it.quantity,
+        })),
+        discountPercent: watchedDiscount,
+        taxPercent: watchedTax,
+      }),
+    [watchedItems, watchedDiscount, watchedTax]
   );
 
   const onClose = (): void => {
@@ -233,6 +248,8 @@ export function SaleCreateDialog({
           unitPrice: toCents(item.unitPrice),
         })),
         currency: data.currency,
+        discountPercent: data.discountPercent,
+        taxPercent: data.taxPercent,
         shippingDetails: {
           address: data.address,
           contactName: data.contactName,
@@ -394,9 +411,30 @@ export function SaleCreateDialog({
         </Button>
       </div>
 
+      <div className={styles['grid2']} style={{ marginTop: '0.75rem' }}>
+        <FormField label="Descuento (%)">
+          <Input
+            {...register('discountPercent', { valueAsNumber: true })}
+            type="number"
+            min="0"
+            max="100"
+            step="1"
+          />
+        </FormField>
+        <FormField label="IVA (%)">
+          <Input
+            {...register('taxPercent', { valueAsNumber: true })}
+            type="number"
+            min="0"
+            max="100"
+            step="1"
+          />
+        </FormField>
+      </div>
+
       <div className={styles['runningTotal']}>
         <span>{t('sales.checkout.runningTotal')}</span>
-        <strong>{formatCurrency(toCents(runningTotal), watch('currency'), 'es-ES')}</strong>
+        <strong>{formatCurrency(saleTotals.total, watch('currency'), 'es-ES')}</strong>
       </div>
     </div>
   );
@@ -540,10 +578,26 @@ export function SaleCreateDialog({
           );
         })}
 
+      {saleTotals.discountAmount > 0 && (
+        <div className={styles['summaryRow']}>
+          <span className={styles['summaryLabel']}>Descuento ({formValues.discountPercent}%)</span>
+          <span className={styles['summaryValue']}>
+            −{formatCurrency(saleTotals.discountAmount, formValues.currency, 'es-ES')}
+          </span>
+        </div>
+      )}
+      {saleTotals.taxAmount > 0 && (
+        <div className={styles['summaryRow']}>
+          <span className={styles['summaryLabel']}>IVA ({formValues.taxPercent}%)</span>
+          <span className={styles['summaryValue']}>
+            +{formatCurrency(saleTotals.taxAmount, formValues.currency, 'es-ES')}
+          </span>
+        </div>
+      )}
       <div className={styles['summaryRow']}>
         <span className={styles['summaryLabel']}>{t('sales.checkout.runningTotal')}</span>
         <strong className={styles['summaryValue']}>
-          {runningTotal.toFixed(2)} {formValues.currency}
+          {formatCurrency(saleTotals.total, formValues.currency, 'es-ES')}
         </strong>
       </div>
 

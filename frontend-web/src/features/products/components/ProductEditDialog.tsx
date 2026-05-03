@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateProduct, useCategories } from '@features/products';
 import { toCents, fromCents } from '@shared/lib/formatCurrency';
+import { UOM_OPTIONS } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
 import {
   Dialog,
@@ -29,6 +30,7 @@ const schema = z.object({
   price: z.number().nonnegative('Must be ≥ 0'),
   currency: z.string().length(3, 'Must be 3 characters'),
   categoryId: z.string().optional(),
+  uom: z.enum(['unit', 'kg', 'litre', 'box', 'pack']),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -51,7 +53,7 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
-    defaultValues: { currency: 'USD', price: 0 },
+    defaultValues: { currency: 'USD', price: 0, uom: 'unit' as const },
   });
 
   React.useEffect(() => {
@@ -63,6 +65,7 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
         price: fromCents(product.price),
         currency: product.currency,
         categoryId: product.categoryId,
+        uom: product.uom,
       });
     }
   }, [open, product, reset]);
@@ -119,26 +122,48 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
-            <FormField label="Category" error={errors.categoryId?.message}>
-              <Controller
-                name="categoryId"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value ?? ''} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories?.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </FormField>
+            <div className={styles['gridPriceShort']}>
+              <FormField label="UOM" error={errors.uom?.message}>
+                <Controller
+                  name="uom"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {UOM_OPTIONS.map((o) => (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </FormField>
+              <FormField label="Category" error={errors.categoryId?.message}>
+                <Controller
+                  name="categoryId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories?.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </FormField>
+            </div>
             <FormField label="Description" error={errors.description?.message}>
               <Textarea {...register('description')} rows={3} />
             </FormField>

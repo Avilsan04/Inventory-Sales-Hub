@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { PencilIcon, ShoppingCartIcon } from 'lucide-react';
 import { exportToCsv } from '@shared/lib/exportCsv';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { formatCurrency, fromCents } from '@shared/lib/formatCurrency';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSales } from '@features/sales';
+import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
 import { useDebounce } from '@shared/hooks';
 import { Skeleton, Badge, Button, Input } from '@shared/ui/primitives';
@@ -16,6 +17,8 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  DateRangePicker,
+  type DateRange,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
 import { SaleCreateWidget } from '@widgets';
@@ -64,6 +67,8 @@ export function SalesPage(): React.ReactElement {
   const [search, setSearch] = React.useState('');
   const debouncedSearch = useDebounce(search);
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [dateFilter, setDateFilter] = React.useState<DateRange | null>(null);
+  const [showDateFilter, setShowDateFilter] = React.useState(false);
 
   const handleExport = (): void => {
     exportToCsv(
@@ -73,7 +78,7 @@ export function SalesPage(): React.ReactElement {
         date: formatDate(s.createdAt),
         status: s.status,
         items: s.items.length,
-        total: s.total,
+        total: fromCents(s.total),
         currency: s.currency,
       })),
       'sales'
@@ -92,12 +97,19 @@ export function SalesPage(): React.ReactElement {
 
   const filtered = React.useMemo(() => {
     if (!sales) return [];
-    if (!debouncedSearch) return sales;
-    const q = debouncedSearch.toLowerCase();
-    return sales.filter(
-      (s) => s.id.toLowerCase().includes(q) || (s.customerId ?? '').toLowerCase().includes(q)
-    );
-  }, [sales, debouncedSearch]);
+    return sales.filter((s) => {
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        if (!s.id.toLowerCase().includes(q) && !(s.customerId ?? '').toLowerCase().includes(q))
+          return false;
+      }
+      if (dateFilter) {
+        const d = s.createdAt.slice(0, 10);
+        if (d < dateFilter.from || d > dateFilter.to) return false;
+      }
+      return true;
+    });
+  }, [sales, debouncedSearch, dateFilter]);
 
   if (isError) {
     return (
@@ -116,8 +128,20 @@ export function SalesPage(): React.ReactElement {
           <p className={styles['subtitle']}>{t('sales.orderHistory')}</p>
         </div>
         <div className={styles['headerActions']}>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            {t('common.export')}
+          <PermissionGuard permission="export:csv">
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              {t('common.export')}
+            </Button>
+          </PermissionGuard>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setShowDateFilter((v) => !v);
+              if (showDateFilter) setDateFilter(null);
+            }}
+          >
+            {t('common.filter')}
           </Button>
           <Button
             size="sm"
@@ -127,6 +151,15 @@ export function SalesPage(): React.ReactElement {
           >{`+ ${t('sales.newSale')}`}</Button>
         </div>
       </header>
+
+      {showDateFilter && (
+        <div style={{ padding: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
+            Date range:
+          </span>
+          <DateRangePicker value={dateFilter ?? { from: '', to: '' }} onChange={setDateFilter} />
+        </div>
+      )}
 
       <section className={pageStyles['content']}>
         <SectionErrorBoundary label="Sales">
@@ -143,9 +176,6 @@ export function SalesPage(): React.ReactElement {
                   aria-label={t('common.search')}
                 />
               </div>
-              <Button variant="outline" size="sm">
-                {t('common.filter')}
-              </Button>
             </div>
 
             <Table>

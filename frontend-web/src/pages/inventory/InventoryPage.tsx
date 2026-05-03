@@ -7,6 +7,7 @@ import { hasPermission } from '@shared/lib/permissions';
 import { toast } from '@shared/hooks/useToast';
 import { useDebounce } from '@shared/hooks';
 import { exportToCsv } from '@shared/lib/exportCsv';
+import { fromCents } from '@shared/lib/formatCurrency';
 import { Spinner, Button, Pagination, Input } from '@shared/ui/primitives';
 import { Card, ConfirmDialog, EmptyState } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
@@ -16,6 +17,8 @@ import { InventoryCreateDialog } from '@features/inventory/components/InventoryC
 import { InventoryEditDialog } from '@features/inventory/components/InventoryEditDialog';
 import { StockAdjustDialog } from '@features/inventory/components/StockAdjustDialog';
 import { MovementsHistoryPanel } from '@features/inventory/components/MovementsHistoryPanel';
+import { StockTransferDialog } from '@features/inventory/components/StockTransferDialog';
+import { useWarehouses } from '@features/inventory/hooks/useWarehouses';
 import { cn } from '@shared/lib/cn';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Inventory.module.scss';
@@ -37,8 +40,12 @@ export function InventoryPage(): React.ReactElement {
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editItem, setEditItem] = React.useState<InventoryItem | null>(null);
   const [adjustItem, setAdjustItem] = React.useState<InventoryItem | null>(null);
+  const [transferItem, setTransferItem] = React.useState<InventoryItem | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
   const [historyItem, setHistoryItem] = React.useState<InventoryItem | null>(null);
+  const [warehouseFilter, setWarehouseFilter] = React.useState<string | null>(null);
+
+  const { data: warehouses } = useWarehouses();
 
   const tabs: { id: StockTab; labelKey: string; count: number }[] = React.useMemo(() => {
     const all = data ?? [];
@@ -65,6 +72,7 @@ export function InventoryPage(): React.ReactElement {
     return (data ?? []).filter((item) => {
       if (tab === 'low' && item.status !== 'LOW_STOCK') return false;
       if (tab === 'out' && item.status !== 'OUT_OF_STOCK') return false;
+      if (warehouseFilter && item.warehouseId !== warehouseFilter) return false;
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
         if (!item.name.toLowerCase().includes(q) && !item.sku.toLowerCase().includes(q))
@@ -72,7 +80,7 @@ export function InventoryPage(): React.ReactElement {
       }
       return true;
     });
-  }, [data, tab, debouncedSearch]);
+  }, [data, tab, debouncedSearch, warehouseFilter]);
 
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -84,7 +92,7 @@ export function InventoryPage(): React.ReactElement {
         name: item.name,
         category: item.category ?? '',
         quantity: item.quantity,
-        price: item.price,
+        price: fromCents(item.price),
         currency: item.currency,
         status: item.status,
         reorderThreshold: item.reorderThreshold ?? '',
@@ -131,9 +139,48 @@ export function InventoryPage(): React.ReactElement {
           <p className={styles['subtitle']}>{t('inventory.subtitle')}</p>
         </div>
         <div className={styles['headerActions']}>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            {t('inventory.exportCsv')}
-          </Button>
+          {warehouses && warehouses.length > 0 && (
+            <select
+              value={warehouseFilter ?? ''}
+              onChange={(e) => {
+                setWarehouseFilter(e.target.value !== '' ? e.target.value : null);
+              }}
+              style={{
+                padding: '0.375rem 0.5rem',
+                border: '1px solid var(--color-border)',
+                borderRadius: '0.375rem',
+                fontSize: '0.875rem',
+                background: 'var(--color-background)',
+              }}
+              aria-label="Filtrar por almacén"
+            >
+              <option value="">Todos los almacenes</option>
+              {warehouses
+                .filter((w) => w.isActive)
+                .map((w) => (
+                  <option key={w.id} value={w.id}>
+                    {w.name}
+                  </option>
+                ))}
+            </select>
+          )}
+          <PermissionGuard permission="export:csv">
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              {t('inventory.exportCsv')}
+            </Button>
+          </PermissionGuard>
+          <PermissionGuard permission="transfer:stock">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setTransferItem(paginated[0] ?? null);
+              }}
+              disabled={paginated.length === 0}
+            >
+              Transferir stock
+            </Button>
+          </PermissionGuard>
           <PermissionGuard permission="create:inventory">
             <Button
               size="sm"
@@ -272,6 +319,13 @@ export function InventoryPage(): React.ReactElement {
         open={adjustItem !== null}
         onOpenChange={(open) => {
           if (!open) setAdjustItem(null);
+        }}
+      />
+      <StockTransferDialog
+        item={transferItem}
+        open={transferItem !== null}
+        onOpenChange={(open) => {
+          if (!open) setTransferItem(null);
         }}
       />
       <ConfirmDialog

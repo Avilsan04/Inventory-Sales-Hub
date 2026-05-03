@@ -8,7 +8,9 @@ import {
   useLowStockAlerts,
   useSalesAnalytics,
 } from '@features/analytics';
+import { PermissionGuard } from '@features/auth';
 import { useSaleSummary } from '@features/sales';
+import { exportToCsv } from '@shared/lib/exportCsv';
 import { Spinner, Skeleton, Button } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import {
@@ -26,19 +28,26 @@ import {
   RevenueAreaChart,
   SalesDonutChart,
   TopProductsBarChart,
+  DateRangePicker,
+  type DateRange,
   type StatusSlice,
 } from '@shared/ui/composed';
+import type { SalesAnalyticsParams } from '@entities/analytics';
 import styles from '@shared/styles/themes/pages/Analytics.module.scss';
 
 const DATE_RANGES = [
-  { id: 'today', label: 'Hoy' },
   { id: '7d', label: '7 días' },
   { id: '30d', label: 'Mensual' },
+  { id: '90d', label: '90 días' },
   { id: 'custom', label: 'Personalizado' },
 ] as const;
 
 type DateRangeId = (typeof DATE_RANGES)[number]['id'];
 type KpiIconKey = 'revenue' | 'orders' | 'customers' | 'products';
+
+function todayStr(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function renderKpiIcon(key: KpiIconKey): React.ReactElement {
   switch (key) {
@@ -56,12 +65,45 @@ function renderKpiIcon(key: KpiIconKey): React.ReactElement {
 export function AnalyticsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const [dateRange, setDateRange] = React.useState<DateRangeId>('7d');
+  const [customRange, setCustomRange] = React.useState<DateRange>({
+    from: todayStr(),
+    to: todayStr(),
+  });
+
+  const salesParams = React.useMemo((): SalesAnalyticsParams => {
+    if (dateRange === 'custom') return { from: customRange.from, to: customRange.to };
+    return { period: dateRange as SalesAnalyticsParams['period'] };
+  }, [dateRange, customRange]);
+
   const { data: kpi, isLoading: kpiLoading, isError: kpiError } = useDashboardKpi();
   const { data: topProds, isLoading: prodsLoading, isError: prodsError } = useTopProducts();
   const { data: topCusts, isLoading: custsLoading, isError: custsError } = useTopCustomers();
   const { data: alerts, isLoading: alertsLoading, isError: alertsError } = useLowStockAlerts();
-  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics();
+  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(salesParams);
   const { data: saleSummary, isLoading: summaryLoading } = useSaleSummary();
+
+  const handleExportProducts = (): void => {
+    exportToCsv(
+      (topProds ?? []).map((p) => ({
+        product: p.productName,
+        sku: p.sku,
+        sold: p.totalSold,
+        revenue: p.revenue,
+      })),
+      'top-products'
+    );
+  };
+
+  const handleExportCustomers = (): void => {
+    exportToCsv(
+      (topCusts ?? []).map((c) => ({
+        customer: c.customerName,
+        orders: c.totalOrders,
+        spent: c.totalSpent,
+      })),
+      'top-customers'
+    );
+  };
 
   const anyLoading = kpiLoading || prodsLoading || custsLoading || alertsLoading;
   const anyError = kpiError || prodsError || custsError || alertsError;
@@ -134,35 +176,39 @@ export function AnalyticsPage(): React.ReactElement {
           <p className={styles['subtitle']}>{t('analytics.subtitle')}</p>
         </div>
         <div className={styles['headerActions']}>
-          <Button variant="outline" size="sm" disabled>
-            Filtros
-          </Button>
-          <Button variant="outline" size="sm" disabled>
-            Exportar PDF
-          </Button>
-          <Button variant="outline" size="sm" disabled>
-            Exportar Excel
-          </Button>
+          <PermissionGuard permission="export:csv">
+            <Button variant="outline" size="sm" onClick={handleExportProducts}>
+              {t('common.export')} products
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleExportCustomers}>
+              {t('common.export')} customers
+            </Button>
+          </PermissionGuard>
         </div>
       </header>
 
-      <div className={styles['dateRangePills']} role="group" aria-label="Período">
-        {DATE_RANGES.map(({ id, label }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => {
-              setDateRange(id);
-            }}
-            className={cn(
-              styles['dateRangePill'],
-              dateRange === id && styles['dateRangePillActive']
-            )}
-            aria-pressed={dateRange === id}
-          >
-            {label}
-          </button>
-        ))}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className={styles['dateRangePills']} role="group" aria-label="Período">
+          {DATE_RANGES.map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => {
+                setDateRange(id);
+              }}
+              className={cn(
+                styles['dateRangePill'],
+                dateRange === id && styles['dateRangePillActive']
+              )}
+              aria-pressed={dateRange === id}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {dateRange === 'custom' && (
+          <DateRangePicker value={customRange} onChange={setCustomRange} />
+        )}
       </div>
 
       {/* KPI grid */}
