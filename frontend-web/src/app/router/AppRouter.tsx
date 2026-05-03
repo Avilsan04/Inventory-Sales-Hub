@@ -102,13 +102,10 @@ const MyOrdersPage = React.lazy(() =>
 
 function RoleLayout(): React.ReactElement {
   const role = useEffectiveRole();
-  if (role === 'admin' || role === 'manager' || role === 'staff' || role === 'test') {
-    return <AdminLayout />;
-  }
-  if (role === 'company') {
-    return <CompanyLayout />;
-  }
-  return <ClientLayout />;
+  if (role === 'COMPANY' || role === 'company') return <CompanyLayout />;
+  if (role === 'CUSTOMER' || role === 'customer') return <ClientLayout />;
+  // ADMIN, MANAGER, STAFF + legacy roles → admin shell
+  return <AdminLayout />;
 }
 
 /**
@@ -172,29 +169,121 @@ export function AppRouter(): React.ReactElement {
               <Route path={APP_ROUTES.CATALOG} element={<CatalogPage />} />
               <Route path={APP_ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
 
-              {/* Admin/staff/test-only routes */}
-              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
+              {/* ADMIN + MANAGER + STAFF: inventory */}
+              <Route
+                element={
+                  <RoleRoute
+                    allowedRoles={[
+                      'admin',
+                      'manager',
+                      'staff',
+                      'test',
+                      'ADMIN',
+                      'MANAGER',
+                      'STAFF',
+                    ]}
+                  />
+                }
+              >
                 <Route path={APP_ROUTES.INVENTORY} element={<InventoryPage />} />
+              </Route>
+
+              {/* COMPANY + ADMIN + MANAGER: employee management */}
+              <Route
+                element={
+                  <RoleRoute
+                    allowedRoles={[
+                      'admin',
+                      'manager',
+                      'test',
+                      'ADMIN',
+                      'MANAGER',
+                      'COMPANY',
+                      'company',
+                    ]}
+                  />
+                }
+              >
                 <Route path={APP_ROUTES.EMPLOYEES} element={<EmployeesPage />} />
+              </Route>
+
+              {/* ADMIN + MANAGER: supplier management */}
+              <Route
+                element={
+                  <RoleRoute allowedRoles={['admin', 'manager', 'test', 'ADMIN', 'MANAGER']} />
+                }
+              >
                 <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
               </Route>
 
-              {/* Admin/staff/company routes */}
+              {/* ADMIN + MANAGER + STAFF: customer management */}
               <Route
                 element={
-                  <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test', 'company']} />
+                  <RoleRoute
+                    allowedRoles={[
+                      'admin',
+                      'manager',
+                      'staff',
+                      'test',
+                      'ADMIN',
+                      'MANAGER',
+                      'STAFF',
+                    ]}
+                  />
                 }
               >
                 <Route path={APP_ROUTES.CUSTOMERS} element={<CustomersPage />} />
-                <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+              </Route>
+
+              {/* ADMIN + MANAGER + STAFF + CUSTOMER: POS */}
+              <Route
+                element={
+                  <RoleRoute
+                    allowedRoles={[
+                      'admin',
+                      'manager',
+                      'staff',
+                      'test',
+                      'ADMIN',
+                      'MANAGER',
+                      'STAFF',
+                      'CUSTOMER',
+                      'customer',
+                    ]}
+                  />
+                }
+              >
                 <Route path={APP_ROUTES.POS} element={<PosPage />} />
+              </Route>
+
+              {/* COMPANY + ADMIN + MANAGER: analytics */}
+              <Route
+                element={
+                  <RoleRoute
+                    allowedRoles={[
+                      'admin',
+                      'manager',
+                      'test',
+                      'company',
+                      'ADMIN',
+                      'MANAGER',
+                      'COMPANY',
+                    ]}
+                  />
+                }
+              >
+                <Route path={APP_ROUTES.ANALYTICS} element={<AnalyticsPage />} />
               </Route>
 
               {/* All authenticated users */}
               <Route path={APP_ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
 
-              {/* Super admin routes */}
-              <Route element={<RoleRoute allowedRoles={['admin']} />}>
+              {/* COMPANY + ADMIN: tenant/permission management */}
+              <Route
+                element={
+                  <RoleRoute allowedRoles={['admin', 'test', 'ADMIN', 'COMPANY', 'company']} />
+                }
+              >
                 <Route path={APP_ROUTES.ADMIN_TENANTS} element={<TenantsPage />} />
               </Route>
             </Route>

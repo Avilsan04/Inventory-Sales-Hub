@@ -1,3 +1,5 @@
+export type UserRole = 'COMPANY' | 'ADMIN' | 'MANAGER' | 'STAFF' | 'CUSTOMER';
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -35,7 +37,7 @@ export interface UserProfile {
   id: number;
   username: string;
   email: string;
-  role: 'admin' | 'manager' | 'staff' | 'customer' | 'test' | 'company';
+  role: 'admin' | 'manager' | 'staff' | 'customer' | 'test' | 'company' | UserRole;
   createdAt: string;
 }
 

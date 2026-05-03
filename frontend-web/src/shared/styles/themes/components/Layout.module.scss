@@ -10,6 +10,13 @@
   }
 }
 
+// Single-column layout (no sidebar) — used by ClientLayout (CUSTOMER role)
+.layoutFull {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: $height-screen;
+}
+
 // ── Right column: topbar + scrollable content ───────────────────────────
 .mainArea {
   display: flex;

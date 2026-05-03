@@ -6,6 +6,7 @@ import type {
   RegisterRequest,
   UserProfile,
   UserResponse,
+  UserRole,
 } from '../models';
 import mockData from '@app/mock/mock-data.json';
 
@@ -61,7 +62,10 @@ export const authHandlers = [
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '') ?? '';
     const resolvedUser: MockUserType = TOKEN_USER_MAP[token] ?? _activeUser;
-    return HttpResponse.json<UserProfile>(auth.profiles[resolvedUser] as UserProfile);
+    const baseProfile = auth.profiles[resolvedUser] as UserProfile;
+    const storedRole = localStorage.getItem('TEST_MODE_ROLE') as UserRole | null;
+    const profile: UserProfile = storedRole ? { ...baseProfile, role: storedRole } : baseProfile;
+    return HttpResponse.json<UserProfile>(profile);
   }),
 
   http.post(`${API_BASE_URL}/auth/refresh`, async () => {

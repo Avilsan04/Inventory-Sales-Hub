@@ -1,78 +1,29 @@
 import * as React from 'react';
 import { BellIcon, HelpCircleIcon, LayoutGridIcon, LogOutIcon, SearchIcon } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe, useLogout } from '@features/auth';
-import { useViewMode } from '@features/auth/context/ViewModeContext';
-import type { ViewRole } from '@features/auth/context/ViewModeContext';
+import { useLogout } from '@features/auth';
 import { useNotifications } from '@features/notifications';
 import { Input } from '@shared/ui/primitives';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@shared/ui/composed';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 
-interface RoleConfig {
-  readonly role: ViewRole;
-  readonly label: string;
-  readonly icon: string;
-  readonly allowedRoutes?: Set<string>;
-}
-
-const ROLE_CONFIGS: ReadonlyArray<RoleConfig> = [
-  { role: 'admin', label: 'Admin', icon: '🛡️' },
-  {
-    role: 'customer',
-    label: 'Cliente',
-    icon: '🛍️',
-    allowedRoutes: new Set([
-      APP_ROUTES.DASHBOARD,
-      APP_ROUTES.SALES,
-      APP_ROUTES.PROFILE,
-      APP_ROUTES.SETTINGS,
-    ]),
-  },
-  {
-    role: 'company',
-    label: 'Empresa',
-    icon: '🏢',
-    allowedRoutes: new Set([
-      APP_ROUTES.DASHBOARD,
-      APP_ROUTES.PRODUCTS,
-      APP_ROUTES.SALES,
-      APP_ROUTES.PROFILE,
-      APP_ROUTES.SETTINGS,
-    ]),
-  },
-];
+const DEV_ROLES = ['COMPANY', 'ADMIN', 'MANAGER', 'STAFF', 'CUSTOMER'] as const;
 
 export function TopBar(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const logout = useLogout();
-  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { data: user } = useAuthMe();
-  const { viewAs, setViewAs } = useViewMode();
 
   const { data: notifications } = useNotifications();
   const unreadCount = notifications?.filter((n) => !n.isRead).length ?? 0;
-  const isTest = user?.role === 'test';
-
-  const handleSwitch = React.useCallback(
-    (role: ViewRole): void => {
-      const config = ROLE_CONFIGS.find((c) => c.role === role);
-      setViewAs(role);
-      if (config?.allowedRoutes !== undefined && !config.allowedRoutes.has(pathname)) {
-        void navigate(APP_ROUTES.DASHBOARD, { replace: true });
-      }
-    },
-    [setViewAs, navigate, pathname]
-  );
 
   return (
     <header className={styles['topbar']}>
       <div className={styles['topbarSearch']}>
-        {isTest && <span className={styles['testBanner']}>⚡ Test Mode · Viendo como:</span>}
         <div className={styles['searchWrapper']}>
           <SearchIcon className={styles['searchIcon']} aria-hidden="true" />
           <Input
@@ -85,23 +36,25 @@ export function TopBar(): React.ReactElement {
       </div>
 
       <div className={styles['topbarActions']}>
-        {isTest && (
-          <div className={styles['rolePills']}>
-            {ROLE_CONFIGS.map(({ role, label, icon }) => (
-              <button
-                key={role}
-                type="button"
-                className={cn(styles['rolePill'], viewAs === role && styles['rolePillActive'])}
-                onClick={() => {
-                  handleSwitch(role);
-                }}
-                disabled={viewAs === role}
-                aria-pressed={viewAs === role}
-              >
-                {icon} {label}
-              </button>
-            ))}
-          </div>
+        {import.meta.env.DEV && (
+          <Select
+            value={localStorage.getItem('TEST_MODE_ROLE') ?? 'COMPANY'}
+            onValueChange={(v: string) => {
+              localStorage.setItem('TEST_MODE_ROLE', v);
+              window.location.reload();
+            }}
+          >
+            <SelectTrigger size="sm" aria-label="Dev role switcher">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {DEV_ROLES.map((r) => (
+                <SelectItem key={r} value={r}>
+                  {r}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         )}
 
         <button type="button" className={styles['iconBtn']} aria-label="Ayuda">
