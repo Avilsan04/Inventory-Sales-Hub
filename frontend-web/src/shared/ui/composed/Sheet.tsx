@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-redundant-type-constituents */
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
@@ -61,17 +60,11 @@ function SheetContent({
   );
 }
 
-function SheetHeader({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function SheetHeader({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.sheetHeader, className)} {...props} />;
 }
 
-function SheetFooter({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function SheetFooter({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.sheetFooter, className)} {...props} />;
 }
 
@@ -79,25 +72,15 @@ function SheetTitle({
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Title>): React.ReactElement {
-  return (
-    <DialogPrimitive.Title
-      className={cn(styles.sheetTitle, className)}
-      {...props}
-    />
-  );
+  return <DialogPrimitive.Title className={cn(styles.sheetTitle, className)} {...props} />;
 }
 
 function SheetDescription({
   className,
   ...props
-}: React.ComponentProps<
-  typeof DialogPrimitive.Description
->): React.ReactElement {
+}: React.ComponentProps<typeof DialogPrimitive.Description>): React.ReactElement {
   return (
-    <DialogPrimitive.Description
-      className={cn(styles.sheetDescription, className)}
-      {...props}
-    />
+    <DialogPrimitive.Description className={cn(styles.sheetDescription, className)} {...props} />
   );
 }
 
