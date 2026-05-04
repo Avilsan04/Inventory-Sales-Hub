@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PrinterIcon } from 'lucide-react';
 import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
 import {
   Dialog,
@@ -27,6 +28,7 @@ export function SaleReceiptDialog({
   open,
   onOpenChange,
 }: SaleReceiptDialogProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const subtotal = (sale?.items ?? []).reduce((s, i) => s + i.subtotal, 0);
 
   const handlePrint = (): void => {
@@ -37,13 +39,13 @@ export function SaleReceiptDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={styles['dialogContent']}>
         <DialogHeader className={styles['noPrint']}>
-          <DialogTitle>Receipt</DialogTitle>
+          <DialogTitle>{t('sales.receipt')}</DialogTitle>
         </DialogHeader>
 
         {sale !== null && (
           <div className={styles['receipt']} id="pos-receipt">
             <div className={styles['receiptHeader']}>
-              <p className={styles['companyName']}>Inventory Sales Hub</p>
+              <p className={styles['companyName']}>{t('common.appName')}</p>
               <p className={styles['ticketId']}>#{orderId(sale.id)}</p>
               <p className={styles['date']}>
                 {new Date(sale.createdAt).toLocaleString('en-GB', {
@@ -61,10 +63,10 @@ export function SaleReceiptDialog({
             <table className={styles['itemsTable']}>
               <thead>
                 <tr>
-                  <th className={styles['colName']}>Item</th>
-                  <th className={styles['colQty']}>Qty</th>
-                  <th className={styles['colPrice']}>Price</th>
-                  <th className={styles['colSubtotal']}>Subtotal</th>
+                  <th className={styles['colName']}>{t('sales.receiptItem')}</th>
+                  <th className={styles['colQty']}>{t('sales.checkout.qty')}</th>
+                  <th className={styles['colPrice']}>{t('sales.checkout.price')}</th>
+                  <th className={styles['colSubtotal']}>{t('pos.subtotal')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -87,18 +89,18 @@ export function SaleReceiptDialog({
 
             <div className={styles['totals']}>
               <div className={styles['totalRow']}>
-                <span>Subtotal</span>
+                <span>{t('pos.subtotal')}</span>
                 <span>{formatCurrency(subtotal, sale.currency)}</span>
               </div>
               <div className={styles['totalRowFinal']}>
-                <span>Total</span>
+                <span>{t('pos.total')}</span>
                 <span>{formatCurrency(sale.total, sale.currency)}</span>
               </div>
             </div>
 
             <div className={styles['divider']} />
 
-            <p className={styles['thanks']}>Thank you for your purchase!</p>
+            <p className={styles['thanks']}>{t('sales.thankYou')}</p>
           </div>
         )}
 
@@ -109,11 +111,11 @@ export function SaleReceiptDialog({
               onOpenChange(false);
             }}
           >
-            Close
+            {t('common.close')}
           </Button>
           <Button onClick={handlePrint}>
             <PrinterIcon size={14} style={{ marginRight: '0.375rem' }} />
-            Print
+            {t('sales.print')}
           </Button>
         </DialogFooter>
       </DialogContent>

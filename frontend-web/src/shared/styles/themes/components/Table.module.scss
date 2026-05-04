@@ -47,11 +47,14 @@
   }
 }
 
+// Table header font-size: between xs and 2xs — not on standard type scale
+$_tableHead-font-size: 0.6875rem;
+
 .tableHead {
   padding: $spacing-2 $spacing-4;
   text-align: left;
   vertical-align: middle;
-  font-size: 11px;
+  font-size: $_tableHead-font-size;
   font-weight: $font-weight-semibold;
   text-transform: uppercase;
   letter-spacing: 0.06em;

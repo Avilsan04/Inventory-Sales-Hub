@@ -78,7 +78,7 @@ export function EmployeesPage(): React.ReactElement {
               setCreateOpen(true);
             }}
           >
-            + Add Employee
+            {t('employees.addEmployee')}
           </Button>
         </PermissionGuard>
       </header>
@@ -152,7 +152,7 @@ export function EmployeesPage(): React.ReactElement {
                           title={t('employees.emptyTitle')}
                           description={t('employees.emptyDescription')}
                           action={{
-                            label: '+ Add Employee',
+                            label: t('employees.addEmployee'),
                             onClick: (): void => {
                               setCreateOpen(true);
                             },
@@ -201,7 +201,7 @@ export function EmployeesPage(): React.ReactElement {
       <PermissionGuard permission="view:audit">
         <div style={{ marginTop: '1.5rem' }}>
           <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-            Audit Log
+            {t('common.auditLog')}
           </h3>
           <AuditLogPanel entityType="employee" />
         </div>

@@ -69,7 +69,7 @@ export function SuppliersPage(): React.ReactElement {
             setCreateOpen(true);
           }}
         >
-          + Add Supplier
+          {t('suppliers.addSupplier')}
         </Button>
       </header>
 
@@ -126,7 +126,7 @@ export function SuppliersPage(): React.ReactElement {
                           title={t('suppliers.emptyTitle')}
                           description={t('suppliers.emptyDescription')}
                           action={{
-                            label: '+ Add Supplier',
+                            label: t('suppliers.addSupplier'),
                             onClick: (): void => {
                               setCreateOpen(true);
                             },
@@ -186,8 +186,8 @@ export function SuppliersPage(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setDeleteId(null);
         }}
-        title="Delete supplier?"
-        description="This action cannot be undone."
+        title={t('suppliers.deleteSupplier')}
+        description={t('common.cannotUndo')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />

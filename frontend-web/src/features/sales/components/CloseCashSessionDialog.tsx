@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useCloseCashSession } from '@features/sales/hooks/useCloseCashSession';
 import { toast } from '@shared/hooks/useToast';
 import { formatCurrency, fromCents, toCents } from '@shared/lib/formatCurrency';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
 import {
   Dialog,
@@ -16,12 +17,10 @@ import {
 } from '@shared/ui/composed';
 import type { CashSession } from '@entities/cash-session';
 
-const formSchema = z.object({
-  closingBalance: z.number().min(0, 'Must be 0 or more'),
-  notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+  closingBalance: number;
+  notes?: string;
+};
 
 interface CloseCashSessionDialogProps {
   session: CashSession;
@@ -36,6 +35,17 @@ export function CloseCashSessionDialog({
   onOpenChange,
   onSuccess,
 }: CloseCashSessionDialogProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+
+  const formSchema = React.useMemo(
+    () =>
+      z.object({
+        closingBalance: z.number().min(0, 'Must be 0 or more'),
+        notes: z.string().optional(),
+      }),
+    []
+  );
+
   const { mutate: closeSession, isPending } = useCloseCashSession(session.id);
 
   const {
@@ -74,20 +84,23 @@ export function CloseCashSessionDialog({
     );
   };
 
+  const openedAt = new Date(session.openedAt).toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent style={{ maxWidth: '420px' }}>
         <DialogHeader>
-          <DialogTitle>Close Cash Session</DialogTitle>
+          <DialogTitle>{t('pos.closeCashSession')}</DialogTitle>
           <DialogDescription>
-            Opened at{' '}
-            {new Date(session.openedAt).toLocaleString('en-GB', {
-              day: '2-digit',
-              month: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
+            {t('pos.sessionOpenedAtDesc', {
+              date: openedAt,
+              amount: formatCurrency(session.openingBalance, 'EUR'),
             })}
-            . Opening balance: {formatCurrency(session.openingBalance, 'EUR')}.
           </DialogDescription>
         </DialogHeader>
 
@@ -98,7 +111,7 @@ export function CloseCashSessionDialog({
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
             <div>
-              <Label htmlFor="closingBalance">Closing balance (€)</Label>
+              <Label htmlFor="closingBalance">{t('pos.closingBalance')}</Label>
               <Input
                 id="closingBalance"
                 type="number"
@@ -135,7 +148,7 @@ export function CloseCashSessionDialog({
                   marginBottom: '0.25rem',
                 }}
               >
-                <span>Expected</span>
+                <span>{t('pos.expected')}</span>
                 <span style={{ fontFamily: 'monospace' }}>
                   {formatCurrency(toCents(expectedEuros), 'EUR')}
                 </span>
@@ -153,7 +166,7 @@ export function CloseCashSessionDialog({
                         : undefined,
                 }}
               >
-                <span>Difference</span>
+                <span>{t('pos.difference')}</span>
                 <span style={{ fontFamily: 'monospace' }}>
                   {difference >= 0 ? '+' : ''}
                   {formatCurrency(toCents(Math.abs(difference)), 'EUR')}
@@ -162,7 +175,7 @@ export function CloseCashSessionDialog({
             </div>
 
             <div>
-              <Label htmlFor="closeNotes">Notes (optional)</Label>
+              <Label htmlFor="closeNotes">{t('pos.notesOptional')}</Label>
               <Input id="closeNotes" style={{ marginTop: '0.375rem' }} {...register('notes')} />
             </div>
           </div>
@@ -175,10 +188,10 @@ export function CloseCashSessionDialog({
                 onOpenChange(false);
               }}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" variant="destructive" disabled={isPending}>
-              {isPending ? 'Closing…' : 'Close session'}
+              {isPending ? t('pos.closing') : t('pos.closeSession')}
             </Button>
           </DialogFooter>
         </form>

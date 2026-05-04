@@ -115,7 +115,7 @@ export function CustomersPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div className={styles['headerText']}>
-          <span className={styles['eyebrow']}>PEOPLE</span>
+          <span className={styles['eyebrow']}>{t('customers.eyebrow')}</span>
           <h1 className={styles['title']}>{t('customers.title')}</h1>
           <p className={styles['subtitle']}>{t('customers.subtitle')}</p>
         </div>
@@ -266,8 +266,8 @@ export function CustomersPage(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setDeleteId(null);
         }}
-        title="Delete customer?"
-        description="This action cannot be undone."
+        title={t('customers.deleteCustomer')}
+        description={t('common.cannotUndo')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateSaleStatus } from '@features/sales';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -34,6 +35,7 @@ interface Props {
 }
 
 export function SaleStatusDialog({ sale, open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateSaleStatus(sale?.id ?? '');
   const { handleSubmit, reset, control } = useForm<FormValues>({
     mode: 'onTouched',
@@ -69,7 +71,7 @@ export function SaleStatusDialog({ sale, open, onOpenChange }: Props): React.Rea
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Update Order Status</DialogTitle>
+          <DialogTitle>{t('sales.updateOrderStatus')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -77,7 +79,7 @@ export function SaleStatusDialog({ sale, open, onOpenChange }: Props): React.Rea
           }}
         >
           <div className={styles['fieldPadding']}>
-            <FormField label="Status">
+            <FormField label={t('common.status')}>
               <Controller
                 name="status"
                 control={control}
@@ -87,9 +89,9 @@ export function SaleStatusDialog({ sale, open, onOpenChange }: Props): React.Rea
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                      <SelectItem value="pending">{t('sales.statusOption.pending')}</SelectItem>
+                      <SelectItem value="completed">{t('sales.statusOption.completed')}</SelectItem>
+                      <SelectItem value="cancelled">{t('sales.statusOption.cancelled')}</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -98,10 +100,10 @@ export function SaleStatusDialog({ sale, open, onOpenChange }: Props): React.Rea
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Updating…' : 'Update'}
+              {isPending ? t('common.updating') : t('common.update')}
             </Button>
           </DialogFooter>
         </form>

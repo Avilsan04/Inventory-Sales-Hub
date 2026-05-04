@@ -2,6 +2,7 @@ import * as React from 'react';
 import { parseCsvFile, type ParsedRow } from '@shared/lib/csvParser';
 import { toCents } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
 import {
   Dialog,
@@ -59,6 +60,7 @@ export function ProductCsvImportDialog({
   open,
   onOpenChange,
 }: ProductCsvImportDialogProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const [step, setStep] = React.useState<Step>('upload');
   const [parsed, setParsed] = React.useState<ParsedProduct[]>([]);
   const [result, setResult] = React.useState<{ success: number; failed: number } | null>(null);
@@ -97,7 +99,7 @@ export function ProductCsvImportDialog({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent style={{ maxWidth: '700px' }}>
         <DialogHeader>
-          <DialogTitle>Import Products from CSV</DialogTitle>
+          <DialogTitle>{t('products.importFromCsv')}</DialogTitle>
         </DialogHeader>
 
         {step === 'upload' && (
@@ -109,7 +111,7 @@ export function ProductCsvImportDialog({
                 fontSize: '0.875rem',
               }}
             >
-              CSV columns: <code>name, sku, price, currency, description, categoryId, uom</code>
+              {t('products.csvColumnsHint')}
             </p>
             <input
               type="file"
@@ -131,17 +133,17 @@ export function ProductCsvImportDialog({
                 padding: '0.5rem 0',
               }}
             >
-              {validCount} valid · {invalidCount} with errors
+              {t('products.csvPreviewSummary', { valid: validCount, invalid: invalidCount })}
             </p>
             <div style={{ maxHeight: '350px', overflowY: 'auto' }}>
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>#</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>SKU</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>{t('products.name')}</TableHead>
+                    <TableHead>{t('inventory.sku')}</TableHead>
+                    <TableHead>{t('inventory.price')}</TableHead>
+                    <TableHead>{t('common.status')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -175,16 +177,19 @@ export function ProductCsvImportDialog({
 
         {step === 'result' && result && (
           <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <p style={{ fontSize: '1.25rem', fontWeight: 600 }}>Import complete</p>
+            <p style={{ fontSize: '1.25rem', fontWeight: 600 }}>{t('products.importComplete')}</p>
             <p style={{ color: 'var(--color-muted-foreground)', marginTop: '0.5rem' }}>
-              {result.success} imported · {result.failed} failed
+              {t('products.importResultSummary', {
+                success: result.success,
+                failed: result.failed,
+              })}
             </p>
           </div>
         )}
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>
-            {step === 'result' ? 'Close' : 'Cancel'}
+            {step === 'result' ? t('common.close') : t('common.cancel')}
           </Button>
           {step === 'preview' && (
             <Button
@@ -194,7 +199,9 @@ export function ProductCsvImportDialog({
               }}
               disabled={isPending || validCount === 0}
             >
-              {isPending ? 'Importing…' : `Import ${validCount} products`}
+              {isPending
+                ? t('products.importing')
+                : t('products.importCount', { count: validCount })}
             </Button>
           )}
         </DialogFooter>

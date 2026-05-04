@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateInventoryItem } from '@features/inventory';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateInventoryItem(item?.id ?? '');
   const {
     register,
@@ -95,7 +97,7 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit: {item?.name ?? ''}</DialogTitle>
+          <DialogTitle>{t('inventory.editItem', { name: item?.name ?? '' })}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -103,7 +105,7 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
           }}
         >
           <div className={styles['body']}>
-            <FormField label="Quantity" required error={errors.quantity?.message}>
+            <FormField label={t('inventory.quantity')} required error={errors.quantity?.message}>
               <Input
                 {...register('quantity', { valueAsNumber: true })}
                 type="number"
@@ -111,7 +113,7 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
                 step="1"
               />
             </FormField>
-            <FormField label="Status" required error={errors.status?.message}>
+            <FormField label={t('common.status')} required error={errors.status?.message}>
               <Controller
                 name="status"
                 control={control}
@@ -121,15 +123,20 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="IN_STOCK">In Stock</SelectItem>
-                      <SelectItem value="LOW_STOCK">Low Stock</SelectItem>
-                      <SelectItem value="OUT_OF_STOCK">Out of Stock</SelectItem>
+                      <SelectItem value="IN_STOCK">{t('inventory.statusInStock')}</SelectItem>
+                      <SelectItem value="LOW_STOCK">{t('inventory.statusLowStock')}</SelectItem>
+                      <SelectItem value="OUT_OF_STOCK">
+                        {t('inventory.statusOutOfStock')}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 )}
               />
             </FormField>
-            <FormField label="Reorder threshold" error={errors.reorderThreshold?.message}>
+            <FormField
+              label={t('inventory.reorderThreshold')}
+              error={errors.reorderThreshold?.message}
+            >
               <Input
                 {...register('reorderThreshold', {
                   setValueAs: (v: string) => (v === '' ? undefined : parseInt(v, 10)),
@@ -137,16 +144,16 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
                 type="number"
                 min="0"
                 step="1"
-                placeholder="Optional"
+                placeholder={t('products.optional')}
               />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Saving…' : 'Save'}
+              {isPending ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

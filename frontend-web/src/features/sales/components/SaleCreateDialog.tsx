@@ -412,7 +412,7 @@ export function SaleCreateDialog({
       </div>
 
       <div className={styles['grid2']} style={{ marginTop: '0.75rem' }}>
-        <FormField label="Descuento (%)">
+        <FormField label={t('sales.discountLabel')}>
           <Input
             {...register('discountPercent', { valueAsNumber: true })}
             type="number"
@@ -421,7 +421,7 @@ export function SaleCreateDialog({
             step="1"
           />
         </FormField>
-        <FormField label="IVA (%)">
+        <FormField label={t('sales.taxLabel')}>
           <Input
             {...register('taxPercent', { valueAsNumber: true })}
             type="number"
@@ -580,7 +580,9 @@ export function SaleCreateDialog({
 
       {saleTotals.discountAmount > 0 && (
         <div className={styles['summaryRow']}>
-          <span className={styles['summaryLabel']}>Descuento ({formValues.discountPercent}%)</span>
+          <span className={styles['summaryLabel']}>
+            {t('sales.discountWithPct', { pct: formValues.discountPercent })}
+          </span>
           <span className={styles['summaryValue']}>
             −{formatCurrency(saleTotals.discountAmount, formValues.currency, 'es-ES')}
           </span>
@@ -588,7 +590,9 @@ export function SaleCreateDialog({
       )}
       {saleTotals.taxAmount > 0 && (
         <div className={styles['summaryRow']}>
-          <span className={styles['summaryLabel']}>IVA ({formValues.taxPercent}%)</span>
+          <span className={styles['summaryLabel']}>
+            {t('sales.taxWithPct', { pct: formValues.taxPercent })}
+          </span>
           <span className={styles['summaryValue']}>
             +{formatCurrency(saleTotals.taxAmount, formValues.currency, 'es-ES')}
           </span>

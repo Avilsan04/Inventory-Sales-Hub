@@ -77,7 +77,7 @@ export function ProductsPage(): React.ReactElement {
                 setImportOpen(true);
               }}
             >
-              Import CSV
+              {t('products.importCsv')}
             </Button>
             <Button
               size="sm"
@@ -216,8 +216,8 @@ export function ProductsPage(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setDeleteId(null);
         }}
-        title="Delete product?"
-        description="This action cannot be undone."
+        title={t('products.deleteProduct')}
+        description={t('common.cannotUndo')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />

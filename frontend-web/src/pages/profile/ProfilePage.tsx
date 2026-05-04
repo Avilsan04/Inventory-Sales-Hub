@@ -15,25 +15,6 @@ import styles from '@shared/styles/themes/pages/Profile.module.scss';
 
 type RoleKey = 'admin' | 'manager' | 'staff';
 
-const profileSchema = z.object({
-  username: z.string().min(2, 'Min 2 characters'),
-  email: z.email('Invalid email'),
-});
-
-const passwordSchema = z
-  .object({
-    currentPassword: z.string().min(1, 'Required'),
-    newPassword: z.string().min(8, 'Min 8 characters'),
-    confirmPassword: z.string().min(1, 'Required'),
-  })
-  .refine((d) => d.newPassword === d.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type ProfileValues = z.infer<typeof profileSchema>;
-type PasswordValues = z.infer<typeof passwordSchema>;
-
 function roleBadgeVariant(role: RoleKey): 'default' | 'secondary' | 'outline' {
   const map: Record<RoleKey, 'default' | 'secondary' | 'outline'> = {
     admin: 'default',
@@ -48,6 +29,33 @@ export function ProfilePage(): React.ReactElement {
   const { data: user, isLoading, isError } = useAuthMe();
   const { mutate: updateProfile, isPending: updatingProfile } = useUpdateProfile();
   const { mutate: changePassword, isPending: changingPassword } = useChangePassword();
+
+  const profileSchema = React.useMemo(
+    () =>
+      z.object({
+        username: z.string().min(2, t('profile.validationMinName')),
+        email: z.email(t('profile.validationInvalidEmail')),
+      }),
+    [t]
+  );
+
+  const passwordSchema = React.useMemo(
+    () =>
+      z
+        .object({
+          currentPassword: z.string().min(1, t('profile.validationRequired')),
+          newPassword: z.string().min(8, t('profile.validationMinPassword')),
+          confirmPassword: z.string().min(1, t('profile.validationRequired')),
+        })
+        .refine((d) => d.newPassword === d.confirmPassword, {
+          message: t('profile.validationPasswordMatch'),
+          path: ['confirmPassword'],
+        }),
+    [t]
+  );
+
+  type ProfileValues = z.infer<typeof profileSchema>;
+  type PasswordValues = z.infer<typeof passwordSchema>;
 
   const profileForm = useForm<ProfileValues>({
     mode: 'onTouched',
@@ -143,7 +151,7 @@ export function ProfilePage(): React.ReactElement {
           <CardHeader>
             <CardTitle className={styles['cardTitleInner']}>
               <UserIcon size={18} aria-hidden="true" />
-              Edit Profile
+              {t('profile.editProfile')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -169,7 +177,7 @@ export function ProfilePage(): React.ReactElement {
                 </FormField>
                 <div className={styles['formActions']}>
                   <Button type="submit" size="sm" disabled={updatingProfile}>
-                    {updatingProfile ? 'Saving…' : 'Save changes'}
+                    {updatingProfile ? t('profile.savingChanges') : t('common.saveChanges')}
                   </Button>
                 </div>
               </div>
@@ -181,7 +189,7 @@ export function ProfilePage(): React.ReactElement {
           <CardHeader>
             <CardTitle className={styles['cardTitleInner']}>
               <KeyIcon size={18} aria-hidden="true" />
-              Change Password
+              {t('profile.changePassword')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -192,21 +200,21 @@ export function ProfilePage(): React.ReactElement {
             >
               <div className={styles['formBody']}>
                 <FormField
-                  label="Current password"
+                  label={t('profile.currentPassword')}
                   required
                   error={passwordForm.formState.errors.currentPassword?.message}
                 >
                   <Input {...passwordForm.register('currentPassword')} type="password" />
                 </FormField>
                 <FormField
-                  label="New password"
+                  label={t('profile.newPassword')}
                   required
                   error={passwordForm.formState.errors.newPassword?.message}
                 >
                   <Input {...passwordForm.register('newPassword')} type="password" />
                 </FormField>
                 <FormField
-                  label="Confirm new password"
+                  label={t('profile.confirmNewPassword')}
                   required
                   error={passwordForm.formState.errors.confirmPassword?.message}
                 >
@@ -214,7 +222,7 @@ export function ProfilePage(): React.ReactElement {
                 </FormField>
                 <div className={styles['formActions']}>
                   <Button type="submit" size="sm" disabled={changingPassword}>
-                    {changingPassword ? 'Changing…' : 'Change password'}
+                    {changingPassword ? t('profile.changingPassword') : t('profile.changePassword')}
                   </Button>
                 </div>
               </div>

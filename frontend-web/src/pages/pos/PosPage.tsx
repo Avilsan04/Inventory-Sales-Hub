@@ -167,7 +167,7 @@ export function PosPage(): React.ReactElement {
           {cashSession?.status === 'open' ? (
             <>
               <span style={{ fontSize: '0.75rem', color: 'var(--color-muted-foreground)' }}>
-                Session open
+                {t('pos.sessionOpen')}
               </span>
               <PermissionGuard permission="close:cash-session">
                 <Button
@@ -177,7 +177,7 @@ export function PosPage(): React.ReactElement {
                     setCloseSessionDialog(true);
                   }}
                 >
-                  Close shift
+                  {t('pos.closeShift')}
                 </Button>
               </PermissionGuard>
             </>
@@ -189,7 +189,7 @@ export function PosPage(): React.ReactElement {
                   setOpenSessionDialog(true);
                 }}
               >
-                Open shift
+                {t('pos.openShift')}
               </Button>
             )
           )}
@@ -206,14 +206,14 @@ export function PosPage(): React.ReactElement {
           }}
         >
           <p style={{ marginBottom: '1rem', color: 'var(--color-muted-foreground)' }}>
-            No active cash session. Open a shift to start selling.
+            {t('pos.noActiveSession')}
           </p>
           <Button
             onClick={() => {
               setOpenSessionDialog(true);
             }}
           >
-            Open shift
+            {t('pos.openShift')}
           </Button>
         </div>
       )}
@@ -348,7 +348,7 @@ export function PosPage(): React.ReactElement {
                       onClick={() => {
                         changeQty(item.productId, -1);
                       }}
-                      aria-label="Decrease quantity"
+                      aria-label={t('pos.decreaseQty')}
                     >
                       −
                     </button>
@@ -359,7 +359,7 @@ export function PosPage(): React.ReactElement {
                       onClick={() => {
                         changeQty(item.productId, 1);
                       }}
-                      aria-label="Increase quantity"
+                      aria-label={t('pos.increaseQty')}
                     >
                       +
                     </button>
@@ -372,7 +372,7 @@ export function PosPage(): React.ReactElement {
           <div className={styles['cartFooter']}>
             <div className={styles['totals']}>
               <div className={styles['totalRow']}>
-                <span>Subtotal</span>
+                <span>{t('pos.subtotal')}</span>
                 <span>{formatCurrency(saleTotals.subtotal, currency, 'es-ES')}</span>
               </div>
               <div className={styles['totalRow']} style={{ alignItems: 'center' }}>
@@ -380,7 +380,7 @@ export function PosPage(): React.ReactElement {
                   htmlFor="pos-discount"
                   style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                 >
-                  Descuento
+                  {t('pos.discount')}
                 </label>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <input
@@ -413,7 +413,7 @@ export function PosPage(): React.ReactElement {
                   htmlFor="pos-tax"
                   style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                 >
-                  IVA
+                  {t('pos.tax')}
                 </label>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                   <input
@@ -442,7 +442,7 @@ export function PosPage(): React.ReactElement {
                 </span>
               </div>
               <div className={styles['totalRowFinal']}>
-                <span>Total</span>
+                <span>{t('pos.total')}</span>
                 <span>{formatCurrency(saleTotals.total, currency, 'es-ES')}</span>
               </div>
             </div>

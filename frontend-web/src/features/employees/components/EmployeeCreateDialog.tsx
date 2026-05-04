@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateEmployee } from '@features/employees';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateEmployee();
   const {
     register,
@@ -69,7 +71,7 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Employee</DialogTitle>
+          <DialogTitle>{t('employees.newEmployee')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -77,13 +79,17 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
           }}
         >
           <div className={styles['body']}>
-            <FormField label="Name" required error={errors.name?.message}>
-              <Input {...register('name')} placeholder="Full name" />
+            <FormField label={t('employees.name')} required error={errors.name?.message}>
+              <Input {...register('name')} placeholder={t('auth.fullNamePlaceholder')} />
             </FormField>
-            <FormField label="Email" required error={errors.email?.message}>
-              <Input {...register('email')} type="email" placeholder="employee@company.com" />
+            <FormField label={t('employees.email')} required error={errors.email?.message}>
+              <Input
+                {...register('email')}
+                type="email"
+                placeholder={t('employees.emailPlaceholder')}
+              />
             </FormField>
-            <FormField label="Role" required error={errors.role?.message}>
+            <FormField label={t('employees.role')} required error={errors.role?.message}>
               <Controller
                 name="role"
                 control={control}
@@ -93,9 +99,9 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
-                      <SelectItem value="staff">Staff</SelectItem>
+                      <SelectItem value="admin">{t('employees.roles.admin')}</SelectItem>
+                      <SelectItem value="manager">{t('employees.roles.manager')}</SelectItem>
+                      <SelectItem value="staff">{t('employees.roles.staff')}</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -111,17 +117,17 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
                     onCheckedChange={field.onChange}
                     id="create-active"
                   />
-                  <Label htmlFor="create-active">Active</Label>
+                  <Label htmlFor="create-active">{t('employees.active')}</Label>
                 </div>
               )}
             />
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Adding…' : 'Add Employee'}
+              {isPending ? t('common.adding') : t('employees.addEmployee')}
             </Button>
           </DialogFooter>
         </form>

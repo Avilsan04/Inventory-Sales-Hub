@@ -36,10 +36,10 @@ import type { SalesAnalyticsParams } from '@entities/analytics';
 import styles from '@shared/styles/themes/pages/Analytics.module.scss';
 
 const DATE_RANGES = [
-  { id: '7d', label: '7 días' },
-  { id: '30d', label: 'Mensual' },
-  { id: '90d', label: '90 días' },
-  { id: 'custom', label: 'Personalizado' },
+  { id: '7d', labelKey: 'analytics.range7d' },
+  { id: '30d', labelKey: 'analytics.rangeMonthly' },
+  { id: '90d', labelKey: 'analytics.range90d' },
+  { id: 'custom', labelKey: 'analytics.rangeCustom' },
 ] as const;
 
 type DateRangeId = (typeof DATE_RANGES)[number]['id'];
@@ -178,10 +178,10 @@ export function AnalyticsPage(): React.ReactElement {
         <div className={styles['headerActions']}>
           <PermissionGuard permission="export:csv">
             <Button variant="outline" size="sm" onClick={handleExportProducts}>
-              {t('common.export')} products
+              {t('analytics.exportProducts')}
             </Button>
             <Button variant="outline" size="sm" onClick={handleExportCustomers}>
-              {t('common.export')} customers
+              {t('analytics.exportCustomers')}
             </Button>
           </PermissionGuard>
         </div>
@@ -189,7 +189,7 @@ export function AnalyticsPage(): React.ReactElement {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
         <div className={styles['dateRangePills']} role="group" aria-label="Período">
-          {DATE_RANGES.map(({ id, label }) => (
+          {DATE_RANGES.map(({ id, labelKey }) => (
             <button
               key={id}
               type="button"
@@ -202,7 +202,7 @@ export function AnalyticsPage(): React.ReactElement {
               )}
               aria-pressed={dateRange === id}
             >
-              {label}
+              {t(labelKey)}
             </button>
           ))}
         </div>

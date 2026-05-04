@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useOpenCashSession } from '@features/sales/hooks/useOpenCashSession';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
 import {
   Dialog,
@@ -33,6 +34,7 @@ export function OpenCashSessionDialog({
   onOpenChange,
   onSuccess,
 }: OpenCashSessionDialogProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate: openSession, isPending } = useOpenCashSession();
 
   const {
@@ -70,8 +72,8 @@ export function OpenCashSessionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent style={{ maxWidth: '400px' }}>
         <DialogHeader>
-          <DialogTitle>Open Cash Session</DialogTitle>
-          <DialogDescription>Enter the opening cash balance for this shift.</DialogDescription>
+          <DialogTitle>{t('pos.openCashSession')}</DialogTitle>
+          <DialogDescription>{t('pos.openingBalanceHint')}</DialogDescription>
         </DialogHeader>
 
         <form
@@ -81,7 +83,7 @@ export function OpenCashSessionDialog({
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
             <div>
-              <Label htmlFor="openingBalance">Opening balance (€)</Label>
+              <Label htmlFor="openingBalance">{t('pos.openingBalance')}</Label>
               <Input
                 id="openingBalance"
                 type="number"
@@ -103,7 +105,7 @@ export function OpenCashSessionDialog({
               )}
             </div>
             <div>
-              <Label htmlFor="openNotes">Notes (optional)</Label>
+              <Label htmlFor="openNotes">{t('pos.notesOptional')}</Label>
               <Input id="openNotes" style={{ marginTop: '0.375rem' }} {...register('notes')} />
             </div>
           </div>
@@ -116,10 +118,10 @@ export function OpenCashSessionDialog({
                 onOpenChange(false);
               }}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Opening…' : 'Open session'}
+              {isPending ? t('pos.opening') : t('pos.openSession')}
             </Button>
           </DialogFooter>
         </form>

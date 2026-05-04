@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MinusIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { Button } from '@shared/ui/primitives';
 import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCart } from '../hooks/useCart';
 import type { CartItem as CartItemType } from '../hooks/useCart';
 
@@ -11,6 +12,7 @@ interface CartItemProps {
 
 export function CartItem({ item }: CartItemProps): React.ReactElement {
   const { updateQuantity, removeItem } = useCart();
+  const { translate: t } = useTranslationAdapter();
 
   return (
     <div
@@ -47,7 +49,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
             updateQuantity(item.productId, item.quantity - 1);
           }}
           disabled={item.quantity <= 1}
-          aria-label="Decrease quantity"
+          aria-label={t('pos.decreaseQty')}
         >
           <MinusIcon size={12} />
         </Button>
@@ -61,7 +63,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
             updateQuantity(item.productId, item.quantity + 1);
           }}
           disabled={item.quantity >= item.maxStock}
-          aria-label="Increase quantity"
+          aria-label={t('pos.increaseQty')}
         >
           <PlusIcon size={12} />
         </Button>
@@ -77,7 +79,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
         onClick={() => {
           removeItem(item.productId);
         }}
-        aria-label="Remove item"
+        aria-label={t('catalog.removeItem')}
       >
         <TrashIcon size={12} />
       </Button>

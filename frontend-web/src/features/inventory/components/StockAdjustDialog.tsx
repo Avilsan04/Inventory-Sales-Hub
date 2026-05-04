@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAdjustStock } from '@features/inventory';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { toast } from '@shared/hooks/useToast';
 import {
   Dialog,
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export function StockAdjustDialog({ item, open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useAdjustStock(item?.id ?? '');
   const {
     register,
@@ -68,7 +70,7 @@ export function StockAdjustDialog({ item, open, onOpenChange }: Props): React.Re
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Adjust Stock: {item?.name ?? ''}</DialogTitle>
+          <DialogTitle>{t('inventory.adjustStock', { name: item?.name ?? '' })}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -77,26 +79,30 @@ export function StockAdjustDialog({ item, open, onOpenChange }: Props): React.Re
         >
           <div className={styles['body']}>
             <p className={styles['infoText']}>
-              Current stock: <strong>{item?.quantity ?? 0}</strong>
+              {t('inventory.currentStock', { qty: item?.quantity ?? 0 })}
             </p>
-            <FormField label="Adjustment quantity" required error={errors.quantity?.message}>
+            <FormField
+              label={t('inventory.adjustmentQty')}
+              required
+              error={errors.quantity?.message}
+            >
               <Input
                 {...register('quantity', { valueAsNumber: true })}
                 type="number"
                 step="1"
-                placeholder="Positive = add, negative = remove"
+                placeholder={t('inventory.adjustmentQtyPlaceholder')}
               />
             </FormField>
-            <FormField label="Note" error={errors.note?.message}>
-              <Input {...register('note')} placeholder="Reason for adjustment" />
+            <FormField label={t('inventory.note')} error={errors.note?.message}>
+              <Input {...register('note')} placeholder={t('inventory.notePlaceholder')} />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Adjusting…' : 'Apply'}
+              {isPending ? t('inventory.applying') : t('common.apply')}
             </Button>
           </DialogFooter>
         </form>

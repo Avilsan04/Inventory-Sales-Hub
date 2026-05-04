@@ -88,7 +88,9 @@
   font-weight: $font-weight-medium;
   color: var(--color-text-secondary);
   background: transparent;
-  transition: background-color 120ms, color 120ms;
+  transition:
+    background-color 120ms,
+    color 120ms;
 
   &:hover {
     background: var(--color-bg-tertiary);
@@ -97,7 +99,7 @@
 
 .tabActive {
   background: var(--color-primary) !important;
-  color: #fff !important;
+  color: var(--color-primary-foreground);
 }
 
 .tabCount {

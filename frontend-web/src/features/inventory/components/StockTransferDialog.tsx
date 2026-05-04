@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useWarehouses } from '../hooks/useWarehouses';
 import { useTransferStock } from '../hooks/useTransferStock';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
 import {
   Dialog,
@@ -21,18 +22,11 @@ import {
 } from '@shared/ui/composed';
 import type { InventoryItem } from '@entities/inventory';
 
-const schema = z
-  .object({
-    quantity: z.number().int().positive('Debe ser mayor a 0'),
-    fromWarehouseId: z.string().min(1, 'Selecciona almacén origen'),
-    toWarehouseId: z.string().min(1, 'Selecciona almacén destino'),
-  })
-  .refine((d) => d.fromWarehouseId !== d.toWarehouseId, {
-    message: 'Origen y destino no pueden ser iguales',
-    path: ['toWarehouseId'],
-  });
-
-type FormValues = z.infer<typeof schema>;
+type FormValues = {
+  quantity: number;
+  fromWarehouseId: string;
+  toWarehouseId: string;
+};
 
 interface StockTransferDialogProps {
   item: InventoryItem | null;
@@ -45,8 +39,24 @@ export function StockTransferDialog({
   open,
   onOpenChange,
 }: StockTransferDialogProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { data: warehouses } = useWarehouses();
   const { mutate: transfer, isPending } = useTransferStock();
+
+  const schema = React.useMemo(
+    () =>
+      z
+        .object({
+          quantity: z.number().int().positive(t('inventory.validQtyPositive')),
+          fromWarehouseId: z.string().min(1, t('inventory.validFromWarehouse')),
+          toWarehouseId: z.string().min(1, t('inventory.validToWarehouse')),
+        })
+        .refine((d) => d.fromWarehouseId !== d.toWarehouseId, {
+          message: t('inventory.validSameWarehouse'),
+          path: ['toWarehouseId'],
+        }),
+    [t]
+  );
 
   const {
     register,
@@ -91,7 +101,7 @@ export function StockTransferDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent style={{ maxWidth: '420px' }}>
         <DialogHeader>
-          <DialogTitle>Transferir stock — {item?.name ?? ''}</DialogTitle>
+          <DialogTitle>{t('inventory.transferTitle', { name: item?.name ?? '' })}</DialogTitle>
         </DialogHeader>
 
         <form
@@ -100,14 +110,17 @@ export function StockTransferDialog({
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
-            <FormField label="Almacén origen" error={errors.fromWarehouseId?.message}>
+            <FormField
+              label={t('inventory.sourceWarehouse')}
+              error={errors.fromWarehouseId?.message}
+            >
               <Controller
                 name="fromWarehouseId"
                 control={control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar almacén" />
+                      <SelectValue placeholder={t('inventory.selectWarehouse')} />
                     </SelectTrigger>
                     <SelectContent>
                       {activeWarehouses.map((w) => (
@@ -121,14 +134,14 @@ export function StockTransferDialog({
               />
             </FormField>
 
-            <FormField label="Almacén destino" error={errors.toWarehouseId?.message}>
+            <FormField label={t('inventory.targetWarehouse')} error={errors.toWarehouseId?.message}>
               <Controller
                 name="toWarehouseId"
                 control={control}
                 render={({ field }) => (
                   <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar almacén" />
+                      <SelectValue placeholder={t('inventory.selectWarehouse')} />
                     </SelectTrigger>
                     <SelectContent>
                       {activeWarehouses.map((w) => (
@@ -143,7 +156,7 @@ export function StockTransferDialog({
             </FormField>
 
             <div>
-              <Label htmlFor="transfer-qty">Cantidad</Label>
+              <Label htmlFor="transfer-qty">{t('inventory.quantity')}</Label>
               <Input
                 id="transfer-qty"
                 type="number"
@@ -171,7 +184,7 @@ export function StockTransferDialog({
                     marginTop: '0.25rem',
                   }}
                 >
-                  Disponible: {item.quantity} unidades
+                  {t('inventory.available', { qty: item.quantity })}
                 </p>
               )}
             </div>
@@ -185,10 +198,10 @@ export function StockTransferDialog({
                 onOpenChange(false);
               }}
             >
-              Cancelar
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Transfiriendo…' : 'Transferir'}
+              {isPending ? t('inventory.transferring') : t('inventory.transfer')}
             </Button>
           </DialogFooter>
         </form>

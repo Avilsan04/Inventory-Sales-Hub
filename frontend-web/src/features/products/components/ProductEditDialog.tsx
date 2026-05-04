@@ -6,6 +6,7 @@ import { useUpdateProduct, useCategories } from '@features/products';
 import { toCents, fromCents } from '@shared/lib/formatCurrency';
 import { UOM_OPTIONS } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -42,6 +43,7 @@ interface Props {
 }
 
 export function ProductEditDialog({ product, open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateProduct(product?.id ?? '');
   const { data: categories } = useCategories();
   const {
@@ -95,7 +97,7 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
+          <DialogTitle>{t('products.editProduct')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -103,14 +105,14 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
           }}
         >
           <div className={styles['body']}>
-            <FormField label="Name" required error={errors.name?.message}>
+            <FormField label={t('products.name')} required error={errors.name?.message}>
               <Input {...register('name')} />
             </FormField>
-            <FormField label="SKU" required error={errors.sku?.message}>
+            <FormField label={t('inventory.sku')} required error={errors.sku?.message}>
               <Input {...register('sku')} />
             </FormField>
             <div className={styles['gridPriceShort']}>
-              <FormField label="Price" required error={errors.price?.message}>
+              <FormField label={t('inventory.price')} required error={errors.price?.message}>
                 <Input
                   {...register('price', { valueAsNumber: true })}
                   type="number"
@@ -118,12 +120,12 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                   min="0"
                 />
               </FormField>
-              <FormField label="Currency" error={errors.currency?.message}>
+              <FormField label={t('products.currency')} error={errors.currency?.message}>
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
             <div className={styles['gridPriceShort']}>
-              <FormField label="UOM" error={errors.uom?.message}>
+              <FormField label={t('products.uom')} error={errors.uom?.message}>
                 <Controller
                   name="uom"
                   control={control}
@@ -143,14 +145,14 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                   )}
                 />
               </FormField>
-              <FormField label="Category" error={errors.categoryId?.message}>
+              <FormField label={t('inventory.category')} error={errors.categoryId?.message}>
                 <Controller
                   name="categoryId"
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value ?? ''} onValueChange={field.onChange}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t('products.selectCategory')} />
                       </SelectTrigger>
                       <SelectContent>
                         {categories?.map((c) => (
@@ -164,16 +166,16 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                 />
               </FormField>
             </div>
-            <FormField label="Description" error={errors.description?.message}>
+            <FormField label={t('products.description')} error={errors.description?.message}>
               <Textarea {...register('description')} rows={3} />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Saving…' : 'Save'}
+              {isPending ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateProduct, useCategories, useProducts } from '@features/products';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { toCents } from '@shared/lib/formatCurrency';
 import { UOM_OPTIONS } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateProduct();
   const { data: categories } = useCategories();
   const { data: products } = useProducts();
@@ -91,7 +93,7 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Product</DialogTitle>
+          <DialogTitle>{t('products.newProduct')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -110,18 +112,18 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                   if (!e.target.checked) setValue('parentId', '');
                 }}
               />
-              Es variante de otro producto
+              {t('products.isVariant')}
             </label>
 
             {isVariant && (
-              <FormField label="Producto padre" error={errors.parentId?.message}>
+              <FormField label={t('products.parentProduct')} error={errors.parentId?.message}>
                 <Controller
                   name="parentId"
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value ?? ''} onValueChange={field.onChange}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar producto padre" />
+                        <SelectValue placeholder={t('products.selectParentProduct')} />
                       </SelectTrigger>
                       <SelectContent>
                         {parentProducts.map((p) => (
@@ -136,14 +138,14 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
               </FormField>
             )}
 
-            <FormField label="Name" required error={errors.name?.message}>
-              <Input {...register('name')} placeholder="Product name" />
+            <FormField label={t('products.name')} required error={errors.name?.message}>
+              <Input {...register('name')} placeholder={t('products.namePlaceholder')} />
             </FormField>
-            <FormField label="SKU" required error={errors.sku?.message}>
-              <Input {...register('sku')} placeholder="PRD-001" />
+            <FormField label={t('inventory.sku')} required error={errors.sku?.message}>
+              <Input {...register('sku')} placeholder={t('products.skuPlaceholder')} />
             </FormField>
             <div className={styles['gridPriceShort']}>
-              <FormField label="Price" required error={errors.price?.message}>
+              <FormField label={t('inventory.price')} required error={errors.price?.message}>
                 <Input
                   {...register('price', { valueAsNumber: true })}
                   type="number"
@@ -151,12 +153,12 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                   min="0"
                 />
               </FormField>
-              <FormField label="Currency" error={errors.currency?.message}>
+              <FormField label={t('products.currency')} error={errors.currency?.message}>
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
             <div className={styles['gridPriceShort']}>
-              <FormField label="UOM" error={errors.uom?.message}>
+              <FormField label={t('products.uom')} error={errors.uom?.message}>
                 <Controller
                   name="uom"
                   control={control}
@@ -176,14 +178,14 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                   )}
                 />
               </FormField>
-              <FormField label="Category" error={errors.categoryId?.message}>
+              <FormField label={t('inventory.category')} error={errors.categoryId?.message}>
                 <Controller
                   name="categoryId"
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value ?? ''} onValueChange={field.onChange}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder={t('products.selectCategory')} />
                       </SelectTrigger>
                       <SelectContent>
                         {categories?.map((c) => (
@@ -197,16 +199,20 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                 />
               </FormField>
             </div>
-            <FormField label="Description" error={errors.description?.message}>
-              <Textarea {...register('description')} placeholder="Optional" rows={3} />
+            <FormField label={t('products.description')} error={errors.description?.message}>
+              <Textarea
+                {...register('description')}
+                placeholder={t('products.optional')}
+                rows={3}
+              />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Creating…' : 'Create'}
+              {isPending ? t('products.creating') : t('common.create')}
             </Button>
           </DialogFooter>
         </form>

@@ -1,3 +1,6 @@
+// Active nav indicator bar width — not on standard spacing scale
+$_nav-indicator-width: 0.1875rem;
+
 // ── Mobile overlay ──────────────────────────────────────────────────────
 .overlay {
   position: fixed;
@@ -63,14 +66,14 @@
 .brandText {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: $spacing-0-5;
   min-width: 0;
 }
 
 .brandName {
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
-  color: #ffffff;
+  color: $color-sidebar-primary-foreground;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -80,7 +83,7 @@
 
 .brandSub {
   font-size: $font-size-xs;
-  color: #64748b;
+  color: $color-dark-text-muted;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,7 +104,7 @@
   padding: $spacing-3 $spacing-4;
   border-radius: $radius-md;
   background-color: var(--color-sidebar-primary);
-  color: #ffffff;
+  color: $color-sidebar-primary-foreground;
   font-size: $font-size-sm;
   font-weight: $font-weight-semibold;
   text-decoration: none;
@@ -111,7 +114,7 @@
 
   &:hover {
     background-color: var(--color-primary-hover);
-    color: #ffffff;
+    color: $color-sidebar-primary-foreground;
   }
 }
 
@@ -167,7 +170,7 @@
   margin-top: $spacing-1;
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  color: #64748b;
+  color: $color-dark-text-muted;
   letter-spacing: $letter-spacing-wider;
   text-transform: uppercase;
   white-space: nowrap;
@@ -193,10 +196,10 @@
 
   &:hover {
     background-color: var(--color-sidebar-accent);
-    color: #ffffff;
+    color: $color-sidebar-accent-foreground;
 
     .navIcon {
-      color: #ffffff;
+      color: $color-sidebar-accent-foreground;
     }
   }
 }
@@ -212,7 +215,7 @@
     left: 0;
     top: 20%;
     bottom: 20%;
-    width: 3px;
+    width: $_nav-indicator-width;
     border-radius: 0 $radius-sm $radius-sm 0;
     background-color: var(--color-sidebar-primary);
   }
@@ -235,7 +238,7 @@
   width: $size-5;
   height: $size-5;
   flex-shrink: 0;
-  color: #64748b;
+  color: $color-dark-text-muted;
   transition: color $duration-fast ease;
   display: flex;
   align-items: center;

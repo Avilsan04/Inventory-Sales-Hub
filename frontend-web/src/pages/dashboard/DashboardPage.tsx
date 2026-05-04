@@ -90,7 +90,7 @@ export function DashboardPage(): React.ReactElement {
       </header>
 
       {/* KPI row */}
-      <section className={styles['kpiGrid']} aria-label="Key performance indicators">
+      <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
         <div className={styles['kpiCard']}>
           <p className={styles['kpiLabel']}>{t('dashboard.stats.monthlySales')}</p>
           <div className={styles['kpiValue']}>
@@ -115,7 +115,9 @@ export function DashboardPage(): React.ReactElement {
         </div>
         <div className={styles['kpiCard']}>
           <p className={styles['kpiLabel']}>{t('dashboard.stats.lowStock')}</p>
-          <div className={styles['kpiValue']}>{alerts?.length ?? 0} items</div>
+          <div className={styles['kpiValue']}>
+            {alerts?.length ?? 0} {t('common.items')}
+          </div>
         </div>
       </section>
 
@@ -128,16 +130,16 @@ export function DashboardPage(): React.ReactElement {
             gap: '1rem',
           }}
         >
-          <SectionErrorBoundary label="Cash Flow">
+          <SectionErrorBoundary label={t('dashboard.section.cashFlow')}>
             <CashFlowWidget />
           </SectionErrorBoundary>
-          <SectionErrorBoundary label="Inventory Value">
+          <SectionErrorBoundary label={t('dashboard.section.inventoryValue')}>
             <InventoryValueWidget />
           </SectionErrorBoundary>
-          <SectionErrorBoundary label="Top Products">
+          <SectionErrorBoundary label={t('dashboard.section.topProducts')}>
             <TopProfitableWidget />
           </SectionErrorBoundary>
-          <SectionErrorBoundary label="Waste Alerts">
+          <SectionErrorBoundary label={t('dashboard.section.wasteAlerts')}>
             <WasteAlertsWidget />
           </SectionErrorBoundary>
         </section>
@@ -145,7 +147,7 @@ export function DashboardPage(): React.ReactElement {
 
       {/* Charts */}
       <div className={styles['chartsGrid']}>
-        <SectionErrorBoundary label="Weekly Sales Chart">
+        <SectionErrorBoundary label={t('dashboard.section.weeklySalesChart')}>
           <div className={styles['chartCard']}>
             <div className={styles['chartCardHeader']}>
               <h3 className={styles['chartTitle']}>{t('dashboard.weeklySales')}</h3>
@@ -154,7 +156,7 @@ export function DashboardPage(): React.ReactElement {
           </div>
         </SectionErrorBoundary>
 
-        <SectionErrorBoundary label="Sales by Status">
+        <SectionErrorBoundary label={t('dashboard.section.salesByStatusChart')}>
           <div className={styles['chartCard']}>
             <div className={styles['chartCardHeader']}>
               <h3 className={styles['chartTitle']}>{t('dashboard.salesByStatus')}</h3>
@@ -165,7 +167,7 @@ export function DashboardPage(): React.ReactElement {
       </div>
 
       {/* Recent transactions */}
-      <SectionErrorBoundary label="Recent Transactions">
+      <SectionErrorBoundary label={t('dashboard.section.recentTransactionsSection')}>
         <div className={styles['transactionsCard']}>
           <div className={styles['transactionsHeader']}>
             <h3 className={styles['transactionsTitle']}>{t('dashboard.recentTransactions')}</h3>
@@ -176,7 +178,7 @@ export function DashboardPage(): React.ReactElement {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Order ID</TableHead>
+                <TableHead>{t('dashboard.cols.order')}</TableHead>
                 <TableHead>{t('sales.customer')}</TableHead>
                 <TableHead>{t('sales.total')}</TableHead>
                 <TableHead>{t('common.status')}</TableHead>

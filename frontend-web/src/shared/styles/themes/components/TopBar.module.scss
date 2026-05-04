@@ -115,7 +115,7 @@
   display: inline-flex;
   align-items: center;
   gap: $spacing-1;
-  padding: 2px $spacing-2;
+  padding: $spacing-0-5 $spacing-2;
   border-radius: $border-radius-full;
   border: 1px solid var(--color-border);
   background-color: var(--color-muted);
@@ -151,14 +151,14 @@
 
 .notifDot {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: $spacing-1;
+  right: $spacing-1;
   min-width: $size-4;
   height: $size-4;
   padding: 0 $spacing-1;
   border-radius: var(--radius-full);
   background-color: $color-error;
-  border: 2px solid var(--color-background);
+  border: $border-width-focus solid var(--color-background);
   pointer-events: none;
   display: flex;
   align-items: center;

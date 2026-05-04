@@ -123,7 +123,7 @@ export function SalesPage(): React.ReactElement {
     <div className={pageStyles['page']}>
       <header className={styles['pageHeader']}>
         <div>
-          <span className={styles['eyebrow']}>SALES</span>
+          <span className={styles['eyebrow']}>{t('sales.eyebrow')}</span>
           <h1 className={styles['title']}>{t('nav.orders')}</h1>
           <p className={styles['subtitle']}>{t('sales.orderHistory')}</p>
         </div>
@@ -155,7 +155,7 @@ export function SalesPage(): React.ReactElement {
       {showDateFilter && (
         <div style={{ padding: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <span style={{ fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
-            Date range:
+            {t('common.dateRange')}:
           </span>
           <DateRangePicker value={dateFilter ?? { from: '', to: '' }} onChange={setDateFilter} />
         </div>

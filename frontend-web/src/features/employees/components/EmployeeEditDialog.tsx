@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateEmployee } from '@features/employees';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateEmployee(employee?.id ?? '');
   const {
     register,
@@ -83,7 +85,7 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Employee</DialogTitle>
+          <DialogTitle>{t('employees.editEmployee')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -91,13 +93,13 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
           }}
         >
           <div className={styles['body']}>
-            <FormField label="Name" required error={errors.name?.message}>
+            <FormField label={t('employees.name')} required error={errors.name?.message}>
               <Input {...register('name')} />
             </FormField>
-            <FormField label="Email" required error={errors.email?.message}>
+            <FormField label={t('employees.email')} required error={errors.email?.message}>
               <Input {...register('email')} type="email" />
             </FormField>
-            <FormField label="Role" required error={errors.role?.message}>
+            <FormField label={t('employees.role')} required error={errors.role?.message}>
               <Controller
                 name="role"
                 control={control}
@@ -107,9 +109,9 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
-                      <SelectItem value="staff">Staff</SelectItem>
+                      <SelectItem value="admin">{t('employees.roles.admin')}</SelectItem>
+                      <SelectItem value="manager">{t('employees.roles.manager')}</SelectItem>
+                      <SelectItem value="staff">{t('employees.roles.staff')}</SelectItem>
                     </SelectContent>
                   </Select>
                 )}
@@ -121,17 +123,17 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
               render={({ field }) => (
                 <div className={styles['activeRow']}>
                   <Switch checked={field.value} onCheckedChange={field.onChange} id="edit-active" />
-                  <Label htmlFor="edit-active">Active</Label>
+                  <Label htmlFor="edit-active">{t('employees.active')}</Label>
                 </div>
               )}
             />
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Saving…' : 'Save'}
+              {isPending ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

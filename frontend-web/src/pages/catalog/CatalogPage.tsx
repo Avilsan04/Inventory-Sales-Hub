@@ -43,7 +43,7 @@ export function CatalogPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div>
-          <span className={styles['eyebrow']}>STORE</span>
+          <span className={styles['eyebrow']}>{t('catalog.storeEyebrow')}</span>
           <h1 className={styles['title']}>{t('catalog.title')}</h1>
           <p className={styles['subtitle']}>{t('catalog.subtitle')}</p>
         </div>

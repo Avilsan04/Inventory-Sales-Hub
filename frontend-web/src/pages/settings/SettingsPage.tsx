@@ -48,6 +48,35 @@ const NAV_ITEMS: Array<{
   },
 ];
 
+const THEME_OPTIONS = [
+  { key: 'light' as const, labelKey: 'settings.themeLight', cls: 'previewLight' },
+  { key: 'dark' as const, labelKey: 'settings.themeDark', cls: 'previewDark' },
+  { key: 'accent' as const, labelKey: 'settings.themeAccent', cls: 'previewAccent' },
+];
+
+const NOTIFICATION_OPTIONS = [
+  {
+    key: 'notificationsInfo' as const,
+    labelKey: 'settings.infoNotifications',
+    descKey: 'settings.infoNotificationsDesc',
+  },
+  {
+    key: 'notificationsWarning' as const,
+    labelKey: 'settings.warningNotifications',
+    descKey: 'settings.warningNotificationsDesc',
+  },
+  {
+    key: 'notificationsError' as const,
+    labelKey: 'settings.errorNotifications',
+    descKey: 'settings.errorNotificationsDesc',
+  },
+  {
+    key: 'notificationsSuccess' as const,
+    labelKey: 'settings.successNotifications',
+    descKey: 'settings.successNotificationsDesc',
+  },
+];
+
 export function SettingsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { theme, setTheme } = useTheme();
@@ -104,10 +133,8 @@ export function SettingsPage(): React.ReactElement {
                       <MoonIcon size={20} aria-hidden="true" />
                     </div>
                     <div className={styles['labelStack']}>
-                      <span className={styles['labelTitle']}>Dark mode</span>
-                      <span className={styles['labelDesc']}>
-                        Switch between light and dark interface
-                      </span>
+                      <span className={styles['labelTitle']}>{t('settings.darkMode')}</span>
+                      <span className={styles['labelDesc']}>{t('settings.darkModeDesc')}</span>
                     </div>
                   </div>
                   <Switch
@@ -120,45 +147,42 @@ export function SettingsPage(): React.ReactElement {
                 </div>
                 <div className={styles['fieldRowLast']}>
                   <div className={styles['labelStack']}>
-                    <span className={styles['labelTitle']}>Current theme</span>
-                    <span className={styles['labelDesc']}>Select a visual theme</span>
+                    <span className={styles['labelTitle']}>{t('settings.currentTheme')}</span>
+                    <span className={styles['labelDesc']}>{t('settings.currentThemeDesc')}</span>
                   </div>
                 </div>
                 <div className={styles['themeCards']}>
-                  {(
-                    [
-                      { key: 'light', label: 'Light', cls: styles['previewLight'] },
-                      { key: 'dark', label: 'Dark', cls: styles['previewDark'] },
-                      { key: 'accent', label: 'Accent', cls: styles['previewAccent'] },
-                    ] as const
-                  ).map(({ key, label, cls }) => (
-                    <div
-                      key={key}
-                      className={styles['themeCard']}
-                      onClick={() => {
-                        if (key !== 'accent') setTheme(key);
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Select ${label} theme`}
-                    >
+                  {THEME_OPTIONS.map(({ key, labelKey, cls }) => {
+                    const label = t(labelKey);
+                    return (
                       <div
-                        className={cn(
-                          styles['themePreview'],
-                          cls,
-                          theme === key && styles['themePreviewActive']
-                        )}
+                        key={key}
+                        className={styles['themeCard']}
+                        onClick={() => {
+                          if (key !== 'accent') setTheme(key);
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={t('settings.selectThemeAria', { label })}
                       >
-                        <div className={styles['themePreviewSidebar']} />
-                        <div className={styles['themePreviewContent']}>
-                          <div className={styles['themePreviewRow']} />
-                          <div className={styles['themePreviewRow']} />
-                          <div className={styles['themePreviewRow']} />
+                        <div
+                          className={cn(
+                            styles['themePreview'],
+                            styles[cls],
+                            theme === key && styles['themePreviewActive']
+                          )}
+                        >
+                          <div className={styles['themePreviewSidebar']} />
+                          <div className={styles['themePreviewContent']}>
+                            <div className={styles['themePreviewRow']} />
+                            <div className={styles['themePreviewRow']} />
+                            <div className={styles['themePreviewRow']} />
+                          </div>
                         </div>
+                        <span className={styles['themeLabel']}>{label}</span>
                       </div>
-                      <span className={styles['themeLabel']}>{label}</span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -174,7 +198,10 @@ export function SettingsPage(): React.ReactElement {
                   <div className={styles['labelStack']}>
                     <span className={styles['labelTitle']}>{t('common.switchLanguage')}</span>
                     <span className={styles['labelDesc']}>
-                      Current: {language === 'en' ? 'English' : 'Español'}
+                      {t('settings.currentLanguage', {
+                        lang:
+                          language === 'en' ? t('settings.langEnglish') : t('settings.langSpanish'),
+                      })}
                     </span>
                   </div>
                   <div className={styles['langButtons']}>
@@ -185,7 +212,7 @@ export function SettingsPage(): React.ReactElement {
                         if (language !== 'en') toggleLanguage();
                       }}
                     >
-                      English
+                      {t('settings.langEnglish')}
                     </Button>
                     <Button
                       variant={language === 'es' ? 'default' : 'outline'}
@@ -194,7 +221,7 @@ export function SettingsPage(): React.ReactElement {
                         if (language !== 'es') toggleLanguage();
                       }}
                     >
-                      Español
+                      {t('settings.langSpanish')}
                     </Button>
                   </div>
                 </div>
@@ -208,37 +235,14 @@ export function SettingsPage(): React.ReactElement {
                 <CardTitle>{t('notifications.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                {(
-                  [
-                    {
-                      key: 'notificationsInfo',
-                      label: 'Info notifications',
-                      desc: 'General informational messages',
-                    },
-                    {
-                      key: 'notificationsWarning',
-                      label: 'Warning notifications',
-                      desc: 'Alerts requiring attention',
-                    },
-                    {
-                      key: 'notificationsError',
-                      label: 'Error notifications',
-                      desc: 'Critical system errors',
-                    },
-                    {
-                      key: 'notificationsSuccess',
-                      label: 'Success notifications',
-                      desc: 'Confirmations of completed actions',
-                    },
-                  ] as const
-                ).map((item, i, arr) => (
+                {NOTIFICATION_OPTIONS.map((item, i, arr) => (
                   <div
                     key={item.key}
                     className={i < arr.length - 1 ? styles['fieldRow'] : styles['fieldRowLast']}
                   >
                     <div className={styles['labelStack']}>
-                      <span className={styles['labelTitle']}>{item.label}</span>
-                      <span className={styles['labelDesc']}>{item.desc}</span>
+                      <span className={styles['labelTitle']}>{t(item.labelKey)}</span>
+                      <span className={styles['labelDesc']}>{t(item.descKey)}</span>
                     </div>
                     <Switch
                       checked={settings[item.key]}
@@ -260,7 +264,7 @@ export function SettingsPage(): React.ReactElement {
               <CardContent>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                   <div>
-                    <Label htmlFor="companyName">Company name</Label>
+                    <Label htmlFor="companyName">{t('settings.companyName')}</Label>
                     <Input
                       id="companyName"
                       value={companyName}
@@ -271,7 +275,7 @@ export function SettingsPage(): React.ReactElement {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="logoUrl">Logo URL</Label>
+                    <Label htmlFor="logoUrl">{t('settings.logoUrl')}</Label>
                     <Input
                       id="logoUrl"
                       type="url"
@@ -284,7 +288,7 @@ export function SettingsPage(): React.ReactElement {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="currency">Default currency</Label>
+                    <Label htmlFor="currency">{t('settings.defaultCurrency')}</Label>
                     <Input
                       id="currency"
                       value={currency}
@@ -296,7 +300,7 @@ export function SettingsPage(): React.ReactElement {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="timezone">Timezone</Label>
+                    <Label htmlFor="timezone">{t('settings.timezone')}</Label>
                     <Input
                       id="timezone"
                       value={timezone}
@@ -310,10 +314,10 @@ export function SettingsPage(): React.ReactElement {
                     <Button
                       size="sm"
                       onClick={() => {
-                        toast({ title: 'Company profile saved' });
+                        toast({ title: t('common.saveChanges') });
                       }}
                     >
-                      Save changes
+                      {t('common.saveChanges')}
                     </Button>
                   </div>
                 </div>
@@ -329,24 +333,24 @@ export function SettingsPage(): React.ReactElement {
               <CardContent>
                 <div className={styles['fieldRow']}>
                   <div className={styles['labelStack']}>
-                    <span className={styles['labelTitle']}>Reset preferences</span>
+                    <span className={styles['labelTitle']}>{t('settings.resetPreferences')}</span>
                     <span className={styles['labelDesc']}>
-                      Restore all settings to default values
+                      {t('settings.resetPreferencesDesc')}
                     </span>
                   </div>
                   <Button variant="outline" size="sm" onClick={resetSettings}>
-                    Reset
+                    {t('settings.resetAction')}
                   </Button>
                 </div>
                 <div className={styles['fieldRowLast']}>
                   <div className={styles['labelStack']}>
-                    <span className={styles['labelTitleDanger']}>Delete account</span>
-                    <span className={styles['labelDesc']}>
-                      Permanently remove your account and all data
+                    <span className={styles['labelTitleDanger']}>
+                      {t('settings.deleteAccount')}
                     </span>
+                    <span className={styles['labelDesc']}>{t('settings.deleteAccountDesc')}</span>
                   </div>
                   <Button variant="destructive" size="sm" disabled>
-                    Delete account
+                    {t('settings.deleteAccount')}
                   </Button>
                 </div>
               </CardContent>

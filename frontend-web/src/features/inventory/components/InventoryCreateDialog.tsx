@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useCreateInventoryItem } from '@features/inventory';
 import { toCents } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export function InventoryCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateInventoryItem();
   const {
     register,
@@ -78,7 +80,7 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Inventory Item</DialogTitle>
+          <DialogTitle>{t('inventory.addItem')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -87,15 +89,15 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
         >
           <div className={styles['body']}>
             <div className={styles['grid2']}>
-              <FormField label="Name" required error={errors.name?.message}>
-                <Input {...register('name')} placeholder="Product name" />
+              <FormField label={t('inventory.name')} required error={errors.name?.message}>
+                <Input {...register('name')} placeholder={t('products.namePlaceholder')} />
               </FormField>
-              <FormField label="SKU" required error={errors.sku?.message}>
-                <Input {...register('sku')} placeholder="INV-001" />
+              <FormField label={t('inventory.sku')} required error={errors.sku?.message}>
+                <Input {...register('sku')} placeholder={t('inventory.skuPlaceholder')} />
               </FormField>
             </div>
             <div className={styles['gridQtyPriceShort']}>
-              <FormField label="Quantity" required error={errors.quantity?.message}>
+              <FormField label={t('inventory.quantity')} required error={errors.quantity?.message}>
                 <Input
                   {...register('quantity', { valueAsNumber: true })}
                   type="number"
@@ -103,7 +105,7 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
                   step="1"
                 />
               </FormField>
-              <FormField label="Price" required error={errors.price?.message}>
+              <FormField label={t('inventory.price')} required error={errors.price?.message}>
                 <Input
                   {...register('price', { valueAsNumber: true })}
                   type="number"
@@ -111,12 +113,12 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
                   min="0"
                 />
               </FormField>
-              <FormField label="Currency" error={errors.currency?.message}>
+              <FormField label={t('products.currency')} error={errors.currency?.message}>
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
             <div className={styles['grid2']}>
-              <FormField label="Status" required error={errors.status?.message}>
+              <FormField label={t('common.status')} required error={errors.status?.message}>
                 <Controller
                   name="status"
                   control={control}
@@ -126,19 +128,24 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="IN_STOCK">In Stock</SelectItem>
-                        <SelectItem value="LOW_STOCK">Low Stock</SelectItem>
-                        <SelectItem value="OUT_OF_STOCK">Out of Stock</SelectItem>
+                        <SelectItem value="IN_STOCK">{t('inventory.statusInStock')}</SelectItem>
+                        <SelectItem value="LOW_STOCK">{t('inventory.statusLowStock')}</SelectItem>
+                        <SelectItem value="OUT_OF_STOCK">
+                          {t('inventory.statusOutOfStock')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   )}
                 />
               </FormField>
-              <FormField label="Category" error={errors.category?.message}>
-                <Input {...register('category')} placeholder="e.g. Laptops" />
+              <FormField label={t('inventory.category')} error={errors.category?.message}>
+                <Input {...register('category')} placeholder={t('inventory.categoryPlaceholder')} />
               </FormField>
             </div>
-            <FormField label="Reorder threshold" error={errors.reorderThreshold?.message}>
+            <FormField
+              label={t('inventory.reorderThreshold')}
+              error={errors.reorderThreshold?.message}
+            >
               <Input
                 {...register('reorderThreshold', {
                   setValueAs: (v: string) => (v === '' ? undefined : parseInt(v, 10)),
@@ -146,16 +153,16 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
                 type="number"
                 min="0"
                 step="1"
-                placeholder="Optional"
+                placeholder={t('products.optional')}
               />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Adding…' : 'Add Item'}
+              {isPending ? t('common.adding') : t('inventory.addItem')}
             </Button>
           </DialogFooter>
         </form>

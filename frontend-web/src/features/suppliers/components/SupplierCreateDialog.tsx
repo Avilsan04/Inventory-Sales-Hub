@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateSupplier } from '@features/suppliers';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export function SupplierCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateSupplier();
   const {
     register,
@@ -63,7 +65,7 @@ export function SupplierCreateDialog({ open, onOpenChange }: Props): React.React
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Supplier</DialogTitle>
+          <DialogTitle>{t('suppliers.newSupplier')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -71,28 +73,35 @@ export function SupplierCreateDialog({ open, onOpenChange }: Props): React.React
           }}
         >
           <div className={styles['body']}>
-            <FormField label="Company name" required error={errors.name?.message}>
-              <Input {...register('name')} placeholder="Acme Corp" />
+            <FormField label={t('suppliers.companyName')} required error={errors.name?.message}>
+              <Input {...register('name')} placeholder={t('suppliers.companyNamePlaceholder')} />
             </FormField>
-            <FormField label="Email" error={errors.email?.message}>
-              <Input {...register('email')} type="email" placeholder="orders@supplier.com" />
+            <FormField label={t('suppliers.email')} error={errors.email?.message}>
+              <Input
+                {...register('email')}
+                type="email"
+                placeholder={t('suppliers.emailPlaceholder')}
+              />
             </FormField>
-            <FormField label="Phone" error={errors.phone?.message}>
-              <Input {...register('phone')} placeholder="+1 555 000 0000" />
+            <FormField label={t('suppliers.phone')} error={errors.phone?.message}>
+              <Input {...register('phone')} placeholder={t('suppliers.phonePlaceholder')} />
             </FormField>
-            <FormField label="Address" error={errors.address?.message}>
-              <Input {...register('address')} placeholder="123 Industrial Ave" />
+            <FormField label={t('suppliers.address')} error={errors.address?.message}>
+              <Input {...register('address')} placeholder={t('suppliers.addressPlaceholder')} />
             </FormField>
-            <FormField label="Contact person" error={errors.contactPerson?.message}>
-              <Input {...register('contactPerson')} placeholder="Jane Smith" />
+            <FormField label={t('suppliers.contactPerson')} error={errors.contactPerson?.message}>
+              <Input
+                {...register('contactPerson')}
+                placeholder={t('suppliers.contactPersonPlaceholder')}
+              />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Adding…' : 'Add Supplier'}
+              {isPending ? t('common.adding') : t('suppliers.addSupplier')}
             </Button>
           </DialogFooter>
         </form>

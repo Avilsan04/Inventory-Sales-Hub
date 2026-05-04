@@ -93,7 +93,9 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
                   onClick={() => {
                     setShowPassword((v) => !v);
                   }}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={
+                    showPassword ? translate('auth.hidePassword') : translate('auth.showPassword')
+                  }
                   tabIndex={-1}
                 >
                   {showPassword ? (

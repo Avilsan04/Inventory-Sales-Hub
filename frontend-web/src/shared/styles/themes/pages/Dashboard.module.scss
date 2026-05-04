@@ -129,11 +129,14 @@
   color: var(--color-on-error-container);
 }
 
+// kpiTrendBadge uses sub-scale gaps — component-scoped constants
+$_trend-badge-padding-y: 0.1875rem;
+
 .kpiTrendBadge {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px $spacing-2;
+  gap: $spacing-0-5;
+  padding: $_trend-badge-padding-y $spacing-2;
   border-radius: var(--radius-full);
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;

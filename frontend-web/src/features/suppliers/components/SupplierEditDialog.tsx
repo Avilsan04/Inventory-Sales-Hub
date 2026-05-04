@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateSupplier } from '@features/suppliers';
 import { toast } from '@shared/hooks/useToast';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
@@ -33,6 +34,7 @@ interface Props {
 }
 
 export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateSupplier(supplier?.id ?? '');
   const {
     register,
@@ -78,7 +80,7 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Supplier</DialogTitle>
+          <DialogTitle>{t('suppliers.editSupplier')}</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -86,28 +88,28 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
           }}
         >
           <div className={styles['body']}>
-            <FormField label="Company name" required error={errors.name?.message}>
+            <FormField label={t('suppliers.companyName')} required error={errors.name?.message}>
               <Input {...register('name')} />
             </FormField>
-            <FormField label="Email" error={errors.email?.message}>
+            <FormField label={t('suppliers.email')} error={errors.email?.message}>
               <Input {...register('email')} type="email" />
             </FormField>
-            <FormField label="Phone" error={errors.phone?.message}>
+            <FormField label={t('suppliers.phone')} error={errors.phone?.message}>
               <Input {...register('phone')} />
             </FormField>
-            <FormField label="Address" error={errors.address?.message}>
+            <FormField label={t('suppliers.address')} error={errors.address?.message}>
               <Input {...register('address')} />
             </FormField>
-            <FormField label="Contact person" error={errors.contactPerson?.message}>
+            <FormField label={t('suppliers.contactPerson')} error={errors.contactPerson?.message}>
               <Input {...register('contactPerson')} />
             </FormField>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Saving…' : 'Save'}
+              {isPending ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

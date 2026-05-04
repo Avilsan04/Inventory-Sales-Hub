@@ -152,9 +152,9 @@ export function InventoryPage(): React.ReactElement {
                 fontSize: '0.875rem',
                 background: 'var(--color-background)',
               }}
-              aria-label="Filtrar por almacén"
+              aria-label={t('inventory.filterByWarehouse')}
             >
-              <option value="">Todos los almacenes</option>
+              <option value="">{t('inventory.allWarehouses')}</option>
               {warehouses
                 .filter((w) => w.isActive)
                 .map((w) => (
@@ -178,7 +178,7 @@ export function InventoryPage(): React.ReactElement {
               }}
               disabled={paginated.length === 0}
             >
-              Transferir stock
+              {t('inventory.transferStock')}
             </Button>
           </PermissionGuard>
           <PermissionGuard permission="create:inventory">
@@ -290,7 +290,7 @@ export function InventoryPage(): React.ReactElement {
             <h3
               style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, marginBottom: '0.75rem' }}
             >
-              Audit Log
+              {t('common.auditLog')}
             </h3>
           </div>
           <div style={{ padding: '0 1rem 1rem' }}>
@@ -333,8 +333,8 @@ export function InventoryPage(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setDeleteId(null);
         }}
-        title="Delete inventory item?"
-        description="This action cannot be undone."
+        title={t('inventory.deleteItem')}
+        description={t('common.cannotUndo')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />
