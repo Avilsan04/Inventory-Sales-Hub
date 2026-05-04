@@ -8,6 +8,7 @@ import type { HttpClient, HttpRequestConfig } from './http.types';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true, // forwards HttpOnly refresh_token cookie on every request
   headers: {
     'Content-Type': 'application/json',
   },
@@ -30,11 +31,10 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
   const resInterceptorId = setupResponseInterceptor(
     axiosInstance,
     async () => {
+      // Browser automatically sends the HttpOnly refresh_token cookie here
       const response = await axiosInstance.post<{ token: string }>('/auth/refresh');
       const newToken = response.data.token;
-      // Preserve token location: save to localStorage if it was there, else sessionStorage
-      const usedLocalStorage = !!localStorage.getItem('auth_token');
-      tokenStorage.saveToken(newToken, usedLocalStorage);
+      tokenStorage.saveToken(newToken);
       return newToken;
     },
     () => {

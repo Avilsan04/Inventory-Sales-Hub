@@ -2,6 +2,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { salesApi } from '../api/salesApi';
 import { saleKeys } from './useSales';
 import { calculateSaleTotals } from '@shared/lib/saleCalculations';
+import { syncDb } from '@shared/lib/db/syncDb';
 import type { Sale, CreateSaleDTO } from '@entities/sale';
 
 export function useCreateSale(): UseMutationResult<
@@ -13,7 +14,27 @@ export function useCreateSale(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: salesApi.createSale,
+    mutationFn: async (dto: CreateSaleDTO): Promise<Sale> => {
+      // UUID generated here is the Idempotency-Key — ensures the backend never processes
+      // the same sale twice even if a network timeout causes a retry.
+      const transactionId = crypto.randomUUID();
+
+      await syncDb.syncQueue.add({
+        id: transactionId,
+        type: 'CREATE_SALE',
+        payload: dto,
+        status: 'pending',
+        retries: 0,
+        createdAt: Date.now(),
+      });
+
+      const result = await salesApi.createSale(dto, {
+        headers: { 'Idempotency-Key': transactionId },
+      });
+
+      await syncDb.syncQueue.update(transactionId, { status: 'completed' });
+      return result;
+    },
 
     onMutate: async (dto) => {
       await queryClient.cancelQueries({ queryKey: saleKeys.lists() });

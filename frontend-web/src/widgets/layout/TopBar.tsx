@@ -11,7 +11,7 @@ import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 
-const DEV_ROLES = ['COMPANY', 'ADMIN', 'MANAGER', 'STAFF', 'CUSTOMER'] as const;
+const DEV_ROLES = ['company', 'admin', 'manager', 'staff', 'customer'] as const;
 
 export function TopBar(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
@@ -38,7 +38,7 @@ export function TopBar(): React.ReactElement {
       <div className={styles['topbarActions']}>
         {import.meta.env.DEV && (
           <Select
-            value={localStorage.getItem('TEST_MODE_ROLE') ?? 'COMPANY'}
+            value={localStorage.getItem('TEST_MODE_ROLE') ?? 'company'}
             onValueChange={(v: string) => {
               localStorage.setItem('TEST_MODE_ROLE', v);
               window.location.reload();

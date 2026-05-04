@@ -161,6 +161,12 @@ export function SettingsPage(): React.ReactElement {
                         onClick={() => {
                           if (key !== 'accent') setTheme(key);
                         }}
+                        onKeyDown={(e) => {
+                          if ((e.key === 'Enter' || e.key === ' ') && key !== 'accent') {
+                            e.preventDefault();
+                            setTheme(key);
+                          }
+                        }}
                         role="button"
                         tabIndex={0}
                         aria-label={t('settings.selectThemeAria', { label })}

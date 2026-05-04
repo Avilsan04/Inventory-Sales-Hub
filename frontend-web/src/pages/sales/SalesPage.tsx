@@ -2,11 +2,11 @@ import * as React from 'react';
 import { PencilIcon, ShoppingCartIcon } from 'lucide-react';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { formatCurrency, fromCents } from '@shared/lib/formatCurrency';
+import { formatOrderId } from '@shared/lib/formatters';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useSales } from '@features/sales';
+import { useSales, useSalesFilters } from '@features/sales';
 import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
-import { useDebounce } from '@shared/hooks';
 import { Skeleton, Badge, Button, Input } from '@shared/ui/primitives';
 import {
   Card,
@@ -18,7 +18,6 @@ import {
   TableHead,
   TableCell,
   DateRangePicker,
-  type DateRange,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
 import { SaleCreateWidget } from '@widgets';
@@ -53,10 +52,6 @@ function formatDate(iso: string): string {
   return iso.slice(0, 10); // YYYY-MM-DD
 }
 
-function orderId(id: string): string {
-  return id.startsWith('ORD-') ? `#${id}` : `#${id.slice(0, 8)}`;
-}
-
 const SKELETON_ROWS = 5;
 
 export function SalesPage(): React.ReactElement {
@@ -64,16 +59,33 @@ export function SalesPage(): React.ReactElement {
   const { data: sales, isLoading, isError } = useSales();
   const { data: topCustomers } = useTopCustomers();
 
-  const [search, setSearch] = React.useState('');
-  const debouncedSearch = useDebounce(search);
   const [createOpen, setCreateOpen] = React.useState(false);
-  const [dateFilter, setDateFilter] = React.useState<DateRange | null>(null);
-  const [showDateFilter, setShowDateFilter] = React.useState(false);
+  const [editSale, setEditSale] = React.useState<Sale | null>(null);
+  const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
+
+  const {
+    filtered,
+    search,
+    setSearch,
+    debouncedSearch,
+    dateFilter,
+    setDateFilter,
+    showDateFilter,
+    toggleDateFilter,
+  } = useSalesFilters(sales);
+
+  const customerMap = React.useMemo(() => {
+    const map = new Map<string, string>();
+    topCustomers?.forEach((c) => {
+      map.set(c.customerId, c.customerName);
+    });
+    return map;
+  }, [topCustomers]);
 
   const handleExport = (): void => {
     exportToCsv(
       (sales ?? []).map((s) => ({
-        id: orderId(s.id),
+        id: formatOrderId(s.id),
         customer: s.customerId ? (customerMap.get(s.customerId) ?? s.customerId) : '',
         date: formatDate(s.createdAt),
         status: s.status,
@@ -84,32 +96,6 @@ export function SalesPage(): React.ReactElement {
       'sales'
     );
   };
-  const [editSale, setEditSale] = React.useState<Sale | null>(null);
-  const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
-
-  const customerMap = React.useMemo(() => {
-    const map = new Map<string, string>();
-    topCustomers?.forEach((c) => {
-      map.set(c.customerId, c.customerName);
-    });
-    return map;
-  }, [topCustomers]);
-
-  const filtered = React.useMemo(() => {
-    if (!sales) return [];
-    return sales.filter((s) => {
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        if (!s.id.toLowerCase().includes(q) && !(s.customerId ?? '').toLowerCase().includes(q))
-          return false;
-      }
-      if (dateFilter) {
-        const d = s.createdAt.slice(0, 10);
-        if (d < dateFilter.from || d > dateFilter.to) return false;
-      }
-      return true;
-    });
-  }, [sales, debouncedSearch, dateFilter]);
 
   if (isError) {
     return (
@@ -133,14 +119,7 @@ export function SalesPage(): React.ReactElement {
               {t('common.export')}
             </Button>
           </PermissionGuard>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setShowDateFilter((v) => !v);
-              if (showDateFilter) setDateFilter(null);
-            }}
-          >
+          <Button variant="outline" size="sm" onClick={toggleDateFilter}>
             {t('common.filter')}
           </Button>
           <Button
@@ -222,7 +201,7 @@ export function SalesPage(): React.ReactElement {
                 ) : (
                   filtered.map((s) => (
                     <TableRow key={s.id}>
-                      <TableCell className={styles['mono']}>{orderId(s.id)}</TableCell>
+                      <TableCell className={styles['mono']}>{formatOrderId(s.id)}</TableCell>
                       <TableCell>
                         {s.customerId
                           ? (customerMap.get(s.customerId) ?? `#${s.customerId.slice(0, 8)}`)

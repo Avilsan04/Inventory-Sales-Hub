@@ -1,0 +1,6 @@
+export const TIMING = {
+  CACHE_STALE_MS: 5 * 60 * 1000,
+  CACHE_GC_MS: 15 * 60 * 1000,
+  MAX_RETRY_DELAY_MS: 30_000,
+  TOAST_DISPLAY_MS: 5_000,
+} as const;

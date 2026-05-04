@@ -2,10 +2,10 @@ import * as React from 'react';
 import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useInventory, useDeleteInventoryItem } from '@features/inventory';
+import { useInventoryFilters, PAGE_SIZE } from '@features/inventory/hooks/useInventoryFilters';
 import { PermissionGuard, useEffectiveRole } from '@features/auth';
 import { hasPermission } from '@shared/lib/permissions';
 import { toast } from '@shared/hooks/useToast';
-import { useDebounce } from '@shared/hooks';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { fromCents } from '@shared/lib/formatCurrency';
 import { Spinner, Button, Pagination, Input } from '@shared/ui/primitives';
@@ -23,19 +23,11 @@ import { cn } from '@shared/lib/cn';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Inventory.module.scss';
 
-type StockTab = 'all' | 'low' | 'out';
-
 export function InventoryPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data, isPending, isError, error } = useInventory();
   const { mutate: deleteItem, isPending: isDeleting } = useDeleteInventoryItem();
   const role = useEffectiveRole();
-
-  const [search, setSearch] = React.useState('');
-  const debouncedSearch = useDebounce(search);
-  const [tab, setTab] = React.useState<StockTab>('all');
-  const [page, setPage] = React.useState(1);
-  const PAGE_SIZE = 10;
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editItem, setEditItem] = React.useState<InventoryItem | null>(null);
@@ -43,47 +35,24 @@ export function InventoryPage(): React.ReactElement {
   const [transferItem, setTransferItem] = React.useState<InventoryItem | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
   const [historyItem, setHistoryItem] = React.useState<InventoryItem | null>(null);
-  const [warehouseFilter, setWarehouseFilter] = React.useState<string | null>(null);
 
   const { data: warehouses } = useWarehouses();
 
-  const tabs: { id: StockTab; labelKey: string; count: number }[] = React.useMemo(() => {
-    const all = data ?? [];
-    return [
-      { id: 'all', labelKey: 'inventory.allProducts', count: all.length },
-      {
-        id: 'low',
-        labelKey: 'inventory.lowStockTab',
-        count: all.filter((i) => i.status === 'LOW_STOCK').length,
-      },
-      {
-        id: 'out',
-        labelKey: 'inventory.outOfStockTab',
-        count: all.filter((i) => i.status === 'OUT_OF_STOCK').length,
-      },
-    ];
-  }, [data]);
-
-  React.useEffect(() => {
-    setPage(1);
-  }, [tab, debouncedSearch]);
-
-  const filtered: InventoryItem[] = React.useMemo(() => {
-    return (data ?? []).filter((item) => {
-      if (tab === 'low' && item.status !== 'LOW_STOCK') return false;
-      if (tab === 'out' && item.status !== 'OUT_OF_STOCK') return false;
-      if (warehouseFilter && item.warehouseId !== warehouseFilter) return false;
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        if (!item.name.toLowerCase().includes(q) && !item.sku.toLowerCase().includes(q))
-          return false;
-      }
-      return true;
-    });
-  }, [data, tab, debouncedSearch, warehouseFilter]);
-
-  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const {
+    search,
+    setSearch,
+    tab,
+    setTab,
+    page,
+    setPage,
+    warehouseFilter,
+    setWarehouseFilter,
+    debouncedSearch,
+    tabs,
+    filtered,
+    paginated,
+    pageCount,
+  } = useInventoryFilters(data);
 
   const handleExport = (): void => {
     exportToCsv(

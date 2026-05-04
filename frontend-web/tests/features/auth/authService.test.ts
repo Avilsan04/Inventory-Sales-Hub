@@ -54,24 +54,24 @@ describe('AuthService', () => {
     });
 
     describe('login', () => {
-        it('saves token on success', async () => {
-            await service.login({ email: 'test@test.com', password: 'password123' }, true);
-            expect(storage.saveToken).toHaveBeenCalledWith('test-token-123', true);
+        it('saves token in memory on success', async () => {
+            await service.login({ email: 'test@test.com', password: 'password123' });
+            expect(storage.saveToken).toHaveBeenCalledWith('test-token-123');
         });
 
         it('throws on empty email', async () => {
-            await expect(service.login({ email: '', password: 'password' }, false))
+            await expect(service.login({ email: '', password: 'password' }))
                 .rejects.toThrow('[Security Validation]');
         });
 
         it('throws on empty password', async () => {
-            await expect(service.login({ email: 'test@test.com', password: '' }, false))
+            await expect(service.login({ email: 'test@test.com', password: '' }))
                 .rejects.toThrow('[Security Validation]');
         });
 
         it('throws when api returns empty token', async () => {
             vi.mocked(api.login).mockResolvedValueOnce({ token: '' });
-            await expect(service.login({ email: 'test@test.com', password: 'password' }, false))
+            await expect(service.login({ email: 'test@test.com', password: 'password' }))
                 .rejects.toThrow('[Security Validation]');
         });
     });

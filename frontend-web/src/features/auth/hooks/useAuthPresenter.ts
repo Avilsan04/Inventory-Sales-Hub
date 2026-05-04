@@ -18,8 +18,6 @@ export interface IAuthPresenter {
   readonly isLoading: boolean;
   readonly error: string | null;
   readonly isValid: boolean;
-  readonly rememberMe: boolean;
-  readonly handleRememberMeChange: (checked: boolean | 'indeterminate') => void;
   readonly onSubmit: (data: LoginFormValues) => Promise<void>;
 }
 
@@ -28,7 +26,6 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [rememberMe, setRememberMe] = React.useState<boolean>(false);
 
   const {
     register,
@@ -39,16 +36,12 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
     resolver: zodResolver(loginFormSchema),
   });
 
-  const handleRememberMeChange = React.useCallback((checked: boolean | 'indeterminate'): void => {
-    setRememberMe(checked === true);
-  }, []);
-
   const onSubmit = React.useCallback(
     async (data: LoginFormValues): Promise<void> => {
       setIsLoading(true);
       setError(null);
       try {
-        await authService.login({ email: data.email, password: data.password }, rememberMe);
+        await authService.login({ email: data.email, password: data.password });
         onSuccess();
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Unknown error';
@@ -58,7 +51,7 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
         setIsLoading(false);
       }
     },
-    [rememberMe, onSuccess, translate, authService]
+    [onSuccess, translate, authService]
   );
 
   return {
@@ -68,8 +61,6 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
     isLoading,
     error,
     isValid,
-    rememberMe,
-    handleRememberMeChange,
     onSubmit,
   };
 }

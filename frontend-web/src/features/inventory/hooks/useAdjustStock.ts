@@ -45,24 +45,6 @@ export function useAdjustStock(
         queryClient.setQueryData(inventoryKeys.detail(id), context.previousDetail);
       }
     },
-    onSuccess: (updated) => {
-      if (updated.status === 'LOW_STOCK' || updated.status === 'OUT_OF_STOCK') {
-        // Fire-and-forget: alert email queue
-        fetch(`${window.location.origin}/api/notifications/email-queue`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'low_stock',
-            itemId: updated.id,
-            itemName: updated.name,
-            quantity: updated.quantity,
-            status: updated.status,
-          }),
-        }).catch(() => {
-          /* intentionally silent */
-        });
-      }
-    },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
       void queryClient.invalidateQueries({ queryKey: inventoryKeys.detail(id) });

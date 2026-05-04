@@ -6,17 +6,12 @@ import { APP_ROUTES } from '@shared/config/routes';
 import type { UserProfile } from '@features/auth/models/auth.types';
 
 const ROLE_DEFAULT_PATH: Record<string, string> = {
-  COMPANY: APP_ROUTES.DASHBOARD,
-  ADMIN: APP_ROUTES.INVENTORY,
-  MANAGER: APP_ROUTES.SALES,
-  STAFF: APP_ROUTES.POS,
-  CUSTOMER: APP_ROUTES.CATALOG,
-  // legacy role compat
   admin: APP_ROUTES.INVENTORY,
   manager: APP_ROUTES.SALES,
   staff: APP_ROUTES.POS,
   company: APP_ROUTES.DASHBOARD,
   customer: APP_ROUTES.CATALOG,
+  test: APP_ROUTES.DASHBOARD,
 };
 
 interface RoleRouteProps {

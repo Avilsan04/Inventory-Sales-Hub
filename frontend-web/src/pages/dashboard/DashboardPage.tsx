@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { ArrowRightIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import {
-  useDashboardKpi,
-  useLowStockAlerts,
-  useTopCustomers,
-  useSalesAnalytics,
-} from '@features/analytics';
-import { useSales } from '@features/sales';
+import { useDashboardStats } from '@features/analytics';
 import { PermissionGuard } from '@features/auth';
 import { SectionErrorBoundary } from '@app/providers';
 import {
@@ -26,9 +20,9 @@ import {
   TableRow,
   TableHead,
   TableCell,
-  type StatusSlice,
 } from '@shared/ui/composed';
 import { formatCurrency } from '@shared/lib/formatCurrency';
+import { formatOrderId } from '@shared/lib/formatters';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/pages/Dashboard.module.scss';
 
@@ -43,39 +37,19 @@ function saleStatusBadge(status: string): BadgeVariant {
   return map[status as SaleStatus] ?? 'neutral';
 }
 
-function orderId(id: string): string {
-  return id.startsWith('ORD-') ? `#${id}` : `#${id.slice(0, 8).toUpperCase()}`;
-}
-
 export function DashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: kpi, isLoading: kpiLoading } = useDashboardKpi();
-  const { data: alerts } = useLowStockAlerts();
-  const { data: sales, isLoading: salesLoading } = useSales();
-  const { data: topCustomers } = useTopCustomers();
-  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics({ period: '7d' });
-
-  const customerMap = React.useMemo((): Map<string, string> => {
-    const map = new Map<string, string>();
-    topCustomers?.forEach((c) => map.set(c.customerId, c.customerName));
-    return map;
-  }, [topCustomers]);
-
-  const statusSlices = React.useMemo((): StatusSlice[] => {
-    if (!sales) return [];
-    const map = new Map<string, { count: number; revenue: number }>();
-    sales.forEach((s) => {
-      const curr = map.get(s.status) ?? { count: 0, revenue: 0 };
-      map.set(s.status, { count: curr.count + 1, revenue: curr.revenue + s.total });
-    });
-    return Array.from(map.entries()).map(([status, d]) => ({
-      status,
-      count: d.count,
-      revenue: d.revenue,
-    }));
-  }, [sales]);
-
-  const recentSales = sales?.slice(0, 5) ?? [];
+  const {
+    kpi,
+    kpiLoading,
+    alerts,
+    salesPeriod,
+    periodLoading,
+    recentSales,
+    salesLoading,
+    customerMap,
+    statusSlices,
+  } = useDashboardStats();
 
   return (
     <div className={styles['page']}>
@@ -202,7 +176,7 @@ export function DashboardPage(): React.ReactElement {
               ) : (
                 recentSales.map((s) => (
                   <TableRow key={s.id}>
-                    <TableCell className={styles['orderIdLink']}>{orderId(s.id)}</TableCell>
+                    <TableCell className={styles['orderIdLink']}>{formatOrderId(s.id)}</TableCell>
                     <TableCell>
                       {s.customerId
                         ? (customerMap.get(s.customerId) ?? `#${s.customerId.slice(0, 8)}`)

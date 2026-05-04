@@ -244,19 +244,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const effectiveRole = useEffectiveRole();
 
   const navGroups = React.useMemo((): readonly NavGroup[] => {
-    if (effectiveRole === 'COMPANY' || effectiveRole === 'company') return COMPANY_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'ADMIN' || effectiveRole === 'admin') return ADMIN_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'MANAGER' || effectiveRole === 'manager') return MANAGER_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'STAFF' || effectiveRole === 'staff') return STAFF_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'CUSTOMER' || effectiveRole === 'customer') return CUSTOMER_NAV_GROUPS;
+    if (effectiveRole === 'company') return COMPANY_ROLE_NAV_GROUPS;
+    if (effectiveRole === 'admin') return ADMIN_ROLE_NAV_GROUPS;
+    if (effectiveRole === 'manager') return MANAGER_ROLE_NAV_GROUPS;
+    if (effectiveRole === 'staff') return STAFF_ROLE_NAV_GROUPS;
+    if (effectiveRole === 'customer') return CUSTOMER_NAV_GROUPS;
     return STAFF_ROLE_NAV_GROUPS;
   }, [effectiveRole]);
 
-  const showAddProduct =
-    effectiveRole === 'ADMIN' ||
-    effectiveRole === 'admin' ||
-    effectiveRole === 'MANAGER' ||
-    effectiveRole === 'manager';
+  const showAddProduct = effectiveRole === 'admin' || effectiveRole === 'manager';
 
   return (
     <>
