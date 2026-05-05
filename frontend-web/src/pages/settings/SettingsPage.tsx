@@ -1,14 +1,35 @@
 import * as React from 'react';
-import { MoonIcon, GlobeIcon, BellIcon, UserIcon, SunIcon, BuildingIcon } from 'lucide-react';
+import {
+  SunIcon,
+  GlobeIcon,
+  BellIcon,
+  UserIcon,
+  BuildingIcon,
+  ContrastIcon,
+  ZapOffIcon,
+  InfoIcon,
+  ExternalLinkIcon,
+} from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useTheme } from '@shared/hooks/useTheme';
 import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
-import { useSettings } from '@shared/hooks/useSettings';
+import {
+  useSettings,
+  type AccentColor,
+  type DisplayScale,
+  type Density,
+} from '@shared/hooks/useSettings';
 import { useEffectiveRole } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
-import { Switch, Button, Input, Label } from '@shared/ui/primitives';
+import {
+  Switch,
+  Button,
+  Input,
+  Label,
+  SegmentedControl,
+  type SegmentedOption,
+} from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
-import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
 import baseStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Settings.module.scss';
 
@@ -48,32 +69,46 @@ const NAV_ITEMS: Array<{
   },
 ];
 
-const THEME_OPTIONS = [
-  { key: 'light' as const, labelKey: 'settings.themeLight', cls: 'previewLight' },
-  { key: 'dark' as const, labelKey: 'settings.themeDark', cls: 'previewDark' },
-  { key: 'accent' as const, labelKey: 'settings.themeAccent', cls: 'previewAccent' },
+const ACCENT_SWATCHES: Array<{ value: AccentColor; color: string }> = [
+  { value: 'blue', color: '#2563eb' },
+  { value: 'green', color: '#10b981' },
+  { value: 'purple', color: '#8b5cf6' },
+  { value: 'slate', color: '#64748b' },
+  { value: 'rose', color: '#f43f5e' },
 ];
 
-const NOTIFICATION_OPTIONS = [
+const NOTIF_OPTIONS: Array<{
+  key: keyof Pick<
+    ReturnType<typeof useSettings>['settings'],
+    'notificationsInfo' | 'notificationsWarning' | 'notificationsError' | 'notificationsSuccess'
+  >;
+  labelKey: string;
+  descKey: string;
+  color: string;
+}> = [
   {
-    key: 'notificationsInfo' as const,
+    key: 'notificationsInfo',
     labelKey: 'settings.infoNotifications',
     descKey: 'settings.infoNotificationsDesc',
+    color: '#3b82f6',
   },
   {
-    key: 'notificationsWarning' as const,
+    key: 'notificationsWarning',
     labelKey: 'settings.warningNotifications',
     descKey: 'settings.warningNotificationsDesc',
+    color: '#f59e0b',
   },
   {
-    key: 'notificationsError' as const,
+    key: 'notificationsError',
     labelKey: 'settings.errorNotifications',
     descKey: 'settings.errorNotificationsDesc',
+    color: '#ef4444',
   },
   {
-    key: 'notificationsSuccess' as const,
+    key: 'notificationsSuccess',
     labelKey: 'settings.successNotifications',
     descKey: 'settings.successNotificationsDesc',
+    color: '#22c55e',
   },
 ];
 
@@ -91,6 +126,58 @@ export function SettingsPage(): React.ReactElement {
   const [currency, setCurrency] = React.useState('EUR');
   const [timezone, setTimezone] = React.useState('Europe/Madrid');
 
+  const themeOptions: SegmentedOption<'light' | 'dark' | 'system'>[] = [
+    { value: 'light', label: t('settings.themeLight') },
+    { value: 'dark', label: t('settings.themeDark') },
+    { value: 'system', label: t('settings.themeSystem') },
+  ];
+
+  const scaleOptions: SegmentedOption<DisplayScale>[] = [
+    { value: 'sm', label: t('settings.scaleSm') },
+    { value: 'md', label: t('settings.scaleMd') },
+    { value: 'lg', label: t('settings.scaleLg') },
+  ];
+
+  const densityOptions: SegmentedOption<Density>[] = [
+    { value: 'comfortable', label: t('settings.densityComfortable') },
+    { value: 'compact', label: t('settings.densityCompact') },
+  ];
+
+  const langOptions: SegmentedOption<'en' | 'es'>[] = [
+    { value: 'en', label: t('settings.langEnglish') },
+    { value: 'es', label: t('settings.langSpanish') },
+  ];
+
+  function handleSavePreferences(): void {
+    toast({ title: t('common.saveChanges') });
+  }
+
+  function handleResetDefaults(): void {
+    resetSettings();
+    setTheme('system');
+    toast({ title: t('settings.resetAction') });
+  }
+
+  function handleLangChange(val: 'en' | 'es'): void {
+    if (val !== language) toggleLanguage();
+  }
+
+  const sectionDescKey: Record<SettingsSection, string> = {
+    appearance: 'settings.appearanceDesc',
+    language: 'settings.languageDesc',
+    notifications: 'settings.notificationsPageDesc',
+    account: 'settings.accountDesc',
+    company: 'settings.companyDesc',
+  };
+
+  const sectionTitleKey: Record<SettingsSection, string> = {
+    appearance: 'settings.nav.appearance',
+    language: 'settings.nav.language',
+    notifications: 'settings.nav.notifications',
+    account: 'settings.nav.account',
+    company: 'settings.nav.company',
+  };
+
   return (
     <div className={baseStyles['page']}>
       <header className={baseStyles['header']}>
@@ -98,9 +185,9 @@ export function SettingsPage(): React.ReactElement {
         <p className={baseStyles['subtitle']}>{t('topbar.subtitle.settings')}</p>
       </header>
 
-      <div className={styles['layout']}>
+      <div className={styles.layout}>
         {/* Secondary nav */}
-        <nav className={styles['nav']} aria-label="Settings sections">
+        <nav className={styles.nav} aria-label="Settings sections">
           {NAV_ITEMS.filter(({ adminOnly }) => !adminOnly || isAdminOrCompany).map(
             ({ id, labelKey, icon }) => (
               <button
@@ -109,146 +196,181 @@ export function SettingsPage(): React.ReactElement {
                 onClick={() => {
                   setActive(id);
                 }}
-                className={cn(styles['navItem'], active === id && styles['navItemActive'])}
+                className={cn(styles.navItem, active === id && styles.navItemActive)}
                 aria-current={active === id ? 'page' : undefined}
               >
-                <span className={styles['navIcon']}>{icon}</span>
+                <span className={styles.navIcon}>{icon}</span>
                 <span>{t(labelKey)}</span>
               </button>
             )
           )}
         </nav>
 
-        {/* Content panel */}
-        <div className={styles['content']}>
+        {/* Content area */}
+        <div className={styles.content}>
+          {/* Section header */}
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>{t(sectionTitleKey[active])}</h2>
+            <p className={styles.sectionDesc}>{t(sectionDescKey[active])}</p>
+          </div>
+
+          {/* ── Appearance ── */}
           {active === 'appearance' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('settings.nav.appearance')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={styles['fieldRow']}>
-                  <div className={styles['fieldRowLeft']}>
-                    <div className={styles['darkModeIconWrap']}>
-                      <MoonIcon size={20} aria-hidden="true" />
-                    </div>
-                    <div className={styles['labelStack']}>
-                      <span className={styles['labelTitle']}>{t('settings.darkMode')}</span>
-                      <span className={styles['labelDesc']}>{t('settings.darkModeDesc')}</span>
-                    </div>
+            <>
+              <div className={styles.mainCard}>
+                {/* Theme */}
+                <div className={styles.cardSection}>
+                  <div className={styles.fieldHeader}>
+                    <span className={styles.fieldTitle}>{t('settings.themeMode')}</span>
+                    <span className={styles.fieldDesc}>{t('settings.themeModeDesc')}</span>
                   </div>
-                  <Switch
-                    id="theme-toggle"
-                    checked={theme === 'dark'}
-                    onCheckedChange={(checked: boolean) => {
-                      setTheme(checked ? 'dark' : 'light');
+                  <SegmentedControl options={themeOptions} value={theme} onChange={setTheme} />
+                </div>
+
+                {/* Accent color */}
+                <div className={styles.cardSection}>
+                  <div className={styles.fieldHeader}>
+                    <span className={styles.fieldTitle}>{t('settings.accentColor')}</span>
+                    <span className={styles.fieldDesc}>{t('settings.accentColorDesc')}</span>
+                  </div>
+                  <div className={styles.swatches}>
+                    {ACCENT_SWATCHES.map(({ value, color }) => (
+                      <button
+                        key={value}
+                        type="button"
+                        aria-label={value}
+                        aria-pressed={settings.accentColor === value}
+                        className={cn(
+                          styles.swatch,
+                          settings.accentColor === value && styles.swatchActive
+                        )}
+                        style={{ backgroundColor: color }}
+                        onClick={() => {
+                          updateSettings({ accentColor: value });
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Display scaling */}
+                <div className={styles.cardSection}>
+                  <div className={styles.fieldHeader}>
+                    <span className={styles.fieldTitle}>{t('settings.displayScale')}</span>
+                    <span className={styles.fieldDesc}>{t('settings.displayScaleDesc')}</span>
+                  </div>
+                  <SegmentedControl
+                    options={scaleOptions}
+                    value={settings.displayScale}
+                    onChange={(val) => {
+                      updateSettings({ displayScale: val });
                     }}
                   />
                 </div>
-                <div className={styles['fieldRowLast']}>
-                  <div className={styles['labelStack']}>
-                    <span className={styles['labelTitle']}>{t('settings.currentTheme')}</span>
-                    <span className={styles['labelDesc']}>{t('settings.currentThemeDesc')}</span>
+
+                {/* Interface density */}
+                <div className={styles.cardSection}>
+                  <div className={styles.fieldHeader}>
+                    <span className={styles.fieldTitle}>{t('settings.density')}</span>
+                    <span className={styles.fieldDesc}>{t('settings.densityDesc')}</span>
                   </div>
+                  <SegmentedControl
+                    options={densityOptions}
+                    value={settings.density}
+                    onChange={(val) => {
+                      updateSettings({ density: val });
+                    }}
+                  />
                 </div>
-                <div className={styles['themeCards']}>
-                  {THEME_OPTIONS.map(({ key, labelKey, cls }) => {
-                    const label = t(labelKey);
-                    return (
-                      <div
-                        key={key}
-                        className={styles['themeCard']}
-                        onClick={() => {
-                          if (key !== 'accent') setTheme(key);
-                        }}
-                        onKeyDown={(e) => {
-                          if ((e.key === 'Enter' || e.key === ' ') && key !== 'accent') {
-                            e.preventDefault();
-                            setTheme(key);
-                          }
-                        }}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={t('settings.selectThemeAria', { label })}
-                      >
-                        <div
-                          className={cn(
-                            styles['themePreview'],
-                            styles[cls],
-                            theme === key && styles['themePreviewActive']
-                          )}
-                        >
-                          <div className={styles['themePreviewSidebar']} />
-                          <div className={styles['themePreviewContent']}>
-                            <div className={styles['themePreviewRow']} />
-                            <div className={styles['themePreviewRow']} />
-                            <div className={styles['themePreviewRow']} />
-                          </div>
-                        </div>
-                        <span className={styles['themeLabel']}>{label}</span>
-                      </div>
-                    );
-                  })}
+
+                <div className={styles.cardFooter}>
+                  <Button variant="outline" size="sm" onClick={handleResetDefaults}>
+                    {t('settings.resetDefaults')}
+                  </Button>
+                  <Button size="sm" onClick={handleSavePreferences}>
+                    {t('settings.savePreferences')}
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Accessibility cards */}
+              <div className={styles.accessGrid}>
+                <div className={styles.accessCard}>
+                  <div className={styles.accessIconWrap}>
+                    <ContrastIcon size={20} aria-hidden="true" />
+                  </div>
+                  <div className={styles.accessInfo}>
+                    <span className={styles.accessTitle}>{t('settings.contrast')}</span>
+                    <span className={styles.accessDesc}>{t('settings.contrastDesc')}</span>
+                  </div>
+                  <Switch
+                    checked={settings.highContrast}
+                    onCheckedChange={(checked: boolean) => {
+                      updateSettings({ highContrast: checked });
+                    }}
+                  />
+                </div>
+
+                <div className={styles.accessCard}>
+                  <div className={styles.accessIconWrap}>
+                    <ZapOffIcon size={20} aria-hidden="true" />
+                  </div>
+                  <div className={styles.accessInfo}>
+                    <span className={styles.accessTitle}>{t('settings.motion')}</span>
+                    <span className={styles.accessDesc}>{t('settings.motionDesc')}</span>
+                  </div>
+                  <Switch
+                    checked={settings.reduceMotion}
+                    onCheckedChange={(checked: boolean) => {
+                      updateSettings({ reduceMotion: checked });
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Enterprise info box */}
+              <div className={styles.infoBox}>
+                <p className={styles.infoBoxText}>
+                  <InfoIcon size={16} aria-hidden="true" />
+                  {t('settings.enterpriseTheme')}
+                </p>
+                <a href="#" className={styles.infoBoxLink}>
+                  {t('settings.contactAdmin')}
+                  <ExternalLinkIcon size={14} aria-hidden="true" />
+                </a>
+              </div>
+            </>
           )}
 
+          {/* ── Language ── */}
           {active === 'language' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('settings.nav.language')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={styles['fieldRowLast']}>
-                  <div className={styles['labelStack']}>
-                    <span className={styles['labelTitle']}>{t('common.switchLanguage')}</span>
-                    <span className={styles['labelDesc']}>
-                      {t('settings.currentLanguage', {
-                        lang:
-                          language === 'en' ? t('settings.langEnglish') : t('settings.langSpanish'),
-                      })}
-                    </span>
-                  </div>
-                  <div className={styles['langButtons']}>
-                    <Button
-                      variant={language === 'en' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => {
-                        if (language !== 'en') toggleLanguage();
-                      }}
-                    >
-                      {t('settings.langEnglish')}
-                    </Button>
-                    <Button
-                      variant={language === 'es' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => {
-                        if (language !== 'es') toggleLanguage();
-                      }}
-                    >
-                      {t('settings.langSpanish')}
-                    </Button>
-                  </div>
+            <div className={styles.mainCard}>
+              <div className={styles.cardSection}>
+                <div className={styles.fieldHeader}>
+                  <span className={styles.fieldTitle}>{t('settings.languageSectionTitle')}</span>
+                  <span className={styles.fieldDesc}>{t('settings.languageSectionDesc')}</span>
                 </div>
-              </CardContent>
-            </Card>
+                <SegmentedControl
+                  options={langOptions}
+                  value={language as 'en' | 'es'}
+                  onChange={handleLangChange}
+                />
+              </div>
+            </div>
           )}
 
+          {/* ── Notifications ── */}
           {active === 'notifications' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('notifications.title')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {NOTIFICATION_OPTIONS.map((item, i, arr) => (
-                  <div
-                    key={item.key}
-                    className={i < arr.length - 1 ? styles['fieldRow'] : styles['fieldRowLast']}
-                  >
-                    <div className={styles['labelStack']}>
-                      <span className={styles['labelTitle']}>{t(item.labelKey)}</span>
-                      <span className={styles['labelDesc']}>{t(item.descKey)}</span>
+            <div className={styles.mainCard}>
+              <div className={styles.cardSection}>
+                {NOTIF_OPTIONS.map((item) => (
+                  <div key={item.key} className={styles.toggleRow}>
+                    <div className={styles.toggleLeft}>
+                      <span className={styles.notifDot} style={{ backgroundColor: item.color }} />
+                      <div className={styles.toggleLabels}>
+                        <span className={styles.toggleTitle}>{t(item.labelKey)}</span>
+                        <span className={styles.toggleDesc}>{t(item.descKey)}</span>
+                      </div>
                     </div>
                     <Switch
                       checked={settings[item.key]}
@@ -258,18 +380,42 @@ export function SettingsPage(): React.ReactElement {
                     />
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
+          {/* ── Account ── */}
+          {active === 'account' && (
+            <div className={styles.mainCard}>
+              <div className={styles.cardSection}>
+                <div className={styles.toggleRow}>
+                  <div className={styles.toggleLabels}>
+                    <span className={styles.toggleTitle}>{t('settings.resetPreferences')}</span>
+                    <span className={styles.toggleDesc}>{t('settings.resetPreferencesDesc')}</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={resetSettings}>
+                    {t('settings.resetAction')}
+                  </Button>
+                </div>
+                <div className={styles.toggleRow}>
+                  <div className={styles.toggleLabels}>
+                    <span className={styles.dangerTitle}>{t('settings.deleteAccount')}</span>
+                    <span className={styles.toggleDesc}>{t('settings.deleteAccountDesc')}</span>
+                  </div>
+                  <Button variant="destructive" size="sm" disabled>
+                    {t('settings.deleteAccount')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Company ── */}
           {active === 'company' && isAdminOrCompany && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('settings.nav.company')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div>
+            <div className={styles.mainCard}>
+              <div className={styles.cardSection}>
+                <div className={styles.companyForm}>
+                  <div className={styles.formField}>
                     <Label htmlFor="companyName">{t('settings.companyName')}</Label>
                     <Input
                       id="companyName"
@@ -277,10 +423,9 @@ export function SettingsPage(): React.ReactElement {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setCompanyName(e.target.value);
                       }}
-                      style={{ marginTop: '0.375rem' }}
                     />
                   </div>
-                  <div>
+                  <div className={styles.formField}>
                     <Label htmlFor="logoUrl">{t('settings.logoUrl')}</Label>
                     <Input
                       id="logoUrl"
@@ -290,10 +435,9 @@ export function SettingsPage(): React.ReactElement {
                         setLogoUrl(e.target.value);
                       }}
                       placeholder="https://..."
-                      style={{ marginTop: '0.375rem' }}
                     />
                   </div>
-                  <div>
+                  <div className={styles.formField}>
                     <Label htmlFor="currency">{t('settings.defaultCurrency')}</Label>
                     <Input
                       id="currency"
@@ -302,10 +446,10 @@ export function SettingsPage(): React.ReactElement {
                         setCurrency(e.target.value);
                       }}
                       maxLength={3}
-                      style={{ marginTop: '0.375rem', maxWidth: '8rem' }}
+                      style={{ maxWidth: '8rem' }}
                     />
                   </div>
-                  <div>
+                  <div className={styles.formField}>
                     <Label htmlFor="timezone">{t('settings.timezone')}</Label>
                     <Input
                       id="timezone"
@@ -313,54 +457,21 @@ export function SettingsPage(): React.ReactElement {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setTimezone(e.target.value);
                       }}
-                      style={{ marginTop: '0.375rem' }}
                     />
                   </div>
-                  <div>
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        toast({ title: t('common.saveChanges') });
-                      }}
-                    >
-                      {t('common.saveChanges')}
-                    </Button>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {active === 'account' && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('settings.nav.account')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={styles['fieldRow']}>
-                  <div className={styles['labelStack']}>
-                    <span className={styles['labelTitle']}>{t('settings.resetPreferences')}</span>
-                    <span className={styles['labelDesc']}>
-                      {t('settings.resetPreferencesDesc')}
-                    </span>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={resetSettings}>
-                    {t('settings.resetAction')}
-                  </Button>
-                </div>
-                <div className={styles['fieldRowLast']}>
-                  <div className={styles['labelStack']}>
-                    <span className={styles['labelTitleDanger']}>
-                      {t('settings.deleteAccount')}
-                    </span>
-                    <span className={styles['labelDesc']}>{t('settings.deleteAccountDesc')}</span>
-                  </div>
-                  <Button variant="destructive" size="sm" disabled>
-                    {t('settings.deleteAccount')}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className={styles.cardFooter}>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    toast({ title: t('common.saveChanges') });
+                  }}
+                >
+                  {t('common.saveChanges')}
+                </Button>
+              </div>
+            </div>
           )}
         </div>
       </div>

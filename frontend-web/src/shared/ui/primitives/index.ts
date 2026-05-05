@@ -17,3 +17,5 @@ export { Switch } from './Switch';
 export { Textarea } from './Textarea';
 export { BrandMark } from './BrandMark';
 export { Pagination } from './Pagination';
+export { SegmentedControl } from './SegmentedControl';
+export type { SegmentedOption } from './SegmentedControl';

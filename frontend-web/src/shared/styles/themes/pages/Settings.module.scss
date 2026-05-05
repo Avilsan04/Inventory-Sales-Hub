@@ -1,9 +1,10 @@
-// ── 3:9 layout ───────────────────────────────────────────────────────────────
+// ── Layout ────────────────────────────────────────────────────────────────────
 .layout {
   display: grid;
   grid-template-columns: 220px 1fr;
-  gap: $spacing-6;
+  gap: $spacing-8;
   align-items: start;
+  max-width: 62rem;
 
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -29,7 +30,7 @@
   gap: $spacing-3;
   width: 100%;
   padding: $spacing-2 $spacing-3;
-  border-radius: $radius-lg;
+  border-radius: $border-radius-full;
   border: none;
   background: none;
   color: var(--color-text-secondary);
@@ -67,191 +68,274 @@
 // ── Content panel ─────────────────────────────────────────────────────────────
 .content {
   min-width: 0;
-}
-
-// ── Field rows ────────────────────────────────────────────────────────────────
-.fieldRow {
+  max-width: 44rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: $spacing-3 0;
-  border-bottom: 1px solid var(--color-border);
+  flex-direction: column;
+  gap: $spacing-6;
 }
 
-.fieldRowLast {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: $spacing-3 0;
-}
-
-.labelStack {
+// ── Section header (title + desc above card) ──────────────────────────────────
+.sectionHeader {
   display: flex;
   flex-direction: column;
   gap: $spacing-1;
+  padding: 0 $spacing-1;
 }
 
-.labelTitle {
+.sectionTitle {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sectionDesc {
   font-size: $font-size-base;
-  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+}
+
+// ── Main settings card ────────────────────────────────────────────────────────
+.mainCard {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+}
+
+// ── Individual section within card ────────────────────────────────────────────
+.cardSection {
+  padding: $spacing-8;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.fieldHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  max-width: 28rem;
+  margin-bottom: $spacing-5;
+}
+
+.fieldTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
 }
 
-.labelTitleDanger {
-  font-size: $font-size-base;
-  font-weight: $font-weight-medium;
-  color: var(--color-destructive);
-}
-
-.labelDesc {
+.fieldDesc {
   font-size: $font-size-sm;
   color: var(--color-text-muted);
 }
 
-.langButtons {
+// ── Card footer (Reset + Save) ─────────────────────────────────────────────────
+.cardFooter {
   display: flex;
-  gap: $spacing-2;
+  justify-content: flex-end;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-5 $spacing-8;
+  background-color: var(--color-surface-high);
+  border-top: 1px solid var(--color-border);
 }
 
-// ── Field row with icon ───────────────────────────────────────────────────────
-.fieldRowLeft {
+// ── Accent color swatches ─────────────────────────────────────────────────────
+.swatches {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: $spacing-3;
 }
 
-// ── Dark mode icon glow ───────────────────────────────────────────────────────
-.darkModeIconWrap {
-  width: $size-10;
-  height: $size-10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-md);
-  background-color: $color-dark-bg-secondary;
-  box-shadow: var(--shadow-glow-blue-sm);
-  flex-shrink: 0;
-  color: $color-dark-primary;
-}
-
-// ── Theme preview cards ───────────────────────────────────────────────────────
-.themeCards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $spacing-4;
-  margin-top: $spacing-4;
-  padding-bottom: $spacing-2;
-}
-
-.themeCard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $spacing-2;
+.swatch {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: $border-radius-full;
+  border: 2px solid transparent;
   cursor: pointer;
+  transition:
+    transform $duration-fast ease,
+    box-shadow $duration-fast ease;
+
+  &:hover {
+    transform: scale(1.12);
+  }
 }
 
-.themePreview {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  border-radius: var(--radius-md);
-  border: $border-width-focus solid var(--color-border);
-  overflow: hidden;
+.swatchActive {
+  box-shadow:
+    0 0 0 3px var(--color-card),
+    0 0 0 5px var(--color-primary);
+}
+
+// ── Accessibility mini-cards ──────────────────────────────────────────────────
+.accessGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.accessCard {
   display: flex;
-  transition:
-    border-color $duration-fast ease,
-    box-shadow $duration-fast ease;
+  align-items: center;
+  gap: $spacing-4;
+  padding: $spacing-5;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+  transition: border-color $duration-fast ease;
 
   &:hover {
     border-color: var(--color-primary);
   }
 }
 
-.themePreviewActive {
-  border-color: $color-primary;
-  box-shadow: 0 0 0 3px $color-primary-light;
-}
-
-.themePreviewSidebar {
-  width: 30%;
-  height: 100%;
+.accessIconWrap {
+  width: 3rem;
+  height: 3rem;
+  border-radius: $radius-xl;
+  background-color: var(--color-surface-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 
-// Component-scoped constants for theme preview thumbnails
-$_preview-gap: $spacing-1;
-$_preview-padding: 0.375rem;
-$_preview-row-height: 0.375rem;
-$_preview-row-radius: 0.1875rem;
-
-.themePreviewContent {
+.accessInfo {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: $_preview-gap;
-  padding: $_preview-padding;
+  gap: 2px;
 }
 
-.themePreviewRow {
-  height: $_preview-row-height;
-  border-radius: $_preview-row-radius;
-  width: 100%;
-
-  &:first-child {
-    width: 60%;
-  }
+.accessTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
 }
 
-// Light preview
-.previewLight {
-  .themePreviewSidebar {
-    background: $color-sidebar-foreground;
-  }
-  .themePreviewContent {
-    background: $color-bg-primary;
-  }
-  .themePreviewRow {
-    background: #e2e8f0; // no token for this slate-200 shade
-  }
-  .themePreviewRow:first-child {
-    background: $color-dark-secondary-hover;
-  }
-}
-
-// Dark preview
-.previewDark {
-  .themePreviewSidebar {
-    background: #0f1117; // intentional design value — slightly darker than $color-dark-bg-primary
-  }
-  .themePreviewContent {
-    background: $color-dark-bg-primary;
-  }
-  .themePreviewRow {
-    background: $color-dark-bg-tertiary;
-  }
-  .themePreviewRow:first-child {
-    background: $color-secondary-hover;
-  }
-}
-
-// Accent preview
-.previewAccent {
-  .themePreviewSidebar {
-    background: $color-dark-primary-light;
-  }
-  .themePreviewContent {
-    background: $color-dark-bg-primary;
-  }
-  .themePreviewRow {
-    background: $color-dark-bg-tertiary;
-  }
-  .themePreviewRow:first-child {
-    background: linear-gradient(90deg, $color-primary, $color-dark-chart-4);
-  }
-}
-
-.themeLabel {
+.accessDesc {
   font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+// ── Enterprise info box ───────────────────────────────────────────────────────
+.infoBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  padding: $spacing-6 $spacing-8;
+  background-color: var(--color-surface-high);
+  border: 1px dashed var(--color-border);
+  border-radius: 2rem;
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.infoBoxText {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   color: var(--color-text-secondary);
+}
+
+.infoBoxLink {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-primary);
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ── Toggle rows (notifications, account, etc.) ────────────────────────────────
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-4 0;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.toggleLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  flex: 1;
+  min-width: 0;
+}
+
+.notifDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: $border-radius-full;
+  flex-shrink: 0;
+}
+
+.toggleLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggleTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+}
+
+.toggleDesc {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+// ── Danger zone row ───────────────────────────────────────────────────────────
+.dangerTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-destructive);
+}
+
+// ── Company form ──────────────────────────────────────────────────────────────
+.companyForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
 }
