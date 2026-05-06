@@ -14,33 +14,13 @@
   flex-shrink: 0;
 }
 
-// ── Left: page title + subtitle ─────────────────────────────────────────
-.topbarTitle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  min-width: 0;
-}
-
-.pageTitle {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-primary);
-  white-space: nowrap;
-}
-
-.pageSubtitle {
-  font-size: $font-size-xs;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
 // ── Center: search ──────────────────────────────────────────────────────
 .topbarSearch {
   flex: 1;
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: $spacing-3;
   min-width: 0;
 }
 
@@ -100,6 +80,70 @@
   }
 }
 
+// ── Search glow ─────────────────────────────────────────────────────────
+.searchInputGlow {
+  &:focus {
+    box-shadow: var(--shadow-glow-purple) !important;
+    outline: none;
+  }
+}
+
+// ── Test mode banner pill ────────────────────────────────────────────────
+.testBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $border-radius-full;
+  background-color: $color-test-bg;
+  border: 1px solid $color-test-border;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-test-fg;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Role pills ────────────────────────────────────────────────────────────
+.rolePills {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+}
+
+.rolePill {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-0-5 $spacing-2;
+  border-radius: $border-radius-full;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-muted);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color $duration-fast ease,
+    border-color $duration-fast ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-bg-tertiary);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.rolePillActive {
+  background-color: $color-primary-light;
+  border-color: $color-primary;
+  color: $color-primary-hover;
+  font-weight: $font-weight-semibold;
+}
+
 // ── Notification dot ────────────────────────────────────────────────────
 .notifWrapper {
   position: relative;
@@ -107,12 +151,20 @@
 
 .notifDot {
   position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
+  top: $spacing-1;
+  right: $spacing-1;
+  min-width: $size-4;
+  height: $size-4;
+  padding: 0 $spacing-1;
   border-radius: var(--radius-full);
   background-color: $color-error;
-  border: 2px solid var(--color-background);
+  border: $border-width-focus solid var(--color-background);
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-bold;
+  color: $color-destructive-foreground;
+  line-height: 1;
 }

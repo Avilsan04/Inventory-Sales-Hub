@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PackageIcon, ArrowRightIcon, TrendingUpIcon, ClockIcon } from 'lucide-react';
+import { ArrowRightIcon, TrendingUpIcon, ClockIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { FadeIn } from '@shared/ui/animated';
 import { Button } from '@shared/ui/primitives';
@@ -7,9 +7,11 @@ import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
 interface HeroSectionProps {
   readonly onGetStarted: () => void;
+  readonly onTestMode: () => void;
+  readonly isTestModeLoading: boolean;
 }
 
-export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElement {
+export function HeroSection({ onGetStarted, onTestMode, isTestModeLoading }: HeroSectionProps): React.ReactElement {
   const { translate } = useTranslationAdapter();
 
   return (
@@ -20,7 +22,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
         <FadeIn delay={0}>
           <div className={styles['heroBadge']}>
             <span className={styles['heroBadgeDot']} aria-hidden="true" />
-            <PackageIcon aria-hidden="true" />
+            <img src="/logo-mark.svg" alt="" aria-hidden="true" width={16} height={16} />
             <span>{translate('landing.hero.badge')}</span>
           </div>
         </FadeIn>
@@ -46,8 +48,8 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
               {translate('landing.hero.cta')}
               <ArrowRightIcon aria-hidden="true" />
             </Button>
-            <Button variant="outline" size="lg">
-              {translate('landing.hero.secondaryCta')}
+            <Button variant="outline" size="lg" onClick={onTestMode} disabled={isTestModeLoading}>
+              {isTestModeLoading ? '...' : translate('landing.hero.secondaryCta')}
             </Button>
           </div>
         </FadeIn>
@@ -83,7 +85,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
             <span className={styles['mockupDotYellow']} aria-hidden="true" />
             <span className={styles['mockupDotGreen']} aria-hidden="true" />
             <span className={styles['mockupBrand']}>
-              <PackageIcon aria-hidden="true" />
+              <img src="/logo-mark.svg" alt="" aria-hidden="true" width={14} height={14} />
               Inventory Sales Hub
             </span>
           </div>

@@ -5,6 +5,52 @@ interface ErrorBoundaryProps {
   children: React.ReactNode;
 }
 
+interface SectionErrorBoundaryProps {
+  children: React.ReactNode;
+  label: string;
+}
+
+interface SectionErrorBoundaryState {
+  hasError: boolean;
+}
+
+export class SectionErrorBoundary extends React.Component<
+  SectionErrorBoundaryProps,
+  SectionErrorBoundaryState
+> {
+  constructor(props: SectionErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): SectionErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    console.error(`[${this.props.label}] Section render error:`, error, errorInfo);
+  }
+
+  render(): React.ReactNode {
+    if (this.state.hasError) {
+      return (
+        <div className={styles.section} role="alert">
+          <span>{this.props.label} failed to load.</span>
+          <button
+            className={styles.sectionRetry}
+            onClick={() => {
+              this.setState({ hasError: false });
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
@@ -32,7 +78,9 @@ export class GlobalErrorBoundary extends React.Component<ErrorBoundaryProps, Err
           <h1>System Failure</h1>
           <p>The application encountered an irrecoverable error.</p>
           <button
-            onClick={() => { window.location.reload(); }}
+            onClick={() => {
+              window.location.reload();
+            }}
             className={styles.reload}
           >
             Reload Application

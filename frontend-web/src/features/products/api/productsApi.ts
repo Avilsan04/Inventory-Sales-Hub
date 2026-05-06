@@ -1,6 +1,17 @@
 import { httpClient } from '@core/http';
-import { productListSchema, productSchema, categoryListSchema, categorySchema } from '@entities/product';
-import type { Product, Category, CreateProductDTO, UpdateProductDTO, CreateCategoryDTO } from '@entities/product';
+import {
+  productListSchema,
+  productSchema,
+  categoryListSchema,
+  categorySchema,
+} from '@entities/product';
+import type {
+  Product,
+  Category,
+  CreateProductDTO,
+  UpdateProductDTO,
+  CreateCategoryDTO,
+} from '@entities/product';
 
 export const productsApi = {
   getProducts: async (): Promise<Product[]> => {
@@ -29,7 +40,7 @@ export const productsApi = {
   },
 
   deleteProduct: async (id: string): Promise<void> => {
-    await httpClient.delete<unknown>(`/products/${id}`);
+    await httpClient.patch<unknown>(`/products/${id}`, { is_active: false });
   },
 
   createCategory: async (data: CreateCategoryDTO): Promise<Category> => {

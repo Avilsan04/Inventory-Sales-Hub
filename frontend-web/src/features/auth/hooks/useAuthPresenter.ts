@@ -1,86 +1,66 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { UseFormRegister, UseFormHandleSubmit, FieldErrors } from 'react-hook-form';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import type { LoginRequest } from '../models/auth.types';
+import { loginFormSchema, type LoginFormValues } from '../models/auth.schemas';
 import type { IAuthService } from '../services/IAuthService';
 
 export interface IAuthPresenterProps {
-    readonly onSuccess: () => void;
-    readonly authService: IAuthService;
+  readonly onSuccess: () => void;
+  readonly authService: IAuthService;
 }
 
 export interface IAuthPresenter {
-    readonly formData: LoginRequest;
-    readonly isLoading: boolean;
-    readonly error: string | null;
-    readonly rememberMe: boolean;
-    readonly isFormValid: boolean;
-    readonly handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    readonly handleRememberMeChange: (checked: boolean | 'indeterminate') => void;
-    readonly handleSubmit: (e: React.SyntheticEvent<HTMLFormElement>) => Promise<void>;
+  readonly register: UseFormRegister<LoginFormValues>;
+  readonly handleSubmit: UseFormHandleSubmit<LoginFormValues>;
+  readonly errors: FieldErrors<LoginFormValues>;
+  readonly isLoading: boolean;
+  readonly error: string | null;
+  readonly isValid: boolean;
+  readonly onSubmit: (data: LoginFormValues) => Promise<void>;
 }
 
 export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps): IAuthPresenter {
-    const { translate } = useTranslationAdapter();
+  const { translate } = useTranslationAdapter();
 
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [error, setError] = React.useState<string | null>(null);
-    const [rememberMe, setRememberMe] = React.useState<boolean>(false);
-    const [formData, setFormData] = React.useState<LoginRequest>({
-        email: '',
-        password: '',
-    });
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-    const isFormValid = React.useMemo((): boolean => {
-        return formData.email.trim().length > 5 && formData.password.trim().length > 0;
-    }, [formData]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<LoginFormValues>({
+    mode: 'onTouched',
+    resolver: zodResolver(loginFormSchema),
+  });
 
-    const handleInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-        const { name, value } = e.target;
-        const isPasswordField = name === 'password';
-        const sanitizedValue = isPasswordField ? value : value.replace(/[<>]/g, '');
-        setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
-        setError(null);
-    }, []);
+  const onSubmit = React.useCallback(
+    async (data: LoginFormValues): Promise<void> => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await authService.login({ email: data.email, password: data.password });
+        onSuccess();
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        console.error('[Telemetry] Authentication Failure:', message);
+        setError(translate('auth.invalidCredentials'));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [onSuccess, translate, authService]
+  );
 
-    const handleRememberMeChange = React.useCallback((checked: boolean | 'indeterminate'): void => {
-        setRememberMe(checked === true);
-    }, []);
-
-    const handleSubmit = React.useCallback(
-        async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
-            e.preventDefault();
-
-            if (!isFormValid) {
-                setError(translate('auth.validationError'));
-                return;
-            }
-
-            setIsLoading(true);
-            setError(null);
-
-            try {
-                // Architecture Note: authService is now strictly decoupled and injected
-                await authService.login(formData, rememberMe);
-                onSuccess();
-            } catch (err: unknown) {
-                const errorMessage = err instanceof Error ? err.message : 'Unknown infrastructure error';
-                console.error('[Telemetry] Authentication Failure:', errorMessage);
-                setError(translate('auth.invalidCredentials'));
-            } finally {
-                setIsLoading(false);
-            }
-        },
-        [formData, rememberMe, onSuccess, isFormValid, translate, authService]
-    );
-
-    return {
-        formData,
-        isLoading,
-        error,
-        rememberMe,
-        isFormValid,
-        handleInputChange,
-        handleRememberMeChange,
-        handleSubmit,
-    };
+  return {
+    register,
+    handleSubmit,
+    errors,
+    isLoading,
+    error,
+    isValid,
+    onSubmit,
+  };
 }

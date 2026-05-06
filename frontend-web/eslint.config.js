@@ -4,9 +4,10 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import boundaries from 'eslint-plugin-boundaries';
 
 export default tseslint.config(
-  { ignores: ['dist', 'build', 'node_modules', '.expo', 'android', 'ios', 'public'] },
+  { ignores: ['dist', 'build', 'node_modules', '.expo', 'android', 'ios', 'public', 'e2e/**', 'playwright.config.ts'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, eslintConfigPrettier],
     files: ['**/*.{ts,tsx}'],
@@ -21,7 +22,7 @@ export default tseslint.config(
         clearTimeout: 'readonly',
       },
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -33,7 +34,8 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/explicit-function-return-type': 'error', // Enforced for architectural boundary clarity
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
     },
   },
   // Environment override for WEB
@@ -55,5 +57,45 @@ export default tseslint.config(
     rules: {
       'react-refresh/only-export-components': 'off',
     }
+  },
+  // FSD layer boundary enforcement
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    plugins: { boundaries },
+    settings: {
+      'boundaries/elements': [
+        { type: 'app',      pattern: 'src/app/**'      },
+        { type: 'pages',    pattern: 'src/pages/**'    },
+        { type: 'widgets',  pattern: 'src/widgets/**'  },
+        { type: 'features', pattern: 'src/features/**' },
+        { type: 'entities', pattern: 'src/entities/**' },
+        { type: 'shared',   pattern: 'src/shared/**'   },
+        { type: 'core',     pattern: 'src/core/**'     },
+      ],
+      'boundaries/resolve-aliases': {
+        '@app':      { path: './src/app'      },
+        '@pages':    { path: './src/pages'    },
+        '@widgets':  { path: './src/widgets'  },
+        '@features': { path: './src/features' },
+        '@entities': { path: './src/entities' },
+        '@shared':   { path: './src/shared'   },
+        '@adapters': { path: './src/shared/adapters' },
+        '@core':     { path: './src/core'     },
+      },
+    },
+    rules: {
+      'boundaries/dependencies': ['error', {
+        default: 'disallow',
+        rules: [
+          { from: 'app',      allow: ['pages', 'widgets', 'features', 'entities', 'shared', 'core'] },
+          { from: 'pages',    allow: ['widgets', 'features', 'entities', 'shared', 'core'] },
+          { from: 'widgets',  allow: ['features', 'entities', 'shared', 'core'] },
+          { from: 'features', allow: ['entities', 'shared', 'core'] },
+          { from: 'entities', allow: ['shared'] },
+          { from: 'shared',   allow: ['core'] },
+          { from: 'core',     allow: [] },
+        ],
+      }],
+    },
   }
 );

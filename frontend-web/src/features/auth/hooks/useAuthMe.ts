@@ -11,5 +11,6 @@ export function useAuthMe(): UseQueryResult<UserProfile> {
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: authApi.getMe,
+    staleTime: Infinity,
   });
 }

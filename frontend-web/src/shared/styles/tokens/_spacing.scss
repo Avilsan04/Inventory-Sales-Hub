@@ -1,6 +1,7 @@
 // Design Tokens - Spacing
 // Single source of truth for all spacing and layout values
 
+$spacing-0-5: 0.125rem;
 $spacing-1: 0.25rem;
 $spacing-2: 0.5rem;
 $spacing-3: 0.75rem;
@@ -20,13 +21,30 @@ $border-radius-full: 9999px;
 
 $shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
 $shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-$shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-$shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+$shadow-base:
+  0 1px 3px 0 rgb(0 0 0 / 0.1),
+  0 1px 2px -1px rgb(0 0 0 / 0.1);
+$shadow-lg:
+  0 10px 15px -3px rgb(0 0 0 / 0.1),
+  0 4px 6px -4px rgb(0 0 0 / 0.1);
+$shadow-xl:
+  0 20px 25px -5px rgb(0 0 0 / 0.1),
+  0 8px 10px -6px rgb(0 0 0 / 0.1);
 
 // ── Radius alias (component-level) ──────────────────────────────
-$radius: 0.5rem;
+$radius: 0.75rem;
 $radius-sm: calc(#{$radius} - 4px);
 $radius-md: calc(#{$radius} - 2px);
 $radius-lg: $radius;
 $radius-xl: calc(#{$radius} + 4px);
+
+// ── Extended shadows ─────────────────────────────────────────────
+$shadow-soft-card:
+  0 8px 40px rgba(0, 0, 0, 0.07),
+  0 2px 8px rgba(0, 0, 0, 0.04);
+$shadow-glow-purple:
+  0 0 0 1px rgba(0, 106, 97, 0.15),
+  0 4px 20px rgba(0, 106, 97, 0.2);
+$shadow-glow-blue-sm:
+  0 0 14px rgba(6, 182, 212, 0.55),
+  0 0 4px rgba(37, 99, 235, 0.4);

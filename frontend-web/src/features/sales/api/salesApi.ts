@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import { httpClient } from '@core/http';
+import type { HttpRequestConfig } from '@core/http';
 import { saleListSchema, saleSchema, saleSummarySchema, saleItemSchema } from '@entities/sale';
-import type { Sale, SaleItem, SaleSummary, CreateSaleDTO, UpdateSaleStatusDTO } from '@entities/sale';
+import type {
+  Sale,
+  SaleItem,
+  SaleSummary,
+  CreateSaleDTO,
+  UpdateSaleStatusDTO,
+} from '@entities/sale';
 
 export const salesApi = {
   getSales: async (): Promise<Sale[]> => {
@@ -24,8 +31,8 @@ export const salesApi = {
     return saleSummarySchema.parse(res);
   },
 
-  createSale: async (data: CreateSaleDTO): Promise<Sale> => {
-    const res = await httpClient.post<unknown>('/sales', data);
+  createSale: async (data: CreateSaleDTO, config?: HttpRequestConfig): Promise<Sale> => {
+    const res = await httpClient.post<unknown>('/sales', data, config);
     return saleSchema.parse(res);
   },
 

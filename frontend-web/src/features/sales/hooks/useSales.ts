@@ -11,5 +11,5 @@ export const saleKeys = {
 };
 
 export function useSales(): UseQueryResult<Sale[]> {
-  return useQuery({ queryKey: saleKeys.lists(), queryFn: salesApi.getSales });
+  return useQuery({ queryKey: saleKeys.lists(), queryFn: salesApi.getSales, staleTime: 30_000 });
 }

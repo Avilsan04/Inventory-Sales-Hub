@@ -4,6 +4,7 @@ export type {
   UserResponse,
   LoginResponse,
   UserProfile,
+  UserRole,
   UpdateProfileRequest,
   ChangePasswordRequest,
   ForgotPasswordRequest,

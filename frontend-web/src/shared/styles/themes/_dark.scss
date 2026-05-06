@@ -14,6 +14,10 @@
   --color-success: #{$color-dark-success};
   --color-warning: #{$color-dark-warning};
   --color-error: #{$color-dark-error};
+  --color-success-bg: #{$color-dark-success-bg};
+  --color-success-fg: #{$color-dark-success-fg};
+  --color-warning-bg: #{$color-dark-warning-bg};
+  --color-warning-fg: #{$color-dark-warning-fg};
 
   // ── Semantic backgrounds ──────────────────────────────────────
   --color-bg-primary: #{$color-dark-bg-primary};
@@ -50,13 +54,17 @@
 
   // ── Sidebar ───────────────────────────────────────────────────
   --color-sidebar: #{$color-dark-sidebar};
+  --color-sidebar-fg: #{$color-dark-sidebar-foreground};
   --color-sidebar-foreground: #{$color-dark-sidebar-foreground};
+  --color-sidebar-nav-inactive: #{$color-sidebar-nav-inactive};
   --color-sidebar-primary: #{$color-dark-sidebar-primary};
   --color-sidebar-primary-foreground: #{$color-dark-sidebar-primary-foreground};
   --color-sidebar-accent: #{$color-dark-sidebar-accent};
   --color-sidebar-accent-foreground: #{$color-dark-sidebar-accent-foreground};
   --color-sidebar-border: #{$color-dark-sidebar-border};
   --color-sidebar-ring: #{$color-dark-sidebar-ring};
+  --color-sidebar-active-bg: #{$color-dark-primary-light};
+  --color-sidebar-active-fg: #{$color-dark-primary-foreground};
 
   // ── Charts ────────────────────────────────────────────────────
   --color-chart-1: #{$color-dark-chart-1};

@@ -1,106 +1,109 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
-import type { DashboardKpi, SalesPeriod, TopProduct, TopCustomer, InventoryValue, LowStockAlert } from '@entities/analytics';
+import type {
+  DashboardKpi,
+  SalesPeriod,
+  TopProduct,
+  TopCustomer,
+  InventoryValue,
+  LowStockAlert,
+  CashFlowEntry,
+  WasteAlert,
+} from '@entities/analytics';
+import mockData from '@app/mock/mock-data.json';
+
+const { analytics } = mockData;
 
 export const analyticsHandlers = [
   http.get(`${API_BASE_URL}/analytics/dashboard`, async () => {
     await delay(700);
-    return HttpResponse.json<DashboardKpi>({
-      totalRevenue: 48750.25,
-      totalOrders: 134,
-      totalCustomers: 87,
-      totalProducts: 42,
-      revenueGrowth: 12.5,
-      ordersGrowth: 8.3,
-      currency: 'USD',
-    });
+    return HttpResponse.json<DashboardKpi>(analytics.dashboard as DashboardKpi);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/sales`, async () => {
+  http.get(`${API_BASE_URL}/analytics/sales`, async ({ request }) => {
     await delay(600);
-    const data: SalesPeriod[] = [
-      { period: '2025-01', revenue: 8200, orders: 22 },
-      { period: '2025-02', revenue: 9500, orders: 28 },
-      { period: '2025-03', revenue: 11300, orders: 34 },
-      { period: '2025-04', revenue: 12800, orders: 38 },
-    ];
-    return HttpResponse.json(data);
+    const url = new URL(request.url);
+    const from = url.searchParams.get('from');
+    const to = url.searchParams.get('to');
+    const period = url.searchParams.get('period');
+    let data = analytics.salesPeriod as SalesPeriod[];
+    if (from || to || period) {
+      const now = new Date();
+      let cutoff: Date | null = null;
+      if (period === '7d') cutoff = new Date(now.getTime() - 7 * 86400_000);
+      else if (period === '30d') cutoff = new Date(now.getTime() - 30 * 86400_000);
+      if (from && to) {
+        data = data.filter((p) => p.period >= from && p.period <= to);
+      } else if (cutoff) {
+        const cutoffStr = cutoff.toISOString().slice(0, 10);
+        data = data.filter((p) => !p.period || p.period >= cutoffStr);
+      }
+    }
+    return HttpResponse.json<SalesPeriod[]>(data);
   }),
 
   http.get(`${API_BASE_URL}/analytics/top-products`, async () => {
     await delay(500);
-    const data: TopProduct[] = [
-      {
-        productId: 'prod-001-0000-0000-0000-000000000001',
-        productName: 'MacBook Pro 16" M3',
-        sku: 'PRD-MBP-001',
-        totalSold: 14,
-        revenue: 48999.86,
-      },
-      {
-        productId: 'prod-002-0000-0000-0000-000000000002',
-        productName: 'Keychron Q1 Pro',
-        sku: 'PRD-KEY-001',
-        totalSold: 38,
-        revenue: 7562.0,
-      },
-    ];
-    return HttpResponse.json(data);
+    return HttpResponse.json<TopProduct[]>(analytics.topProducts as TopProduct[]);
   }),
 
   http.get(`${API_BASE_URL}/analytics/top-customers`, async () => {
     await delay(500);
-    const data: TopCustomer[] = [
-      {
-        customerId: 'cust-001-0000-0000-0000-000000000001',
-        customerName: 'Alice Johnson',
-        email: 'alice@example.com',
-        totalOrders: 8,
-        totalSpent: 14200.5,
-      },
-      {
-        customerId: 'cust-002-0000-0000-0000-000000000002',
-        customerName: 'Bob Martinez',
-        email: 'bob@example.com',
-        totalOrders: 5,
-        totalSpent: 7800.0,
-      },
-    ];
-    return HttpResponse.json(data);
+    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers as TopCustomer[]);
   }),
 
   http.get(`${API_BASE_URL}/analytics/inventory-value`, async () => {
     await delay(500);
-    return HttpResponse.json<InventoryValue>({
-      totalItems: 44,
-      totalValue: 154897.58,
-      currency: 'USD',
-      byStatus: [
-        { status: 'IN_STOCK', count: 38, value: 142000.0 },
-        { status: 'LOW_STOCK', count: 4, value: 9897.58 },
-        { status: 'OUT_OF_STOCK', count: 2, value: 3000.0 },
-      ],
-    });
+    return HttpResponse.json<InventoryValue>(analytics.inventoryValue as InventoryValue);
   }),
 
   http.get(`${API_BASE_URL}/analytics/low-stock-alerts`, async () => {
     await delay(500);
-    const data: LowStockAlert[] = [
+    return HttpResponse.json<LowStockAlert[]>(analytics.lowStockAlerts as LowStockAlert[]);
+  }),
+
+  http.get(`${API_BASE_URL}/analytics/cash-flow`, async () => {
+    await delay(600);
+    const cashFlow: CashFlowEntry[] = [
+      { period: 'Mon', inflow: 450000, outflow: 120000, net: 330000 },
+      { period: 'Tue', inflow: 380000, outflow: 95000, net: 285000 },
+      { period: 'Wed', inflow: 620000, outflow: 200000, net: 420000 },
+      { period: 'Thu', inflow: 510000, outflow: 160000, net: 350000 },
+      { period: 'Fri', inflow: 840000, outflow: 230000, net: 610000 },
+      { period: 'Sat', inflow: 290000, outflow: 80000, net: 210000 },
+      { period: 'Sun', inflow: 150000, outflow: 40000, net: 110000 },
+    ];
+    return HttpResponse.json<CashFlowEntry[]>(cashFlow);
+  }),
+
+  http.get(`${API_BASE_URL}/analytics/waste-alerts`, async () => {
+    await delay(500);
+    const wasteAlerts: WasteAlert[] = [
       {
-        itemId: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-        sku: 'KEY-MECH-01',
-        name: 'Keychron Q1 Pro',
-        currentQuantity: 2,
-        threshold: 5,
+        productId: 'p-001',
+        productName: 'Organic Milk',
+        sku: 'MILK-ORG-001',
+        expiredUnits: 12,
+        estimatedLoss: 2400,
+        currency: 'EUR',
       },
       {
-        itemId: '123e4567-e89b-12d3-a456-426614174000',
-        sku: 'MOU-MX-M3',
-        name: 'Logitech MX Master 3S',
-        currentQuantity: 0,
-        threshold: 5,
+        productId: 'p-002',
+        productName: 'Fresh Bread',
+        sku: 'BREAD-001',
+        expiredUnits: 8,
+        estimatedLoss: 960,
+        currency: 'EUR',
+      },
+      {
+        productId: 'p-003',
+        productName: 'Greek Yogurt',
+        sku: 'YOGURT-GR-001',
+        expiredUnits: 5,
+        estimatedLoss: 1500,
+        currency: 'EUR',
       },
     ];
-    return HttpResponse.json(data);
+    return HttpResponse.json<WasteAlert[]>(wasteAlerts);
   }),
 ];

@@ -1,22 +1,38 @@
 import * as React from 'react';
+import { ArrowLeftIcon } from 'lucide-react';
 
 import { LoginForm } from '@features/auth/components/LoginForm';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useRoutingAdapter } from '@adapters/useRoutingAdapter';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import styles from '@shared/styles/themes/pages/Login.module.scss';
 
 export function LoginPage(): React.ReactElement {
-  const { navigateTo } = useRoutingAdapter();
+    const { navigateTo } = useRoutingAdapter();
+    const { translate } = useTranslationAdapter();
 
-  const handleLoginSuccess = React.useCallback((): void => {
-    navigateTo(APP_ROUTES.DASHBOARD, true);
-  }, [navigateTo]);
+    const handleLoginSuccess = React.useCallback((): void => {
+        navigateTo(APP_ROUTES.DASHBOARD, true);
+    }, [navigateTo]);
 
-  return (
-    <div className={styles['page']}>
-      <div className={styles['container']}>
-        <LoginForm onSuccess={handleLoginSuccess} />
-      </div>
-    </div>
-  );
+    const handleBackToLanding = React.useCallback((): void => {
+        navigateTo(APP_ROUTES.LANDING);
+    }, [navigateTo]);
+
+    return (
+        <div className={styles['page']}>
+            <button
+                type="button"
+                className={styles['backBtn']}
+                onClick={handleBackToLanding}
+                aria-label={translate('nav.home')}
+            >
+                <ArrowLeftIcon size={16} aria-hidden="true" />
+                {translate('nav.home')}
+            </button>
+            <div className={styles['container']}>
+                <LoginForm onSuccess={handleLoginSuccess} />
+            </div>
+        </div>
+    );
 }

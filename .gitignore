@@ -53,7 +53,7 @@ frontend-mobile/.env.local
 .DS_Store
 Thumbs.db
 .claude
-
+.mcp.json
 # Environment
 .env
 .env.*

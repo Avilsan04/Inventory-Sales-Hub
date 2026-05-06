@@ -1,0 +1,341 @@
+// ── Layout ────────────────────────────────────────────────────────────────────
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: $spacing-8;
+  align-items: start;
+  max-width: 62rem;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Secondary nav ─────────────────────────────────────────────────────────────
+.nav {
+  position: sticky;
+  top: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: $spacing-2;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  background-color: var(--color-card);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border-radius: $border-radius-full;
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  font-family: $font-family-base;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color $duration-fast ease,
+    color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-surface-high);
+    color: var(--color-text-primary);
+  }
+}
+
+.navItemActive {
+  background-color: var(--color-surface-high);
+  color: var(--color-primary);
+
+  .navIcon {
+    color: var(--color-primary);
+  }
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+// ── Content panel ─────────────────────────────────────────────────────────────
+.content {
+  min-width: 0;
+  max-width: 44rem;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+// ── Section header (title + desc above card) ──────────────────────────────────
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: 0 $spacing-1;
+}
+
+.sectionTitle {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sectionDesc {
+  font-size: $font-size-base;
+  color: var(--color-text-secondary);
+}
+
+// ── Main settings card ────────────────────────────────────────────────────────
+.mainCard {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+}
+
+// ── Individual section within card ────────────────────────────────────────────
+.cardSection {
+  padding: $spacing-8;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.fieldHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  max-width: 28rem;
+  margin-bottom: $spacing-5;
+}
+
+.fieldTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+}
+
+.fieldDesc {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
+// ── Card footer (Reset + Save) ─────────────────────────────────────────────────
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-5 $spacing-8;
+  background-color: var(--color-surface-high);
+  border-top: 1px solid var(--color-border);
+}
+
+// ── Accent color swatches ─────────────────────────────────────────────────────
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-3;
+}
+
+.swatch {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: $border-radius-full;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    transform $duration-fast ease,
+    box-shadow $duration-fast ease;
+
+  &:hover {
+    transform: scale(1.12);
+  }
+}
+
+.swatchActive {
+  box-shadow:
+    0 0 0 3px var(--color-card),
+    0 0 0 5px var(--color-primary);
+}
+
+// ── Accessibility mini-cards ──────────────────────────────────────────────────
+.accessGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.accessCard {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  padding: $spacing-5;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+  transition: border-color $duration-fast ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+.accessIconWrap {
+  width: 3rem;
+  height: 3rem;
+  border-radius: $radius-xl;
+  background-color: var(--color-surface-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.accessInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.accessTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+}
+
+.accessDesc {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+// ── Enterprise info box ───────────────────────────────────────────────────────
+.infoBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  padding: $spacing-6 $spacing-8;
+  background-color: var(--color-surface-high);
+  border: 1px dashed var(--color-border);
+  border-radius: 2rem;
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.infoBoxText {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+}
+
+.infoBoxLink {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-primary);
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ── Toggle rows (notifications, account, etc.) ────────────────────────────────
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-4 0;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.toggleLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  flex: 1;
+  min-width: 0;
+}
+
+.notifDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: $border-radius-full;
+  flex-shrink: 0;
+}
+
+.toggleLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggleTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+}
+
+.toggleDesc {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+// ── Danger zone row ───────────────────────────────────────────────────────────
+.dangerTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-destructive);
+}
+
+// ── Company form ──────────────────────────────────────────────────────────────
+.companyForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}

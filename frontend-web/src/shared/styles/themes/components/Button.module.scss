@@ -11,11 +11,20 @@
   color: inherit;
   border: $border-width-base solid transparent;
   cursor: pointer;
-  transition: background-color $duration-fast ease, color $duration-fast ease, border-color $duration-fast ease,
-    box-shadow $duration-fast ease;
+  transition:
+    background-color $duration-fast ease,
+    color $duration-fast ease,
+    border-color $duration-fast ease,
+    box-shadow $duration-fast ease,
+    transform $duration-fast ease;
   outline: none;
   flex-shrink: 0;
   text-decoration: none;
+  will-change: transform;
+
+  &:active {
+    transform: scale(0.97);
+  }
 
   &:disabled {
     pointer-events: none;
@@ -56,7 +65,8 @@
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-destructive) 25%, transparent);
+    box-shadow: 0 0 0 $focus-ring-spread
+      color-mix(in srgb, var(--color-destructive) 25%, transparent);
   }
 }
 
@@ -66,8 +76,8 @@
   box-shadow: var(--shadow-xs);
 
   &:hover {
-    background-color: var(--color-accent);
-    color: var(--color-accent-foreground);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-foreground);
   }
 }
 
@@ -76,7 +86,8 @@
   color: var(--color-secondary-foreground);
 
   &:hover {
-    opacity: 0.8;
+    background-color: var(--color-muted);
+    color: var(--color-secondary-foreground);
   }
 }
 

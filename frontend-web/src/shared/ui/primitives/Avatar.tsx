@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import * as React from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cn } from '@shared/lib/cn';
@@ -8,36 +7,21 @@ function Avatar({
   className,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Root>): React.ReactElement {
-  return (
-    <AvatarPrimitive.Root
-      className={cn(styles.avatar, className)}
-      {...props}
-    />
-  );
+  return <AvatarPrimitive.Root className={cn(styles.avatar, className)} {...props} />;
 }
 
 function AvatarImage({
   className,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>): React.ReactElement {
-  return (
-    <AvatarPrimitive.Image
-      className={cn(styles.avatarImage, className)}
-      {...props}
-    />
-  );
+  return <AvatarPrimitive.Image className={cn(styles.avatarImage, className)} {...props} />;
 }
 
 function AvatarFallback({
   className,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>): React.ReactElement {
-  return (
-    <AvatarPrimitive.Fallback
-      className={cn(styles.avatarFallback, className)}
-      {...props}
-    />
-  );
+  return <AvatarPrimitive.Fallback className={cn(styles.avatarFallback, className)} {...props} />;
 }
 
 export { Avatar, AvatarImage, AvatarFallback };

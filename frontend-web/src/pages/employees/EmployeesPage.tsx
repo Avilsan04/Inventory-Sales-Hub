@@ -1,10 +1,29 @@
 import * as React from 'react';
-import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon } from 'lucide-react';
+import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon, PencilIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useEmployees } from '@features/employees';
-import { Spinner, Badge } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardAction, CardContent, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
+import { PermissionGuard } from '@features/auth';
+import { Spinner, Badge, Button } from '@shared/ui/primitives';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardAction,
+  CardContent,
+  EmptyState,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@shared/ui/composed';
+import { SectionErrorBoundary } from '@app/providers';
+import { EmployeeCreateDialog } from '@features/employees/components/EmployeeCreateDialog';
+import { EmployeeEditDialog } from '@features/employees/components/EmployeeEditDialog';
+import { AuditLogPanel } from '@widgets/audit';
 import type { BadgeVariant } from '@shared/ui/primitives';
+import type { Employee } from '@entities/employee';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 import statsStyles from '@shared/styles/themes/pages/Employees.module.scss';
 
@@ -21,9 +40,12 @@ function roleVariant(role: EmployeeRole): BadgeVariant {
 
 export function EmployeesPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data, isLoading, isError } = useEmployees();
+  const { data, isPending, isError } = useEmployees();
 
-  if (isLoading) {
+  const [createOpen, setCreateOpen] = React.useState(false);
+  const [editEmployee, setEditEmployee] = React.useState<Employee | null>(null);
+
+  if (isPending) {
     return (
       <div className={styles['placeholderContainer']} aria-busy="true" aria-live="polite">
         <Spinner size="lg" />
@@ -31,7 +53,7 @@ export function EmployeesPage(): React.ReactElement {
     );
   }
 
-  if (isError || !data) {
+  if (isError) {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
@@ -40,45 +62,65 @@ export function EmployeesPage(): React.ReactElement {
   }
 
   const activeCount = data.filter((e) => e.isActive).length;
-  const adminCount  = data.filter((e) => e.role === 'admin').length;
+  const adminCount = data.filter((e) => e.role === 'admin').length;
 
   return (
     <div className={styles['page']}>
       <header className={styles['header']}>
-        <h1 className={styles['title']}>{t('employees.title')}</h1>
-        <p className={styles['subtitle']}>{t('employees.subtitle')}</p>
+        <div>
+          <h1 className={styles['title']}>{t('employees.title')}</h1>
+          <p className={styles['subtitle']}>{t('employees.subtitle')}</p>
+        </div>
+        <PermissionGuard permission="create:employee">
+          <Button
+            size="sm"
+            onClick={() => {
+              setCreateOpen(true);
+            }}
+          >
+            {t('employees.addEmployee')}
+          </Button>
+        </PermissionGuard>
       </header>
 
       <section className={statsStyles['statsRow']} aria-label="Employee statistics">
         <Card>
           <CardHeader>
-            <CardTitle className={statsStyles['statTitle']}>{t('employees.totalEmployees')}</CardTitle>
+            <CardTitle className={statsStyles['statTitle']}>
+              {t('employees.totalEmployees')}
+            </CardTitle>
             <CardAction>
-              <span className={statsStyles['statIcon']}><UserCogIcon aria-hidden="true" /></span>
+              <span className={statsStyles['statIcon']}>
+                <UserCogIcon aria-hidden="true" />
+              </span>
             </CardAction>
           </CardHeader>
           <CardContent>
             <div className={statsStyles['statValue']}>{data.length}</div>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
-            <CardTitle className={statsStyles['statTitle']}>{t('employees.activeEmployees')}</CardTitle>
+            <CardTitle className={statsStyles['statTitle']}>
+              {t('employees.activeEmployees')}
+            </CardTitle>
             <CardAction>
-              <span className={statsStyles['statIcon']}><CheckCircle2Icon aria-hidden="true" /></span>
+              <span className={statsStyles['statIcon']}>
+                <CheckCircle2Icon aria-hidden="true" />
+              </span>
             </CardAction>
           </CardHeader>
           <CardContent>
             <div className={statsStyles['statValue']}>{activeCount}</div>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle className={statsStyles['statTitle']}>{t('employees.adminCount')}</CardTitle>
             <CardAction>
-              <span className={statsStyles['statIcon']}><ShieldCheckIcon aria-hidden="true" /></span>
+              <span className={statsStyles['statIcon']}>
+                <ShieldCheckIcon aria-hidden="true" />
+              </span>
             </CardAction>
           </CardHeader>
           <CardContent>
@@ -88,49 +130,91 @@ export function EmployeesPage(): React.ReactElement {
       </section>
 
       <section className={styles['content']}>
-        <Card>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('employees.name')}</TableHead>
-                  <TableHead>{t('employees.email')}</TableHead>
-                  <TableHead>{t('employees.role')}</TableHead>
-                  <TableHead>{t('employees.status')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.length === 0 ? (
+        <SectionErrorBoundary label="Employees">
+          <Card>
+            <CardContent>
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={4}>
-                      <div className={styles['placeholderContainer']}>
-                        <p className={styles['placeholder']}>{t('common.noData')}</p>
-                      </div>
-                    </TableCell>
+                    <TableHead>{t('employees.name')}</TableHead>
+                    <TableHead>{t('employees.email')}</TableHead>
+                    <TableHead>{t('employees.role')}</TableHead>
+                    <TableHead>{t('employees.status')}</TableHead>
+                    <TableHead />
                   </TableRow>
-                ) : (
-                  data.map((e) => (
-                    <TableRow key={e.id}>
-                      <TableCell>{e.name}</TableCell>
-                      <TableCell>{e.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={roleVariant(e.role as EmployeeRole)}>
-                          {t(`employees.roles.${e.role}`)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={e.isActive ? 'success' : 'destructive'}>
-                          {e.isActive ? t('employees.active') : t('employees.inactive')}
-                        </Badge>
+                </TableHeader>
+                <TableBody>
+                  {data.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5}>
+                        <EmptyState
+                          icon={<UserCogIcon size={24} />}
+                          title={t('employees.emptyTitle')}
+                          description={t('employees.emptyDescription')}
+                          action={{
+                            label: t('employees.addEmployee'),
+                            onClick: (): void => {
+                              setCreateOpen(true);
+                            },
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+                  ) : (
+                    data.map((e) => (
+                      <TableRow key={e.id}>
+                        <TableCell>{e.name}</TableCell>
+                        <TableCell>{e.email}</TableCell>
+                        <TableCell>
+                          <Badge variant={roleVariant(e.role as EmployeeRole)}>
+                            {t(`employees.roles.${e.role}`)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={e.isActive ? 'success' : 'destructive'}>
+                            {e.isActive ? t('employees.active') : t('employees.inactive')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => {
+                                setEditEmployee(e);
+                              }}
+                            >
+                              <PencilIcon size={14} />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </SectionErrorBoundary>
       </section>
+
+      <PermissionGuard permission="view:audit">
+        <div style={{ marginTop: '1.5rem' }}>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem' }}>
+            {t('common.auditLog')}
+          </h3>
+          <AuditLogPanel entityType="employee" />
+        </div>
+      </PermissionGuard>
+
+      <EmployeeCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <EmployeeEditDialog
+        employee={editEmployee}
+        open={editEmployee !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditEmployee(null);
+        }}
+      />
     </div>
   );
 }
