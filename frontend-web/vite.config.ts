@@ -28,19 +28,19 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-query': ['@tanstack/react-query'],
-          'vendor-radix': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-select',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-scroll-area',
-          ],
-          'vendor-charts': ['recharts'],
-          'vendor-forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'vendor-motion': ['framer-motion'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('/react-dom/') || id.includes('/react-router-dom/') || id.includes('/react/')) return 'vendor-react';
+            if (id.includes('@tanstack/react-query')) return 'vendor-query';
+            if (id.includes('@radix-ui/')) return 'vendor-radix';
+            if (id.includes('/recharts/')) return 'vendor-charts';
+            if (id.includes('/react-hook-form/') || id.includes('@hookform/') || id.includes('/zod/')) return 'vendor-forms';
+            if (id.includes('/framer-motion/')) return 'vendor-motion';
+          }
+          // Eagerly-loaded widgets inflate index.js — split into own chunk
+          if (id.includes('/src/widgets/')) return 'app-widgets';
+          // MSW seed/mock data only needed in dev — keep out of main bundle
+          if (id.includes('/src/app/mock/')) return 'app-mock';
         },
       },
     },
