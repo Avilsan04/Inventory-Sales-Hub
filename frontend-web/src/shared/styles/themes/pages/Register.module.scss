@@ -1,14 +1,12 @@
-// ── Register Page — Centered layout ───────────────────────────────
+// ── Register Page — Full-split 50/50 layout ────────────────────────
 
 // ── Layout-scoped constants ────────────────────────────────────────
-$_page-bg-dark: #0b1326;
 $_page-bg-light-from: #eef2fb;
 $_page-bg-light-to: #f4f7ff;
 $_brand-text: rgba(218 226 253 / 0.95);
 $_brand-muted: rgba(197 198 205 / 0.8);
 $_brand-feature: rgba(197 198 205 / 0.85);
 $_check-color: #b9c7e0;
-$_glass-bg: rgba(11 19 38 / 0.45);
 $_glass-border: rgba(218 226 253 / 0.07);
 $_icon-ring-bg: rgba(34 42 61 / 0.9);
 $_icon-ring-border: rgba(218 226 253 / 0.12);
@@ -18,14 +16,13 @@ $_brand-gradient-to: #131c35;
 // ── Page shell ────────────────────────────────────────────────────
 
 .page {
-  min-height: $height-screen;
-  overflow-y: auto;
+  min-height: 100dvh;
   position: relative;
 
   // mobile: simple light gradient
   background: linear-gradient(135deg, $_page-bg-light-from 0%, $_page-bg-light-to 100%);
 
-  // desktop light: dark-left / light-right split + blobs, fixed so sticky panel stays aligned
+  // desktop light: dark-left / light-right split aligned to 50%
   @media (min-width: $breakpoint-lg) {
     background:
       radial-gradient(circle at 78% 15%, rgba(99 102 241 / 0.09) 0%, transparent 38%),
@@ -33,40 +30,18 @@ $_brand-gradient-to: #131c35;
       linear-gradient(
         to right,
         $_brand-gradient-from 0%,
-        $_brand-gradient-to calc(50% - 54px),
-        $_page-bg-light-from calc(50% - 50px),
+        $_brand-gradient-to calc(50% - 2px),
+        $_page-bg-light-from calc(50% + 2px),
         $_page-bg-light-to 100%
       );
     background-attachment: fixed;
   }
 
   :global([data-theme='dark']) & {
-    background: $_page-bg-dark;
+    background: var(--color-bg-primary);
 
-    &::before {
-      content: '';
-      position: fixed;
-      top: -10%;
-      left: -10%;
-      width: 50vw;
-      height: 50vw;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(51 65 85 / 0.35) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    &::after {
-      content: '';
-      position: fixed;
-      bottom: -20%;
-      right: -10%;
-      width: 60vw;
-      height: 60vw;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(39 36 184 / 0.12) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
+    @media (min-width: $breakpoint-lg) {
+      background: var(--color-bg-primary);
     }
   }
 }
@@ -87,23 +62,23 @@ $_brand-gradient-to: #131c35;
   flex-direction: column;
   align-items: center;
   gap: $spacing-8;
-  min-height: $height-screen;
+  min-height: 100dvh;
   padding: $spacing-12 $spacing-4;
   position: relative;
   z-index: 1;
 
   @media (min-width: $breakpoint-lg) {
     flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    gap: $spacing-16;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: $spacing-12 $spacing-8;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    padding: 0;
   }
 }
 
-// ── Brand panel (left) ────────────────────────────────────────────
+// ── Brand panel (left) — always dark, 50% width ───────────────────
 
 .brandPanel {
   display: none;
@@ -111,13 +86,43 @@ $_brand-gradient-to: #131c35;
   @media (min-width: $breakpoint-lg) {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     gap: $spacing-8;
-    width: 45%;
+    width: 50%;
     flex-shrink: 0;
-    height: $height-screen;
+    height: 100dvh;
     position: sticky;
     top: 0;
+    overflow: hidden;
+    padding: $spacing-12 $spacing-32;
+    background: linear-gradient(160deg, $_brand-gradient-from 0%, $_brand-gradient-to 100%);
+    border-right: 1px solid rgba(218 226 253 / 0.06);
+
+    // Decorative top-right glow blob
+    &::before {
+      content: '';
+      position: absolute;
+      top: -15%;
+      right: -10%;
+      width: 55%;
+      height: 55%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99 102 241 / 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    // Decorative bottom-left glow blob
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -15%;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37 99 235 / 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
   }
 }
 
@@ -125,6 +130,8 @@ $_brand-gradient-to: #131c35;
   display: flex;
   align-items: center;
   gap: $spacing-3;
+  position: relative;
+  z-index: 1;
 }
 
 .brandName {
@@ -135,12 +142,14 @@ $_brand-gradient-to: #131c35;
 }
 
 .brandTagline {
-  font-size: $font-size-3xl;
+  font-size: $font-size-4xl;
   font-weight: $font-weight-bold;
   color: $_brand-text;
-  line-height: 1.25;
-  letter-spacing: -0.025em;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 // ── Feature list ──────────────────────────────────────────────────
@@ -152,6 +161,8 @@ $_brand-gradient-to: #131c35;
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
+  position: relative;
+  z-index: 1;
 }
 
 .brandFeatureItem {
@@ -182,14 +193,18 @@ $_brand-gradient-to: #131c35;
 .brandRoleCard {
   padding: $spacing-5 $spacing-6;
   border-radius: $radius-xl;
-  background: $_glass-bg;
-  border: 1px solid $_glass-border;
+  background: rgba(11 19 38 / 0.55);
+  border: 1px solid rgba(218 226 253 / 0.15);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 32px rgba(0 0 0 / 0.28);
+  box-shadow:
+    0 0 0 1px rgba(218 226 253 / 0.05),
+    0 8px 32px rgba(0 0 0 / 0.35);
   display: flex;
   flex-direction: column;
   gap: $spacing-3;
+  position: relative;
+  z-index: 1;
 }
 
 .brandRoleCardHeader {
@@ -224,7 +239,7 @@ $_brand-gradient-to: #131c35;
   margin: 0;
 }
 
-// ── Form panel (right) ────────────────────────────────────────────
+// ── Form panel (right) — 50% width, scrollable ────────────────────
 
 .formPanel {
   display: flex;
@@ -234,25 +249,35 @@ $_brand-gradient-to: #131c35;
   width: 100%;
 
   @media (min-width: $breakpoint-lg) {
-    width: 55%;
+    width: 50%;
     flex-shrink: 0;
+    height: 100dvh;
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding: $spacing-12 $spacing-8;
+    background: var(--color-bg-secondary);
+  }
+
+  :global([data-theme='dark']) & {
+    @media (min-width: $breakpoint-lg) {
+      background: var(--color-bg-primary);
+    }
   }
 }
 
-// ── Glass form card ───────────────────────────────────────────────
+// ── Form card ─────────────────────────────────────────────────────
 
 .formCard {
   width: 100%;
+  max-width: 480px;
   box-shadow:
-    0 4px 24px rgba(99 102 241 / 0.08),
-    0 1px 4px rgba(0 0 0 / 0.05);
+    0 4px 32px rgba(99 102 241 / 0.1),
+    0 1px 6px rgba(0 0 0 / 0.06);
 
   :global([data-theme='dark']) & {
-    background: $_glass-bg;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-color: $_glass-border;
-    box-shadow: 0 8px 32px rgba(0 0 0 / 0.35);
+    box-shadow:
+      0 8px 32px rgba(0 0 0 / 0.4),
+      0 1px 6px rgba(0 0 0 / 0.2);
   }
 }
 
@@ -274,6 +299,7 @@ $_brand-gradient-to: #131c35;
   display: flex;
   align-items: center;
   gap: $spacing-2;
+  margin-top: $spacing-4;
 
   @media (min-width: $breakpoint-lg) {
     display: none;
