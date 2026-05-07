@@ -1,18 +1,5 @@
 // ── Register Page — Full-split 50/50 layout ────────────────────────
 
-// ── Layout-scoped constants ────────────────────────────────────────
-$_page-bg-light-from: #eef2fb;
-$_page-bg-light-to: #f4f7ff;
-$_brand-text: rgba(218 226 253 / 0.95);
-$_brand-muted: rgba(197 198 205 / 0.8);
-$_brand-feature: rgba(197 198 205 / 0.85);
-$_check-color: #b9c7e0;
-$_glass-border: rgba(218 226 253 / 0.07);
-$_icon-ring-bg: rgba(34 42 61 / 0.9);
-$_icon-ring-border: rgba(218 226 253 / 0.12);
-$_brand-gradient-from: #0d1629;
-$_brand-gradient-to: #131c35;
-
 // ── Page shell ────────────────────────────────────────────────────
 
 .page {
@@ -20,7 +7,7 @@ $_brand-gradient-to: #131c35;
   position: relative;
 
   // mobile: simple light gradient
-  background: linear-gradient(135deg, $_page-bg-light-from 0%, $_page-bg-light-to 100%);
+  background: linear-gradient(135deg, $color-auth-bg-from 0%, $color-auth-bg-to 100%);
 
   // desktop light: dark-left / light-right split aligned to 50%
   @media (min-width: $breakpoint-lg) {
@@ -29,10 +16,10 @@ $_brand-gradient-to: #131c35;
       radial-gradient(circle at 72% 88%, rgba(59 130 246 / 0.07) 0%, transparent 32%),
       linear-gradient(
         to right,
-        $_brand-gradient-from 0%,
-        $_brand-gradient-to calc(50% - 2px),
-        $_page-bg-light-from calc(50% + 2px),
-        $_page-bg-light-to 100%
+        $color-auth-gradient-from 0%,
+        $color-auth-gradient-to calc(50% - 2px),
+        $color-auth-bg-from calc(50% + 2px),
+        $color-auth-bg-to 100%
       );
     background-attachment: fixed;
   }
@@ -52,7 +39,7 @@ $_brand-gradient-to: #131c35;
   position: fixed;
   top: $spacing-4;
   right: $spacing-4;
-  z-index: 20;
+  z-index: $z-float;
 }
 
 // ── Main content container ────────────────────────────────────────
@@ -65,7 +52,7 @@ $_brand-gradient-to: #131c35;
   min-height: 100dvh;
   padding: $spacing-12 $spacing-4;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 
   @media (min-width: $breakpoint-lg) {
     flex-direction: row;
@@ -95,8 +82,8 @@ $_brand-gradient-to: #131c35;
     top: 0;
     overflow: hidden;
     padding: $spacing-12 $spacing-32;
-    background: linear-gradient(160deg, $_brand-gradient-from 0%, $_brand-gradient-to 100%);
-    border-right: 1px solid rgba(218 226 253 / 0.06);
+    background: linear-gradient(160deg, $color-auth-gradient-from 0%, $color-auth-gradient-to 100%);
+    border-right: $border-width-base solid $color-auth-glass-border-panel;
 
     // Decorative top-right glow blob
     &::before {
@@ -131,25 +118,25 @@ $_brand-gradient-to: #131c35;
   align-items: center;
   gap: $spacing-3;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 }
 
 .brandName {
   font-size: $font-size-lg;
   font-weight: $font-weight-bold;
-  color: $_brand-text;
+  color: $color-auth-brand-text;
   letter-spacing: -0.01em;
 }
 
 .brandTagline {
   font-size: $font-size-4xl;
   font-weight: $font-weight-bold;
-  color: $_brand-text;
+  color: $color-auth-brand-text;
   line-height: 1.15;
   letter-spacing: -0.03em;
   margin: 0;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 }
 
 // ── Feature list ──────────────────────────────────────────────────
@@ -162,7 +149,7 @@ $_brand-gradient-to: #131c35;
   flex-direction: column;
   gap: $spacing-4;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 }
 
 .brandFeatureItem {
@@ -170,7 +157,7 @@ $_brand-gradient-to: #131c35;
   align-items: center;
   gap: $spacing-4;
   font-size: $font-size-base;
-  color: $_brand-feature;
+  color: $color-auth-brand-feature;
   font-weight: $font-weight-medium;
 }
 
@@ -179,13 +166,13 @@ $_brand-gradient-to: #131c35;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: $size-8;
+  height: $size-8;
   border-radius: $border-radius-full;
-  background-color: $_icon-ring-bg;
-  border: 1px solid $_icon-ring-border;
-  color: $_check-color;
-  box-shadow: 0 1px 3px rgba(0 0 0 / 0.25);
+  background-color: $color-auth-icon-ring-bg;
+  border: $border-width-base solid $color-auth-icon-ring-border;
+  color: $color-auth-check;
+  box-shadow: $shadow-auth-icon;
 }
 
 // ── Role card ─────────────────────────────────────────────────────
@@ -193,18 +180,16 @@ $_brand-gradient-to: #131c35;
 .brandRoleCard {
   padding: $spacing-5 $spacing-6;
   border-radius: $radius-xl;
-  background: rgba(11 19 38 / 0.55);
-  border: 1px solid rgba(218 226 253 / 0.15);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow:
-    0 0 0 1px rgba(218 226 253 / 0.05),
-    0 8px 32px rgba(0 0 0 / 0.35);
+  background: $color-auth-role-card-bg;
+  border: $border-width-base solid $color-auth-glass-border-md;
+  backdrop-filter: blur($blur-lg);
+  -webkit-backdrop-filter: blur($blur-lg);
+  box-shadow: $shadow-auth-card;
   display: flex;
   flex-direction: column;
   gap: $spacing-3;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 }
 
 .brandRoleCardHeader {
@@ -218,23 +203,23 @@ $_brand-gradient-to: #131c35;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: $size-10;
+  height: $size-10;
   border-radius: $border-radius-full;
-  background-color: rgba(57 72 90 / 0.8);
-  color: $_check-color;
+  background-color: $color-auth-role-icon-bg;
+  color: $color-auth-check;
 }
 
 .brandRoleTitle {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
-  color: $_brand-text;
+  color: $color-auth-brand-text;
   margin: 0;
 }
 
 .brandRoleDesc {
   font-size: $font-size-sm;
-  color: $_brand-muted;
+  color: $color-auth-brand-muted;
   line-height: 1.65;
   margin: 0;
 }
@@ -269,7 +254,7 @@ $_brand-gradient-to: #131c35;
 
 .formCard {
   width: 100%;
-  max-width: 480px;
+  max-width: $container-form;
   box-shadow:
     0 4px 32px rgba(99 102 241 / 0.1),
     0 1px 6px rgba(0 0 0 / 0.06);

@@ -19,12 +19,6 @@ import {
   CardTitle,
   CardAction,
   CardContent,
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
   RevenueAreaChart,
   SalesDonutChart,
   TopProductsBarChart,
@@ -33,6 +27,11 @@ import {
   type StatusSlice,
 } from '@shared/ui/composed';
 import type { SalesAnalyticsParams } from '@entities/analytics';
+import {
+  AnalyticsTopProductsTable,
+  AnalyticsTopCustomersTable,
+  AnalyticsLowStockTable,
+} from '@widgets/analytics';
 import styles from '@shared/styles/themes/pages/Analytics.module.scss';
 
 const DATE_RANGES = [
@@ -82,31 +81,9 @@ export function AnalyticsPage(): React.ReactElement {
   const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(salesParams);
   const { data: saleSummary, isLoading: summaryLoading } = useSaleSummary();
 
-  const handleExportProducts = (): void => {
-    exportToCsv(
-      (topProds ?? []).map((p) => ({
-        product: p.productName,
-        sku: p.sku,
-        sold: p.totalSold,
-        revenue: p.revenue,
-      })),
-      'top-products'
-    );
-  };
-
-  const handleExportCustomers = (): void => {
-    exportToCsv(
-      (topCusts ?? []).map((c) => ({
-        customer: c.customerName,
-        orders: c.totalOrders,
-        spent: c.totalSpent,
-      })),
-      'top-customers'
-    );
-  };
-
   const anyLoading = kpiLoading || prodsLoading || custsLoading || alertsLoading;
   const anyError = kpiError || prodsError || custsError || alertsError;
+  const currency = kpi?.currency ?? '';
 
   if (anyLoading && !kpi) {
     return (
@@ -123,8 +100,6 @@ export function AnalyticsPage(): React.ReactElement {
       </div>
     );
   }
-
-  const kpiLoaded = !kpiLoading;
 
   const kpiCards: Array<{
     key: string;
@@ -162,11 +137,31 @@ export function AnalyticsPage(): React.ReactElement {
   ];
 
   const donutData: StatusSlice[] =
-    saleSummary?.byStatus?.map((b) => ({
-      status: b.status,
-      count: b.count,
-      revenue: b.revenue,
-    })) ?? [];
+    saleSummary?.byStatus?.map((b) => ({ status: b.status, count: b.count, revenue: b.revenue })) ??
+    [];
+
+  const handleExportProducts = (): void => {
+    exportToCsv(
+      (topProds ?? []).map((p) => ({
+        product: p.productName,
+        sku: p.sku,
+        sold: p.totalSold,
+        revenue: p.revenue,
+      })),
+      'top-products'
+    );
+  };
+
+  const handleExportCustomers = (): void => {
+    exportToCsv(
+      (topCusts ?? []).map((c) => ({
+        customer: c.customerName,
+        orders: c.totalOrders,
+        spent: c.totalSpent,
+      })),
+      'top-customers'
+    );
+  };
 
   return (
     <div className={styles['page']}>
@@ -187,7 +182,7 @@ export function AnalyticsPage(): React.ReactElement {
         </div>
       </header>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+      <div className={styles['dateRangeRow']}>
         <div className={styles['dateRangePills']} role="group" aria-label="Período">
           {DATE_RANGES.map(({ id, labelKey }) => (
             <button
@@ -211,7 +206,6 @@ export function AnalyticsPage(): React.ReactElement {
         )}
       </div>
 
-      {/* KPI grid */}
       <section className={styles['kpiGrid']} aria-label="Key performance indicators">
         {kpiCards.map((card) => (
           <Card key={card.key}>
@@ -223,9 +217,9 @@ export function AnalyticsPage(): React.ReactElement {
             </CardHeader>
             <CardContent>
               <div className={styles['kpiValue']}>
-                {kpiLoaded ? card.value : <Skeleton className={styles['kpiSkeleton']} />}
+                {!kpiLoading ? card.value : <Skeleton className={styles['kpiSkeleton']} />}
               </div>
-              {kpiLoaded && card.trend !== undefined && (
+              {!kpiLoading && card.trend !== undefined && (
                 <p className={styles['kpiTrend']}>
                   {card.trend} {t('analytics.vsLastMonth')}
                 </p>
@@ -235,7 +229,6 @@ export function AnalyticsPage(): React.ReactElement {
         ))}
       </section>
 
-      {/* Revenue Over Time (full width) */}
       <Card>
         <CardHeader>
           <div className={styles['chartSection']}>
@@ -266,7 +259,6 @@ export function AnalyticsPage(): React.ReactElement {
         </CardContent>
       </Card>
 
-      {/* Sales by Status + Top Products (2-col) */}
       <div className={styles['sectionsGrid']}>
         <Card>
           <CardHeader>
@@ -276,7 +268,6 @@ export function AnalyticsPage(): React.ReactElement {
             <SalesDonutChart data={donutData} isLoading={summaryLoading} />
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle>{t('analytics.topProductsRevenue')}</CardTitle>
@@ -287,137 +278,12 @@ export function AnalyticsPage(): React.ReactElement {
         </Card>
       </div>
 
-      {/* Top Products + Top Customers tables (2-col grid) */}
       <div className={styles['sectionsGrid']}>
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('analytics.topProducts')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('analytics.col.product')}</TableHead>
-                  <TableHead>{t('analytics.col.sku')}</TableHead>
-                  <TableHead>{t('analytics.col.sold')}</TableHead>
-                  <TableHead>{t('analytics.col.revenue')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {prodsLoading ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={4}>
-                        <Skeleton className={styles['skeletonRow']} />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : !topProds || topProds.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4}>{t('common.noData')}</TableCell>
-                  </TableRow>
-                ) : (
-                  topProds.map((p) => (
-                    <TableRow key={p.productId}>
-                      <TableCell>{p.productName}</TableCell>
-                      <TableCell>{p.sku}</TableCell>
-                      <TableCell>{p.totalSold}</TableCell>
-                      <TableCell>
-                        {kpi?.currency ?? ''} {p.revenue.toLocaleString()}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('analytics.topCustomers')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('analytics.col.customer')}</TableHead>
-                  <TableHead>{t('analytics.col.orders')}</TableHead>
-                  <TableHead>{t('analytics.col.spent')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {custsLoading ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={3}>
-                        <Skeleton className={styles['skeletonRow']} />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : !topCusts || topCusts.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={3}>{t('common.noData')}</TableCell>
-                  </TableRow>
-                ) : (
-                  topCusts.map((c) => (
-                    <TableRow key={c.customerId}>
-                      <TableCell>{c.customerName}</TableCell>
-                      <TableCell>{c.totalOrders}</TableCell>
-                      <TableCell>
-                        {kpi?.currency ?? ''} {c.totalSpent.toLocaleString()}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <AnalyticsTopProductsTable data={topProds} isLoading={prodsLoading} currency={currency} />
+        <AnalyticsTopCustomersTable data={topCusts} isLoading={custsLoading} currency={currency} />
       </div>
 
-      {/* Low Stock Alerts (full width) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('analytics.lowStockAlerts')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('analytics.col.item')}</TableHead>
-                <TableHead>{t('analytics.col.sku')}</TableHead>
-                <TableHead>{t('analytics.col.qty')}</TableHead>
-                <TableHead>{t('analytics.col.threshold')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {alertsLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell colSpan={4}>
-                      <Skeleton className={styles['skeletonRow']} />
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : !alerts || alerts.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4}>{t('common.noData')}</TableCell>
-                </TableRow>
-              ) : (
-                alerts.map((a) => (
-                  <TableRow key={a.itemId}>
-                    <TableCell>{a.name}</TableCell>
-                    <TableCell>{a.sku}</TableCell>
-                    <TableCell>{a.currentQuantity}</TableCell>
-                    <TableCell>{a.threshold}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <AnalyticsLowStockTable data={alerts} isLoading={alertsLoading} />
     </div>
   );
 }

@@ -176,7 +176,7 @@ export function EmployeesPage(): React.ReactElement {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <div className={styles['cellActions']}>
                             <Button
                               variant="ghost"
                               size="icon-sm"
@@ -199,10 +199,8 @@ export function EmployeesPage(): React.ReactElement {
       </section>
 
       <PermissionGuard permission="view:audit">
-        <div style={{ marginTop: '1.5rem' }}>
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-            {t('common.auditLog')}
-          </h3>
+        <div className={styles['auditSection']}>
+          <h3 className={styles['auditTitle']}>{t('common.auditLog')}</h3>
           <AuditLogPanel entityType="employee" />
         </div>
       </PermissionGuard>

@@ -4,7 +4,7 @@ import type { Warehouse } from '@entities/warehouse';
 
 export const warehousesApi = {
   getWarehouses: async (): Promise<Warehouse[]> => {
-    const res = await httpClient.get<unknown>('/warehouses');
+    const res = await httpClient.get<Warehouse[]>('/warehouses');
     return warehouseListSchema.parse(res);
   },
 
@@ -14,6 +14,6 @@ export const warehousesApi = {
     fromWarehouseId: string;
     toWarehouseId: string;
   }): Promise<void> => {
-    await httpClient.post<unknown>('/inventory/transfer', dto);
+    await httpClient.post('/inventory/transfer', dto);
   },
 };

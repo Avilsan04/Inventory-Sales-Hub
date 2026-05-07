@@ -65,8 +65,56 @@ $size-24: 6rem; // 24 × 0.25rem — KPI skeleton width
 $min-section-height: 12rem; // Empty/error state container min height
 $card-min-width: 14rem; // Min card width for auto-fill stats grids
 
+// Settings page layout
+$settings-nav-width: 13.75rem; // 220px — secondary nav column
+$container-settings: 62rem; // max-width of settings page shell
+$container-settings-content: 44rem; // max-width of settings content panel
+$container-settings-field: 28rem; // max-width of field description headers
+
+// Input widths
+$size-search-input: 17.5rem; // 280px — standard search box width
+$size-1-5: 0.375rem; // 6px — status dot, micro icon
+$size-20: 5rem; // 80px
+$size-32: 8rem; // 128px — KPI card decorative blob
+$size-48: 12rem; // 192px — topbar left section min-width
+$size-80: 20rem; // 320px — cmd palette height, filter max-width
+$size-blob-md: 24rem; // decorative blob (Login)
+$size-blob-lg: 31.25rem; // decorative blob (Login)
+$size-14: 3.5rem; // 56px — percent/narrow input width
+$size-pos-cart: 23.75rem; // 380px — POS cart panel width
+$size-grid-card-min: 16.25rem; // 260px — product grid card min-width
+$container-login-form: 25rem; // 400px — login form wrapper max-width
+$container-form: 30rem; // 480px — register form card max-width
+$container-mockup: 28rem; // landing page mockup window
+$container-mockup-lg: 34rem; // landing page large mockup window
+// Panel widths
+$panel-notifications-width: 22rem;
+$panel-user-width: 16rem;
+// Negative offsets for decorative blobs
+$offset-kpi-blob: -2rem; // Dashboard KPI card bg blob
+$offset-blob-sm: -5rem; // Login decorative blob
+$offset-blob-md: -8rem; // Login decorative blob
+
+// Dialog table columns
+$dialog-col-short: 5rem; // ~80px — currency / short inputs
+$dialog-col-qty: 3.75rem; // ~60px — quantity field
+$dialog-col-price: 5.5rem; // ~88px — unit price field
+
+// ── Blur scale ────────────────────────────────────────────────────
+$blur-2xs: 1px; // near-invisible particle blur
+$blur-xs: 2px; // particle blur
+$blur-base: 6px; // dialog backdrop
+$blur-lg: 16px; // glassmorphism card
+$blur-xl: 20px; // decorative blob
+$blur-2xl: 24px; // glassmorphism panel
+$blur-xxl: 32px; // large decorative blob
+
+// ── Animation durations ──────────────────────────────────────────
 // Transition durations — single source of truth
 $duration-fast: 0.12s; // Micro-interactions: hover, focus, color changes
+$duration-feedback: 0.2s; // Interactive card/link hover feedback
 $duration-base: 0.18s; // General state transitions: overlays, theme
 $duration-slow: 0.28s; // Deliberate motion: sliding panels
 $duration-slower: 0.3s; // Pronounced motion: toasts, progress bars
+$duration-pulse: 2s; // Skeleton loading pulse animation
+$duration-spin: 0.6s; // Spinner rotation

@@ -85,11 +85,7 @@ export function SuppliersPage(): React.ReactElement {
           </CardHeader>
           <CardContent>
             <div className={styles['statValue']}>
-              {isPending ? (
-                <Skeleton style={{ height: '2rem', width: '4rem' }} />
-              ) : (
-                suppliers.length
-              )}
+              {isPending ? <Skeleton className={styles['skeletonValue']} /> : suppliers.length}
             </div>
           </CardContent>
         </Card>
@@ -114,7 +110,7 @@ export function SuppliersPage(): React.ReactElement {
                     Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
                         <TableCell colSpan={5}>
-                          <Skeleton style={{ height: '2rem', width: '100%' }} />
+                          <Skeleton className={styles['skeletonRow']} />
                         </TableCell>
                       </TableRow>
                     ))
@@ -142,7 +138,7 @@ export function SuppliersPage(): React.ReactElement {
                         <TableCell>{s.phone ?? '—'}</TableCell>
                         <TableCell>{s.contactPerson ?? '—'}</TableCell>
                         <TableCell>
-                          <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
+                          <div className={styles['cellActions']}>
                             <Button
                               variant="ghost"
                               size="icon-sm"

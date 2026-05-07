@@ -24,147 +24,13 @@ import { useEffectiveRole } from '@features/auth/hooks/useEffectiveRole';
 import { BrandMark } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
+import {
+  type NavIconKey,
+  type NavGroup,
+  NAV_GROUPS_BY_ROLE,
+  FOOTER_NAV_GROUP,
+} from '@shared/config/navigation';
 import styles from '@shared/styles/themes/components/Sidebar.module.scss';
-
-type NavIconKey =
-  | 'dashboard'
-  | 'analytics'
-  | 'inventory'
-  | 'products'
-  | 'sales'
-  | 'pos'
-  | 'myOrders'
-  | 'catalog'
-  | 'customers'
-  | 'employees'
-  | 'shipments'
-  | 'notifications'
-  | 'tenants'
-  | 'settings'
-  | 'profile';
-
-interface NavItem {
-  to: string;
-  labelKey: string;
-  iconKey: NavIconKey;
-}
-
-interface NavGroup {
-  labelKey?: string;
-  items: readonly NavItem[];
-}
-
-const CUSTOMER_NAV_GROUPS: readonly NavGroup[] = [
-  {
-    items: [
-      { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
-      { to: APP_ROUTES.CATALOG, labelKey: 'nav.catalog', iconKey: 'catalog' },
-      { to: APP_ROUTES.POS, labelKey: 'nav.pos', iconKey: 'pos' },
-      { to: APP_ROUTES.MY_ORDERS, labelKey: 'nav.myOrders', iconKey: 'myOrders' },
-      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
-    ],
-  },
-] as const;
-
-// New canonical role nav groups
-
-const COMPANY_ROLE_NAV_GROUPS: readonly NavGroup[] = [
-  {
-    labelKey: 'nav.section.overview',
-    items: [
-      { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
-      { to: APP_ROUTES.ANALYTICS, labelKey: 'nav.analytics', iconKey: 'analytics' },
-    ],
-  },
-  {
-    labelKey: 'nav.section.operations',
-    items: [{ to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' }],
-  },
-  {
-    labelKey: 'nav.section.system',
-    items: [
-      { to: APP_ROUTES.ADMIN_TENANTS, labelKey: 'nav.tenants', iconKey: 'tenants' },
-      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
-    ],
-  },
-] as const;
-
-const ADMIN_ROLE_NAV_GROUPS: readonly NavGroup[] = [
-  {
-    labelKey: 'nav.section.overview',
-    items: [
-      { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
-      { to: APP_ROUTES.ANALYTICS, labelKey: 'nav.analytics', iconKey: 'analytics' },
-    ],
-  },
-  {
-    labelKey: 'nav.section.operations',
-    items: [
-      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
-      { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
-      { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
-      { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
-      { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
-    ],
-  },
-  {
-    labelKey: 'nav.section.system',
-    items: [
-      { to: APP_ROUTES.ADMIN_TENANTS, labelKey: 'nav.tenants', iconKey: 'tenants' },
-      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
-    ],
-  },
-] as const;
-
-const MANAGER_ROLE_NAV_GROUPS: readonly NavGroup[] = [
-  {
-    labelKey: 'nav.section.overview',
-    items: [
-      { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' },
-      { to: APP_ROUTES.ANALYTICS, labelKey: 'nav.analytics', iconKey: 'analytics' },
-    ],
-  },
-  {
-    labelKey: 'nav.section.operations',
-    items: [
-      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
-      { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
-      { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
-      { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
-    ],
-  },
-  {
-    labelKey: 'nav.section.system',
-    items: [
-      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
-    ],
-  },
-] as const;
-
-const STAFF_ROLE_NAV_GROUPS: readonly NavGroup[] = [
-  {
-    labelKey: 'nav.section.operations',
-    items: [
-      { to: APP_ROUTES.POS, labelKey: 'nav.pos', iconKey: 'pos' },
-      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
-      { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
-      { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
-    ],
-  },
-  {
-    labelKey: 'nav.section.system',
-    items: [
-      { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
-    ],
-  },
-] as const;
-
-const FOOTER_NAV_GROUP: NavGroup = {
-  items: [
-    { to: APP_ROUTES.PROFILE, labelKey: 'nav.profile', iconKey: 'profile' },
-    { to: APP_ROUTES.SETTINGS, labelKey: 'nav.settings', iconKey: 'settings' },
-  ],
-};
 
 function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
   switch (iconKey) {
@@ -243,15 +109,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const effectiveRole = useEffectiveRole();
 
-  const navGroups = React.useMemo((): readonly NavGroup[] => {
-    if (effectiveRole === 'company') return COMPANY_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'admin') return ADMIN_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'manager') return MANAGER_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'staff') return STAFF_ROLE_NAV_GROUPS;
-    if (effectiveRole === 'customer') return CUSTOMER_NAV_GROUPS;
-    return STAFF_ROLE_NAV_GROUPS;
-  }, [effectiveRole]);
-
+  const navGroups = NAV_GROUPS_BY_ROLE[effectiveRole ?? 'staff'];
   const showAddProduct = effectiveRole === 'admin' || effectiveRole === 'manager';
 
   return (

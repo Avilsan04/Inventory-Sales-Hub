@@ -58,7 +58,7 @@
 
 .footer {
   padding: $spacing-5 $spacing-6 $spacing-6;
-  border-top: 1px solid var(--color-border);
+  border-top: $border-width-base solid var(--color-border);
 }
 
 .submitButton {

@@ -73,14 +73,16 @@ export function MyOrdersPage(): React.ReactElement {
   return (
     <div className={styles['page']}>
       <header className={styles['header']}>
-        <h1 className={styles['title']}>{t('myOrders.title')}</h1>
-        <p className={styles['subtitle']}>{t('myOrders.subtitle')}</p>
+        <div>
+          <h1 className={styles['title']}>{t('myOrders.title')}</h1>
+          <p className={styles['subtitle']}>{t('myOrders.subtitle')}</p>
+        </div>
       </header>
 
       <section className={styles['content']}>
         <Card className={tableStyles['tableCard']}>
           <div className={tableStyles['controls']}>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div className={tableStyles['filterPills']}>
               {STATUS_FILTERS.map(({ id, labelKey }) => (
                 <Button
                   key={id}
@@ -132,8 +134,7 @@ export function MyOrdersPage(): React.ReactElement {
                     onClick={() => {
                       setDetailSale(s);
                     }}
-                    className={cn(tableStyles['mono'])}
-                    style={{ cursor: 'pointer' }}
+                    className={cn(tableStyles['mono'], tableStyles['clickableRow'])}
                   >
                     <TableCell className={tableStyles['mono']}>{orderId(s.id)}</TableCell>
                     <TableCell>{s.createdAt.slice(0, 10)}</TableCell>

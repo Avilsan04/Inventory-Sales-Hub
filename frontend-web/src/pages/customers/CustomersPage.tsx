@@ -119,7 +119,7 @@ export function CustomersPage(): React.ReactElement {
           <h1 className={styles['title']}>{t('customers.title')}</h1>
           <p className={styles['subtitle']}>{t('customers.subtitle')}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className={styles['headerActions']}>
           <PermissionGuard permission="export:csv">
             <Button variant="outline" size="sm" onClick={handleExport}>
               {t('common.export')}
@@ -165,7 +165,7 @@ export function CustomersPage(): React.ReactElement {
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
                     <TableCell colSpan={5}>
-                      <Skeleton style={{ height: '2rem', width: '100%' }} />
+                      <Skeleton className={styles['skeletonRow']} />
                     </TableCell>
                   </TableRow>
                 ))
@@ -223,7 +223,7 @@ export function CustomersPage(): React.ReactElement {
                         )}
                       </TableCell>
                       <TableCell>
-                        <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
+                        <div className={styles['cellActions']}>
                           <Button
                             variant="ghost"
                             size="icon-sm"

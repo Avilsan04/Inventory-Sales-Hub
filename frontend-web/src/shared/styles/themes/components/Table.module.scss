@@ -14,7 +14,7 @@
 .tableHeader {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: $z-base;
 
   tr {
     background-color: var(--color-bg-secondary);
@@ -47,14 +47,11 @@
   }
 }
 
-// Table header font-size: between xs and 2xs — not on standard type scale
-$_tableHead-font-size: 0.6875rem;
-
 .tableHead {
   padding: $spacing-2 $spacing-4;
   text-align: left;
   vertical-align: middle;
-  font-size: $_tableHead-font-size;
+  font-size: $font-size-table-header;
   font-weight: $font-weight-semibold;
   text-transform: uppercase;
   letter-spacing: 0.06em;

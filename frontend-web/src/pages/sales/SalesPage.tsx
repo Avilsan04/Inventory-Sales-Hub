@@ -132,10 +132,8 @@ export function SalesPage(): React.ReactElement {
       </header>
 
       {showDateFilter && (
-        <div style={{ padding: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span style={{ fontSize: '0.875rem', color: 'var(--color-muted-foreground)' }}>
-            {t('common.dateRange')}:
-          </span>
+        <div className={styles['filterRow']}>
+          <span className={styles['filterLabel']}>{t('common.dateRange')}:</span>
           <DateRangePicker value={dateFilter ?? { from: '', to: '' }} onChange={setDateFilter} />
         </div>
       )}
@@ -218,7 +216,7 @@ export function SalesPage(): React.ReactElement {
                         {formatCurrency(s.total, s.currency)}
                       </TableCell>
                       <TableCell>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
+                        <div className={pageStyles['cellActions']}>
                           <Button
                             variant="ghost"
                             size="icon-sm"

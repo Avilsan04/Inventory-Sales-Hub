@@ -12,32 +12,32 @@ import type {
 
 export const salesApi = {
   getSales: async (): Promise<Sale[]> => {
-    const res = await httpClient.get<unknown>('/sales');
+    const res = await httpClient.get<Sale[]>('/sales');
     return saleListSchema.parse(res);
   },
 
   getSale: async (id: string): Promise<Sale> => {
-    const res = await httpClient.get<unknown>(`/sales/${id}`);
+    const res = await httpClient.get<Sale>(`/sales/${id}`);
     return saleSchema.parse(res);
   },
 
   getSaleItems: async (id: string): Promise<SaleItem[]> => {
-    const res = await httpClient.get<unknown>(`/sales/${id}/items`);
+    const res = await httpClient.get<SaleItem[]>(`/sales/${id}/items`);
     return z.array(saleItemSchema).parse(res);
   },
 
   getSummary: async (): Promise<SaleSummary> => {
-    const res = await httpClient.get<unknown>('/sales/summary');
+    const res = await httpClient.get<SaleSummary>('/sales/summary');
     return saleSummarySchema.parse(res);
   },
 
   createSale: async (data: CreateSaleDTO, config?: HttpRequestConfig): Promise<Sale> => {
-    const res = await httpClient.post<unknown>('/sales', data, config);
+    const res = await httpClient.post<Sale>('/sales', data, config);
     return saleSchema.parse(res);
   },
 
   updateStatus: async (id: string, data: UpdateSaleStatusDTO): Promise<Sale> => {
-    const res = await httpClient.patch<unknown>(`/sales/${id}/status`, data);
+    const res = await httpClient.patch<Sale>(`/sales/${id}/status`, data);
     return saleSchema.parse(res);
   },
 };

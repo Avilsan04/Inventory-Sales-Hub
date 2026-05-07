@@ -14,7 +14,7 @@ export interface CartItem {
   maxStock: number;
 }
 
-interface CartState {
+export interface CartState {
   items: CartItem[];
   customerId: string | null;
   paymentMethod: PaymentMethod;

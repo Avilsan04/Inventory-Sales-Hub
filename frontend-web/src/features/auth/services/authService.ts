@@ -3,6 +3,7 @@ import type { IAuthApi } from '../ports/IAuthApi';
 import type { ITokenStorage } from '@core/storage/ITokenStorage';
 import type { LoginRequest, RegisterRequest } from '../models/auth.types';
 import { AUTH_VALIDATION_RULES } from '../models/auth.constants';
+import { logger } from '@shared/lib/logger';
 
 export class AuthService implements IAuthService {
   public constructor(
@@ -50,7 +51,7 @@ export class AuthService implements IAuthService {
       await this._authApi.logout();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown network failure';
-      console.warn(
+      logger.warn(
         '[Telemetry] Remote logout failed. Local session securely destroyed. Details:',
         errorMessage
       );

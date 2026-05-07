@@ -21,7 +21,6 @@ export function LoginPage(): React.ReactElement {
 
   return (
     <div className={styles['page']}>
-      {/* Stitch "Luminous Enterprise" decorative blobs */}
       <div className={`${styles['glassBlob']} ${styles['blob1']}`} aria-hidden="true" />
       <div className={`${styles['glassBlob']} ${styles['blob2']}`} aria-hidden="true" />
       <div className={`${styles['glassBlob']} ${styles['blob3']}`} aria-hidden="true" />

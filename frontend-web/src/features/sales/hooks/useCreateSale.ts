@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 import { salesApi } from '../api/salesApi';
 import { saleKeys } from './useSales';
-import { calculateSaleTotals } from '@shared/lib/saleCalculations';
+import { calculateSaleTotals } from '../lib/saleCalculations';
 import { syncDb } from '@shared/lib/db/syncDb';
 import type { Sale, CreateSaleDTO } from '@entities/sale';
 

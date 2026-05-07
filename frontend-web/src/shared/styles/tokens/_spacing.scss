@@ -52,3 +52,31 @@ $shadow-glow-purple:
 $shadow-glow-blue-sm:
   0 0 14px rgba(6, 182, 212, 0.55),
   0 0 4px rgba(37, 99, 235, 0.4);
+
+// ── Micro-spacing (sub-scale) ────────────────────────────────────
+$spacing-0-75: 0.1875rem; // 3px — badge/indicator micro-padding
+$spacing-2-25: 0.5625rem; // 9px — badge horizontal padding
+$spacing-5-5: 1.375rem; // 22px — form label-height alignment offset
+$spacing-px-5: 5px; // 5px — segmented control inset
+
+// ── Extended border-radius ────────────────────────────────────────
+$border-radius-2xl: 2rem; // large pill — settings cards
+
+// ── Component-specific shadows ────────────────────────────────────
+$shadow-topbar:
+  0 1px 3px rgba(15, 23, 42, 0.06),
+  0 1px 2px rgba(15, 23, 42, 0.04);
+$shadow-kpi-card: 0 4px 12px rgba(15, 23, 42, 0.08);
+$shadow-kpi-card-hover: 0 8px 24px rgba(15, 23, 42, 0.12);
+$shadow-card-main: 0 8px 32px rgba(0, 0, 0, 0.03);
+$shadow-card-access: 0 4px 24px rgba(0, 0, 0, 0.02);
+$shadow-auth-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+$shadow-auth-card:
+  0 0 0 1px rgba(218 226 253 / 0.05),
+  0 8px 32px rgba(0 0 0 / 0.35);
+$shadow-auth-icon: 0 1px 3px rgba(0 0 0 / 0.25);
+$shadow-auth-form: 0 20px 40px -10px rgba(30, 64, 175, 0.08);
+$shadow-focus-ring: 0 0 0 2px var(--color-ring);
+$shadow-swatch-active:
+  0 0 0 3px var(--color-card),
+  0 0 0 5px var(--color-primary);

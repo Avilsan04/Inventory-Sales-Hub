@@ -32,7 +32,7 @@
   padding: $spacing-6;
 
   &::-webkit-scrollbar {
-    width: 5px;
+    width: $spacing-px-5;
   }
 
   &::-webkit-scrollbar-track {

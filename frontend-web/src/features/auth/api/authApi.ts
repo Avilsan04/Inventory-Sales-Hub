@@ -20,27 +20,26 @@ export const authApi = {
     httpClient.post<UserResponse>('/auth/register', data),
 
   logout: async (): Promise<void> => {
-    await httpClient.post<unknown>('/auth/logout');
+    await httpClient.post('/auth/logout');
   },
 
-  getMe: async (): Promise<UserProfile> =>
-    httpClient.get<UserProfile>('/auth/me'),
+  getMe: async (): Promise<UserProfile> => httpClient.get<UserProfile>('/auth/me'),
 
   refresh: async (): Promise<RefreshTokenResponse> =>
     httpClient.post<RefreshTokenResponse>('/auth/refresh'),
 
   forgotPassword: async (payload: ForgotPasswordRequest): Promise<void> => {
-    await httpClient.post<unknown>('/auth/forgot-password', payload);
+    await httpClient.post('/auth/forgot-password', payload);
   },
 
   resetPassword: async (payload: ResetPasswordRequest): Promise<void> => {
-    await httpClient.post<unknown>('/auth/reset-password', payload);
+    await httpClient.post('/auth/reset-password', payload);
   },
 
   updateProfile: async (payload: UpdateProfileRequest): Promise<UserProfile> =>
     httpClient.patch<UserProfile>('/auth/me', payload),
 
   changePassword: async (payload: ChangePasswordRequest): Promise<void> => {
-    await httpClient.patch<unknown>('/auth/me/password', payload);
+    await httpClient.patch('/auth/me/password', payload);
   },
 };

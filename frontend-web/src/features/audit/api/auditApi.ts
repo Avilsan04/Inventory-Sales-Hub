@@ -7,7 +7,7 @@ export const auditApi = {
     entityType?: AuditEntityType;
     userId?: string;
   }): Promise<AuditLog[]> => {
-    const res = await httpClient.get<unknown>('/audit', {
+    const res = await httpClient.get<AuditLog[]>('/audit', {
       params: params as Record<string, unknown>,
     });
     return auditLogsSchema.parse(res);

@@ -114,13 +114,7 @@ export function InventoryPage(): React.ReactElement {
               onChange={(e) => {
                 setWarehouseFilter(e.target.value !== '' ? e.target.value : null);
               }}
-              style={{
-                padding: '0.375rem 0.5rem',
-                border: '1px solid var(--color-border)',
-                borderRadius: '0.375rem',
-                fontSize: '0.875rem',
-                background: 'var(--color-background)',
-              }}
+              className={styles['nativeSelect']}
               aria-label={t('inventory.filterByWarehouse')}
             >
               <option value="">{t('inventory.allWarehouses')}</option>
@@ -254,15 +248,11 @@ export function InventoryPage(): React.ReactElement {
       </Card>
 
       <PermissionGuard permission="view:audit">
-        <Card className={styles['tableCard']} style={{ marginTop: '1rem' }}>
-          <div style={{ padding: '1rem 1rem 0' }}>
-            <h3
-              style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, marginBottom: '0.75rem' }}
-            >
-              {t('common.auditLog')}
-            </h3>
+        <Card className={`${styles['tableCard']} ${styles['auditCard']}`}>
+          <div className={styles['auditCardHeader']}>
+            <h3 className={styles['auditTitle']}>{t('common.auditLog')}</h3>
           </div>
-          <div style={{ padding: '0 1rem 1rem' }}>
+          <div className={styles['auditCardBody']}>
             <AuditLogPanel entityType="inventory" />
           </div>
         </Card>

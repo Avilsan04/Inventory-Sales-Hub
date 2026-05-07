@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { httpClient } from '@core/http';
 import { cashSessionSchema } from '@entities/cash-session';
 import type { CashSession, OpenCashSessionDTO, CloseCashSessionDTO } from '@entities/cash-session';
@@ -5,15 +6,16 @@ import type { CashSession, OpenCashSessionDTO, CloseCashSessionDTO } from '@enti
 export const cashSessionApi = {
   getCurrentSession: async (): Promise<CashSession | null> => {
     try {
-      const res = await httpClient.get<unknown>('/cash-sessions/current');
+      const res = await httpClient.get<CashSession>('/cash-sessions/current');
       return cashSessionSchema.parse(res);
-    } catch {
-      return null;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.status === 404) return null;
+      throw err;
     }
   },
 
   openSession: async (dto: OpenCashSessionDTO): Promise<CashSession> => {
-    const res = await httpClient.post<unknown>('/cash-sessions/open', dto);
+    const res = await httpClient.post<CashSession>('/cash-sessions/open', dto);
     return cashSessionSchema.parse(res);
   },
 
@@ -24,7 +26,7 @@ export const cashSessionApi = {
     id: string;
     dto: CloseCashSessionDTO;
   }): Promise<CashSession> => {
-    const res = await httpClient.post<unknown>(`/cash-sessions/${id}/close`, dto);
+    const res = await httpClient.post<CashSession>(`/cash-sessions/${id}/close`, dto);
     return cashSessionSchema.parse(res);
   },
 };

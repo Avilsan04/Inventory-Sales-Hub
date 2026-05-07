@@ -1,9 +1,6 @@
 // ── Login Page ─────────────────────────────────────────────────────────
 // Stitch "Luminous Enterprise": mesh gradient + glassmorphism blobs
 
-$_mesh-base: #eef2ff;
-$_form-max-width: 32rem;
-
 // ── Page Shell ─────────────────────────────────────────────────────────
 
 .page {
@@ -14,7 +11,7 @@ $_form-max-width: 32rem;
   position: relative;
   overflow: hidden;
 
-  background-color: $_mesh-base;
+  background-color: $color-auth-mesh-base;
   background-image:
     radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.4) 0px, transparent 50%),
     radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.3) 0px, transparent 50%),
@@ -34,40 +31,40 @@ $_form-max-width: 32rem;
 .glassBlob {
   position: absolute;
   border-radius: 50%;
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur($blur-2xl);
+  -webkit-backdrop-filter: blur($blur-2xl);
+  background: linear-gradient(135deg, $color-auth-glass-bg-from 0%, $color-auth-glass-bg-to 100%);
+  border: $border-width-base solid $color-auth-glass-white-border;
+  box-shadow: $shadow-auth-glass;
   pointer-events: none;
 }
 
 .blob1 {
-  width: 24rem;
-  height: 24rem;
-  top: -5rem;
-  left: -5rem;
+  width: $size-blob-md;
+  height: $size-blob-md;
+  top: $offset-blob-sm;
+  left: $offset-blob-sm;
   opacity: 0.8;
-  filter: blur(20px);
+  filter: blur($blur-xl);
   mix-blend-mode: overlay;
 }
 
 .blob2 {
-  width: 20rem;
-  height: 20rem;
+  width: $size-80;
+  height: $size-80;
   top: 25%;
   right: -10%;
   opacity: 0.6;
-  filter: blur(12px);
+  filter: blur($blur-md);
 }
 
 .blob3 {
-  width: 31.25rem;
-  height: 31.25rem;
-  bottom: -8rem;
+  width: $size-blob-lg;
+  height: $size-blob-lg;
+  bottom: $offset-blob-md;
   left: 33%;
   opacity: 0.5;
-  filter: blur(32px);
+  filter: blur($blur-xxl);
 }
 
 // ── Floating Particles ─────────────────────────────────────────────────
@@ -80,32 +77,32 @@ $_form-max-width: 32rem;
 .p1 {
   top: 33%;
   left: 25%;
-  width: 1rem;
-  height: 1rem;
+  width: $size-4;
+  height: $size-4;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.4);
-  filter: blur(2px);
+  filter: blur($blur-xs);
 }
 
 .p2 {
   bottom: 25%;
   right: 33%;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.25rem;
+  width: $size-6;
+  height: $size-6;
+  border-radius: $border-radius-sm;
   transform: rotate(45deg);
   background: rgba(255, 255, 255, 0.3);
-  filter: blur(1px);
+  filter: blur($blur-2xs);
 }
 
 .p3 {
   top: 66%;
   left: 20%;
-  width: 0.75rem;
-  height: 0.75rem;
+  width: $size-3;
+  height: $size-3;
   border-radius: 50%;
   background: rgba(221, 225, 255, 0.5);
-  filter: blur(1px);
+  filter: blur($blur-2xs);
 }
 
 // ── Back to Landing Button ─────────────────────────────────────────────
@@ -114,7 +111,7 @@ $_form-max-width: 32rem;
   position: absolute;
   top: $spacing-4;
   left: $spacing-4;
-  z-index: 1;
+  z-index: $z-base;
   display: flex;
   align-items: center;
   gap: $spacing-1;
@@ -140,8 +137,8 @@ $_form-max-width: 32rem;
 
 .container {
   width: 100%;
-  max-width: $_form-max-width;
+  max-width: $container-dialog;
   padding: 0 $spacing-4;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 }

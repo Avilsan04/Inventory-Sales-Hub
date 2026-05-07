@@ -4,7 +4,7 @@
   align-items: center;
   gap: $spacing-6;
   width: 100%;
-  max-width: 400px;
+  max-width: $container-login-form;
 }
 
 .brand {
@@ -25,17 +25,17 @@
   padding-top: $spacing-8 !important;
   padding-bottom: $spacing-8 !important;
   // Glassmorphism (Stitch: Luminous Enterprise)
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255, 255, 255, 0.8) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.6) !important;
-  box-shadow: 0 20px 40px -10px rgba(30, 64, 175, 0.08) !important;
+  background: $color-auth-form-bg-light !important;
+  backdrop-filter: blur($blur-lg);
+  -webkit-backdrop-filter: blur($blur-lg);
+  border-top: $border-width-base solid $color-auth-form-border-light !important;
+  border-left: $border-width-base solid $color-auth-form-border-left-light !important;
+  box-shadow: $shadow-auth-form !important;
 
   :global([data-theme='dark']) & {
-    background: rgba(15, 23, 42, 0.85) !important;
-    border-top-color: rgba(255, 255, 255, 0.1) !important;
-    border-left-color: rgba(255, 255, 255, 0.08) !important;
+    background: $color-auth-form-bg-dark !important;
+    border-top-color: $color-auth-form-border-dark !important;
+    border-left-color: $color-auth-form-border-dark-left !important;
   }
 }
 

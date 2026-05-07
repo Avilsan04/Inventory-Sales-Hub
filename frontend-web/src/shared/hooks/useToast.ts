@@ -138,7 +138,7 @@ export function useToast(): State & { toast: typeof toast; dismiss: (toastId?: s
         listeners.splice(index, 1);
       }
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,

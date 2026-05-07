@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowRightIcon, DollarSignIcon, ShoppingCartIcon, AlertCircleIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useDashboardStats } from '@features/analytics';
 import { PermissionGuard } from '@features/auth';
@@ -66,44 +66,75 @@ export function DashboardPage(): React.ReactElement {
       {/* KPI row */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
         <div className={styles['kpiCard']}>
-          <p className={styles['kpiLabel']}>{t('dashboard.stats.monthlySales')}</p>
-          <div className={styles['kpiValue']}>
-            {kpiLoading ? (
-              <Skeleton className={styles['kpiSkeleton']} />
-            ) : kpi ? (
-              formatCurrency(kpi.totalRevenue, kpi.currency)
-            ) : (
-              '—'
-            )}
+          <div
+            className={`${styles['kpiCardBg']} ${styles['kpiCardBgPrimary']}`}
+            aria-hidden="true"
+          />
+          <div className={styles['kpiTopRow']}>
+            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
+              <DollarSignIcon />
+            </div>
+          </div>
+          <div>
+            <p className={styles['kpiLabel']}>{t('dashboard.stats.monthlySales')}</p>
+            <div className={styles['kpiValue']}>
+              {kpiLoading ? (
+                <Skeleton className={styles['kpiSkeleton']} />
+              ) : kpi ? (
+                formatCurrency(kpi.totalRevenue, kpi.currency)
+              ) : (
+                '—'
+              )}
+            </div>
           </div>
         </div>
+
         <div className={styles['kpiCard']}>
-          <p className={styles['kpiLabel']}>{t('dashboard.stats.activeOrders')}</p>
-          <div className={styles['kpiValue']}>
-            {kpiLoading ? (
-              <Skeleton className={styles['kpiSkeleton']} />
-            ) : (
-              (kpi?.totalOrders ?? '—')
-            )}
+          <div
+            className={`${styles['kpiCardBg']} ${styles['kpiCardBgNeutral']}`}
+            aria-hidden="true"
+          />
+          <div className={styles['kpiTopRow']}>
+            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
+              <ShoppingCartIcon />
+            </div>
+          </div>
+          <div>
+            <p className={styles['kpiLabel']}>{t('dashboard.stats.activeOrders')}</p>
+            <div className={styles['kpiValue']}>
+              {kpiLoading ? (
+                <Skeleton className={styles['kpiSkeleton']} />
+              ) : (
+                (kpi?.totalOrders ?? '—')
+              )}
+            </div>
           </div>
         </div>
+
         <div className={styles['kpiCard']}>
-          <p className={styles['kpiLabel']}>{t('dashboard.stats.lowStock')}</p>
-          <div className={styles['kpiValue']}>
-            {alerts?.length ?? 0} {t('common.items')}
+          <div
+            className={`${styles['kpiCardBg']} ${styles['kpiCardBgError']}`}
+            aria-hidden="true"
+          />
+          <div className={styles['kpiTopRow']}>
+            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconError']}`}>
+              <AlertCircleIcon />
+            </div>
+          </div>
+          <div>
+            <p className={styles['kpiLabel']}>{t('dashboard.stats.lowStock')}</p>
+            <div
+              className={`${styles['kpiValue']}${alerts?.length ? ` ${styles['kpiValueError']}` : ''}`}
+            >
+              {alerts?.length ?? 0} {t('common.items')}
+            </div>
           </div>
         </div>
       </section>
 
       {/* C-level widgets — admin/company/manager only */}
       <PermissionGuard permission="view:analytics">
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1rem',
-          }}
-        >
+        <section className={styles['widgetGrid']}>
           <SectionErrorBoundary label={t('dashboard.section.cashFlow')}>
             <CashFlowWidget />
           </SectionErrorBoundary>

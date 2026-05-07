@@ -9,7 +9,7 @@ export const catalogKeys = {
 };
 
 async function fetchCatalog(): Promise<Product[]> {
-  const res = await httpClient.get<unknown>('/products');
+  const res = await httpClient.get<Product[]>('/products');
   return productListSchema.parse(res);
 }
 

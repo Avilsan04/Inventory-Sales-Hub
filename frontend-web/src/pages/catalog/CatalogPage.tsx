@@ -50,7 +50,7 @@ export function CatalogPage(): React.ReactElement {
         <CartDrawer />
       </header>
 
-      <div style={{ marginBottom: '1.5rem', maxWidth: '24rem' }}>
+      <div className={styles['searchFilter']}>
         <Input
           type="search"
           placeholder={`${t('common.filter')} SKU, ${t('inventory.name').toLowerCase()}…`}
@@ -69,13 +69,7 @@ export function CatalogPage(): React.ReactElement {
           description={t('catalog.emptyDescription')}
         />
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-            gap: '1rem',
-          }}
-        >
+        <div className={styles['productGrid']}>
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

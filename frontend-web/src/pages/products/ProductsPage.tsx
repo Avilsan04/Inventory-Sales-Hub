@@ -69,7 +69,7 @@ export function ProductsPage(): React.ReactElement {
           <p className={styles['subtitle']}>{t('products.subtitle')}</p>
         </div>
         <PermissionGuard permission="create:product">
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div className={styles['headerActions']}>
             <Button
               variant="outline"
               size="sm"
@@ -103,7 +103,7 @@ export function ProductsPage(): React.ReactElement {
           </CardHeader>
           <CardContent>
             <div className={styles['statValue']}>
-              {isPending ? <Skeleton style={{ height: '2rem', width: '4rem' }} /> : data.length}
+              {isPending ? <Skeleton className={styles['skeletonValue']} /> : data.length}
             </div>
           </CardContent>
         </Card>
@@ -119,7 +119,7 @@ export function ProductsPage(): React.ReactElement {
           <CardContent>
             <div className={styles['statValue']}>
               {isPending ? (
-                <Skeleton style={{ height: '2rem', width: '4rem' }} />
+                <Skeleton className={styles['skeletonValue']} />
               ) : (
                 (categories?.length ?? 0)
               )}
@@ -167,7 +167,7 @@ export function ProductsPage(): React.ReactElement {
                         <TableCell>{formatCurrency(p.price, p.currency)}</TableCell>
                         <TableCell>{p.category?.name ?? '—'}</TableCell>
                         <TableCell>
-                          <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
+                          <div className={styles['cellActions']}>
                             <PermissionGuard permission="create:product">
                               <Button
                                 variant="ghost"

@@ -1,10 +1,10 @@
 // ── Layout ────────────────────────────────────────────────────────────────────
 .layout {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: $settings-nav-width 1fr;
   gap: $spacing-8;
   align-items: start;
-  max-width: 62rem;
+  max-width: $container-settings;
 
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
@@ -19,7 +19,7 @@
   flex-direction: column;
   gap: $spacing-1;
   padding: $spacing-2;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
 }
@@ -68,7 +68,7 @@
 // ── Content panel ─────────────────────────────────────────────────────────────
 .content {
   min-width: 0;
-  max-width: 44rem;
+  max-width: $container-settings-content;
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
@@ -98,16 +98,16 @@
 // ── Main settings card ────────────────────────────────────────────────────────
 .mainCard {
   background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: 2rem;
+  border: $border-width-base solid var(--color-border);
+  border-radius: $border-radius-2xl;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+  box-shadow: $shadow-card-main;
 }
 
 // ── Individual section within card ────────────────────────────────────────────
 .cardSection {
   padding: $spacing-8;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
 
   &:last-of-type {
     border-bottom: none;
@@ -118,7 +118,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-1;
-  max-width: 28rem;
+  max-width: $container-settings-field;
   margin-bottom: $spacing-5;
 }
 
@@ -141,7 +141,7 @@
   gap: $spacing-3;
   padding: $spacing-5 $spacing-8;
   background-color: var(--color-surface-high);
-  border-top: 1px solid var(--color-border);
+  border-top: $border-width-base solid var(--color-border);
 }
 
 // ── Accent color swatches ─────────────────────────────────────────────────────
@@ -152,10 +152,10 @@
 }
 
 .swatch {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: $size-10;
+  height: $size-10;
   border-radius: $border-radius-full;
-  border: 2px solid transparent;
+  border: $border-width-focus solid transparent;
   cursor: pointer;
   transition:
     transform $duration-fast ease,
@@ -167,9 +167,7 @@
 }
 
 .swatchActive {
-  box-shadow:
-    0 0 0 3px var(--color-card),
-    0 0 0 5px var(--color-primary);
+  box-shadow: $shadow-swatch-active;
 }
 
 // ── Accessibility mini-cards ──────────────────────────────────────────────────
@@ -189,9 +187,9 @@
   gap: $spacing-4;
   padding: $spacing-5;
   background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: 2rem;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+  border: $border-width-base solid var(--color-border);
+  border-radius: $border-radius-2xl;
+  box-shadow: $shadow-card-access;
   transition: border-color $duration-fast ease;
 
   &:hover {
@@ -200,8 +198,8 @@
 }
 
 .accessIconWrap {
-  width: 3rem;
-  height: 3rem;
+  width: $size-12;
+  height: $size-12;
   border-radius: $radius-xl;
   background-color: var(--color-surface-high);
   display: flex;
@@ -215,7 +213,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: $spacing-0-5;
 }
 
 .accessTitle {
@@ -237,8 +235,8 @@
   gap: $spacing-4;
   padding: $spacing-6 $spacing-8;
   background-color: var(--color-surface-high);
-  border: 1px dashed var(--color-border);
-  border-radius: 2rem;
+  border: $border-width-base dashed var(--color-border);
+  border-radius: $border-radius-2xl;
 
   @media (max-width: $breakpoint-sm) {
     flex-direction: column;
@@ -276,7 +274,7 @@
   align-items: center;
   justify-content: space-between;
   padding: $spacing-4 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
 
   &:last-child {
     border-bottom: none;
@@ -297,8 +295,8 @@
 }
 
 .notifDot {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: $size-2;
+  height: $size-2;
   border-radius: $border-radius-full;
   flex-shrink: 0;
 }
@@ -306,7 +304,7 @@
 .toggleLabels {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: $spacing-0-5;
 }
 
 .toggleTitle {
@@ -338,4 +336,8 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-2;
+}
+
+.inputNarrow {
+  max-width: $size-32;
 }

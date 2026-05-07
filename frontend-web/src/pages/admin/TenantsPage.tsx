@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { BuildingIcon, CheckCircle2Icon, BanIcon, DollarSignIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useTenants, useActivateTenant, useSuspendTenant, useImpersonation } from '@features/admin';
 import { useAdminMetrics } from '@features/admin';
@@ -79,7 +80,7 @@ export function TenantsPage(): React.ReactElement {
                 {t('admin.metrics.totalTenants')}
               </CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>🏢</span>
+                <BuildingIcon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -92,7 +93,7 @@ export function TenantsPage(): React.ReactElement {
                 {t('admin.metrics.activeTenants')}
               </CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>✅</span>
+                <CheckCircle2Icon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -105,7 +106,7 @@ export function TenantsPage(): React.ReactElement {
                 {t('admin.metrics.suspendedTenants')}
               </CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>⛔</span>
+                <BanIcon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -116,7 +117,7 @@ export function TenantsPage(): React.ReactElement {
             <CardHeader>
               <CardTitle className={styles['statTitle']}>{t('admin.metrics.mrr')}</CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>💰</span>
+                <DollarSignIcon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
