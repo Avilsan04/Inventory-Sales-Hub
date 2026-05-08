@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.function.Function;
 
 @Service
 public class JwtManager {
     private static JwtManager instance;
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final long ACCESS_TOKEN_EXPIRY_MS = 1000L * 60 * 15; // 15 minutes
 
     public static JwtManager getInstance() {
         if (instance == null) {
@@ -31,9 +31,17 @@ public class JwtManager {
                 .setSubject(username)
                 .claim("id", id)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 360))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY_MS))
                 .signWith(SECRET_KEY)
                 .compact();
+    }
+
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    public Long extractId(String token) {
+        return extractAllClaims(token).get("id", Long.class);
     }
 
     private Claims extractAllClaims(String token) {
@@ -52,6 +60,5 @@ public class JwtManager {
             return false;
         }
     }
-
 }
 
