@@ -1,0 +1,10 @@
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-2 $spacing-4;
+  background: var(--color-warning);
+  color: var(--color-warning-fg);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}

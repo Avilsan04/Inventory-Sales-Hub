@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { ImpersonationBanner } from '@features/admin';
 import styles from '@shared/styles/themes/components/Layout.module.scss';
 import { FadeIn } from '@shared/ui/animated';
 import { Sidebar } from './Sidebar';
@@ -20,7 +19,6 @@ export function Layout(): React.ReactElement {
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       <div className={styles['mainArea']}>
-        <ImpersonationBanner />
         <TopBar />
 
         <main className={styles['main']}>

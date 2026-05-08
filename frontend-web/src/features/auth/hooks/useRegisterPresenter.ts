@@ -13,7 +13,7 @@ import {
 } from '../models/auth.schemas';
 import type { RegisterRequest, RegisterRole } from '../models/auth.types';
 import type { IAuthService } from '../services/IAuthService';
-import { logger } from '@shared/lib/logger';
+import { telemetry } from '@shared/lib/observability';
 
 // Union of all register form value shapes
 type RegisterFormValues = RegisterCustomerValues | RegisterAdminValues | RegisterCompanyValues;
@@ -101,7 +101,7 @@ export function useRegisterPresenter({
         onSuccess();
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Unknown error';
-        logger.error('[Telemetry] Registration Failure:', message);
+        telemetry.captureMessage('Registration failure', { message });
         setError(translate('auth.registerError'));
       } finally {
         setIsLoading(false);

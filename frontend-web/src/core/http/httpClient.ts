@@ -24,7 +24,20 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
   const reqInterceptorId = setupRequestInterceptor(
     axiosInstance,
     () => tokenStorage.getToken(),
-    () => sessionStorage.getItem('impersonation_token'),
+    () => {
+      try {
+        const raw = sessionStorage.getItem('ish.impersonation');
+        if (!raw) return null;
+        const session = JSON.parse(raw) as { token: string; expiresAt: number };
+        if (Date.now() > session.expiresAt) {
+          sessionStorage.removeItem('ish.impersonation');
+          return null;
+        }
+        return session.token;
+      } catch {
+        return null;
+      }
+    },
     () => tenantStorage.getTenantId()
   );
 

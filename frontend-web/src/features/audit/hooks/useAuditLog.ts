@@ -1,11 +1,12 @@
-import { useQuery, type UseQueryResult } from '@tanstack/react-query';
+import { useQuery, type QueryKey, type UseQueryResult } from '@tanstack/react-query';
 import { auditApi } from '../api/auditApi';
+import { withTenant } from '@core/api/queryKeys';
 import type { AuditLog, AuditEntityType } from '@entities/audit';
 
 const auditKeys = {
-  all: ['audit'] as const,
-  list: (params?: { entityType?: AuditEntityType; userId?: string }) =>
-    [...auditKeys.all, params] as const,
+  all: (): QueryKey => withTenant(['audit'] as const),
+  list: (params?: { entityType?: AuditEntityType; userId?: string }): QueryKey =>
+    withTenant(['audit', params] as const),
 };
 
 export function useAuditLog(params?: {

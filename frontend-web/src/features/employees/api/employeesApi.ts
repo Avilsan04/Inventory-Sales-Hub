@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import { parseOrThrow } from '@core/api/parseOrThrow';
 import { employeeListSchema, employeeSchema } from '@entities/employee';
 import type {
   Employee,
@@ -9,23 +10,23 @@ import type {
 
 export const employeesApi = {
   getEmployees: async (): Promise<Employee[]> => {
-    const res = await httpClient.get<Employee[]>('/employees');
-    return employeeListSchema.parse(res);
+    const res = await httpClient.get<unknown>('/employees');
+    return parseOrThrow(employeeListSchema, res);
   },
 
   getEmployee: async (id: string): Promise<Employee> => {
-    const res = await httpClient.get<Employee>(`/employees/${id}`);
-    return employeeSchema.parse(res);
+    const res = await httpClient.get<unknown>(`/employees/${id}`);
+    return parseOrThrow(employeeSchema, res);
   },
 
   createEmployee: async (data: CreateEmployeeDTO): Promise<Employee> => {
-    const res = await httpClient.post<Employee>('/employees', data);
-    return employeeSchema.parse(res);
+    const res = await httpClient.post<unknown>('/employees', data);
+    return parseOrThrow(employeeSchema, res);
   },
 
   updateEmployee: async (id: string, data: UpdateEmployeeDTO): Promise<Employee> => {
-    const res = await httpClient.put<Employee>(`/employees/${id}`, data);
-    return employeeSchema.parse(res);
+    const res = await httpClient.put<unknown>(`/employees/${id}`, data);
+    return parseOrThrow(employeeSchema, res);
   },
 
   deactivateEmployee: async (id: string): Promise<void> => {
@@ -33,7 +34,7 @@ export const employeesApi = {
   },
 
   updateRole: async (id: string, data: UpdateRoleDTO): Promise<Employee> => {
-    const res = await httpClient.patch<Employee>(`/employees/${id}/role`, data);
-    return employeeSchema.parse(res);
+    const res = await httpClient.patch<unknown>(`/employees/${id}/role`, data);
+    return parseOrThrow(employeeSchema, res);
   },
 };

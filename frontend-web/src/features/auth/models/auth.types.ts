@@ -39,6 +39,7 @@ export interface UserProfile {
   email: string;
   role: UserRole;
   createdAt: string;
+  tenantId?: string;
 }
 
 export interface UpdateProfileRequest {

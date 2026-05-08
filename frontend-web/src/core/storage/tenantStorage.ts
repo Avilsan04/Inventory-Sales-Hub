@@ -1,4 +1,7 @@
-const TENANT_KEY = 'tenant_id';
+import { APP_ENV } from '@core/config/env';
+
+// Namespaced by Vite mode so dev/staging/prod never share the same key.
+const TENANT_KEY = `ish.${APP_ENV}.tenant_id`;
 const isBrowser = typeof window !== 'undefined';
 
 export const tenantStorage = {

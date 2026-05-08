@@ -1,12 +1,13 @@
-import { useQuery, type UseQueryResult } from '@tanstack/react-query';
+import { useQuery, type QueryKey, type UseQueryResult } from '@tanstack/react-query';
 import { productsApi } from '../api/productsApi';
+import { withTenant } from '@core/api/queryKeys';
 import type { Product } from '@entities/product';
 
 export const productKeys = {
-  all: ['products'] as const,
-  lists: () => [...productKeys.all, 'list'] as const,
-  detail: (id: string) => [...productKeys.all, 'detail', id] as const,
-  categories: () => [...productKeys.all, 'categories'] as const,
+  all: (): QueryKey => withTenant(['products'] as const),
+  lists: (): QueryKey => withTenant(['products', 'list'] as const),
+  detail: (id: string): QueryKey => withTenant(['products', 'detail', id] as const),
+  categories: (): QueryKey => withTenant(['products', 'categories'] as const),
 };
 
 export function useProducts(): UseQueryResult<Product[]> {

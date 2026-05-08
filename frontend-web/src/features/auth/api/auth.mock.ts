@@ -6,13 +6,28 @@ import type {
   RegisterRequest,
   UserProfile,
   UserResponse,
-  UserRole,
 } from '../models';
 import mockData from '@app/mock/mock-data.json';
 
 type MockUserType = 'admin' | 'customer' | 'test' | 'company';
 
-let _activeUser: MockUserType = 'admin';
+const STORAGE_SESSION_KEY = 'mock-session-user';
+
+function persistSession(user: MockUserType): void {
+  localStorage.setItem(STORAGE_SESSION_KEY, user);
+}
+
+function clearSession(): void {
+  localStorage.removeItem(STORAGE_SESSION_KEY);
+}
+
+function getPersistedSession(): MockUserType | null {
+  return localStorage.getItem(STORAGE_SESSION_KEY) as MockUserType | null;
+}
+
+// Restore session from localStorage so refresh survives page reloads.
+let _activeUser: MockUserType = getPersistedSession() ?? 'admin';
+let _isLoggedIn: boolean = getPersistedSession() !== null;
 
 const CREDENTIAL_MAP: Record<string, MockUserType> = {
   'admin@ish.dev': 'admin',
@@ -34,6 +49,8 @@ export const authHandlers = [
     await delay(1000);
     const body = (await request.json()) as LoginRequest;
     _activeUser = CREDENTIAL_MAP[body.email] ?? 'admin';
+    _isLoggedIn = true;
+    persistSession(_activeUser);
     return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });
   }),
 
@@ -44,6 +61,8 @@ export const authHandlers = [
     const profileKey: MockUserType = roleMap[body.role ?? ''] ?? 'customer';
     const profile = auth.profiles[profileKey];
     _activeUser = profileKey;
+    _isLoggedIn = true;
+    persistSession(_activeUser);
     return HttpResponse.json<UserResponse>({
       id: profile.id,
       username: body.username,
@@ -54,6 +73,8 @@ export const authHandlers = [
 
   http.post(`${API_BASE_URL}/auth/logout`, async () => {
     await delay(300);
+    _isLoggedIn = false;
+    clearSession();
     return new HttpResponse(null, { status: 204 });
   }),
 
@@ -62,15 +83,17 @@ export const authHandlers = [
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '') ?? '';
     const resolvedUser: MockUserType = TOKEN_USER_MAP[token] ?? _activeUser;
-    const baseProfile = auth.profiles[resolvedUser] as UserProfile;
-    const storedRole = localStorage.getItem('TEST_MODE_ROLE') as UserRole | null;
-    const profile: UserProfile = storedRole ? { ...baseProfile, role: storedRole } : baseProfile;
+    const profile = auth.profiles[resolvedUser] as UserProfile;
     return HttpResponse.json<UserProfile>(profile);
   }),
 
   http.post(`${API_BASE_URL}/auth/refresh`, async () => {
     await delay(300);
-    return HttpResponse.json<LoginResponse>({ token: auth.refreshToken });
+    if (!_isLoggedIn) {
+      return new HttpResponse(null, { status: 401 });
+    }
+    // Return the actual user token so it's valid in TOKEN_USER_MAP / requirePermission checks.
+    return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });
   }),
 
   http.post(`${API_BASE_URL}/auth/forgot-password`, async () => {

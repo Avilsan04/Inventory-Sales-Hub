@@ -143,6 +143,16 @@
   gap: $spacing-1;
 }
 
+.tableFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 $spacing-4;
+  border-top: 1px solid var(--color-border);
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
 .auditSection {
   margin-top: $spacing-6;
 }

@@ -16,6 +16,7 @@ import {
 import { Avatar, AvatarFallback } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useAuthMe, useLogout, useEffectiveRole } from '@features/auth';
+import { useViewMode, type ViewRole } from '@features/auth/context/ViewModeContext';
 import type { UserRole } from '@features/auth/models/auth.types';
 import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
@@ -45,6 +46,7 @@ export function UserMenu(): React.ReactElement {
   const role = useEffectiveRole();
   const logout = useLogout();
   const navigate = useNavigate();
+  const { viewAs, setViewAs } = useViewMode();
 
   const initials = user?.username ? user.username.slice(0, 2).toUpperCase() : '??';
 
@@ -80,10 +82,9 @@ export function UserMenu(): React.ReactElement {
             <div className={styles['devSwitcher']}>
               <span className={styles['devLabel']}>Vista</span>
               <Select
-                value={localStorage.getItem('TEST_MODE_ROLE') ?? 'company'}
+                value={viewAs}
                 onValueChange={(v: string) => {
-                  localStorage.setItem('TEST_MODE_ROLE', v);
-                  window.location.reload();
+                  setViewAs(v as ViewRole);
                 }}
               >
                 <SelectTrigger size="sm" aria-label="Dev: cambiar rol">

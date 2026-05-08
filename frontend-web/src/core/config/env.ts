@@ -7,6 +7,11 @@ const envSchema = z.object({
     .optional()
     .transform((v) => v === 'true'),
   VITE_APP_VERSION: z.string().optional(),
+  VITE_TELEMETRY_URL: z.string().optional(),
+  MODE: z.string().default('development'),
 });
 
 export const env = envSchema.parse(import.meta.env);
+
+/** Current Vite mode (development | staging | production). Used for storage namespacing. */
+export const APP_ENV: string = env.MODE;

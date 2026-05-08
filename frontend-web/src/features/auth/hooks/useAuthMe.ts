@@ -1,5 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { authApi } from '../api/authApi';
+import { TIMING } from '@core/config/timing';
 import type { UserProfile } from '../models/auth.types';
 
 export const authKeys = {
@@ -11,6 +12,6 @@ export function useAuthMe(): UseQueryResult<UserProfile> {
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: authApi.getMe,
-    staleTime: Infinity,
+    staleTime: TIMING.USER_PROFILE_STALE_MS,
   });
 }

@@ -1,24 +1,38 @@
 import { httpClient } from '@core/http';
-import type { Tenant, AdminMetrics, ImpersonationToken } from '@entities/admin';
+import { parseOrThrow } from '@core/api/parseOrThrow';
+import {
+  tenantSchema,
+  tenantListSchema,
+  adminMetricsSchema,
+  impersonationTokenSchema,
+  type Tenant,
+  type AdminMetrics,
+  type ImpersonationToken,
+} from '@entities/admin';
 
 export const adminApi = {
   getTenants: async (): Promise<Tenant[]> => {
-    return httpClient.get<Tenant[]>('/admin/tenants');
+    const res = await httpClient.get<unknown>('/admin/tenants');
+    return parseOrThrow(tenantListSchema, res);
   },
 
   getMetrics: async (): Promise<AdminMetrics> => {
-    return httpClient.get<AdminMetrics>('/admin/metrics');
+    const res = await httpClient.get<unknown>('/admin/metrics');
+    return parseOrThrow(adminMetricsSchema, res);
   },
 
   activateTenant: async (tenantId: string): Promise<Tenant> => {
-    return httpClient.post<Tenant>(`/admin/tenants/${tenantId}/activate`);
+    const res = await httpClient.post<unknown>(`/admin/tenants/${tenantId}/activate`);
+    return parseOrThrow(tenantSchema, res);
   },
 
   suspendTenant: async (tenantId: string, reason?: string): Promise<Tenant> => {
-    return httpClient.post<Tenant>(`/admin/tenants/${tenantId}/suspend`, { reason });
+    const res = await httpClient.post<unknown>(`/admin/tenants/${tenantId}/suspend`, { reason });
+    return parseOrThrow(tenantSchema, res);
   },
 
   getImpersonationToken: async (tenantId: string): Promise<ImpersonationToken> => {
-    return httpClient.post<ImpersonationToken>(`/admin/tenants/${tenantId}/impersonate`);
+    const res = await httpClient.post<unknown>(`/admin/tenants/${tenantId}/impersonate`);
+    return parseOrThrow(impersonationTokenSchema, res);
   },
 };

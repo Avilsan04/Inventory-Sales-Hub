@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import { parseOrThrow } from '@core/api/parseOrThrow';
 import {
   dashboardKpiSchema,
   salesAnalyticsSchema,
@@ -23,44 +24,44 @@ import type {
 
 export const analyticsApi = {
   getDashboard: async (): Promise<DashboardKpi> => {
-    const res = await httpClient.get<DashboardKpi>('/analytics/dashboard');
-    return dashboardKpiSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/dashboard');
+    return parseOrThrow(dashboardKpiSchema, res);
   },
 
   getSalesAnalytics: async (params?: SalesAnalyticsParams): Promise<SalesPeriod[]> => {
-    const res = await httpClient.get<SalesPeriod[]>('/analytics/sales', {
+    const res = await httpClient.get<unknown>('/analytics/sales', {
       params: params as Record<string, unknown>,
     });
-    return salesAnalyticsSchema.parse(res);
+    return parseOrThrow(salesAnalyticsSchema, res);
   },
 
   getTopProducts: async (): Promise<TopProduct[]> => {
-    const res = await httpClient.get<TopProduct[]>('/analytics/top-products');
-    return topProductsSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/top-products');
+    return parseOrThrow(topProductsSchema, res);
   },
 
   getTopCustomers: async (): Promise<TopCustomer[]> => {
-    const res = await httpClient.get<TopCustomer[]>('/analytics/top-customers');
-    return topCustomersSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/top-customers');
+    return parseOrThrow(topCustomersSchema, res);
   },
 
   getInventoryValue: async (): Promise<InventoryValue> => {
-    const res = await httpClient.get<InventoryValue>('/analytics/inventory-value');
-    return inventoryValueSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/inventory-value');
+    return parseOrThrow(inventoryValueSchema, res);
   },
 
   getLowStockAlerts: async (): Promise<LowStockAlert[]> => {
-    const res = await httpClient.get<LowStockAlert[]>('/analytics/low-stock-alerts');
-    return lowStockAlertsSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/low-stock-alerts');
+    return parseOrThrow(lowStockAlertsSchema, res);
   },
 
   getCashFlow: async (): Promise<CashFlowEntry[]> => {
-    const res = await httpClient.get<CashFlowEntry[]>('/analytics/cash-flow');
-    return cashFlowSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/cash-flow');
+    return parseOrThrow(cashFlowSchema, res);
   },
 
   getWasteAlerts: async (): Promise<WasteAlert[]> => {
-    const res = await httpClient.get<WasteAlert[]>('/analytics/waste-alerts');
-    return wasteAlertsSchema.parse(res);
+    const res = await httpClient.get<unknown>('/analytics/waste-alerts');
+    return parseOrThrow(wasteAlertsSchema, res);
   },
 };

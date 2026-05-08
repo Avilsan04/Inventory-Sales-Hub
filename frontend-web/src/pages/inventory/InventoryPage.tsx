@@ -20,6 +20,7 @@ import { MovementsHistoryPanel } from '@features/inventory/components/MovementsH
 import { StockTransferDialog } from '@features/inventory/components/StockTransferDialog';
 import { useWarehouses } from '@features/inventory/hooks/useWarehouses';
 import { cn } from '@shared/lib/cn';
+import { telemetry } from '@shared/lib/observability';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Inventory.module.scss';
 
@@ -92,7 +93,11 @@ export function InventoryPage(): React.ReactElement {
   }
 
   if (isError) {
-    console.error('[Telemetry] Inventory fetch error:', error);
+    if (error instanceof Error) {
+      telemetry.captureException(error, { source: 'InventoryPage' });
+    } else {
+      telemetry.captureMessage('Inventory fetch error', { source: 'InventoryPage', error });
+    }
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>

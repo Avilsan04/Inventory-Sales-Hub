@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AdminLayout, CompanyLayout, ClientLayout } from '@widgets';
-import { useEffectiveRole } from '@features/auth';
+import { useEffectiveRole, useAuthMe } from '@features/auth';
 import { ProtectedRoute } from './guards/ProtectedRoute';
 import { PublicRoute } from './guards/PublicRoute';
 import { RoleRoute } from './guards/RoleRoute';
 import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
 import { HttpInterceptorSetup } from '@app/providers/HttpInterceptorSetup';
+import { useTabSync } from '@features/auth/hooks/useTabSync';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const LandingPage = React.lazy(() =>
@@ -99,16 +100,34 @@ const MyOrdersPage = React.lazy(() =>
 );
 
 function RoleLayout(): React.ReactElement {
+  const { isLoading } = useAuthMe();
   const role = useEffectiveRole();
+
+  if (isLoading) {
+    return (
+      <div
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}
+      >
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   if (role === 'company') return <CompanyLayout />;
   if (role === 'customer') return <ClientLayout />;
   return <AdminLayout />;
+}
+
+function TabSyncSetup(): null {
+  useTabSync();
+  return null;
 }
 
 export function AppRouter(): React.ReactElement {
   return (
     <BrowserRouter>
       <HttpInterceptorSetup />
+      <TabSyncSetup />
       <React.Suspense
         fallback={
           <div className={styles.appLoading}>

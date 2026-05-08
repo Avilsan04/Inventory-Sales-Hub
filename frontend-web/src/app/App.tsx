@@ -3,22 +3,44 @@ import { AppRouter } from './router/AppRouter';
 import { ThemeProvider, GlobalErrorBoundary, QueryProvider } from './providers';
 import { DependencyProvider } from './providers/DependencyProvider';
 import { Toaster } from '@shared/ui/composed/Toaster';
-import { ViewModeProvider } from '@features/auth/context/ViewModeContext';
-import { CartProvider } from '@features/catalog';
+import { OfflineBanner } from '@shared/ui/composed';
+import { ViewModeProvider } from './providers/ViewModeContext';
+import { startSalesSyncWorker } from '@features/sales/services/salesSyncWorker';
+import { SalesSyncBanner } from '@features/sales/components/SalesSyncBanner';
+import { env } from '@core/config/env';
+
+const isMockEnabled = env.VITE_MOCK_ENABLED || import.meta.env.DEV;
+
+function AppContent(): React.ReactElement {
+  React.useEffect(() => {
+    const stop = startSalesSyncWorker();
+    return (): void => {
+      stop();
+    };
+  }, []);
+
+  return (
+    <ThemeProvider>
+      <OfflineBanner />
+      <SalesSyncBanner />
+      <AppRouter />
+      <Toaster />
+    </ThemeProvider>
+  );
+}
 
 export function App(): React.ReactElement {
   return (
     <GlobalErrorBoundary>
       <DependencyProvider>
         <QueryProvider>
-          <ViewModeProvider>
-            <CartProvider>
-              <ThemeProvider>
-                <AppRouter />
-                <Toaster />
-              </ThemeProvider>
-            </CartProvider>
-          </ViewModeProvider>
+          {isMockEnabled ? (
+            <ViewModeProvider>
+              <AppContent />
+            </ViewModeProvider>
+          ) : (
+            <AppContent />
+          )}
         </QueryProvider>
       </DependencyProvider>
     </GlobalErrorBoundary>

@@ -3,7 +3,7 @@ import { TruckIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSuppliers, useDeleteSupplier } from '@features/suppliers';
 import { toast } from '@shared/hooks/useToast';
-import { Skeleton, Button } from '@shared/ui/primitives';
+import { Skeleton, Button, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -23,17 +23,30 @@ import { SectionErrorBoundary } from '@app/providers';
 import { SupplierCreateDialog } from '@features/suppliers/components/SupplierCreateDialog';
 import { SupplierEditDialog } from '@features/suppliers/components/SupplierEditDialog';
 import type { Supplier } from '@entities/supplier';
+import { useTableFilters } from '@shared/hooks';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
+
+const SUPPLIER_PAGE_SIZE = 20;
 
 export function SuppliersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data, isPending, isError } = useSuppliers();
-  const suppliers = data ?? [];
   const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editSupplier, setEditSupplier] = React.useState<Supplier | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
+
+  const { page, setPage, pageCount, paginated } = useTableFilters<Supplier>(
+    data,
+    (s, q) =>
+      s.name.toLowerCase().includes(q) ||
+      (s.email ?? '').toLowerCase().includes(q) ||
+      (s.contactPerson ?? '').toLowerCase().includes(q),
+    SUPPLIER_PAGE_SIZE
+  );
+
+  const suppliers = paginated;
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
@@ -165,6 +178,15 @@ export function SuppliersPage(): React.ReactElement {
                 </TableBody>
               </Table>
             </CardContent>
+            {pageCount > 1 && (
+              <div className={styles['tableFooter']}>
+                <span>
+                  {Math.min((page - 1) * SUPPLIER_PAGE_SIZE + 1, data?.length ?? 0)}–
+                  {Math.min(page * SUPPLIER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+                </span>
+                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              </div>
+            )}
           </Card>
         </SectionErrorBoundary>
       </section>

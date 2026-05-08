@@ -1,3 +1,5 @@
+import type { UserRole } from '@features/auth/models/auth.types';
+
 export type Permission =
   | 'create:product'
   | 'delete:product'
@@ -14,8 +16,6 @@ export type Permission =
   | 'close:cash-session'
   | 'manage:warehouses'
   | 'transfer:stock';
-
-type PermissionRole = 'admin' | 'manager' | 'staff' | 'customer' | 'company';
 
 const ALL_PERMISSIONS: ReadonlyArray<Permission> = [
   'create:product',
@@ -35,9 +35,10 @@ const ALL_PERMISSIONS: ReadonlyArray<Permission> = [
   'transfer:stock',
 ];
 
-const PERMISSIONS: Readonly<Record<PermissionRole, ReadonlyArray<Permission>>> = {
+const PERMISSIONS: Readonly<Record<UserRole, ReadonlyArray<Permission>>> = {
   admin: ALL_PERMISSIONS,
-  company: ALL_PERMISSIONS,
+  // company can view analytics, employees, audit and manage suppliers — no POS or stock ops.
+  company: ['view:analytics', 'view:employees', 'view:audit', 'manage:suppliers', 'export:csv'],
   manager: [
     'create:product',
     'delete:product',
@@ -62,9 +63,11 @@ const PERMISSIONS: Readonly<Record<PermissionRole, ReadonlyArray<Permission>>> =
     'transfer:stock',
   ],
   customer: [],
+  // test role has all permissions to simulate any role during development/demo.
+  test: ALL_PERMISSIONS,
 };
 
-export function hasPermission(role: string | undefined, permission: Permission): boolean {
-  if (!role || !(role in PERMISSIONS)) return false;
-  return PERMISSIONS[role as PermissionRole].includes(permission);
+export function hasPermission(role: UserRole | undefined, permission: Permission): boolean {
+  if (!role) return false;
+  return PERMISSIONS[role].includes(permission);
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { telemetry } from '@shared/lib/observability';
 import styles from '@shared/styles/themes/components/ErrorBoundary.module.scss';
 
 interface ErrorBoundaryProps {
@@ -28,7 +29,10 @@ export class SectionErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.error(`[${this.props.label}] Section render error:`, error, errorInfo);
+    telemetry.captureException(error, {
+      label: this.props.label,
+      componentStack: errorInfo.componentStack ?? undefined,
+    });
   }
 
   render(): React.ReactNode {
@@ -67,8 +71,7 @@ export class GlobalErrorBoundary extends React.Component<ErrorBoundaryProps, Err
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    // In a production environment, emit this to a logging service (e.g., Sentry, Datadog)
-    console.error('Uncaught React Exception:', error, errorInfo);
+    telemetry.captureException(error, { componentStack: errorInfo.componentStack ?? undefined });
   }
 
   render(): React.ReactNode {

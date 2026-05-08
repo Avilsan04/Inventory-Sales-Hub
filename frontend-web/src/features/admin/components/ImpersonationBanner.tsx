@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
 import { useImpersonation } from '../hooks/useImpersonation';
+import styles from './ImpersonationBanner.module.scss';
 
 export function ImpersonationBanner(): React.ReactElement | null {
   const { isImpersonating, stopImpersonation } = useImpersonation();
@@ -10,19 +11,7 @@ export function ImpersonationBanner(): React.ReactElement | null {
   if (!isImpersonating) return null;
 
   return (
-    <div
-      role="alert"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0.5rem 1rem',
-        background: 'var(--color-warning)',
-        color: 'var(--color-warning-fg)',
-        fontSize: '0.875rem',
-        fontWeight: 500,
-      }}
-    >
+    <div role="alert" className={styles['banner']}>
       <span>{t('admin.impersonationActive')}</span>
       <Button variant="outline" size="sm" onClick={stopImpersonation}>
         {t('admin.exitImpersonation')}

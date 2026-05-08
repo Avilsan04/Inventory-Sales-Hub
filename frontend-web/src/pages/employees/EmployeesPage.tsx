@@ -3,7 +3,7 @@ import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon, PencilIcon } from 'luci
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useEmployees } from '@features/employees';
 import { PermissionGuard } from '@features/auth';
-import { Spinner, Badge, Button } from '@shared/ui/primitives';
+import { Spinner, Badge, Button, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -22,12 +22,15 @@ import { SectionErrorBoundary } from '@app/providers';
 import { EmployeeCreateDialog } from '@features/employees/components/EmployeeCreateDialog';
 import { EmployeeEditDialog } from '@features/employees/components/EmployeeEditDialog';
 import { AuditLogPanel } from '@widgets/audit';
+import { useTableFilters } from '@shared/hooks';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { Employee } from '@entities/employee';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 import statsStyles from '@shared/styles/themes/pages/Employees.module.scss';
 
 type EmployeeRole = 'admin' | 'manager' | 'staff';
+
+const EMPLOYEE_PAGE_SIZE = 20;
 
 function roleVariant(role: EmployeeRole): BadgeVariant {
   const map: Record<EmployeeRole, BadgeVariant> = {
@@ -44,6 +47,12 @@ export function EmployeesPage(): React.ReactElement {
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editEmployee, setEditEmployee] = React.useState<Employee | null>(null);
+
+  const { page, setPage, pageCount, paginated } = useTableFilters<Employee>(
+    data,
+    () => true,
+    EMPLOYEE_PAGE_SIZE
+  );
 
   if (isPending) {
     return (
@@ -63,6 +72,8 @@ export function EmployeesPage(): React.ReactElement {
 
   const activeCount = data.filter((e) => e.isActive).length;
   const adminCount = data.filter((e) => e.role === 'admin').length;
+  const totalEmployees = data.length;
+  const employees = paginated;
 
   return (
     <div className={styles['page']}>
@@ -96,7 +107,7 @@ export function EmployeesPage(): React.ReactElement {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <div className={statsStyles['statValue']}>{data.length}</div>
+            <div className={statsStyles['statValue']}>{totalEmployees}</div>
           </CardContent>
         </Card>
         <Card>
@@ -144,7 +155,7 @@ export function EmployeesPage(): React.ReactElement {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.length === 0 ? (
+                  {totalEmployees === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5}>
                         <EmptyState
@@ -161,7 +172,7 @@ export function EmployeesPage(): React.ReactElement {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    data.map((e) => (
+                    employees.map((e) => (
                       <TableRow key={e.id}>
                         <TableCell>{e.name}</TableCell>
                         <TableCell>{e.email}</TableCell>
@@ -194,6 +205,15 @@ export function EmployeesPage(): React.ReactElement {
                 </TableBody>
               </Table>
             </CardContent>
+            {pageCount > 1 && (
+              <div className={styles['tableFooter']}>
+                <span>
+                  {Math.min((page - 1) * EMPLOYEE_PAGE_SIZE + 1, totalEmployees)}–
+                  {Math.min(page * EMPLOYEE_PAGE_SIZE, totalEmployees)} / {totalEmployees}
+                </span>
+                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              </div>
+            )}
           </Card>
         </SectionErrorBoundary>
       </section>

@@ -110,3 +110,4 @@ export { FormField, type FormFieldProps } from './FormField';
 export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog';
 export { EmptyState } from './EmptyState';
 export { DateRangePicker, type DateRange } from './DateRangePicker';
+export { OfflineBanner } from './OfflineBanner';

@@ -5,7 +5,7 @@ import { useProducts, useCategories, useDeleteProduct } from '@features/products
 import { PermissionGuard } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
 import { formatCurrency } from '@shared/lib/formatCurrency';
-import { Skeleton, Button } from '@shared/ui/primitives';
+import { Skeleton, Button, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -24,8 +24,11 @@ import { SectionErrorBoundary } from '@app/providers';
 import { ProductCreateDialog } from '@features/products/components/ProductCreateDialog';
 import { ProductEditDialog } from '@features/products/components/ProductEditDialog';
 import { ProductCsvImportDialog } from '@features/products/components/ProductCsvImportDialog';
+import { useTableFilters } from '@shared/hooks';
 import type { Product } from '@entities/product';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
+
+const PRODUCT_PAGE_SIZE = 20;
 
 const SKELETON_ROWS = 5;
 
@@ -39,6 +42,15 @@ export function ProductsPage(): React.ReactElement {
   const [importOpen, setImportOpen] = React.useState(false);
   const [editProduct, setEditProduct] = React.useState<Product | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
+
+  const { page, setPage, pageCount, paginated } = useTableFilters<Product>(
+    data,
+    (p, q) =>
+      p.name.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q) ||
+      (p.category?.name ?? '').toLowerCase().includes(q),
+    PRODUCT_PAGE_SIZE
+  );
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
@@ -151,7 +163,7 @@ export function ProductsPage(): React.ReactElement {
                         </TableCell>
                       </TableRow>
                     ))
-                  ) : data.length === 0 ? (
+                  ) : paginated.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5}>
                         <div className={styles['placeholderContainer']}>
@@ -160,7 +172,7 @@ export function ProductsPage(): React.ReactElement {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    data.map((p) => (
+                    paginated.map((p) => (
                       <TableRow key={p.id}>
                         <TableCell>{p.name}</TableCell>
                         <TableCell>{p.sku}</TableCell>
@@ -172,22 +184,24 @@ export function ProductsPage(): React.ReactElement {
                               <Button
                                 variant="ghost"
                                 size="icon-sm"
+                                aria-label="Editar producto"
                                 onClick={() => {
                                   setEditProduct(p);
                                 }}
                               >
-                                <PencilIcon size={14} />
+                                <PencilIcon size={14} aria-hidden="true" />
                               </Button>
                             </PermissionGuard>
                             <PermissionGuard permission="delete:product">
                               <Button
                                 variant="ghost"
                                 size="icon-sm"
+                                aria-label="Eliminar producto"
                                 onClick={() => {
                                   setDeleteId(p.id);
                                 }}
                               >
-                                <TrashIcon size={14} />
+                                <TrashIcon size={14} aria-hidden="true" />
                               </Button>
                             </PermissionGuard>
                           </div>
@@ -198,6 +212,15 @@ export function ProductsPage(): React.ReactElement {
                 </TableBody>
               </Table>
             </CardContent>
+            {pageCount > 1 && (
+              <div className={styles['tableFooter']}>
+                <span>
+                  {Math.min((page - 1) * PRODUCT_PAGE_SIZE + 1, data?.length ?? 0)}–
+                  {Math.min(page * PRODUCT_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+                </span>
+                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              </div>
+            )}
           </Card>
         </SectionErrorBoundary>
       </section>

@@ -4,10 +4,10 @@ import { exportToCsv } from '@shared/lib/exportCsv';
 import { formatCurrency, fromCents } from '@shared/lib/formatCurrency';
 import { formatOrderId } from '@shared/lib/formatters';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useSales, useSalesFilters } from '@features/sales';
+import { useSalesFilters, SALES_PAGE_SIZE } from '@features/sales';
 import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
-import { Skeleton, Badge, Button, Input } from '@shared/ui/primitives';
+import { Skeleton, Badge, Button, Input, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   EmptyState,
@@ -56,7 +56,6 @@ const SKELETON_ROWS = 5;
 
 export function SalesPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: sales, isLoading, isError } = useSales();
   const { data: topCustomers } = useTopCustomers();
 
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -64,7 +63,10 @@ export function SalesPage(): React.ReactElement {
   const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
 
   const {
-    filtered,
+    data: sales,
+    isLoading,
+    isError,
+    paginated,
     search,
     setSearch,
     debouncedSearch,
@@ -72,7 +74,10 @@ export function SalesPage(): React.ReactElement {
     setDateFilter,
     showDateFilter,
     toggleDateFilter,
-  } = useSalesFilters(sales);
+    page,
+    setPage,
+    pageCount,
+  } = useSalesFilters();
 
   const customerMap = React.useMemo(() => {
     const map = new Map<string, string>();
@@ -176,7 +181,7 @@ export function SalesPage(): React.ReactElement {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : filtered.length === 0 ? (
+                ) : paginated.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7}>
                       <EmptyState
@@ -197,7 +202,7 @@ export function SalesPage(): React.ReactElement {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filtered.map((s) => (
+                  paginated.map((s) => (
                     <TableRow key={s.id}>
                       <TableCell className={styles['mono']}>{formatOrderId(s.id)}</TableCell>
                       <TableCell>
@@ -220,11 +225,12 @@ export function SalesPage(): React.ReactElement {
                           <Button
                             variant="ghost"
                             size="icon-sm"
+                            aria-label={t('sales.viewDetail')}
                             onClick={() => {
                               setDetailSale(s);
                             }}
                           >
-                            <PencilIcon size={14} />
+                            <PencilIcon size={14} aria-hidden="true" />
                           </Button>
                         </div>
                       </TableCell>
@@ -233,6 +239,16 @@ export function SalesPage(): React.ReactElement {
                 )}
               </TableBody>
             </Table>
+            {pageCount > 1 && (
+              <div className={pageStyles['tableFooter']}>
+                <span>
+                  {Math.min((page - 1) * SALES_PAGE_SIZE + 1, sales?.length ?? 0)}–
+                  {Math.min(page * SALES_PAGE_SIZE, sales?.length ?? 0)} / {sales?.length ?? 0}{' '}
+                  {t('nav.orders').toLowerCase()}
+                </span>
+                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              </div>
+            )}
           </Card>
         </SectionErrorBoundary>
       </section>
