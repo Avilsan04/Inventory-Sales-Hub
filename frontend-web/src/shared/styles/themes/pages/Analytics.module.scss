@@ -8,8 +8,66 @@
 
 .header {
   display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-6;
+}
+
+.headerMeta {
+  display: flex;
   flex-direction: column;
+  gap: $spacing-1;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
   gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+// ── Date range filter ────────────────────────────────────────────────────
+.dateRangeRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  flex-wrap: wrap;
+}
+
+.dateRangePills {
+  display: flex;
+  gap: $spacing-1;
+}
+
+.dateRangePill {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $border-radius-full;
+  border: $border-width-base solid var(--color-border);
+  background: var(--color-background);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color $duration-fast ease,
+    border-color $duration-fast ease;
+
+  &:hover {
+    background: var(--color-muted);
+    border-color: var(--color-border-focus);
+  }
+}
+
+.dateRangePillActive {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+
+  &:hover {
+    background-color: var(--color-primary-hover) !important;
+  }
 }
 
 .title {
@@ -31,8 +89,12 @@
   grid-template-columns: repeat(4, 1fr);
   gap: $spacing-4;
 
-  @media (max-width: $breakpoint-lg) { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: $breakpoint-sm) { grid-template-columns: 1fr; }
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .kpiTitle {
@@ -75,7 +137,50 @@
   grid-template-columns: 1fr 1fr;
   gap: $spacing-4;
 
-  @media (max-width: $breakpoint-lg) { grid-template-columns: 1fr; }
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Charts ────────────────────────────────────────────────────────────────
+.chartSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.chartTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.chartSubtitle {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: $spacing-1 0 0;
+}
+
+.chartLegend {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.chartLegendItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.chartLegendDot {
+  width: $size-2;
+  height: $size-2;
+  border-radius: 50%;
 }
 
 // ── State containers ─────────────────────────────────────────────────────
@@ -95,4 +200,9 @@
   min-height: $min-section-height;
   color: var(--color-error);
   font-size: $font-size-sm;
+}
+
+.skeletonRow {
+  height: $spacing-5;
+  width: 100%;
 }

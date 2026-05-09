@@ -1,0 +1,262 @@
+// Shared layout primitives for forms rendered inside Dialog components.
+// All dialogs import this single module — avoids repeating flex/grid declarations.
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-3 0;
+}
+
+.bodyScroll {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-3 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.fieldPadding {
+  padding: $spacing-3 0;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2;
+}
+
+.gridOffset {
+  margin-top: $spacing-3;
+}
+
+.gridPriceShort {
+  display: grid;
+  grid-template-columns: 1fr $dialog-col-short;
+  gap: $spacing-2;
+}
+
+.gridQtyPriceShort {
+  display: grid;
+  grid-template-columns: 1fr 1fr $dialog-col-short;
+  gap: $spacing-2;
+}
+
+// 4-col row for sale item: product | qty | price | delete
+.saleItemRow {
+  display: grid;
+  grid-template-columns: 1fr $dialog-col-qty $dialog-col-price auto;
+  gap: $spacing-1;
+  margin-bottom: $spacing-2;
+  align-items: end;
+}
+
+.activeRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.infoText {
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-2;
+  color: var(--color-text-primary);
+}
+
+.errorBanner {
+  font-size: $font-size-xs;
+  color: var(--color-destructive);
+  margin: 0 0 $spacing-2;
+}
+
+// Delete button in sale item row needs top margin only on first row
+// (first row has labels above, rest don't)
+.deleteBtn {
+  align-self: end;
+}
+.deleteBtnFirst {
+  align-self: end;
+  margin-top: $spacing-5-5;
+}
+
+// ── Checkout wizard ───────────────────────────────────────────────────
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding-bottom: $spacing-4;
+  border-bottom: $border-width-base solid var(--color-border);
+  margin-bottom: $spacing-4;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex: 1;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.stepDot {
+  width: $size-6;
+  height: $size-6;
+  border-radius: $border-radius-full;
+  border: $border-width-base solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-bold;
+  flex-shrink: 0;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-muted);
+}
+
+.stepDotActive {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: $color-primary-foreground;
+}
+
+.stepDotDone {
+  background-color: $color-success;
+  border-color: $color-success;
+  color: white;
+}
+
+.stepLabel {
+  font-weight: $font-weight-medium;
+  color: var(--color-text-muted);
+}
+
+.stepLabelActive {
+  color: var(--color-primary);
+  font-weight: $font-weight-semibold;
+}
+
+.stepLabelDone {
+  color: $color-success;
+}
+
+.stepConnector {
+  flex: 1;
+  height: $border-width-base;
+  background-color: var(--color-border);
+}
+
+.stepConnectorDone {
+  background-color: $color-success;
+}
+
+.runningTotal {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2 0;
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  border-top: $border-width-base solid var(--color-border);
+  margin-top: $spacing-2;
+
+  strong {
+    color: var(--color-text-primary);
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.paymentCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-2;
+  margin-bottom: $spacing-4;
+}
+
+.paymentCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-3 $spacing-2;
+  border-radius: $radius-md;
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  cursor: pointer;
+  transition:
+    border-color $duration-fast ease,
+    background-color $duration-fast ease;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+.paymentCardActive {
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  color: var(--color-primary);
+}
+
+.paymentCardIcon {
+  font-size: $font-size-xl;
+}
+
+.ibanBox {
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-md;
+  background-color: var(--color-bg-tertiary);
+  border: $border-width-base solid var(--color-border);
+  font-size: $font-size-sm;
+  font-family: $font-family-mono;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+
+.infoBox {
+  padding: $spacing-3;
+  border-radius: $radius-md;
+  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  border: $border-width-base solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: $font-size-sm;
+  padding: $spacing-2 0;
+  border-bottom: $border-width-base solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-base;
+  }
+}
+
+.summaryLabel {
+  color: var(--color-text-secondary);
+}
+
+.summaryValue {
+  color: var(--color-text-primary);
+  font-weight: $font-weight-medium;
+  text-align: right;
+  max-width: 60%;
+}

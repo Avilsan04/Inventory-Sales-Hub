@@ -1,8 +1,10 @@
+// shadcn/ui toast pattern
 import * as React from 'react';
 import type { ToastActionElement, ToastProps } from '@shared/ui/composed/Toast';
+import { TIMING } from '@core/config/timing';
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 5_000;
+const TOAST_REMOVE_DELAY = TIMING.TOAST_DISPLAY_MS;
 
 export type ToasterToast = ToastProps & {
   id: string;
@@ -46,23 +48,21 @@ function reducer(state: State, action: Action): State {
     case 'UPDATE_TOAST':
       return {
         ...state,
-        toasts: state.toasts.map((t) =>
-          t.id === action.toast.id ? { ...t, ...action.toast } : t
-        ),
+        toasts: state.toasts.map((t) => (t.id === action.toast.id ? { ...t, ...action.toast } : t)),
       };
     case 'DISMISS_TOAST': {
       const { toastId } = action;
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
-        state.toasts.forEach((t) => { addToRemoveQueue(t.id); });
+        state.toasts.forEach((t) => {
+          addToRemoveQueue(t.id);
+        });
       }
       return {
         ...state,
         toasts: state.toasts.map((t) =>
-          t.id === toastId || toastId === undefined
-            ? { ...t, open: false }
-            : t
+          t.id === toastId || toastId === undefined ? { ...t, open: false } : t
         ),
       };
     }
@@ -80,7 +80,9 @@ let memoryState: State = { toasts: [] };
 
 function dispatch(action: Action): void {
   memoryState = reducer(memoryState, action);
-  listeners.forEach((listener) => { listener(memoryState); });
+  listeners.forEach((listener) => {
+    listener(memoryState);
+  });
 }
 
 let count = 0;
@@ -115,8 +117,10 @@ export function toast(props: ToastInput): ToastReturn {
       id,
       open: true,
       onOpenChange: (open: boolean) => {
-        if (!open) { dismiss(); }
-      }
+        if (!open) {
+          dismiss();
+        }
+      },
     },
   });
 
@@ -130,9 +134,11 @@ export function useToast(): State & { toast: typeof toast; dismiss: (toastId?: s
     listeners.push(setState);
     return (): void => {
       const index = listeners.indexOf(setState);
-      if (index > -1) { listeners.splice(index, 1); }
+      if (index > -1) {
+        listeners.splice(index, 1);
+      }
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,

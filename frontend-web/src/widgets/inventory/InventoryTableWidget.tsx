@@ -2,6 +2,7 @@ import * as React from 'react';
 import { EllipsisIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { cn } from '@shared/lib/cn';
+import { formatCurrency } from '@shared/lib/formatCurrency';
 import {
   Table,
   TableBody,
@@ -9,36 +10,60 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@shared/ui/composed/Table';
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@shared/ui/composed';
 import { Badge } from '@shared/ui/primitives';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/widgets/InventoryTable.module.scss';
 
 interface InventoryTableWidgetProps {
   data: InventoryItem[];
+  onEdit?: (item: InventoryItem) => void;
+  onAdjustStock?: (item: InventoryItem) => void;
+  onDelete?: (id: string) => void;
+  onViewHistory?: (item: InventoryItem) => void;
 }
 
-function statusBadgeVariant(status: InventoryItem['status']): 'success' | 'warning' | 'destructive' {
+function statusBadgeVariant(
+  status: InventoryItem['status']
+): 'success' | 'warning' | 'destructive' {
   switch (status) {
-    case 'IN_STOCK':     return 'success';
-    case 'LOW_STOCK':    return 'warning';
-    case 'OUT_OF_STOCK': return 'destructive';
+    case 'IN_STOCK':
+      return 'success';
+    case 'LOW_STOCK':
+      return 'warning';
+    case 'OUT_OF_STOCK':
+      return 'destructive';
   }
 }
 
 function stockExtraClass(status: InventoryItem['status']): string | undefined {
   switch (status) {
-    case 'LOW_STOCK':    return styles['stockLow'];
-    case 'OUT_OF_STOCK': return styles['stockOut'];
-    default:             return undefined;
+    case 'LOW_STOCK':
+      return styles['stockLow'];
+    case 'OUT_OF_STOCK':
+      return styles['stockOut'];
+    default:
+      return undefined;
   }
 }
 
-const formatCurrency = (amount: number, currency: string): string =>
-  new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(amount);
-
-export function InventoryTableWidget({ data }: InventoryTableWidgetProps): React.ReactElement {
+export function InventoryTableWidget({
+  data,
+  onEdit,
+  onAdjustStock,
+  onDelete,
+  onViewHistory,
+}: InventoryTableWidgetProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const hasActions =
+    onEdit !== undefined ||
+    onAdjustStock !== undefined ||
+    onDelete !== undefined ||
+    onViewHistory !== undefined;
 
   return (
     <div className={styles['tableWrapper']}>
@@ -52,7 +77,7 @@ export function InventoryTableWidget({ data }: InventoryTableWidgetProps): React
             <TableHead className={styles['numCell']}>{t('inventory.reorderAt')}</TableHead>
             <TableHead className={styles['priceCell']}>{t('inventory.price')}</TableHead>
             <TableHead>{t('inventory.status')}</TableHead>
-            <TableHead className={styles['dotsHead']} />
+            {hasActions && <TableHead className={styles['dotsHead']} />}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -75,11 +100,56 @@ export function InventoryTableWidget({ data }: InventoryTableWidgetProps): React
                   {t(`inventory.status_${item.status}`)}
                 </Badge>
               </TableCell>
-              <TableCell className={styles['dotsCell']}>
-                <button type="button" className={styles['dotsBtn']} aria-label="Actions">
-                  <EllipsisIcon size={16} aria-hidden="true" />
-                </button>
-              </TableCell>
+              {hasActions && (
+                <TableCell className={styles['dotsCell']}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button type="button" className={styles['dotsBtn']} aria-label="Actions">
+                        <EllipsisIcon size={16} aria-hidden="true" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {onEdit !== undefined && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            onEdit(item);
+                          }}
+                        >
+                          Edit
+                        </DropdownMenuItem>
+                      )}
+                      {onAdjustStock !== undefined && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            onAdjustStock(item);
+                          }}
+                        >
+                          Adjust stock
+                        </DropdownMenuItem>
+                      )}
+                      {onViewHistory !== undefined && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            onViewHistory(item);
+                          }}
+                        >
+                          View history
+                        </DropdownMenuItem>
+                      )}
+                      {onDelete !== undefined && (
+                        <DropdownMenuItem
+                          onClick={() => {
+                            onDelete(item.id);
+                          }}
+                          style={{ color: 'var(--color-destructive)' }}
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

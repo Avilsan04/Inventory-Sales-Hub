@@ -1,81 +1,84 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
+import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
 import type { Supplier, SupplierOrder } from '@entities/supplier';
+import mockData from '@app/mock/mock-data.json';
 
-const mockSuppliers: Supplier[] = [
-  {
-    id: 'supp-001-0000-0000-0000-000000000001',
-    name: 'TechGlobal Distributors',
-    email: 'orders@techglobal.com',
-    phone: '+1 800 555 0100',
-    address: '1 Commerce Park, San Jose, CA',
-    contactPerson: 'Michael Scott',
-    createdAt: '2024-05-01T10:00:00.000Z',
-    updatedAt: '2025-01-10T08:00:00.000Z',
-  },
-  {
-    id: 'supp-002-0000-0000-0000-000000000002',
-    name: 'PeripheralsPro Inc.',
-    email: 'supply@peripheralspro.com',
-    phone: '+1 800 555 0200',
-    contactPerson: 'Jan Levinson',
-    createdAt: '2024-08-01T10:00:00.000Z',
-    updatedAt: '2024-08-01T10:00:00.000Z',
-  },
-];
+const baseSuppliers: Supplier[] = [...mockData.suppliers] as Supplier[];
 
 export const supplierHandlers = [
-  http.get(`${API_BASE_URL}/suppliers`, async () => {
+  http.get(`${API_BASE_URL}/suppliers`, async ({ request }) => {
     await delay(600);
-    return HttpResponse.json(mockSuppliers);
+    const tenantId = resolveTenant(request);
+    const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
+    return HttpResponse.json(suppliers);
   }),
 
-  http.get(`${API_BASE_URL}/suppliers/:id/products`, async () => {
+  http.get(`${API_BASE_URL}/suppliers/:id/products`, async ({ request }) => {
     await delay(500);
+    resolveTenant(request);
     return HttpResponse.json([]);
   }),
 
-  http.get(`${API_BASE_URL}/suppliers/:id`, async ({ params }) => {
+  http.get(`${API_BASE_URL}/suppliers/:id`, async ({ params, request }) => {
     await delay(400);
-    const item = mockSuppliers.find((s) => s.id === params['id']);
+    const tenantId = resolveTenant(request);
+    const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
+    const item = suppliers.find((s) => s.id === params['id']);
     if (!item) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(item);
   }),
 
   http.post(`${API_BASE_URL}/suppliers`, async ({ request }) => {
     await delay(600);
-    const body = await request.json() as Partial<Supplier>;
+    const denied = requirePermission(request, 'manage:suppliers');
+    if (denied) return denied;
+    const tenantId = resolveTenant(request);
+    const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
+    const body = (await request.json()) as Partial<Supplier>;
     const now = new Date().toISOString();
-    return HttpResponse.json<Supplier>(
-      {
-        id: crypto.randomUUID(),
-        name: body.name ?? 'New Supplier',
-        email: body.email,
-        phone: body.phone,
-        address: body.address,
-        contactPerson: body.contactPerson,
-        createdAt: now,
-        updatedAt: now,
-      },
-      { status: 201 }
-    );
+    const newSupplier: Supplier = {
+      id: crypto.randomUUID(),
+      name: body.name ?? 'Nuevo proveedor',
+      email: body.email,
+      phone: body.phone,
+      address: body.address,
+      contactPerson: body.contactPerson,
+      createdAt: now,
+      updatedAt: now,
+    };
+    suppliers.push(newSupplier);
+    return HttpResponse.json<Supplier>(newSupplier, { status: 201 });
   }),
 
   http.put(`${API_BASE_URL}/suppliers/:id`, async ({ params, request }) => {
     await delay(500);
-    const body = await request.json() as Partial<Supplier>;
-    const existing = mockSuppliers.find((s) => s.id === params['id']);
-    if (!existing) return new HttpResponse(null, { status: 404 });
-    return HttpResponse.json({ ...existing, ...body, updatedAt: new Date().toISOString() });
+    const denied = requirePermission(request, 'manage:suppliers');
+    if (denied) return denied;
+    const tenantId = resolveTenant(request);
+    const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
+    const body = (await request.json()) as Partial<Supplier>;
+    const idx = suppliers.findIndex((s) => s.id === params['id']);
+    if (idx === -1) return new HttpResponse(null, { status: 404 });
+    const existing = suppliers[idx];
+    if (existing === undefined) return new HttpResponse(null, { status: 404 });
+    const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
+    suppliers[idx] = updated;
+    return HttpResponse.json(updated);
   }),
 
-  http.delete(`${API_BASE_URL}/suppliers/:id`, async () => {
+  http.delete(`${API_BASE_URL}/suppliers/:id`, async ({ request }) => {
     await delay(400);
+    const denied = requirePermission(request, 'manage:suppliers');
+    if (denied) return denied;
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.post(`${API_BASE_URL}/suppliers/:id/orders`, async ({ params }) => {
+  http.post(`${API_BASE_URL}/suppliers/:id/orders`, async ({ params, request }) => {
     await delay(700);
+    const denied = requirePermission(request, 'manage:suppliers');
+    if (denied) return denied;
+    resolveTenant(request);
     const now = new Date().toISOString();
     return HttpResponse.json<SupplierOrder>(
       {
@@ -84,7 +87,7 @@ export const supplierHandlers = [
         status: 'pending',
         items: [],
         total: 0,
-        currency: 'USD',
+        currency: 'EUR',
         createdAt: now,
         updatedAt: now,
       },

@@ -1,5 +1,5 @@
 .popoverContent {
-  z-index: 50;
+  z-index: $z-overlay;
   width: $container-popover;
   border-radius: var(--radius-md);
   border: $border-width-base solid var(--color-border);

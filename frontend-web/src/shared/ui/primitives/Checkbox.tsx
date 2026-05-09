@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import * as React from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { CheckIcon } from 'lucide-react';
@@ -10,10 +9,7 @@ function Checkbox({
   ...props
 }: React.ComponentProps<typeof CheckboxPrimitive.Root>): React.ReactElement {
   return (
-    <CheckboxPrimitive.Root
-      className={cn(styles.checkbox, className)}
-      {...props}
-    >
+    <CheckboxPrimitive.Root className={cn(styles.checkbox, className)} {...props}>
       <CheckboxPrimitive.Indicator className={styles.checkboxIndicator}>
         <CheckIcon />
       </CheckboxPrimitive.Indicator>

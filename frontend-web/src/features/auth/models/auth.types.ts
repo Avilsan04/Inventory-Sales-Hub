@@ -1,3 +1,7 @@
+export type UserRole = 'company' | 'admin' | 'manager' | 'staff' | 'customer' | 'test';
+
+export type RegisterRole = Extract<UserRole, 'customer' | 'admin' | 'company'>;
+
 export interface LoginRequest {
   email: string;
   password: string;
@@ -7,6 +11,15 @@ export interface RegisterRequest {
   readonly username: string;
   readonly email: string;
   readonly password: string;
+  readonly role?: RegisterRole;
+  // admin fields
+  readonly fullName?: string;
+  readonly adminCode?: string;
+  // company fields
+  readonly companyName?: string;
+  readonly cif?: string;
+  readonly legalRepresentative?: string;
+  readonly phone?: string;
 }
 
 export interface UserResponse {
@@ -24,8 +37,9 @@ export interface UserProfile {
   id: number;
   username: string;
   email: string;
-  role: 'admin' | 'manager' | 'staff';
+  role: UserRole;
   createdAt: string;
+  tenantId?: string;
 }
 
 export interface UpdateProfileRequest {

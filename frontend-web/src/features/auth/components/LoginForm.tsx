@@ -4,7 +4,14 @@ import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthPresenter } from '@features/auth/hooks/useAuthPresenter';
 import { useDependencies } from '@shared/hooks/useDependencies';
 import { Button, Input, Label, Spinner, BrandMark } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@shared/ui/composed';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@shared/ui/composed';
 import styles from '@shared/styles/themes/components/LoginForm.module.scss';
 
 interface LoginFormProps {
@@ -17,21 +24,10 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
 
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const {
-    formData,
-    isLoading,
-    error,
-    isFormValid,
-    handleInputChange,
-    handleSubmit,
-  } = useAuthPresenter({ onSuccess, authService });
-
-  const handleFormSubmit = React.useCallback(
-    (e: React.SyntheticEvent<HTMLFormElement>): void => {
-      void handleSubmit(e);
-    },
-    [handleSubmit],
-  );
+  const { register, handleSubmit, errors, isLoading, error, isValid, onSubmit } = useAuthPresenter({
+    onSuccess,
+    authService,
+  });
 
   return (
     <div className={styles['wrapper']}>
@@ -41,7 +37,13 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
       </div>
 
       <Card className={styles['card']}>
-        <form onSubmit={handleFormSubmit} noValidate>
+        <form
+          onSubmit={(e: React.BaseSyntheticEvent) => {
+            void handleSubmit(onSubmit)(e);
+          }}
+          noValidate
+          className={styles['form']}
+        >
           <CardHeader>
             <CardTitle>{translate('auth.login')}</CardTitle>
             <CardDescription>{translate('auth.loginSubtitle')}</CardDescription>
@@ -58,15 +60,18 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
               <Label htmlFor="email">{translate('auth.email')}</Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
                 placeholder={translate('auth.emailPlaceholder')}
-                value={formData.email}
-                onChange={handleInputChange}
                 autoComplete="email"
-                required
                 disabled={isLoading}
+                aria-invalid={errors.email !== undefined}
+                {...register('email')}
               />
+              {errors.email && (
+                <span className={styles['fieldError']} role="alert">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
 
             <div className={styles['field']}>
@@ -74,43 +79,58 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
               <div className={styles['passwordWrapper']}>
                 <Input
                   id="password"
-                  name="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder={translate('auth.passwordPlaceholder')}
-                  value={formData.password}
-                  onChange={handleInputChange}
                   autoComplete="current-password"
-                  required
                   disabled={isLoading}
+                  aria-invalid={errors.password !== undefined}
                   className={styles['passwordInput']}
+                  {...register('password')}
                 />
                 <button
                   type="button"
                   className={styles['eyeBtn']}
-                  onClick={() => { setShowPassword((v) => !v); }}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => {
+                    setShowPassword((v) => !v);
+                  }}
+                  aria-label={
+                    showPassword ? translate('auth.hidePassword') : translate('auth.showPassword')
+                  }
                   tabIndex={-1}
                 >
-                  {showPassword
-                    ? <EyeOffIcon size={16} aria-hidden="true" />
-                    : <EyeIcon size={16} aria-hidden="true" />}
+                  {showPassword ? (
+                    <EyeOffIcon size={16} aria-hidden="true" />
+                  ) : (
+                    <EyeIcon size={16} aria-hidden="true" />
+                  )}
                 </button>
               </div>
+              {errors.password && (
+                <span className={styles['fieldError']} role="alert">
+                  {errors.password.message}
+                </span>
+              )}
               <div className={styles['forgotRow']}>
-                <button type="button" className={styles['forgotPassword']}>
+                <a href="/forgot-password" className={styles['forgotPassword']}>
                   {translate('auth.forgotPassword')}
-                </button>
+                </a>
               </div>
             </div>
           </CardContent>
 
           <CardFooter className={styles['footer']}>
-            <Button type="submit" disabled={!isFormValid || isLoading} className={styles['submitButton']}>
+            <Button
+              type="submit"
+              disabled={!isValid || isLoading}
+              className={styles['submitButton']}
+            >
               {isLoading ? <Spinner size="sm" /> : translate('auth.login')}
             </Button>
             <p className={styles['signupLink']}>
               {translate('auth.newToIsh')}{' '}
-              <a href="/register" className={styles['signupAnchor']}>{translate('auth.createAccount')}</a>
+              <a href="/register" className={styles['signupAnchor']}>
+                {translate('auth.createAccount')}
+              </a>
             </p>
           </CardFooter>
         </form>

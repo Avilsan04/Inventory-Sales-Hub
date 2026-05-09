@@ -2,6 +2,8 @@ export const APP_ROUTES = {
   LANDING: '/',
   LOGIN: '/login',
   REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
   INVENTORY: '/inventory',
   PRODUCTS: '/products',
@@ -13,6 +15,10 @@ export const APP_ROUTES = {
   NOTIFICATIONS: '/notifications',
   PROFILE: '/profile',
   SETTINGS: '/settings',
+  ADMIN_TENANTS: '/admin/tenants',
+  CATALOG: '/catalog',
+  MY_ORDERS: '/my-orders',
+  POS: '/pos',
 } as const;
 
-export type AppRoute = typeof APP_ROUTES[keyof typeof APP_ROUTES];
+export type AppRoute = (typeof APP_ROUTES)[keyof typeof APP_ROUTES];

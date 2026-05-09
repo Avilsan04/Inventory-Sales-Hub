@@ -1,0 +1,16 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $size-1-5;
+}
+
+.required {
+  color: var(--color-destructive);
+}
+
+.error {
+  font-size: $font-size-xs;
+  color: var(--color-destructive);
+  margin: 0;
+  line-height: 1.4;
+}

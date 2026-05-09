@@ -1,14 +1,14 @@
 .sheetOverlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: $z-overlay;
   background-color: var(--color-overlay);
   animation: overlayShow $duration-slower ease-out;
 }
 
 .sheetContent {
   position: fixed;
-  z-index: 50;
+  z-index: $z-overlay;
   display: flex;
   flex-direction: column;
   gap: $spacing-4;

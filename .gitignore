@@ -33,13 +33,18 @@ frontend-web/node_modules/
 frontend-web/dist/
 frontend-web/.env
 frontend-web/.env.local
+frontend-web/tsconfig.tsbuildinfo
 
 # ========================
 # Frontend Mobile
 # ========================
 frontend-mobile/node_modules/
 frontend-mobile/android/app/build/
+frontend-mobile/android/app/.cxx/
+frontend-mobile/android/.gradle/
+frontend-mobile/android/.kotlin/
 frontend-mobile/ios/Pods/
+frontend-mobile/ios/build/
 frontend-mobile/.env
 frontend-mobile/.env.local
 

@@ -2,7 +2,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 39;
+  z-index: $z-sidebar;
   background-color: var(--color-overlay);
   opacity: 0;
   transition: opacity $duration-base ease;
@@ -38,7 +38,7 @@
     top: 0;
     left: 0;
     height: $height-screen;
-    z-index: 40;
+    z-index: $z-sidebar-mobile;
     transform: translateX(-100%);
     transition: transform $duration-slow ease;
   }
@@ -60,25 +60,81 @@
   flex-shrink: 0;
 }
 
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-0-5;
+  min-width: 0;
+}
+
 .brandName {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
-  color: var(--color-sidebar-foreground);
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  color: $color-sidebar-primary-foreground;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: $letter-spacing-tight;
+  line-height: 1.2;
+}
+
+.brandSub {
+  font-size: $font-size-xs;
+  color: $color-dark-text-muted;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── CTA button (Add Product) ────────────────────────────────────────────
+.ctaWrapper {
+  padding: $spacing-3 $spacing-4;
+  flex-shrink: 0;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-md;
+  background-color: var(--color-sidebar-primary);
+  color: $color-sidebar-primary-foreground;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+    color: $color-sidebar-primary-foreground;
+  }
+}
+
+.ctaIcon {
+  width: $size-4;
+  height: $size-4;
+  flex-shrink: 0;
 }
 
 // ── Navigation ──────────────────────────────────────────────────────────
 .nav {
   flex: 1;
   overflow-y: auto;
-  padding: $spacing-4 $spacing-3;
+  padding: $spacing-4 0;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .footerNav {
-  padding: $spacing-2 $spacing-3;
+  padding: $spacing-2 0;
   border-top: $border-width-base solid var(--color-sidebar-border);
   flex-shrink: 0;
 }
@@ -92,71 +148,85 @@
   margin: 0;
 }
 
+// ── Nav group (section wrapper) ─────────────────────────────────────────
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+
+  & + & {
+    margin-top: $spacing-5;
+  }
+}
+
+// ── Section label ────────────────────────────────────────────────────────
+.navSectionLabel {
+  display: block;
+  padding: 0 $spacing-4;
+  margin-bottom: $spacing-2;
+  margin-top: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-dark-text-muted;
+  letter-spacing: $letter-spacing-wider;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
 .navItem {
   display: flex;
   align-items: center;
   gap: $spacing-3;
-  padding: $spacing-2 $spacing-3;
+  padding: $spacing-3 $spacing-4;
   border-radius: var(--radius-md);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: var(--color-sidebar-foreground);
+  color: var(--color-sidebar-nav-inactive);
   text-decoration: none;
-  transition: background-color $duration-fast ease, color $duration-fast ease;
+  position: relative;
+  transition:
+    background-color $duration-fast ease,
+    color $duration-fast ease;
 
   &:hover {
     background-color: var(--color-sidebar-accent);
-    color: var(--color-sidebar-accent-foreground);
+    color: $color-sidebar-accent-foreground;
+
+    .navIcon {
+      color: $color-sidebar-accent-foreground;
+    }
   }
 }
 
 .navItemActive {
-  background-color: $color-primary-light;
-  color: $color-primary-hover;
+  background-color: var(--color-sidebar-active-bg);
+  color: var(--color-sidebar-active-fg);
   font-weight: $font-weight-semibold;
 
+  .navIcon {
+    color: var(--color-sidebar-active-fg);
+  }
+
   &:hover {
-    background-color: $color-primary-light;
-    color: $color-primary-hover;
+    background-color: var(--color-sidebar-active-bg);
+    color: var(--color-sidebar-active-fg);
+
+    .navIcon {
+      color: var(--color-sidebar-active-fg);
+    }
   }
 }
 
 .navIcon {
-  width: $size-4;
-  height: $size-4;
+  width: $size-5;
+  height: $size-5;
   flex-shrink: 0;
-}
-
-// ── User footer ─────────────────────────────────────────────────────────
-.userFooter {
+  color: $color-dark-text-muted;
+  transition: color $duration-fast ease;
   display: flex;
   align-items: center;
-  gap: $spacing-3;
-  padding: $spacing-4;
-  border-top: $border-width-base solid var(--color-sidebar-border);
-  flex-shrink: 0;
-}
-
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-1;
-  min-width: 0;
-}
-
-.userName {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
-  color: var(--color-sidebar-foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.userEmail {
-  font-size: $font-size-xs;
-  color: var(--color-muted-foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  justify-content: center;
 }

@@ -1,0 +1,30 @@
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.cardTitleInner {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.identityMeta {
+  display: flex;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+  color: var(--color-text-secondary);
+  font-size: $font-size-sm;
+}
+
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}

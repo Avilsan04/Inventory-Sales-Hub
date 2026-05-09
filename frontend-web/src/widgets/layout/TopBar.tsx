@@ -1,77 +1,44 @@
 import * as React from 'react';
-import { BellIcon, LogOutIcon, SearchIcon } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useLogout } from '@features/auth';
-import { Input } from '@shared/ui/primitives';
-import { APP_ROUTES } from '@shared/config/routes';
+import { MoonIcon, SunIcon } from 'lucide-react';
+import { useTheme } from '@shared/hooks/useTheme';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
-
-interface PageMeta {
-  titleKey: string;
-  subtitleKey: string;
-}
-
-const PAGE_META: Record<string, PageMeta> = {
-  [APP_ROUTES.DASHBOARD]: { titleKey: 'nav.dashboard',  subtitleKey: 'topbar.subtitle.dashboard'  },
-  [APP_ROUTES.INVENTORY]: { titleKey: 'nav.inventory',  subtitleKey: 'topbar.subtitle.inventory'  },
-  [APP_ROUTES.SALES]:     { titleKey: 'nav.orders',     subtitleKey: 'topbar.subtitle.orders'     },
-  [APP_ROUTES.CUSTOMERS]: { titleKey: 'nav.customers',  subtitleKey: 'topbar.subtitle.customers'  },
-  [APP_ROUTES.SUPPLIERS]: { titleKey: 'nav.suppliers',  subtitleKey: 'topbar.subtitle.suppliers'  },
-  [APP_ROUTES.ANALYTICS]: { titleKey: 'nav.analytics',  subtitleKey: 'topbar.subtitle.analytics'  },
-  [APP_ROUTES.SETTINGS]:  { titleKey: 'nav.settings',   subtitleKey: 'topbar.subtitle.settings'   },
-};
+import { PageTitle } from './topbar/PageTitle';
+import { CommandPalette } from './topbar/CommandPalette';
+import { QuickActionBtn } from './topbar/QuickActionBtn';
+import { CartButton } from './topbar/CartButton';
+import { NotificationPanel } from './topbar/NotificationPanel';
+import { UserMenu } from './topbar/UserMenu';
 
 export function TopBar(): React.ReactElement {
-  const { translate: t } = useTranslationAdapter();
-  const logout = useLogout();
-  const { pathname } = useLocation();
-
-  const meta = PAGE_META[pathname] ?? { titleKey: 'common.appName', subtitleKey: '' };
+  const { resolvedTheme, toggleTheme } = useTheme();
 
   return (
     <header className={styles['topbar']}>
-      <div className={styles['topbarTitle']}>
-        <span className={styles['pageTitle']}>{t(meta.titleKey)}</span>
-        {meta.subtitleKey && (
-          <span className={styles['pageSubtitle']}>{t(meta.subtitleKey)}</span>
-        )}
+      <div className={styles['topbarLeft']}>
+        <PageTitle />
       </div>
 
-      <div className={styles['topbarSearch']}>
-        <div className={styles['searchWrapper']}>
-          <SearchIcon className={styles['searchIcon']} aria-hidden="true" />
-          <Input
-            type="search"
-            placeholder={t('common.search')}
-            className={styles['searchInput']}
-            aria-label={t('common.search')}
-          />
-        </div>
+      <div className={styles['topbarCenter']}>
+        <CommandPalette />
       </div>
 
-      <div className={styles['topbarActions']}>
-        <div className={styles['notifWrapper']}>
-          <button
-            type="button"
-            className={styles['iconBtn']}
-            aria-label={t('nav.notifications')}
-          >
-            <BellIcon aria-hidden="true" />
-          </button>
-          <span className={styles['notifDot']} aria-label="3 unread notifications" />
-        </div>
-
+      <div className={styles['topbarRight']}>
+        <QuickActionBtn />
+        <CartButton />
         <button
           type="button"
           className={styles['iconBtn']}
-          onClick={logout}
-          aria-label={t('auth.logout')}
-          title={t('auth.logout')}
+          onClick={toggleTheme}
+          aria-label={resolvedTheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
         >
-          <LogOutIcon aria-hidden="true" />
+          {resolvedTheme === 'dark' ? (
+            <SunIcon aria-hidden="true" />
+          ) : (
+            <MoonIcon aria-hidden="true" />
+          )}
         </button>
+        <NotificationPanel />
+        <UserMenu />
       </div>
     </header>
   );

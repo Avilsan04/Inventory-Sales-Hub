@@ -1,0 +1,14 @@
+// ── Pagination ─────────────────────────────────────────────────────
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.pageInfo {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  min-width: $size-16;
+  text-align: center;
+}

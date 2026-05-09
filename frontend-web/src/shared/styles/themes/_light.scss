@@ -47,6 +47,14 @@
   --color-muted: #{$color-muted-bg};
   --color-muted-foreground: #{$color-muted-foreground};
 
+  // ── Soft semantic surfaces (badges / pills) ───────────────────
+  --color-success-bg: #{$color-success-bg};
+  --color-success-fg: #{$color-success-fg};
+  --color-warning-bg: #{$color-warning-bg};
+  --color-warning-fg: #{$color-warning-fg};
+  --color-info-bg: #{$color-info-bg};
+  --color-info-fg: #{$color-info-fg};
+
   // ── Card & Popover surfaces ───────────────────────────────────
   --color-card: #{$color-card-bg};
   --color-card-foreground: #{$color-card-foreground};
@@ -55,13 +63,24 @@
 
   // ── Sidebar ───────────────────────────────────────────────────
   --color-sidebar: #{$color-sidebar-bg};
+  --color-sidebar-fg: #{$color-sidebar-foreground};
   --color-sidebar-foreground: #{$color-sidebar-foreground};
+  --color-sidebar-nav-inactive: #{$color-sidebar-nav-inactive};
   --color-sidebar-primary: #{$color-sidebar-primary};
   --color-sidebar-primary-foreground: #{$color-sidebar-primary-foreground};
   --color-sidebar-accent: #{$color-sidebar-accent};
   --color-sidebar-accent-foreground: #{$color-sidebar-accent-foreground};
   --color-sidebar-border: #{$color-sidebar-border};
   --color-sidebar-ring: #{$color-sidebar-ring};
+  --color-sidebar-active-bg: #{$color-sidebar-active-bg};
+  --color-sidebar-active-fg: #{$color-sidebar-active-fg};
+
+  // ── Surface levels ────────────────────────────────────────────
+  --color-surface-high: #{$color-surface-high};
+  --color-surface-highest: #{$color-surface-highest};
+  --color-error-container: #{$color-error-container};
+  --color-on-error-container: #{$color-on-error-container};
+  --color-primary-on-container: #{$color-primary-on-container};
 
   // ── Charts ────────────────────────────────────────────────────
   --color-chart-1: #{$color-chart-1};
@@ -73,14 +92,48 @@
   // ── Typography ────────────────────────────────────────────────
   --font-family-base: #{$font-family-base};
   --font-family-mono: #{$font-family-mono};
+  --font-size-2xs: #{$font-size-2xs};
+  --font-size-xs: #{$font-size-xs};
+  --font-size-sm: #{$font-size-sm};
   --font-size-base: #{$font-size-base};
+  --font-size-lg: #{$font-size-lg};
+  --font-size-xl: #{$font-size-xl};
+  --font-size-2xl: #{$font-size-2xl};
+  --font-size-3xl: #{$font-size-3xl};
+  --font-size-4xl: #{$font-size-4xl};
+  --font-weight-normal: #{$font-weight-normal};
+  --font-weight-medium: #{$font-weight-medium};
+  --font-weight-semibold: #{$font-weight-semibold};
+  --font-weight-bold: #{$font-weight-bold};
+  --line-height-none: #{$line-height-none};
+  --line-height-heading: #{$line-height-heading};
+  --line-height-tight: #{$line-height-tight};
+  --line-height-base: #{$line-height-base};
+  --line-height-relaxed: #{$line-height-relaxed};
+  --letter-spacing-tightest: #{$letter-spacing-tightest};
+  --letter-spacing-tighter: #{$letter-spacing-tighter};
+  --letter-spacing-tight: #{$letter-spacing-tight};
+  --letter-spacing-wider: #{$letter-spacing-wider};
 
-  // ── Spacing & radius ──────────────────────────────────────────
+  // ── Spacing CSS vars ──────────────────────────────────────────
+  --spacing-1: #{$spacing-1};
+  --spacing-2: #{$spacing-2};
+  --spacing-3: #{$spacing-3};
+  --spacing-4: #{$spacing-4};
+  --spacing-5: #{$spacing-5};
+  --spacing-6: #{$spacing-6};
+  --spacing-8: #{$spacing-8};
+  --spacing-10: #{$spacing-10};
+  --spacing-12: #{$spacing-12};
+  --spacing-16: #{$spacing-16};
+
+  // ── Radius & shadows ──────────────────────────────────────────
   --radius: #{$radius};
   --radius-sm: #{$radius-sm};
   --radius-md: #{$radius-md};
   --radius-lg: #{$radius-lg};
   --radius-xl: #{$radius-xl};
+  --radius-full: 9999px;
   --border-radius-base: #{$border-radius-base};
   --shadow-xs: #{$shadow-xs};
   --shadow-sm: #{$shadow-sm};
@@ -88,6 +141,21 @@
   --shadow-lg: #{$shadow-lg};
   --shadow-xl: #{$shadow-xl};
 
+  // ── Animation durations ───────────────────────────────────────
+  --duration-fast: #{$duration-fast};
+  --duration-base: #{$duration-base};
+  --duration-slow: #{$duration-slow};
+  --duration-slower: #{$duration-slower};
+
+  // ── Layout constants ──────────────────────────────────────────
+  --navbar-height: #{$navbar-height};
+  --sidebar-width: #{$sidebar-width};
+
   // ── Overlay ───────────────────────────────────────────────────
   --color-overlay: #{$color-overlay};
+
+  // ── Extended shadows ──────────────────────────────────────────
+  --shadow-soft-card: #{$shadow-soft-card};
+  --shadow-glow-purple: #{$shadow-glow-purple};
+  --shadow-glow-blue-sm: #{$shadow-glow-blue-sm};
 }

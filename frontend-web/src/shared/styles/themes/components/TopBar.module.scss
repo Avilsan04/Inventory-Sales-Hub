@@ -1,81 +1,221 @@
-// ── Top bar shell ───────────────────────────────────────────────────────
+// ── Top bar shell ─────────────────────────────────────────────────────────
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: $z-topbar;
   display: flex;
   align-items: center;
   gap: $spacing-4;
   height: $navbar-height;
   padding: 0 $spacing-6;
   border-bottom: $border-width-base solid var(--color-border);
+  box-shadow: $shadow-topbar;
   background-color: var(--color-background);
   backdrop-filter: blur($blur-sm);
   flex-shrink: 0;
 }
 
-// ── Left: page title + subtitle ─────────────────────────────────────────
-.topbarTitle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-shrink: 0;
-  min-width: 0;
-}
-
-.pageTitle {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-primary);
-  white-space: nowrap;
-}
-
-.pageSubtitle {
-  font-size: $font-size-xs;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-// ── Center: search ──────────────────────────────────────────────────────
-.topbarSearch {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  min-width: 0;
-}
-
-.searchWrapper {
-  position: relative;
+// ── Three-section layout ──────────────────────────────────────────────────
+.topbarLeft {
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: $container-2xs;
-}
-
-.searchIcon {
-  position: absolute;
-  left: $spacing-3;
-  width: $size-4;
-  height: $size-4;
-  color: var(--color-muted-foreground);
-  pointer-events: none;
   flex-shrink: 0;
+  min-width: $size-48;
 }
 
-.searchInput {
-  padding-left: $size-9 !important;
-  width: 100%;
+.topbarCenter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
 }
 
-// ── Right: actions ──────────────────────────────────────────────────────
-.topbarActions {
+.topbarRight {
   display: flex;
   align-items: center;
   gap: $spacing-2;
   flex-shrink: 0;
 }
 
-// ── Icon button base ────────────────────────────────────────────────────
+// ── Page title ────────────────────────────────────────────────────────────
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  min-width: 0;
+}
+
+.pageTitleIcon {
+  width: $size-5;
+  height: $size-5;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.pageTitleText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Search trigger ────────────────────────────────────────────────────────
+.searchTrigger {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  width: 100%;
+  max-width: $container-2xs;
+  height: $size-9;
+  padding: 0 $spacing-3;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background: var(--color-input);
+  cursor: pointer;
+  color: var(--color-muted-foreground);
+  font-size: $font-size-sm;
+  transition:
+    border-color $duration-fast ease,
+    box-shadow $duration-fast ease;
+
+  &:hover {
+    border-color: var(--color-border-focus);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+    border-color: var(--color-border-focus);
+  }
+}
+
+.searchTriggerIcon {
+  width: $size-4;
+  height: $size-4;
+  flex-shrink: 0;
+}
+
+.searchTriggerLabel {
+  flex: 1;
+  text-align: left;
+}
+
+.kbdHint {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-1;
+  height: $size-5;
+  border-radius: $border-radius-sm;
+  border: $border-width-base solid var(--color-border);
+  background: var(--color-background);
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+  pointer-events: none;
+  font-family: $font-family-mono;
+}
+
+// ── Command palette modal ─────────────────────────────────────────────────
+.cmdPaletteContent {
+  padding: 0 !important;
+  max-width: $container-sm;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cmdPaletteSearch {
+  display: flex;
+  align-items: center;
+  border-bottom: $border-width-base solid var(--color-border);
+  padding: 0 $spacing-4;
+}
+
+.cmdPaletteSearchIcon {
+  width: $size-4;
+  height: $size-4;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.cmdPaletteInput {
+  flex: 1;
+  height: $size-12;
+  padding: 0 $spacing-3;
+  border: none;
+  background: transparent;
+  font-size: $font-size-base;
+  color: var(--color-foreground);
+  outline: none;
+
+  &::placeholder {
+    color: var(--color-muted-foreground);
+  }
+}
+
+.cmdPaletteList {
+  display: flex;
+  flex-direction: column;
+  max-height: $size-80;
+  overflow-y: auto;
+  padding: $spacing-2;
+}
+
+.cmdPaletteItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  color: var(--color-foreground);
+  text-align: left;
+  transition: background-color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+}
+
+.cmdPaletteItemActive {
+  background-color: var(--color-muted);
+}
+
+.cmdPaletteItemIcon {
+  width: $size-4;
+  height: $size-4;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.cmdPaletteEmpty {
+  padding: $spacing-8 $spacing-4;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: var(--color-muted-foreground);
+}
+
+// ── Quick action CTA ──────────────────────────────────────────────────────
+.quickActionBtn {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  white-space: nowrap;
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
+// ── Icon button base ──────────────────────────────────────────────────────
 .iconBtn {
   display: inline-flex;
   align-items: center;
@@ -100,19 +240,378 @@
   }
 }
 
-// ── Notification dot ────────────────────────────────────────────────────
+// ── Notification panel ────────────────────────────────────────────────────
 .notifWrapper {
   position: relative;
 }
 
 .notifDot {
   position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
+  top: $spacing-1;
+  right: $spacing-1;
+  min-width: $size-4;
+  height: $size-4;
+  padding: 0 $spacing-1;
   border-radius: var(--radius-full);
   background-color: $color-error;
-  border: 2px solid var(--color-background);
+  border: $border-width-focus solid var(--color-background);
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-bold;
+  color: $color-destructive-foreground;
+  line-height: 1;
+}
+
+.notifPanel {
+  width: $panel-notifications-width;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: $container-dialog;
+}
+
+.notifPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 $spacing-4;
+  border-bottom: $border-width-base solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.notifPanelTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+}
+
+.markAllBtn {
+  font-size: $font-size-xs;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.notifList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.notifEmpty {
+  padding: $spacing-8 $spacing-4;
+  text-align: center;
+  font-size: $font-size-sm;
+  color: var(--color-muted-foreground);
+}
+
+.notifItem {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  padding: $spacing-3 $spacing-4;
+  border-bottom: $border-width-base solid var(--color-border);
+  transition: background-color $duration-fast ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+}
+
+.notifUnread {
+  background-color: var(--color-bg-secondary);
+}
+
+.notifTypeIcon {
+  width: $size-4;
+  height: $size-4;
+  margin-top: $spacing-0-5;
+  flex-shrink: 0;
+}
+
+.notifTypeInfo {
+  color: var(--color-primary);
+}
+
+.notifTypeSuccess {
+  color: var(--color-success);
+}
+
+.notifTypeWarning {
+  color: var(--color-warning);
+}
+
+.notifTypeError {
+  color: var(--color-error);
+}
+
+.notifContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-0-5;
+  min-width: 0;
+}
+
+.notifTitle {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+  line-height: $line-height-tight;
+}
+
+.notifMessage {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  line-height: $line-height-base;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.notifTime {
+  font-size: $font-size-2xs;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.notifPanelFooter {
+  padding: $spacing-2 $spacing-4;
+  border-top: $border-width-base solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.viewAllBtn {
+  display: block;
+  width: 100%;
+  padding: $spacing-2;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-primary);
+  text-align: center;
+  transition: background-color $duration-fast ease;
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+}
+
+// ── User menu ─────────────────────────────────────────────────────────────
+.userMenuTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: $border-radius-full;
+  padding: $spacing-0-5;
+  transition:
+    opacity $duration-fast ease,
+    box-shadow $duration-fast ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+  }
+}
+
+.avatar {
+  width: $size-8;
+  height: $size-8;
+}
+
+.avatarFallback {
+  background-color: $color-primary;
+  color: $color-primary-foreground;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.userMenuContent {
+  width: $panel-user-width;
+  padding: 0;
+  overflow: hidden;
+}
+
+.userMenuHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background-color: var(--color-bg-secondary);
+}
+
+.avatarLg {
+  width: $size-10;
+  height: $size-10;
+  flex-shrink: 0;
+}
+
+.avatarFallbackLg {
+  background-color: $color-primary;
+  color: $color-primary-foreground;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-0-5;
+  min-width: 0;
+}
+
+.userName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userEmail {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.roleChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: $size-5;
+  border-radius: $border-radius-full;
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-semibold;
+  width: fit-content;
+  margin-top: $spacing-0-5;
+}
+
+// Role chip color variants — static values (not theme-aware by design)
+.roleChipAdmin {
+  background-color: $color-error-container;
+  color: $color-on-error-container;
+}
+
+.roleChipManager {
+  background-color: $color-warning-bg;
+  color: $color-warning-fg;
+}
+
+.roleChipStaff {
+  background-color: $color-info-bg;
+  color: $color-primary-on-container;
+}
+
+.roleChipCompany {
+  background-color: $color-role-company-bg;
+  color: $color-role-company-fg;
+}
+
+.roleChipCustomer {
+  background-color: $color-success-bg;
+  color: $color-success-fg;
+}
+
+.roleChipTest {
+  background-color: $color-test-bg;
+  color: $color-test-fg;
+}
+
+.devSwitcher {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-4;
+}
+
+.devLabel {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+}
+
+// ── Test mode banner pill (kept for TestModeBanner) ───────────────────────
+.testBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $border-radius-full;
+  background-color: $color-test-bg;
+  border: $border-width-base solid $color-test-border;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-test-fg;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Role pills (kept for backward compat) ─────────────────────────────────
+.rolePills {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+}
+
+.rolePill {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-0-5 $spacing-2;
+  border-radius: $border-radius-full;
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-muted);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color $duration-fast ease,
+    border-color $duration-fast ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-bg-tertiary);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.rolePillActive {
+  background-color: $color-primary-light;
+  border-color: $color-primary;
+  color: $color-primary-hover;
+  font-weight: $font-weight-semibold;
 }

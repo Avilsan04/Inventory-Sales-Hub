@@ -22,18 +22,22 @@ function typeBadgeVariant(type: NotifType): BadgeVariant {
 function renderTypeIcon(type: NotifType, iconClass: string): React.ReactElement {
   const props = { 'aria-hidden': true as const, className: iconClass };
   switch (type) {
-    case 'info':    return <InfoIcon {...props} />;
-    case 'warning': return <AlertTriangleIcon {...props} />;
-    case 'error':   return <XCircleIcon {...props} />;
-    case 'success': return <CheckCircle2Icon {...props} />;
+    case 'info':
+      return <InfoIcon {...props} />;
+    case 'warning':
+      return <AlertTriangleIcon {...props} />;
+    case 'error':
+      return <XCircleIcon {...props} />;
+    case 'success':
+      return <CheckCircle2Icon {...props} />;
   }
 }
 
 function typeIconClass(type: NotifType, s: typeof styles): string {
   const map: Record<NotifType, string> = {
-    info:    s['notifInfo'] ?? '',
+    info: s['notifInfo'] ?? '',
     warning: s['notifWarning'] ?? '',
-    error:   s['notifError'] ?? '',
+    error: s['notifError'] ?? '',
     success: s['notifSuccess'] ?? '',
   };
   return cn(s['notifIcon'], map[type]);
@@ -75,7 +79,9 @@ export function NotificationsPage(): React.ReactElement {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { markAllRead.mutate(); }}
+            onClick={() => {
+              markAllRead.mutate();
+            }}
             disabled={markAllRead.isPending}
           >
             {t('notifications.markAllRead')}
@@ -94,12 +100,12 @@ export function NotificationsPage(): React.ReactElement {
               key={n.id}
               className={cn(styles['notifItem'], !n.isRead && styles['notifItemUnread'])}
             >
-              {renderTypeIcon(n.type as NotifType, typeIconClass(n.type as NotifType, styles))}
+              {renderTypeIcon(n.type, typeIconClass(n.type, styles))}
               <div className={styles['notifBody']}>
                 <p className={styles['notifTitle']}>{n.title}</p>
                 <p className={styles['notifMessage']}>{n.message}</p>
                 <div className={styles['notifMeta']}>
-                  <Badge variant={typeBadgeVariant(n.type as NotifType)}>
+                  <Badge variant={typeBadgeVariant(n.type)}>
                     {t(`notifications.types.${n.type}`)}
                   </Badge>
                 </div>

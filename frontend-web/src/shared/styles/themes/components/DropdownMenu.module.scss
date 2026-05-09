@@ -1,5 +1,5 @@
 .dropdownContent {
-  z-index: 50;
+  z-index: $z-overlay;
   min-width: $dropdown-min-width;
   overflow: hidden;
   border-radius: var(--radius-md);
@@ -159,7 +159,7 @@
 }
 
 .dropdownSubContent {
-  z-index: 50;
+  z-index: $z-overlay;
   min-width: $dropdown-min-width;
   overflow: hidden;
   border-radius: var(--radius-md);
