@@ -212,8 +212,8 @@ export function SalesPage(): React.ReactElement {
                       </TableCell>
                       <TableCell className={styles['mono']}>{formatDate(s.createdAt)}</TableCell>
                       <TableCell>
-                        <Badge variant={statusVariant(s.status as SaleStatus)} showDot>
-                          {statusLabel(s.status as SaleStatus, t)}
+                        <Badge variant={statusVariant(s.status)} showDot>
+                          {statusLabel(s.status, t)}
                         </Badge>
                       </TableCell>
                       <TableCell>{s.items.length}</TableCell>

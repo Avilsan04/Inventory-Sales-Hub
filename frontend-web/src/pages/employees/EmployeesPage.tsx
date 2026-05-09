@@ -177,7 +177,7 @@ export function EmployeesPage(): React.ReactElement {
                         <TableCell>{e.name}</TableCell>
                         <TableCell>{e.email}</TableCell>
                         <TableCell>
-                          <Badge variant={roleVariant(e.role as EmployeeRole)}>
+                          <Badge variant={roleVariant(e.role)}>
                             {t(`employees.roles.${e.role}`)}
                           </Badge>
                         </TableCell>

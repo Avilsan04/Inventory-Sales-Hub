@@ -71,7 +71,7 @@ export function AnalyticsPage(): React.ReactElement {
 
   const salesParams = React.useMemo((): SalesAnalyticsParams => {
     if (dateRange === 'custom') return { from: customRange.from, to: customRange.to };
-    return { period: dateRange as SalesAnalyticsParams['period'] };
+    return { period: dateRange };
   }, [dateRange, customRange]);
 
   const { data: kpi, isLoading: kpiLoading, isError: kpiError } = useDashboardKpi();

@@ -143,7 +143,7 @@ export function MyOrdersPage(): React.ReactElement {
                       {formatCurrency(s.total, s.currency)}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusVariant(s.status as SaleStatus)} showDot>
+                      <Badge variant={statusVariant(s.status)} showDot>
                         {t(`sales.status.${s.status}`)}
                       </Badge>
                     </TableCell>

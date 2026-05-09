@@ -91,7 +91,7 @@ export function SaleDetailDrawer({
             <SheetHeader>
               <SheetTitle style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 {orderId(sale.id)}
-                <Badge variant={statusVariant(sale.status as SaleStatus)} showDot>
+                <Badge variant={statusVariant(sale.status)} showDot>
                   {sale.status}
                 </Badge>
               </SheetTitle>

@@ -47,7 +47,7 @@ export const authApi = {
 
   getMe: async (): Promise<UserProfile> => {
     const data = await httpClient.get<unknown>('/auth/me');
-    return userProfileSchema.parse(data) as UserProfile;
+    return userProfileSchema.parse(data);
   },
 
   refresh: async (): Promise<RefreshTokenResponse> => {
@@ -65,7 +65,7 @@ export const authApi = {
 
   updateProfile: async (payload: UpdateProfileRequest): Promise<UserProfile> => {
     const data = await httpClient.patch<unknown>('/auth/me', payload);
-    return userProfileSchema.parse(data) as UserProfile;
+    return userProfileSchema.parse(data);
   },
 
   changePassword: async (payload: ChangePasswordRequest): Promise<void> => {

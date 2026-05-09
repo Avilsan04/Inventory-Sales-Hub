@@ -40,9 +40,9 @@ export async function seed(database: AppDatabase): Promise<void> {
   // Combine existing mock sales + 6-month generated history
   const generatedSales = generateSixMonthsSales(sales.length + 1);
   await database.sales.bulkAdd([...sales, ...generatedSales]);
-  await database.customers.bulkAdd(mockData.customers as unknown as Customer[]);
+  await database.customers.bulkAdd(mockData.customers as Customer[]);
   await database.employees.bulkAdd(mockData.employees as unknown as Employee[]);
-  await database.suppliers.bulkAdd(mockData.suppliers as unknown as Supplier[]);
+  await database.suppliers.bulkAdd(mockData.suppliers as Supplier[]);
 
   await database.notifications.bulkAdd(mockData.notifications as unknown as Notification[]);
 

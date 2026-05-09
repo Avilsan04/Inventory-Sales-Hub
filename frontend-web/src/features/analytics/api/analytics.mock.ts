@@ -30,7 +30,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<DashboardKpi>(analytics.dashboard as DashboardKpi);
+    return HttpResponse.json<DashboardKpi>(analytics.dashboard);
   }),
 
   http.get(`${API_BASE_URL}/analytics/sales`, async ({ request }) => {
@@ -63,7 +63,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<TopProduct[]>(analytics.topProducts as TopProduct[]);
+    return HttpResponse.json<TopProduct[]>(analytics.topProducts);
   }),
 
   http.get(`${API_BASE_URL}/analytics/top-customers`, async ({ request }) => {
@@ -71,7 +71,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers as TopCustomer[]);
+    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers);
   }),
 
   http.get(`${API_BASE_URL}/analytics/inventory-value`, async ({ request }) => {
@@ -79,7 +79,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<InventoryValue>(analytics.inventoryValue as InventoryValue);
+    return HttpResponse.json<InventoryValue>(analytics.inventoryValue);
   }),
 
   http.get(`${API_BASE_URL}/analytics/low-stock-alerts`, async ({ request }) => {
@@ -87,7 +87,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<LowStockAlert[]>(analytics.lowStockAlerts as LowStockAlert[]);
+    return HttpResponse.json<LowStockAlert[]>(analytics.lowStockAlerts);
   }),
 
   http.get(`${API_BASE_URL}/analytics/cash-flow`, async ({ request }) => {

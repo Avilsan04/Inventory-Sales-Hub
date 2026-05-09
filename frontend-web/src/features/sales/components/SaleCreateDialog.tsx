@@ -79,7 +79,7 @@ export function SaleCreateDialog({
 
   const handleNext = async (): Promise<void> => {
     const stepFields = STEP_FIELDS[step] ?? [];
-    const ok = await trigger(stepFields as Parameters<typeof trigger>[0]);
+    const ok = await trigger(stepFields);
     if (ok) setStep((s) => s + 1);
   };
 

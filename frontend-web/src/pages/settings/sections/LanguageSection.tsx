@@ -24,11 +24,7 @@ export function LanguageSection(): React.ReactElement {
           <span className={styles.fieldTitle}>{t('settings.languageSectionTitle')}</span>
           <span className={styles.fieldDesc}>{t('settings.languageSectionDesc')}</span>
         </div>
-        <SegmentedControl
-          options={langOptions}
-          value={language as 'en' | 'es'}
-          onChange={handleLangChange}
-        />
+        <SegmentedControl options={langOptions} value={language} onChange={handleLangChange} />
       </div>
     </div>
   );

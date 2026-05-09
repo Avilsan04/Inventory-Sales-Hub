@@ -31,7 +31,7 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       items: [],
       customerId: null,
-      paymentMethod: 'cash_on_delivery' as PaymentMethod,
+      paymentMethod: 'cash_on_delivery',
 
       addItem: (item) =>
         set((state) => {

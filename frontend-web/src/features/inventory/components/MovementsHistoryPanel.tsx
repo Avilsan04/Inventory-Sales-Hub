@@ -101,7 +101,7 @@ export function MovementsHistoryPanel({
                 {movements.map((m) => (
                   <TableRow key={m.id}>
                     <TableCell>
-                      <Badge variant={typeBadgeVariant(m.type as MovementType)}>{m.type}</Badge>
+                      <Badge variant={typeBadgeVariant(m.type)}>{m.type}</Badge>
                     </TableCell>
                     <TableCell style={{ textAlign: 'right', fontFamily: 'monospace' }}>
                       {m.quantity > 0 ? `+${m.quantity}` : m.quantity}
