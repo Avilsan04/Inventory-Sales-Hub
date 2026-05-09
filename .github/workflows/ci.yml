@@ -38,6 +38,9 @@ jobs:
         run: npm ci --ignore-scripts
         working-directory: ${{ github.workspace }}
 
+      - name: Install rollup Linux binary
+        run: npm install --ignore-scripts --no-save --no-package-lock @rollup/rollup-linux-x64-gnu
+
       - name: Type check
         run: npm run type-check
 
