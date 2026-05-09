@@ -48,16 +48,6 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     }
   },
-  // Environment override for MOBILE
-  {
-    files: ['frontend-mobile/**/*.{ts,tsx}'],
-    languageOptions: {
-      globals: globals.reactNative,
-    },
-    rules: {
-      'react-refresh/only-export-components': 'off',
-    }
-  },
   // FSD layer boundary enforcement
   {
     files: ['src/**/*.{ts,tsx}'],
