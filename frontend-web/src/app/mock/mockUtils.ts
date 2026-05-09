@@ -60,7 +60,7 @@ const MOCK_ROLE_PERMISSIONS: Record<MockRole, ReadonlyArray<MockPermission>> = {
     'transfer:stock',
   ],
   company: ['view:analytics', 'view:employees', 'view:audit', 'manage:suppliers', 'export:csv'],
-  customer: [],
+  customer: ['create:sale'],
 };
 
 /**
