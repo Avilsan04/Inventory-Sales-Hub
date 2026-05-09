@@ -1,7 +1,13 @@
 import * as React from 'react';
-import { MoonIcon, SunIcon, GlobeIcon } from 'lucide-react';
+import { MoonIcon, SunIcon, ChevronDownIcon } from 'lucide-react';
 import { useTheme } from '@shared/hooks/useTheme';
-import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
+import { useLanguageAdapter, type Language } from '@shared/adapters/useLanguageAdapter';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@shared/ui/composed';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 import { PageTitle } from './topbar/PageTitle';
 import { CommandPalette } from './topbar/CommandPalette';
@@ -10,9 +16,21 @@ import { CartButton } from './topbar/CartButton';
 import { NotificationPanel } from './topbar/NotificationPanel';
 import { UserMenu } from './topbar/UserMenu';
 
+const LANGUAGE_OPTIONS: { value: Language; label: string; flag: string }[] = [
+  { value: 'en', label: 'English', flag: '/flags/en.svg' },
+  { value: 'es', label: 'Español', flag: '/flags/es.svg' },
+];
+
+const LANGUAGE_MAP: Record<Language, { label: string; flag: string }> = {
+  en: { label: 'English', flag: '/flags/en.svg' },
+  es: { label: 'Español', flag: '/flags/es.svg' },
+};
+
 export function TopBar(): React.ReactElement {
   const { resolvedTheme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
+
+  const current = LANGUAGE_MAP[language];
 
   return (
     <header className={styles['topbar']}>
@@ -27,15 +45,31 @@ export function TopBar(): React.ReactElement {
       <div className={styles['topbarRight']}>
         <QuickActionBtn />
         <CartButton />
-        <button
-          type="button"
-          className={styles['langBtn']}
-          onClick={toggleLanguage}
-          aria-label={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}
-        >
-          <GlobeIcon aria-hidden="true" />
-          <span>{language.toUpperCase()}</span>
-        </button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button type="button" className={styles['langBtn']} aria-label="Select language">
+              <img src={current.flag} alt={current.label} className={styles['langFlag']} />
+              <span>{language.toUpperCase()}</span>
+              <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" style={{ minWidth: '130px' }}>
+            {LANGUAGE_OPTIONS.map((lang) => (
+              <DropdownMenuItem
+                key={lang.value}
+                onClick={() => {
+                  if (lang.value !== language) toggleLanguage();
+                }}
+                className={lang.value === language ? styles['langItemActive'] : undefined}
+              >
+                <img src={lang.flag} alt={lang.label} className={styles['langFlag']} />
+                <span>{lang.label}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <button
           type="button"
           className={styles['iconBtn']}
