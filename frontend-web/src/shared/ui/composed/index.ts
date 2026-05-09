@@ -43,7 +43,7 @@ export {
   DropdownMenuRadioGroup,
 } from './DropdownMenu';
 
-export { Popover, PopoverTrigger, PopoverContent } from './Popover';
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './Popover';
 
 export { ScrollArea, ScrollBar } from './ScrollArea';
 

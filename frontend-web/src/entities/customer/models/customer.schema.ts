@@ -7,7 +7,7 @@ export const customerSchema = z.object({
   phone: z.string().optional(),
   address: z.string().optional(),
   createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime().optional(),
 });
 
 export const customerListSchema = z.array(customerSchema);
