@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { MoonIcon, SunIcon } from 'lucide-react';
+import { MoonIcon, SunIcon, GlobeIcon } from 'lucide-react';
 import { useTheme } from '@shared/hooks/useTheme';
+import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 import { PageTitle } from './topbar/PageTitle';
 import { CommandPalette } from './topbar/CommandPalette';
@@ -11,6 +12,7 @@ import { UserMenu } from './topbar/UserMenu';
 
 export function TopBar(): React.ReactElement {
   const { resolvedTheme, toggleTheme } = useTheme();
+  const { language, toggleLanguage } = useLanguageAdapter();
 
   return (
     <header className={styles['topbar']}>
@@ -25,6 +27,15 @@ export function TopBar(): React.ReactElement {
       <div className={styles['topbarRight']}>
         <QuickActionBtn />
         <CartButton />
+        <button
+          type="button"
+          className={styles['langBtn']}
+          onClick={toggleLanguage}
+          aria-label={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}
+        >
+          <GlobeIcon aria-hidden="true" />
+          <span>{language.toUpperCase()}</span>
+        </button>
         <button
           type="button"
           className={styles['iconBtn']}

@@ -215,6 +215,34 @@
   }
 }
 
+// ── Language toggle button ────────────────────────────────────────────────
+.langBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-1;
+  height: $size-9;
+  padding: 0 $spacing-2;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-foreground);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  transition: background-color $duration-fast ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
 // ── Icon button base ──────────────────────────────────────────────────────
 .iconBtn {
   display: inline-flex;

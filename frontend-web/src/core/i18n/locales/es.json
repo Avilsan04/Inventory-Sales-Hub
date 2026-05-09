@@ -316,6 +316,8 @@
     "noVariants": "Sin variantes",
     "importFromCsv": "Importar productos desde CSV",
     "csvColumnsHint": "Columnas CSV: name, sku, price, currency, description, categoryId, uom",
+    "dropCsvHere": "Arrastra tu archivo CSV aquí",
+    "orClickToSelect": "o haz clic para seleccionar",
     "csvPreviewSummary": "{{valid}} válidos · {{invalid}} con errores",
     "importComplete": "Importación completada",
     "importResultSummary": "{{success}} importados · {{failed}} fallidos",
