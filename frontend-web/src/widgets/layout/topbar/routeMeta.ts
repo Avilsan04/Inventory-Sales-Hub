@@ -20,73 +20,73 @@ import type { UserRole } from '@features/auth/models/auth.types';
 import { APP_ROUTES } from '@shared/config/routes';
 
 export interface RouteMeta {
-  title: string;
+  labelKey: string;
   Icon: LucideIcon;
   roles?: ReadonlyArray<UserRole>;
 }
 
 export const ROUTE_META: Readonly<Record<string, RouteMeta>> = {
-  [APP_ROUTES.DASHBOARD]: { title: 'Dashboard', Icon: LayoutDashboardIcon },
+  [APP_ROUTES.DASHBOARD]: { labelKey: 'nav.dashboard', Icon: LayoutDashboardIcon },
   [APP_ROUTES.INVENTORY]: {
-    title: 'Inventario',
+    labelKey: 'nav.inventory',
     Icon: PackageIcon,
     roles: ['admin', 'manager', 'staff', 'test'],
   },
   [APP_ROUTES.PRODUCTS]: {
-    title: 'Productos',
+    labelKey: 'nav.products',
     Icon: PackageIcon,
     roles: ['admin', 'manager', 'staff', 'test'],
   },
   [APP_ROUTES.SALES]: {
-    title: 'Ventas',
+    labelKey: 'nav.sales',
     Icon: ShoppingCartIcon,
     roles: ['admin', 'manager', 'staff', 'test'],
   },
   [APP_ROUTES.CUSTOMERS]: {
-    title: 'Clientes',
+    labelKey: 'nav.customers',
     Icon: UsersIcon,
     roles: ['admin', 'manager', 'staff', 'test'],
   },
   [APP_ROUTES.EMPLOYEES]: {
-    title: 'Empleados',
+    labelKey: 'nav.employees',
     Icon: UserCogIcon,
     roles: ['admin', 'manager', 'company', 'test'],
   },
   [APP_ROUTES.SUPPLIERS]: {
-    title: 'Proveedores',
+    labelKey: 'nav.suppliers',
     Icon: TruckIcon,
     roles: ['admin', 'manager', 'test'],
   },
   [APP_ROUTES.ANALYTICS]: {
-    title: 'Analytics',
+    labelKey: 'nav.analytics',
     Icon: BarChart2Icon,
     roles: ['admin', 'manager', 'company', 'test'],
   },
-  [APP_ROUTES.NOTIFICATIONS]: { title: 'Notificaciones', Icon: BellIcon },
-  [APP_ROUTES.PROFILE]: { title: 'Perfil', Icon: UserIcon },
-  [APP_ROUTES.SETTINGS]: { title: 'Ajustes', Icon: SettingsIcon },
+  [APP_ROUTES.NOTIFICATIONS]: { labelKey: 'nav.notifications', Icon: BellIcon },
+  [APP_ROUTES.PROFILE]: { labelKey: 'nav.profile', Icon: UserIcon },
+  [APP_ROUTES.SETTINGS]: { labelKey: 'nav.settings', Icon: SettingsIcon },
   [APP_ROUTES.ADMIN_TENANTS]: {
-    title: 'Tenants',
+    labelKey: 'nav.tenants',
     Icon: BuildingIcon,
     roles: ['admin', 'company', 'test'],
   },
   [APP_ROUTES.CATALOG]: {
-    title: 'Catálogo',
+    labelKey: 'nav.catalog',
     Icon: ShoppingBagIcon,
     roles: ['customer', 'test'],
   },
   [APP_ROUTES.MY_ORDERS]: {
-    title: 'Mis Pedidos',
+    labelKey: 'nav.myOrders',
     Icon: ClipboardListIcon,
     roles: ['customer', 'test'],
   },
   [APP_ROUTES.POS]: {
-    title: 'Punto de Venta',
+    labelKey: 'nav.pos',
     Icon: ScanBarcodeIcon,
     roles: ['admin', 'manager', 'staff', 'customer', 'test'],
   },
   [APP_ROUTES.AUDIT]: {
-    title: 'Auditoría',
+    labelKey: 'nav.audit',
     Icon: ScrollTextIcon,
     roles: ['admin', 'company', 'test'],
   },

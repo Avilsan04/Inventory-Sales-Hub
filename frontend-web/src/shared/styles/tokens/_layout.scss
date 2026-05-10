@@ -49,6 +49,7 @@ $textarea-min-height: 3.75rem;
 // Borders
 $border-width-base: 1px;
 $border-width-focus: 2px;
+$border-width-accent: 3px; // left-border accent indicator (active pay card, active tabs)
 
 // Focus ring
 $focus-ring-spread: 3px;
@@ -81,8 +82,13 @@ $size-80: 20rem; // 320px — cmd palette height, filter max-width
 $size-blob-md: 24rem; // decorative blob (Login)
 $size-blob-lg: 31.25rem; // decorative blob (Login)
 $size-14: 3.5rem; // 56px — percent/narrow input width
-$size-pos-cart: 23.75rem; // 380px — POS cart panel width
+$size-pos-cart: 23.75rem; // 380px — POS cart panel width (desktop only)
+$size-pos-checkout-cart: 35rem; // 560px — POS checkout-only cart max-width
+$size-pos-product-card-min: 10.625rem; // 170px — POS product grid card min-width
 $size-grid-card-min: 16.25rem; // 260px — product grid card min-width
+$size-date-input: 9rem; // 144px — date range picker input width
+$height-chart-area: 15rem; // 240px — area/bar chart container height
+$height-chart-donut: 13.75rem; // 220px — donut chart container height
 $container-login-form: 25rem; // 400px — login form wrapper max-width
 $container-form: 30rem; // 480px — register form card max-width
 $container-mockup: 28rem; // landing page mockup window

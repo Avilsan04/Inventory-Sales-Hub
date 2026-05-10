@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Input } from '@shared/ui/primitives';
+import styles from '@shared/styles/themes/components/DateRangePicker.module.scss';
 
 export interface DateRange {
   from: string; // YYYY-MM-DD
@@ -13,7 +14,7 @@ interface DateRangePickerProps {
 
 export function DateRangePicker({ value, onChange }: DateRangePickerProps): React.ReactElement {
   return (
-    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+    <div className={styles.container}>
       <Input
         type="date"
         value={value.from}
@@ -21,10 +22,10 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps): Reac
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           onChange({ ...value, from: e.target.value });
         }}
-        style={{ width: '9rem' }}
+        className={styles.dateInput}
         aria-label="From date"
       />
-      <span style={{ color: 'var(--color-muted-foreground)', fontSize: '0.875rem' }}>–</span>
+      <span className={styles.separator}>–</span>
       <Input
         type="date"
         value={value.to}
@@ -32,7 +33,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps): Reac
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           onChange({ ...value, to: e.target.value });
         }}
-        style={{ width: '9rem' }}
+        className={styles.dateInput}
         aria-label="To date"
       />
     </div>

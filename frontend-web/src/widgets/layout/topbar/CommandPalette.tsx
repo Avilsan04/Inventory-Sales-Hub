@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent } from '@shared/ui/composed';
 import { cn } from '@shared/lib/cn';
 import { useEffectiveRole } from '@features/auth';
+import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 
 import { ROUTE_META } from './routeMeta';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
@@ -16,6 +17,7 @@ export function CommandPalette(): React.ReactElement {
   const [activeIdx, setActiveIdx] = React.useState(0);
   const navigate = useNavigate();
   const role = useEffectiveRole();
+  const { translate: t } = useTranslationAdapter();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const items = React.useMemo(
@@ -29,8 +31,8 @@ export function CommandPalette(): React.ReactElement {
   const filtered = React.useMemo(() => {
     if (!query.trim()) return items;
     const q = query.toLowerCase();
-    return items.filter((i) => i.title.toLowerCase().includes(q));
-  }, [items, query]);
+    return items.filter((i) => t(i.labelKey).toLowerCase().includes(q));
+  }, [items, query, t]);
 
   React.useEffect((): void => {
     setActiveIdx(0);
@@ -51,11 +53,11 @@ export function CommandPalette(): React.ReactElement {
 
   React.useEffect((): (() => void) | undefined => {
     if (open) {
-      const t = setTimeout((): void => {
+      const timer = setTimeout((): void => {
         inputRef.current?.focus();
       }, 10);
       return (): void => {
-        clearTimeout(t);
+        clearTimeout(timer);
       };
     }
     return undefined;
@@ -93,10 +95,10 @@ export function CommandPalette(): React.ReactElement {
         onClick={() => {
           setOpen(true);
         }}
-        aria-label="Abrir buscador (Ctrl K)"
+        aria-label={`${t('common.search')} (Ctrl K)`}
       >
         <SearchIcon className={styles['searchTriggerIcon']} aria-hidden="true" />
-        <span className={styles['searchTriggerLabel']}>Buscar...</span>
+        <span className={styles['searchTriggerLabel']}>{t('common.search')}</span>
         <kbd className={styles['kbdHint']}>{isMac ? '⌘K' : 'Ctrl K'}</kbd>
       </button>
 
@@ -108,18 +110,18 @@ export function CommandPalette(): React.ReactElement {
               ref={inputRef}
               type="text"
               className={styles['cmdPaletteInput']}
-              placeholder="Buscar páginas..."
+              placeholder={t('common.search')}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
               }}
               onKeyDown={onKeyDown}
-              aria-label="Buscar páginas"
+              aria-label={t('common.search')}
             />
           </div>
           <div className={styles['cmdPaletteList']} role="listbox">
             {filtered.length === 0 ? (
-              <div className={styles['cmdPaletteEmpty']}>Sin resultados</div>
+              <div className={styles['cmdPaletteEmpty']}>{t('common.noData')}</div>
             ) : (
               filtered.map((item, idx) => {
                 const { Icon } = item;
@@ -141,7 +143,7 @@ export function CommandPalette(): React.ReactElement {
                     }}
                   >
                     <Icon className={styles['cmdPaletteItemIcon']} aria-hidden="true" />
-                    <span>{item.title}</span>
+                    <span>{t(item.labelKey)}</span>
                   </button>
                 );
               })

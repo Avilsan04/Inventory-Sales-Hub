@@ -3,6 +3,8 @@ import * as React from 'react';
 import type { ToastActionElement, ToastProps } from '@shared/ui/composed/Toast';
 import { TIMING } from '@core/config/timing';
 
+// Single-toast design: each new notification replaces the previous one.
+// Prevents cognitive overload in POS/operational contexts where rapid actions are common.
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = TIMING.TOAST_DISPLAY_MS;
 

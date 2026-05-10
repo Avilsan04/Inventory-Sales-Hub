@@ -22,7 +22,11 @@ export function BaseLayout({ header }: BaseLayoutProps): React.ReactElement {
 
       <div className={styles['mainArea']}>
         {header}
-        <TopBar />
+        <TopBar
+          onToggleSidebar={() => {
+            setIsSidebarOpen((prev) => !prev);
+          }}
+        />
 
         <main className={styles['main']}>
           <Outlet />

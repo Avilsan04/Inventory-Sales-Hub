@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MoonIcon, SunIcon, ChevronDownIcon } from 'lucide-react';
+import { MoonIcon, SunIcon, ChevronDownIcon, MenuIcon } from 'lucide-react';
 import { useTheme } from '@shared/hooks/useTheme';
 import { useLanguageAdapter, type Language } from '@shared/adapters/useLanguageAdapter';
 import {
@@ -26,7 +26,11 @@ const LANGUAGE_MAP: Record<Language, { label: string; flag: string }> = {
   es: { label: 'Español', flag: '/flags/es.svg' },
 };
 
-export function TopBar(): React.ReactElement {
+interface TopBarProps {
+  onToggleSidebar?: () => void;
+}
+
+export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
   const { resolvedTheme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
 
@@ -35,6 +39,16 @@ export function TopBar(): React.ReactElement {
   return (
     <header className={styles['topbar']}>
       <div className={styles['topbarLeft']}>
+        {onToggleSidebar !== undefined && (
+          <button
+            type="button"
+            className={styles['menuBtn']}
+            onClick={onToggleSidebar}
+            aria-label="Open menu"
+          >
+            <MenuIcon aria-hidden="true" />
+          </button>
+        )}
         <PageTitle />
       </div>
 

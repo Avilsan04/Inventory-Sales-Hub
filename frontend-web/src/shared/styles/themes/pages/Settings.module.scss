@@ -86,7 +86,7 @@
   font-size: $font-size-2xl;
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
   line-height: 1.2;
 }
 

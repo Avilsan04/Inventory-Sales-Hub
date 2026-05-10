@@ -9,6 +9,7 @@ const PAGE_SIZE = 20;
 interface SalesFiltersState {
   data: Sale[] | undefined;
   isLoading: boolean;
+  isFetching: boolean;
   isError: boolean;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
@@ -43,7 +44,7 @@ export function useSalesFilters(): SalesFiltersState {
     [debouncedSearch, dateFilter]
   );
 
-  const { data, isLoading, isError } = useSales(filters);
+  const { data, isLoading, isFetching, isError } = useSales(filters);
 
   const pageCount = Math.ceil((data?.length ?? 0) / PAGE_SIZE);
   const paginated = (data ?? []).slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -56,6 +57,7 @@ export function useSalesFilters(): SalesFiltersState {
   return {
     data,
     isLoading,
+    isFetching,
     isError,
     search,
     setSearch,

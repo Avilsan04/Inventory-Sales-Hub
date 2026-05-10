@@ -26,7 +26,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
 }
 
 .dateLabel {
@@ -149,7 +149,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: $spacing-1 0 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
   line-height: 1.1;
 }
 
@@ -251,8 +251,8 @@
 }
 
 .rankOne {
-  background-color: #fef3c7;
-  color: #b45309;
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-fg);
 }
 .rankTwo {
   background-color: var(--color-surface-highest);

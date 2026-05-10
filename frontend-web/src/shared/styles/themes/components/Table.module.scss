@@ -54,7 +54,7 @@
   font-size: $font-size-table-header;
   font-weight: $font-weight-semibold;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: $letter-spacing-widest;
   white-space: nowrap;
   color: var(--color-text-muted);
 }

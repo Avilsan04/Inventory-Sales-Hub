@@ -26,7 +26,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
 }
 
 .dateLabel {
@@ -149,7 +149,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: $spacing-1 0 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
   line-height: 1.1;
 }
 
@@ -321,7 +321,7 @@
   padding: 0 $spacing-2;
   border-radius: var(--radius-full);
   background-color: var(--color-primary);
-  color: #ffffff;
+  color: var(--color-primary-foreground);
   font-size: $font-size-xs;
   font-weight: $font-weight-bold;
   line-height: 1;

@@ -52,7 +52,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
 }
 
 .orderBadge {
@@ -70,6 +70,13 @@
   flex: 1;
   display: flex;
   overflow: hidden;
+
+  // Mobile: stack products above cart
+  flex-direction: column;
+
+  @media (min-width: $breakpoint-lg) {
+    flex-direction: row;
+  }
 }
 
 .splitPanelCheckoutOnly {
@@ -79,7 +86,7 @@
   background-color: var(--color-surface-low);
 
   .cart {
-    width: min(560px, 100%);
+    width: min($size-pos-checkout-cart, 100%);
     border-left: none;
     border: $border-width-base solid var(--color-border);
     border-radius: var(--radius-xl);
@@ -130,6 +137,12 @@
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+    border-color: var(--color-ring);
+  }
 }
 
 .pillActive {
@@ -146,7 +159,7 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax($size-pos-product-card-min, 1fr));
   gap: $spacing-3;
   overflow-y: auto;
   padding-bottom: $spacing-2;
@@ -167,7 +180,7 @@
     border-color $duration-fast ease;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    box-shadow: $shadow-kpi-card;
     border-color: var(--color-primary);
   }
 }
@@ -257,6 +270,11 @@
     background-color: var(--color-primary-hover);
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+  }
+
   &:disabled {
     background-color: var(--color-border);
     cursor: not-allowed;
@@ -265,12 +283,21 @@
 
 // ── Right — cart panel ────────────────────────────────────────────────────────
 .cart {
-  width: $size-pos-cart;
-  flex-shrink: 0;
+  // Mobile: full width stacked below products
+  width: 100%;
   display: flex;
   flex-direction: column;
-  border-left: $border-width-base solid var(--color-border);
+  border-left: none;
+  border-top: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
+
+  // Desktop: fixed-width side panel
+  @media (min-width: $breakpoint-lg) {
+    width: $size-pos-cart;
+    flex-shrink: 0;
+    border-left: $border-width-base solid var(--color-border);
+    border-top: none;
+  }
 }
 
 .cartHeader {
@@ -468,7 +495,7 @@
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ring) 15%, transparent);
   }
 }
 
@@ -485,7 +512,7 @@
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: $letter-spacing-wider;
   color: var(--color-text-secondary);
   white-space: nowrap;
 }
@@ -512,7 +539,7 @@
   padding: $spacing-2 $spacing-3;
   background-color: var(--color-card);
   border: $border-width-base solid var(--color-border);
-  border-left: 3px solid transparent;
+  border-left: $border-width-accent solid transparent;
   border-radius: var(--radius-lg);
   color: var(--color-text-secondary);
   font-family: $font-family-base;
@@ -525,6 +552,11 @@
 
   &:hover:not(:disabled) {
     background-color: var(--color-bg-secondary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
   }
 }
 
@@ -562,15 +594,15 @@
 }
 
 .payCardBadge {
-  font-size: 0.6rem;
+  font-size: $font-size-2xs;
   font-weight: $font-weight-bold;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: $letter-spacing-wide;
   background-color: var(--color-bg-secondary);
   color: var(--color-text-muted);
   border: $border-width-base solid var(--color-border);
   border-radius: $border-radius-sm;
-  padding: 1px $spacing-1;
+  padding: $spacing-px $spacing-1;
   line-height: 1.5;
   flex-shrink: 0;
   white-space: nowrap;
@@ -581,29 +613,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background: linear-gradient(135deg, $color-sidebar-accent 0%, $color-sidebar-bg 100%);
   border-radius: var(--radius-lg);
   padding: $spacing-3 $spacing-4;
   margin-bottom: $spacing-3;
-  color: #ffffff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.25);
+  color: $color-primary-foreground;
+  box-shadow: $shadow-mini-card;
 }
 
 .miniCardBrand {
   font-weight: $font-weight-bold;
   font-style: italic;
   font-size: $font-size-lg;
-  letter-spacing: -0.05em;
-  color: #93c5fd;
+  letter-spacing: $letter-spacing-super-tight;
+  color: $color-dark-primary-hover;
 }
 
 .miniCardNumber {
   font-family: $font-family-mono;
   font-size: $font-size-sm;
-  letter-spacing: 0.2em;
-  color: #94a3b8;
+  letter-spacing: $letter-spacing-mono;
+  color: $color-sidebar-nav-inactive;
 }
 
 // ── Payment detail form ────────────────────────────────────────────────────────
@@ -615,7 +645,7 @@
   border-radius: var(--radius-lg);
   border: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: $shadow-form-panel;
 }
 
 .paymentField {
@@ -662,7 +692,7 @@
   font-family: $font-family-mono;
   font-size: $font-size-sm;
   color: var(--color-text-primary);
-  letter-spacing: 0.05em;
+  letter-spacing: $letter-spacing-wide-plus;
 }
 
 .infoBox {
@@ -691,6 +721,11 @@
 
   &:hover:not(:disabled) {
     background-color: var(--color-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
   }
 
   &:disabled {

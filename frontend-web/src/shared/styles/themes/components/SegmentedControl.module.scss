@@ -28,6 +28,11 @@
     color: var(--color-text-primary);
     background-color: var(--color-surface-highest);
   }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+  }
 }
 
 .active {

@@ -15,12 +15,47 @@
   flex-shrink: 0;
 }
 
+// ── Mobile menu toggle ────────────────────────────────────────────────────
+.menuBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $size-9;
+  height: $size-9;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-foreground);
+  transition: background-color $duration-fast ease;
+  flex-shrink: 0;
+  margin-right: $spacing-1;
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+
+  svg {
+    width: $size-5;
+    height: $size-5;
+  }
+
+  // Hidden on desktop — sidebar is always visible
+  @media (min-width: $breakpoint-lg) {
+    display: none;
+  }
+}
+
 // ── Three-section layout ──────────────────────────────────────────────────
 .topbarLeft {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  min-width: $size-48;
+  min-width: 0; // allow shrink on mobile
+
+  @media (min-width: $breakpoint-lg) {
+    min-width: $size-48;
+  }
 }
 
 .topbarCenter {
@@ -29,13 +64,22 @@
   align-items: center;
   justify-content: center;
   min-width: 0;
+
+  // Hide command palette on very small screens — no room alongside right actions
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    display: none;
+  }
 }
 
 .topbarRight {
   display: flex;
   align-items: center;
-  gap: $spacing-2;
+  gap: $spacing-1;
   flex-shrink: 0;
+
+  @media (min-width: $breakpoint-sm) {
+    gap: $spacing-2;
+  }
 }
 
 // ── Page title ────────────────────────────────────────────────────────────

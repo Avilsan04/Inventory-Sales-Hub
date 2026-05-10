@@ -65,6 +65,7 @@ export function SalesPage(): React.ReactElement {
   const {
     data: sales,
     isLoading,
+    isFetching,
     isError,
     paginated,
     search,
@@ -155,6 +156,7 @@ export function SalesPage(): React.ReactElement {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setSearch(e.target.value);
                   }}
+                  isLoading={isFetching}
                   aria-label={t('common.search')}
                 />
               </div>
