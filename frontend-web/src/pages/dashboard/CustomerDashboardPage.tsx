@@ -10,26 +10,17 @@ import {
   ShoppingCartIcon,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe } from '@features/auth';
+import { useCustomerStats } from '@features/analytics';
 import { useCatalog, useCart, ProductCard } from '@features/catalog';
-import { useCustomerStats } from '@features/analytics/hooks/useCustomerStats';
-import { SaleDetailDrawer } from '@features/sales/components/SaleDetailDrawer';
-import { Skeleton, Badge } from '@shared/ui/primitives';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-  EmptyState,
-} from '@shared/ui/composed';
-import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { formatOrderId } from '@shared/lib/formatters';
-import { APP_ROUTES } from '@shared/config/routes';
-import type { BadgeVariant } from '@shared/ui/primitives';
+import { SaleDetailDrawer } from '@features/sales';
+import { KpiCard, Skeleton, Badge, EmptyState } from '@shared/ui';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui';
+import { formatCurrency, formatOrderId } from '@shared/lib';
+import { APP_ROUTES } from '@shared/config';
+import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
+import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
+import type { QuickAction } from '@widgets/dashboard';
+import type { BadgeVariant } from '@shared/ui';
 import type { Sale } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/CustomerDashboard.module.scss';
 
@@ -52,22 +43,12 @@ function formatDate(iso: string, locale: string): string {
   }).format(new Date(iso));
 }
 
-function todayLabel(locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date());
-}
-
 const FEATURED_COUNT = 4;
 const SKELETON_ROWS = 4;
 
 export function CustomerDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { i18n } = useTranslation();
-  const { data: me } = useAuthMe();
   const { navigateTo } = useRoutingAdapter();
   const { data: products } = useCatalog();
   const { items: cartItems } = useCart();
@@ -85,88 +66,70 @@ export function CustomerDashboardPage(): React.ReactElement {
 
   const featuredProducts = products?.slice(0, FEATURED_COUNT) ?? [];
   const cartCount = cartItems.reduce((n, i) => n + i.quantity, 0);
-  const firstName = me?.username.split(' ')[0] ?? '';
+
+  const quickActions: QuickAction[] = [
+    {
+      icon: <StoreIcon />,
+      labelKey: 'customerDashboard.actions.browseStore',
+      descKey: 'customerDashboard.actions.browseStoreDesc',
+      onClick: (): void => {
+        navigateTo(APP_ROUTES.CATALOG);
+      },
+    },
+    {
+      icon: <ListOrderedIcon />,
+      labelKey: 'nav.myOrders',
+      descKey: 'customerDashboard.actions.myOrdersDesc',
+      onClick: (): void => {
+        navigateTo(APP_ROUTES.MY_ORDERS);
+      },
+    },
+    {
+      icon: <ShoppingCartIcon />,
+      labelKey: 'catalog.cart',
+      descKey: 'customerDashboard.actions.cartDesc',
+      onClick: (): void => {
+        navigateTo(APP_ROUTES.POS);
+      },
+      badge: cartCount > 0 ? <span className={styles['cartBadge']}>{cartCount}</span> : undefined,
+    },
+  ];
 
   return (
-    <div className={styles['page']}>
-      {/* Welcome header */}
-      <header className={styles['header']}>
-        <div className={styles['headerMeta']}>
-          <h1 className={styles['greeting']}>
-            {t('customerDashboard.greeting')}, {firstName}
-          </h1>
-          <p className={styles['dateLabel']}>{todayLabel(i18n.language)}</p>
-        </div>
-      </header>
+    <DashboardShell>
+      <DashboardHeader greetingKey="customerDashboard.greeting" />
 
-      {/* KPI strip */}
-      <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
-        {/* Total orders */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
-              <ShoppingBagIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('customerDashboard.kpi.totalOrders')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : totalOrders}
-            </div>
-          </div>
-        </div>
+      <DashboardShell.KpiGrid aria-label={t('dashboard.kpiAriaLabel')}>
+        <KpiCard
+          label={t('customerDashboard.kpi.totalOrders')}
+          icon={<ShoppingBagIcon />}
+          accent="primary"
+          isLoading={isLoading}
+          value={totalOrders}
+        />
+        <KpiCard
+          label={t('customerDashboard.kpi.completed')}
+          icon={<CheckCircleIcon />}
+          accent="success"
+          isLoading={isLoading}
+          value={completedOrders}
+        />
+        <KpiCard
+          label={t('customerDashboard.kpi.pending')}
+          icon={<ClockIcon />}
+          accent="warning"
+          isLoading={isLoading}
+          value={pendingOrders}
+        />
+        <KpiCard
+          label={t('customerDashboard.kpi.totalSpent')}
+          icon={<CreditCardIcon />}
+          accent="spent"
+          isLoading={isLoading}
+          value={formatCurrency(totalSpent, currency)}
+        />
+      </DashboardShell.KpiGrid>
 
-        {/* Completed */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSuccess']}`}>
-              <CheckCircleIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('customerDashboard.kpi.completed')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : completedOrders}
-            </div>
-          </div>
-        </div>
-
-        {/* Pending */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentWarning']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconWarning']}`}>
-              <ClockIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('customerDashboard.kpi.pending')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : pendingOrders}
-            </div>
-          </div>
-        </div>
-
-        {/* Total spent */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSpent']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSpent']}`}>
-              <CreditCardIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('customerDashboard.kpi.totalSpent')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? (
-                <Skeleton className={styles['kpiSkeleton']} />
-              ) : (
-                formatCurrency(totalSpent, currency)
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Recent orders */}
       <div className={styles['sectionCard']}>
         <div className={styles['sectionHeader']}>
           <h2 className={styles['sectionTitle']}>{t('customerDashboard.recentOrders')}</h2>
@@ -234,7 +197,6 @@ export function CustomerDashboardPage(): React.ReactElement {
         </Table>
       </div>
 
-      {/* Featured products */}
       {featuredProducts.length > 0 && (
         <div className={styles['sectionCard']}>
           <div className={styles['sectionHeader']}>
@@ -257,64 +219,7 @@ export function CustomerDashboardPage(): React.ReactElement {
         </div>
       )}
 
-      {/* Quick actions */}
-      <div className={styles['sectionCard']}>
-        <div className={styles['sectionHeader']}>
-          <h2 className={styles['sectionTitle']}>{t('dashboard.quickActions.title')}</h2>
-        </div>
-        <div className={styles['quickActions']}>
-          <button
-            type="button"
-            className={styles['quickActionCard']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.CATALOG);
-            }}
-          >
-            <div className={styles['quickActionIcon']}>
-              <StoreIcon />
-            </div>
-            <p className={styles['quickActionLabel']}>
-              {t('customerDashboard.actions.browseStore')}
-            </p>
-            <p className={styles['quickActionDesc']}>
-              {t('customerDashboard.actions.browseStoreDesc')}
-            </p>
-          </button>
-
-          <button
-            type="button"
-            className={styles['quickActionCard']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.MY_ORDERS);
-            }}
-          >
-            <div className={styles['quickActionIcon']}>
-              <ListOrderedIcon />
-            </div>
-            <p className={styles['quickActionLabel']}>{t('nav.myOrders')}</p>
-            <p className={styles['quickActionDesc']}>
-              {t('customerDashboard.actions.myOrdersDesc')}
-            </p>
-          </button>
-
-          <button
-            type="button"
-            className={styles['quickActionCard']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.POS);
-            }}
-          >
-            <div className={styles['quickActionIcon']}>
-              <ShoppingCartIcon />
-            </div>
-            <p className={styles['quickActionLabel']}>
-              {t('catalog.cart')}
-              {cartCount > 0 && <span className={styles['cartBadge']}>{cartCount}</span>}
-            </p>
-            <p className={styles['quickActionDesc']}>{t('customerDashboard.actions.cartDesc')}</p>
-          </button>
-        </div>
-      </div>
+      <DashboardQuickActions actions={quickActions} />
 
       <SaleDetailDrawer
         sale={detailSale}
@@ -323,6 +228,6 @@ export function CustomerDashboardPage(): React.ReactElement {
           if (!open) setDetailSale(null);
         }}
       />
-    </div>
+    </DashboardShell>
   );
 }

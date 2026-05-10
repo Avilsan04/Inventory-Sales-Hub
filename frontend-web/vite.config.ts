@@ -1,9 +1,36 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
+
+const VENDOR_MAP: Array<[string, string]> = [
+  ['/react-dom/', 'vendor-react'],
+  ['/react-router-dom/', 'vendor-react'],
+  ['/react/', 'vendor-react'],
+  ['@tanstack/react-query', 'vendor-query'],
+  ['@radix-ui/', 'vendor-radix'],
+  ['/recharts/', 'vendor-charts'],
+  ['/react-hook-form/', 'vendor-forms'],
+  ['@hookform/', 'vendor-forms'],
+  ['/zod/', 'vendor-forms'],
+  ['/framer-motion/', 'vendor-motion'],
+];
+
+function resolveChunk(id: string): string | undefined {
+  if (id.includes('node_modules')) {
+    return VENDOR_MAP.find(([pattern]) => id.includes(pattern))?.[1];
+  }
+  if (id.includes('/src/widgets/')) return 'app-widgets';
+  if (id.includes('/src/app/mock/')) return 'app-mock';
+  return undefined;
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Run `npm run analyze` to open an interactive bundle size treemap (mode === 'analyze')
+    process.env['npm_lifecycle_event'] === 'analyze' && visualizer({ open: true, gzipSize: true, filename: 'dist/stats.html' }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -32,20 +59,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('/react-dom/') || id.includes('/react-router-dom/') || id.includes('/react/')) return 'vendor-react';
-            if (id.includes('@tanstack/react-query')) return 'vendor-query';
-            if (id.includes('@radix-ui/')) return 'vendor-radix';
-            if (id.includes('/recharts/')) return 'vendor-charts';
-            if (id.includes('/react-hook-form/') || id.includes('@hookform/') || id.includes('/zod/')) return 'vendor-forms';
-            if (id.includes('/framer-motion/')) return 'vendor-motion';
-          }
-          // Eagerly-loaded widgets inflate index.js — split into own chunk
-          if (id.includes('/src/widgets/')) return 'app-widgets';
-          // MSW seed/mock data only needed in dev — keep out of main bundle
-          if (id.includes('/src/app/mock/')) return 'app-mock';
-        },
+        manualChunks: resolveChunk,
       },
     },
   },

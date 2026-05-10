@@ -6,7 +6,7 @@ import { CartDrawer } from '@features/catalog';
 import { useDebounce } from '@shared/hooks';
 import { Spinner, Input } from '@shared/ui/primitives';
 import { EmptyState } from '@shared/ui/composed';
-import { ProductCard } from '@features/catalog/components/ProductCard';
+import { ProductCard } from '@features/catalog';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 export function CatalogPage(): React.ReactElement {

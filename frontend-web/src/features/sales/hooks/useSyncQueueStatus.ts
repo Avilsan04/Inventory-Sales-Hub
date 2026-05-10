@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { syncDb } from '@shared/lib/db/syncDb';
+import { syncDb } from '@shared/lib';
 
 export interface SyncQueueStatus {
   readonly pending: number;

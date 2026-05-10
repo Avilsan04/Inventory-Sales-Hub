@@ -1,0 +1,132 @@
+import * as React from 'react';
+import { PencilIcon, ShoppingCartIcon } from 'lucide-react';
+import { formatCurrency } from '@shared/lib';
+import { formatOrderId } from '@shared/lib';
+import { Skeleton, Badge, Button } from '@shared/ui';
+import { EmptyState, TableRow, TableCell } from '@shared/ui';
+import type { BadgeVariant } from '@shared/ui';
+import type { Sale } from '@entities/sale';
+import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
+import styles from '@shared/styles/themes/pages/Sales.module.scss';
+
+type SaleStatus = 'pending' | 'completed' | 'cancelled';
+
+export const STATUS_VARIANT_MAP: Partial<Record<SaleStatus, BadgeVariant>> = {
+  pending: 'warning',
+  completed: 'info',
+  cancelled: 'neutral',
+};
+
+export const STATUS_LABEL_KEYS: Partial<Record<SaleStatus, string>> = {
+  completed: 'sales.status.shipped',
+  pending: 'sales.status.processing',
+  cancelled: 'sales.status.cancelled',
+};
+
+export function formatDate(iso: string): string {
+  return iso.slice(0, 10);
+}
+
+export function lookupCustomer(id: string | undefined, map: Map<string, string>): string {
+  if (id === undefined) return '—';
+  return map.get(id) ?? `#${id.slice(0, 8)}`;
+}
+
+interface SalesRowProps {
+  sale: Sale;
+  customerMap: Map<string, string>;
+  t: (k: string) => string;
+  onDetail: (s: Sale) => void;
+}
+
+function SaleRow({ sale, customerMap, t, onDetail }: SalesRowProps): React.ReactElement {
+  return (
+    <TableRow>
+      <TableCell className={styles['mono']}>{formatOrderId(sale.id)}</TableCell>
+      <TableCell>{lookupCustomer(sale.customerId, customerMap)}</TableCell>
+      <TableCell className={styles['mono']}>{formatDate(sale.createdAt)}</TableCell>
+      <TableCell>
+        <Badge variant={STATUS_VARIANT_MAP[sale.status as SaleStatus] ?? 'neutral'} showDot>
+          {t(STATUS_LABEL_KEYS[sale.status as SaleStatus] ?? 'sales.status.pending')}
+        </Badge>
+      </TableCell>
+      <TableCell>{sale.items.length}</TableCell>
+      <TableCell className={styles['mono']}>{formatCurrency(sale.total, sale.currency)}</TableCell>
+      <TableCell>
+        <div className={pageStyles['cellActions']}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t('sales.viewDetail')}
+            onClick={(): void => {
+              onDetail(sale);
+            }}
+          >
+            <PencilIcon size={14} aria-hidden="true" />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+const SKELETON_ROWS = 5;
+
+interface SalesTableBodyProps {
+  isLoading: boolean;
+  paginated: Sale[];
+  debouncedSearch: string;
+  customerMap: Map<string, string>;
+  t: (k: string) => string;
+  onDetail: (s: Sale) => void;
+  onCreateOpen: () => void;
+}
+
+export function SalesTableBody({
+  isLoading,
+  paginated,
+  debouncedSearch,
+  customerMap,
+  t,
+  onDetail,
+  onCreateOpen,
+}: SalesTableBodyProps): React.ReactElement {
+  if (isLoading) {
+    return (
+      <>
+        {Array.from({ length: SKELETON_ROWS }).map((_, i) => (
+          <TableRow key={i}>
+            <TableCell colSpan={7}>
+              <Skeleton className={styles['skeletonRow']} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </>
+    );
+  }
+  if (paginated.length === 0) {
+    return (
+      <TableRow>
+        <TableCell colSpan={7}>
+          <EmptyState
+            icon={<ShoppingCartIcon size={24} />}
+            title={t('sales.emptyTitle')}
+            description={t('sales.emptyDescription')}
+            action={
+              debouncedSearch
+                ? undefined
+                : { label: `+ ${t('sales.newSale')}`, onClick: onCreateOpen }
+            }
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+  return (
+    <>
+      {paginated.map((s) => (
+        <SaleRow key={s.id} sale={s} customerMap={customerMap} t={t} onDetail={onDetail} />
+      ))}
+    </>
+  );
+}

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import type { IAuthService } from '@features/auth/services/IAuthService';
-import { AuthService } from '@features/auth/services/authService';
-import { authApi } from '@features/auth/api/authApi';
+import type { IAuthService } from '@features/auth';
+import { AuthService } from '@features/auth';
+import { authApi } from '@features/auth';
 import { tokenStorage } from '@core/storage/tokenStorage';
 
 export interface IDependencies {

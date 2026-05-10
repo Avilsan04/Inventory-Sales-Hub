@@ -9,13 +9,14 @@ import {
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCart } from '@features/sales';
 import type { CartItem } from '@features/sales';
-import { calculateSaleTotals } from '@features/sales/lib/saleCalculations';
+import { calculateSaleTotals } from '@features/sales';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { cn } from '@shared/lib/cn';
-import { Input, Label } from '@shared/ui/primitives';
 import type { Customer } from '@entities/customer';
-import type { PaymentMethod } from '@features/sales/models/checkout.types';
-import { MOCK_BANK_IBAN } from '@features/sales/models/checkout.types';
+import type { PaymentMethod } from '@features/sales';
+import { MOCK_BANK_IBAN } from '@features/sales';
+import { Label } from '@shared/ui/primitives';
+import { CreditCardForm } from './CreditCardForm';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
 const PAYMENT_OPTIONS: Array<{
@@ -253,72 +254,17 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
 
           {/* Credit card form with mini card preview */}
           {paymentMethod === 'credit_card' && (
-            <div className={styles['paymentForm']}>
-              <div className={styles['miniCard']}>
-                <span className={styles['miniCardBrand']}>VISA</span>
-                <span className={styles['miniCardNumber']}>•••• {maskedCardSuffix}</span>
-              </div>
-              <div className={styles['paymentField']}>
-                <Label htmlFor="pos-holder">{t('sales.checkout.holderName')}</Label>
-                <Input
-                  id="pos-holder"
-                  value={cardHolder}
-                  onChange={(e) => {
-                    setCardHolder(e.target.value);
-                  }}
-                  placeholder={t('sales.checkout.holderNamePlaceholder')}
-                  className={styles['paymentInput']}
-                />
-              </div>
-              <div className={styles['paymentField']}>
-                <Label htmlFor="pos-card">{t('sales.checkout.cardNumber')}</Label>
-                <div className={styles['paymentInputWrapper']}>
-                  <CreditCardIcon className={styles['paymentInputIcon']} aria-hidden="true" />
-                  <Input
-                    id="pos-card"
-                    value={cardNumber}
-                    maxLength={19}
-                    placeholder={t('sales.checkout.cardNumberPlaceholder')}
-                    className={cn(styles['paymentInput'], styles['paymentInputWithIcon'])}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '').slice(0, 16);
-                      setCardNumber(raw.replace(/(.{4})/g, '$1 ').trim());
-                    }}
-                  />
-                </div>
-              </div>
-              <div className={styles['paymentGrid2']}>
-                <div className={styles['paymentField']}>
-                  <Label htmlFor="pos-expiry">{t('sales.checkout.expiry')}</Label>
-                  <Input
-                    id="pos-expiry"
-                    value={expiry}
-                    maxLength={5}
-                    placeholder={t('sales.checkout.expiryPlaceholder')}
-                    className={styles['paymentInput']}
-                    onChange={(e) => {
-                      let v = e.target.value.replace(/\D/g, '').slice(0, 4);
-                      if (v.length > 2) v = `${v.slice(0, 2)}/${v.slice(2)}`;
-                      setExpiry(v);
-                    }}
-                  />
-                </div>
-                <div className={styles['paymentField']}>
-                  <Label htmlFor="pos-cvv">{t('sales.checkout.cvv')}</Label>
-                  <Input
-                    id="pos-cvv"
-                    value={cvv}
-                    maxLength={4}
-                    type="password"
-                    placeholder={t('sales.checkout.cvvPlaceholder')}
-                    className={styles['paymentInput']}
-                    onChange={(e) => {
-                      setCvv(e.target.value.replace(/\D/g, '').slice(0, 4));
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
+            <CreditCardForm
+              cardHolder={cardHolder}
+              cardNumber={cardNumber}
+              expiry={expiry}
+              cvv={cvv}
+              maskedCardSuffix={maskedCardSuffix}
+              onCardHolderChange={setCardHolder}
+              onCardNumberChange={setCardNumber}
+              onExpiryChange={setExpiry}
+              onCvvChange={setCvv}
+            />
           )}
 
           {/* Bank transfer IBAN box */}

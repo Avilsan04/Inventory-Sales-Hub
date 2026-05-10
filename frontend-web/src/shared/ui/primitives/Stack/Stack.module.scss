@@ -1,0 +1,85 @@
+.stack {
+  display: flex;
+}
+
+// Direction
+.dir-column {
+  flex-direction: column;
+}
+.dir-row {
+  flex-direction: row;
+}
+
+// Gap
+.gap-0 {
+  gap: 0;
+}
+.gap-1 {
+  gap: $spacing-1;
+}
+.gap-2 {
+  gap: $spacing-2;
+}
+.gap-3 {
+  gap: $spacing-3;
+}
+.gap-4 {
+  gap: $spacing-4;
+}
+.gap-5 {
+  gap: $spacing-5;
+}
+.gap-6 {
+  gap: $spacing-6;
+}
+.gap-8 {
+  gap: $spacing-8;
+}
+.gap-10 {
+  gap: $spacing-10;
+}
+.gap-12 {
+  gap: $spacing-12;
+}
+
+// Align
+.align-start {
+  align-items: flex-start;
+}
+.align-center {
+  align-items: center;
+}
+.align-end {
+  align-items: flex-end;
+}
+.align-stretch {
+  align-items: stretch;
+}
+.align-baseline {
+  align-items: baseline;
+}
+
+// Justify
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+// Wrap
+.wrap {
+  flex-wrap: wrap;
+}

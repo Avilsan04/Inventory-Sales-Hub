@@ -1,6 +1,6 @@
 // shadcn/ui toast pattern
 import * as React from 'react';
-import type { ToastActionElement, ToastProps } from '@shared/ui/composed/Toast';
+import type { ToastActionElement, ToastProps } from '@shared/ui';
 import { TIMING } from '@core/config/timing';
 
 // Single-toast design: each new notification replaces the previous one.

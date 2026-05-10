@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ArrowLeftIcon } from 'lucide-react';
 
-import { LoginForm } from '@features/auth/components/LoginForm';
+import { LoginForm } from '@features/auth';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useRoutingAdapter } from '@adapters/useRoutingAdapter';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';

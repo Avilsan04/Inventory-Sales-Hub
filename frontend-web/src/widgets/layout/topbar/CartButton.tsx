@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CartDrawer } from '@features/catalog/components/CartDrawer';
+import { CartDrawer } from '@features/catalog';
 import { useEffectiveRole } from '@features/auth';
 
 export function CartButton(): React.ReactElement | null {

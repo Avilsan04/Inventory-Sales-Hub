@@ -19,8 +19,8 @@ import {
   TableCell,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
-import { EmployeeCreateDialog } from '@features/employees/components/EmployeeCreateDialog';
-import { EmployeeEditDialog } from '@features/employees/components/EmployeeEditDialog';
+import { EmployeeCreateDialog } from '@features/employees';
+import { EmployeeEditDialog } from '@features/employees';
 import { AuditLogPanel } from '@widgets/audit';
 import { useTableFilters } from '@shared/hooks';
 import type { BadgeVariant } from '@shared/ui/primitives';

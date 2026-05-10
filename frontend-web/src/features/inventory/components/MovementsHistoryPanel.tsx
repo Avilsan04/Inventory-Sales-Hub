@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useInventoryMovements } from '@features/inventory/hooks/useInventoryMovements';
+import { useInventoryMovements } from '../hooks/useInventoryMovements';
 import { Skeleton, Badge } from '@shared/ui/primitives';
 import {
   Sheet,

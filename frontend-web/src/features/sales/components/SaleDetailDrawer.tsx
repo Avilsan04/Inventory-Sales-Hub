@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useUpdateSaleStatus } from '@features/sales/hooks/useUpdateSaleStatus';
+import { useUpdateSaleStatus } from '../hooks/useUpdateSaleStatus';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import { Badge, Button } from '@shared/ui/primitives';

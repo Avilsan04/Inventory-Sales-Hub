@@ -1,4 +1,4 @@
-import type { UserRole } from '@features/auth/models/auth.types';
+import type { UserRole } from '@features/auth';
 
 export type Permission =
   | 'create:product'

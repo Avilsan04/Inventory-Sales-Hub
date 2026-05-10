@@ -1,58 +1,32 @@
 import * as React from 'react';
-import { PencilIcon, ShoppingCartIcon } from 'lucide-react';
 import { exportToCsv } from '@shared/lib/exportCsv';
-import { formatCurrency, fromCents } from '@shared/lib/formatCurrency';
-import { formatOrderId } from '@shared/lib/formatters';
+import { fromCents } from '@shared/lib';
+import { formatOrderId } from '@shared/lib';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useSalesFilters, SALES_PAGE_SIZE } from '@features/sales';
+import {
+  useSalesFilters,
+  SALES_PAGE_SIZE,
+  SaleStatusDialog,
+  SaleDetailDrawer,
+} from '@features/sales';
 import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
-import { Skeleton, Badge, Button, Input, Pagination } from '@shared/ui/primitives';
+import { Button, Input, Pagination } from '@shared/ui';
 import {
   Card,
-  EmptyState,
   Table,
   TableHeader,
   TableBody,
   TableRow,
   TableHead,
-  TableCell,
   DateRangePicker,
-} from '@shared/ui/composed';
+} from '@shared/ui';
 import { SectionErrorBoundary } from '@app/providers';
 import { SaleCreateWidget } from '@widgets';
-import { SaleStatusDialog } from '@features/sales/components/SaleStatusDialog';
-import { SaleDetailDrawer } from '@features/sales/components/SaleDetailDrawer';
-import type { BadgeVariant } from '@shared/ui/primitives';
 import type { Sale } from '@entities/sale';
+import { SalesTableBody, formatDate } from './SalesTable';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Sales.module.scss';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-function statusVariant(status: SaleStatus): BadgeVariant {
-  const map: Record<SaleStatus, BadgeVariant> = {
-    pending: 'warning',
-    completed: 'info',
-    cancelled: 'neutral',
-  };
-  return map[status];
-}
-
-function statusLabel(status: SaleStatus, t: (k: string) => string): string {
-  const map: Record<SaleStatus, string> = {
-    completed: t('sales.status.shipped'),
-    pending: t('sales.status.processing'),
-    cancelled: t('sales.status.cancelled'),
-  };
-  return map[status];
-}
-
-function formatDate(iso: string): string {
-  return iso.slice(0, 10); // YYYY-MM-DD
-}
-
-const SKELETON_ROWS = 5;
 
 export function SalesPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
@@ -103,6 +77,8 @@ export function SalesPage(): React.ReactElement {
     );
   };
 
+  const totalSales = sales?.length ?? 0;
+
   if (isError) {
     return (
       <div className={pageStyles['errorContainer']} role="alert" aria-live="assertive">
@@ -129,10 +105,12 @@ export function SalesPage(): React.ReactElement {
           </Button>
           <Button
             size="sm"
-            onClick={() => {
+            onClick={(): void => {
               setCreateOpen(true);
             }}
-          >{`+ ${t('sales.newSale')}`}</Button>
+          >
+            {`+ ${t('sales.newSale')}`}
+          </Button>
         </div>
       </header>
 
@@ -152,7 +130,7 @@ export function SalesPage(): React.ReactElement {
                   type="search"
                   placeholder={t('sales.searchPlaceholder')}
                   value={search}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
                     setSearch(e.target.value);
                   }}
                   isLoading={isFetching}
@@ -160,7 +138,6 @@ export function SalesPage(): React.ReactElement {
                 />
               </div>
             </div>
-
             <Table>
               <TableHeader>
                 <TableRow>
@@ -174,77 +151,24 @@ export function SalesPage(): React.ReactElement {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isLoading ? (
-                  Array.from({ length: SKELETON_ROWS }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={7}>
-                        <Skeleton className={styles['skeletonRow']} />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : paginated.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7}>
-                      <EmptyState
-                        icon={<ShoppingCartIcon size={24} />}
-                        title={t('sales.emptyTitle')}
-                        description={t('sales.emptyDescription')}
-                        action={
-                          debouncedSearch
-                            ? undefined
-                            : {
-                                label: `+ ${t('sales.newSale')}`,
-                                onClick: (): void => {
-                                  setCreateOpen(true);
-                                },
-                              }
-                        }
-                      />
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginated.map((s) => (
-                    <TableRow key={s.id}>
-                      <TableCell className={styles['mono']}>{formatOrderId(s.id)}</TableCell>
-                      <TableCell>
-                        {s.customerId
-                          ? (customerMap.get(s.customerId) ?? `#${s.customerId.slice(0, 8)}`)
-                          : '—'}
-                      </TableCell>
-                      <TableCell className={styles['mono']}>{formatDate(s.createdAt)}</TableCell>
-                      <TableCell>
-                        <Badge variant={statusVariant(s.status)} showDot>
-                          {statusLabel(s.status, t)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{s.items.length}</TableCell>
-                      <TableCell className={styles['mono']}>
-                        {formatCurrency(s.total, s.currency)}
-                      </TableCell>
-                      <TableCell>
-                        <div className={pageStyles['cellActions']}>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            aria-label={t('sales.viewDetail')}
-                            onClick={() => {
-                              setDetailSale(s);
-                            }}
-                          >
-                            <PencilIcon size={14} aria-hidden="true" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
+                <SalesTableBody
+                  isLoading={isLoading}
+                  paginated={paginated}
+                  debouncedSearch={debouncedSearch}
+                  customerMap={customerMap}
+                  t={t}
+                  onDetail={setDetailSale}
+                  onCreateOpen={(): void => {
+                    setCreateOpen(true);
+                  }}
+                />
               </TableBody>
             </Table>
             {pageCount > 1 && (
               <div className={pageStyles['tableFooter']}>
                 <span>
-                  {Math.min((page - 1) * SALES_PAGE_SIZE + 1, sales?.length ?? 0)}–
-                  {Math.min(page * SALES_PAGE_SIZE, sales?.length ?? 0)} / {sales?.length ?? 0}{' '}
+                  {Math.min((page - 1) * SALES_PAGE_SIZE + 1, totalSales)}–
+                  {Math.min(page * SALES_PAGE_SIZE, totalSales)} / {totalSales}{' '}
                   {t('nav.orders').toLowerCase()}
                 </span>
                 <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
@@ -258,20 +182,18 @@ export function SalesPage(): React.ReactElement {
       <SaleStatusDialog
         sale={editSale}
         open={editSale !== null}
-        onOpenChange={(open) => {
+        onOpenChange={(open): void => {
           if (!open) setEditSale(null);
         }}
       />
       <SaleDetailDrawer
         sale={detailSale}
         open={detailSale !== null}
-        onOpenChange={(open) => {
+        onOpenChange={(open): void => {
           if (!open) setDetailSale(null);
         }}
         customerName={
-          detailSale?.customerId !== undefined
-            ? (customerMap.get(detailSale.customerId) ?? undefined)
-            : undefined
+          detailSale?.customerId !== undefined ? customerMap.get(detailSale.customerId) : undefined
         }
       />
     </div>

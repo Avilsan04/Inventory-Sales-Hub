@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthPresenter } from '@features/auth/hooks/useAuthPresenter';
+import { useAuthPresenter } from '../hooks/useAuthPresenter';
 import { useDependencies } from '@shared/hooks/useDependencies';
 import { Button, Input, Label, Spinner, BrandMark } from '@shared/ui/primitives';
 import {

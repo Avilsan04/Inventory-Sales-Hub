@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { MinusIcon, PlusIcon, TrashIcon } from 'lucide-react';
-import { Button } from '@shared/ui/primitives';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
+import { Button } from '@shared/ui';
+import { formatCurrency } from '@shared/lib';
+import { useTranslationAdapter } from '@adapters';
 import { useCart } from '../hooks/useCart';
 import type { CartItem as CartItemType } from '../hooks/useCart';
+import styles from './CartItem.module.scss';
 
 interface CartItemProps {
   item: CartItemType;
@@ -15,33 +16,13 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
-        padding: '0.75rem 0',
-        borderBottom: '1px solid var(--color-border)',
-      }}
-    >
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
-          style={{
-            fontWeight: 500,
-            fontSize: '0.875rem',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {item.name}
-        </div>
-        <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-          {formatCurrency(item.price, item.currency)}
-        </div>
+    <div className={styles['item']}>
+      <div className={styles['info']}>
+        <div className={styles['name']}>{item.name}</div>
+        <div className={styles['unitPrice']}>{formatCurrency(item.price, item.currency)}</div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+      <div className={styles['qtyControls']}>
         <Button
           variant="ghost"
           size="icon-sm"
@@ -53,9 +34,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
         >
           <MinusIcon size={12} />
         </Button>
-        <span style={{ minWidth: '1.5rem', textAlign: 'center', fontSize: '0.875rem' }}>
-          {item.quantity}
-        </span>
+        <span className={styles['qtyValue']}>{item.quantity}</span>
         <Button
           variant="ghost"
           size="icon-sm"
@@ -69,7 +48,7 @@ export function CartItem({ item }: CartItemProps): React.ReactElement {
         </Button>
       </div>
 
-      <div style={{ fontWeight: 600, fontSize: '0.875rem', minWidth: '4rem', textAlign: 'right' }}>
+      <div className={styles['lineTotal']}>
         {formatCurrency(item.price * item.quantity, item.currency)}
       </div>
 

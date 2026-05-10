@@ -9,13 +9,7 @@ export default defineConfig({
         exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
         coverage: {
             provider: 'v8',
-            reporter: ['text', 'lcov'],
-            thresholds: {
-                lines: 70,
-                branches: 70,
-                functions: 70,
-                statements: 70,
-            },
+            reporter: ['text', 'lcov', 'html'],
             exclude: [
                 'src/app/mock/**',
                 'src/mocks/**',
@@ -24,6 +18,27 @@ export default defineConfig({
                 'src/core/i18n/**',
                 'tests/**',
             ],
+            thresholds: {
+                // Global baseline — UI components, pages, widgets
+                lines: 70,
+                branches: 70,
+                functions: 70,
+                statements: 70,
+                // Strict — core infrastructure must be well-covered (failures originate here)
+                'src/core/**/*.ts': {
+                    lines: 95,
+                    branches: 95,
+                    functions: 95,
+                    statements: 95,
+                },
+                // Strict — feature hooks are business logic (most production bugs live here)
+                'src/features/**/hooks/**/*.ts': {
+                    lines: 95,
+                    branches: 95,
+                    functions: 95,
+                    statements: 95,
+                },
+            },
         },
     },
     resolve: {

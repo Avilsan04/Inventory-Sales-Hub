@@ -8,7 +8,7 @@ import { RoleRoute } from './guards/RoleRoute';
 import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
 import { HttpInterceptorSetup } from '@app/providers/HttpInterceptorSetup';
-import { useTabSync } from '@features/auth/hooks/useTabSync';
+import { useTabSync } from '@features/auth';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const LandingPage = React.lazy(() =>

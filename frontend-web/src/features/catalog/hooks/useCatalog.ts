@@ -1,5 +1,6 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { httpClient } from '@core/http';
+import { TIMING } from '@core/config/timing';
 import { productListSchema } from '@entities/product';
 import type { Product } from '@entities/product';
 
@@ -14,5 +15,9 @@ async function fetchCatalog(): Promise<Product[]> {
 }
 
 export function useCatalog(): UseQueryResult<Product[]> {
-  return useQuery({ queryKey: catalogKeys.list(), queryFn: fetchCatalog, staleTime: 60_000 });
+  return useQuery({
+    queryKey: catalogKeys.list(),
+    queryFn: fetchCatalog,
+    staleTime: TIMING.CATALOG_STALE_MS,
+  });
 }

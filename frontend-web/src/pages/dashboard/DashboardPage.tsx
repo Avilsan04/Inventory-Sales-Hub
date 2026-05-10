@@ -18,7 +18,7 @@ import {
   TopProfitableWidget,
   WasteAlertsWidget,
 } from '@widgets/dashboard';
-import { Skeleton, Badge, Button } from '@shared/ui/primitives';
+import { KpiCard, Skeleton, Badge, Button } from '@shared/ui';
 import {
   SalesDonutChart,
   WeeklySalesBarChart,
@@ -33,23 +33,37 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from '@shared/ui/composed';
-import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
-import { APP_ROUTES } from '@shared/config/routes';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { formatOrderId } from '@shared/lib/formatters';
-import type { BadgeVariant } from '@shared/ui/primitives';
+} from '@shared/ui';
+import { useRoutingAdapter } from '@adapters';
+import { APP_ROUTES } from '@shared/config';
+import { formatCurrency, formatOrderId } from '@shared/lib';
+import type { BadgeVariant } from '@shared/ui';
 import styles from '@shared/styles/themes/pages/Dashboard.module.scss';
 
 type SaleStatus = 'pending' | 'completed' | 'cancelled';
 
+const SALE_STATUS_BADGE: Partial<Record<SaleStatus, BadgeVariant>> = {
+  completed: 'success',
+  pending: 'neutral',
+  cancelled: 'destructive',
+};
+
 function saleStatusBadge(status: string): BadgeVariant {
-  const map: Partial<Record<SaleStatus, BadgeVariant>> = {
-    completed: 'success',
-    pending: 'neutral',
-    cancelled: 'destructive',
-  };
-  return map[status as SaleStatus] ?? 'neutral';
+  return SALE_STATUS_BADGE[status as SaleStatus] ?? 'neutral';
+}
+
+function GrowthLabel({ growth, label }: { growth: number; label: string }): React.ReactElement {
+  const positive = growth >= 0;
+  return (
+    <p className={positive ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']}>
+      {positive ? (
+        <TrendingUpIcon size={12} aria-hidden="true" />
+      ) : (
+        <TrendingDownIcon size={12} aria-hidden="true" />
+      )}{' '}
+      {Math.abs(growth).toFixed(1)}% {label}
+    </p>
+  );
 }
 
 export function DashboardPage(): React.ReactElement {
@@ -88,116 +102,47 @@ export function DashboardPage(): React.ReactElement {
         </TooltipProvider>
       </header>
 
-      {/* KPI row */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
-        {/* Monthly revenue + growth */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
-              <DollarSignIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('dashboard.stats.monthlySales')}</p>
-            <div className={styles['kpiValue']}>
-              {kpiLoading ? (
-                <Skeleton className={styles['kpiSkeleton']} />
-              ) : kpi ? (
-                formatCurrency(kpi.totalRevenue, kpi.currency)
-              ) : (
-                '—'
-              )}
-            </div>
-            {kpiLoading ? (
-              <Skeleton className={styles['kpiGrowthSkeleton']} />
-            ) : kpi ? (
-              <p
-                className={
-                  kpi.revenueGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
-                }
-              >
-                {kpi.revenueGrowth >= 0 ? (
-                  <TrendingUpIcon size={12} aria-hidden="true" />
-                ) : (
-                  <TrendingDownIcon size={12} aria-hidden="true" />
-                )}{' '}
-                {Math.abs(kpi.revenueGrowth).toFixed(1)}% {t('dashboard.stats.vsLastMonth')}
-              </p>
-            ) : null}
-          </div>
-        </div>
-
-        {/* Active orders + growth */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentNeutral']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
-              <ShoppingCartIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('dashboard.stats.activeOrders')}</p>
-            <div className={styles['kpiValue']}>
-              {kpiLoading ? (
-                <Skeleton className={styles['kpiSkeleton']} />
-              ) : (
-                (kpi?.totalOrders ?? '—')
-              )}
-            </div>
-            {!kpiLoading && kpi && (
-              <p
-                className={
-                  kpi.ordersGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
-                }
-              >
-                {kpi.ordersGrowth >= 0 ? (
-                  <TrendingUpIcon size={12} aria-hidden="true" />
-                ) : (
-                  <TrendingDownIcon size={12} aria-hidden="true" />
-                )}{' '}
-                {Math.abs(kpi.ordersGrowth).toFixed(1)}% {t('dashboard.stats.vsLastMonth')}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Total customers */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
-              <UsersRoundIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('dashboard.stats.totalCustomers')}</p>
-            <div className={styles['kpiValue']}>
-              {kpiLoading ? (
-                <Skeleton className={styles['kpiSkeleton']} />
-              ) : (
-                (kpi?.totalCustomers ?? '—')
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Low stock alerts */}
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentError']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconError']}`}>
-              <AlertCircleIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('dashboard.stats.lowStock')}</p>
-            <div
-              className={`${styles['kpiValue']}${alerts?.length ? ` ${styles['kpiValueError']}` : ''}`}
-            >
-              {alerts?.length ?? 0} {t('common.items')}
-            </div>
-          </div>
-        </div>
+        <KpiCard
+          label={t('dashboard.stats.monthlySales')}
+          icon={<DollarSignIcon />}
+          accent="primary"
+          isLoading={kpiLoading}
+          value={kpi ? formatCurrency(kpi.totalRevenue, kpi.currency) : '—'}
+          subtext={
+            kpi ? (
+              <GrowthLabel growth={kpi.revenueGrowth} label={t('dashboard.stats.vsLastMonth')} />
+            ) : undefined
+          }
+        />
+        <KpiCard
+          label={t('dashboard.stats.activeOrders')}
+          icon={<ShoppingCartIcon />}
+          accent="neutral"
+          isLoading={kpiLoading}
+          value={kpi?.totalOrders ?? '—'}
+          subtext={
+            kpi ? (
+              <GrowthLabel growth={kpi.ordersGrowth} label={t('dashboard.stats.vsLastMonth')} />
+            ) : undefined
+          }
+        />
+        <KpiCard
+          label={t('dashboard.stats.totalCustomers')}
+          icon={<UsersRoundIcon />}
+          accent="success"
+          isLoading={kpiLoading}
+          value={kpi?.totalCustomers ?? '—'}
+        />
+        <KpiCard
+          label={t('dashboard.stats.lowStock')}
+          icon={<AlertCircleIcon />}
+          accent="error"
+          isLoading={kpiLoading}
+          value={`${String(alerts?.length ?? 0)} ${t('common.items')}`}
+        />
       </section>
 
-      {/* C-level widgets — admin/company/manager only */}
       <PermissionGuard permission="view:analytics">
         <section className={styles['widgetGrid']}>
           <SectionErrorBoundary label={t('dashboard.section.cashFlow')}>
@@ -215,7 +160,6 @@ export function DashboardPage(): React.ReactElement {
         </section>
       </PermissionGuard>
 
-      {/* Charts */}
       <div className={styles['chartsGrid']}>
         <SectionErrorBoundary label={t('dashboard.section.weeklySalesChart')}>
           <div className={styles['chartCard']}>
@@ -225,7 +169,6 @@ export function DashboardPage(): React.ReactElement {
             <WeeklySalesBarChart data={salesPeriod} isLoading={periodLoading} />
           </div>
         </SectionErrorBoundary>
-
         <SectionErrorBoundary label={t('dashboard.section.salesByStatusChart')}>
           <div className={styles['chartCard']}>
             <div className={styles['chartCardHeader']}>
@@ -236,7 +179,6 @@ export function DashboardPage(): React.ReactElement {
         </SectionErrorBoundary>
       </div>
 
-      {/* Recent transactions */}
       <SectionErrorBoundary label={t('dashboard.section.recentTransactionsSection')}>
         <div className={styles['transactionsCard']}>
           <div className={styles['transactionsHeader']}>
@@ -244,7 +186,7 @@ export function DashboardPage(): React.ReactElement {
             <button
               type="button"
               className={styles['viewAllBtn']}
-              onClick={() => {
+              onClick={(): void => {
                 navigateTo(APP_ROUTES.SALES);
               }}
             >

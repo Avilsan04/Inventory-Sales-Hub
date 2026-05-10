@@ -36,6 +36,38 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+      // Cyclomatic complexity — a 80-line hook with 10 nested ifs is worse than 150 lines of sequential mapping
+      'complexity': ['warn', { max: 12 }],
+      // File size limits — signals SRP violation when exceeded
+      'max-lines': ['warn', { max: 300, skipBlankLines: true, skipComments: true }],
+      // Deep import prevention — enforce public API (index.ts) for all cross-slice imports.
+      // Set to 'warn' during migration. Reduce --max-warnings threshold as violations are fixed.
+      // Target: 'error' + --max-warnings 0 once all violations are resolved (estimated end of FASE 3).
+      // SCSS module imports are excluded — they have no TS public API by design.
+      'no-restricted-imports': ['warn', {
+        patterns: [
+          {
+            group: ['@features/*/*', '@features/*/**', '!@features/**/*.scss', '!@features/**/*.module.scss'],
+            message: "Deep import forbidden. Use public API: import from '@features/[slice]' only.",
+          },
+          {
+            group: ['@widgets/*/*', '@widgets/*/**', '!@widgets/**/*.scss', '!@widgets/**/*.module.scss'],
+            message: "Deep import forbidden. Use public API: import from '@widgets/[slice]' only.",
+          },
+          {
+            group: ['@entities/*/*', '@entities/*/**', '!@entities/**/*.scss', '!@entities/**/*.module.scss'],
+            message: "Deep import forbidden. Use public API: import from '@entities/[slice]' only.",
+          },
+          {
+            group: ['@shared/ui/*/*', '@shared/ui/*/**', '@shared/hooks/*/*', '@shared/hooks/*/**', '@shared/lib/*/*', '@shared/lib/*/**'],
+            message: "Deep import forbidden. Use public API: import from '@shared/[layer]' only (e.g. '@shared/ui', '@shared/hooks', '@shared/lib').",
+          },
+          {
+            group: ['@pages/*/*', '@pages/*/**', '!@pages/**/*.scss', '!@pages/**/*.module.scss'],
+            message: "Deep import forbidden. Use public API: import from '@pages/[slice]' only.",
+          },
+        ],
+      }],
     },
   },
   // Environment override for WEB

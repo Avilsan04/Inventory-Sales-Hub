@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PlusIcon, PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { usePosKeyboard } from '@features/sales/hooks/usePosKeyboard';
-import { Input, Badge, Spinner } from '@shared/ui/primitives';
-import { cn } from '@shared/lib/cn';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { usePosKeyboard } from '@features/sales';
+import { Input, Badge, Spinner } from '@shared/ui';
+import { cn } from '@shared/lib';
+import { formatCurrency } from '@shared/lib';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 

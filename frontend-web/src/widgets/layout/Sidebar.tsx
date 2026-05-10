@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useEffectiveRole } from '@features/auth/hooks/useEffectiveRole';
+import { useEffectiveRole } from '@features/auth';
 import { BrandMark } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
@@ -32,41 +32,27 @@ import {
 } from '@shared/config/navigation';
 import styles from '@shared/styles/themes/components/Sidebar.module.scss';
 
+const NAV_ICON_MAP: Record<NavIconKey, React.ReactElement> = {
+  dashboard: <LayoutDashboardIcon aria-hidden="true" />,
+  analytics: <TrendingUpIcon aria-hidden="true" />,
+  inventory: <WarehouseIcon aria-hidden="true" />,
+  products: <TagIcon aria-hidden="true" />,
+  sales: <ReceiptIcon aria-hidden="true" />,
+  pos: <StoreIcon aria-hidden="true" />,
+  myOrders: <ClipboardListIcon aria-hidden="true" />,
+  catalog: <LayoutGridIcon aria-hidden="true" />,
+  customers: <UsersIcon aria-hidden="true" />,
+  employees: <BriefcaseIcon aria-hidden="true" />,
+  shipments: <FactoryIcon aria-hidden="true" />,
+  notifications: <BellIcon aria-hidden="true" />,
+  tenants: <Building2Icon aria-hidden="true" />,
+  audit: <ScrollTextIcon aria-hidden="true" />,
+  settings: <SlidersHorizontalIcon aria-hidden="true" />,
+  profile: <UserRoundIcon aria-hidden="true" />,
+};
+
 function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
-  switch (iconKey) {
-    case 'dashboard':
-      return <LayoutDashboardIcon aria-hidden="true" />;
-    case 'analytics':
-      return <TrendingUpIcon aria-hidden="true" />;
-    case 'inventory':
-      return <WarehouseIcon aria-hidden="true" />;
-    case 'products':
-      return <TagIcon aria-hidden="true" />;
-    case 'sales':
-      return <ReceiptIcon aria-hidden="true" />;
-    case 'pos':
-      return <StoreIcon aria-hidden="true" />;
-    case 'myOrders':
-      return <ClipboardListIcon aria-hidden="true" />;
-    case 'catalog':
-      return <LayoutGridIcon aria-hidden="true" />;
-    case 'customers':
-      return <UsersIcon aria-hidden="true" />;
-    case 'employees':
-      return <BriefcaseIcon aria-hidden="true" />;
-    case 'shipments':
-      return <FactoryIcon aria-hidden="true" />;
-    case 'notifications':
-      return <BellIcon aria-hidden="true" />;
-    case 'tenants':
-      return <Building2Icon aria-hidden="true" />;
-    case 'audit':
-      return <ScrollTextIcon aria-hidden="true" />;
-    case 'settings':
-      return <SlidersHorizontalIcon aria-hidden="true" />;
-    case 'profile':
-      return <UserRoundIcon aria-hidden="true" />;
-  }
+  return NAV_ICON_MAP[iconKey];
 }
 
 interface NavGroupSectionProps {

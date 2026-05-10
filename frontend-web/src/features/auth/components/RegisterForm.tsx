@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useRegisterPresenter } from '@features/auth/hooks/useRegisterPresenter';
+import { useRegisterPresenter } from '../hooks/useRegisterPresenter';
 import { useDependencies } from '@shared/hooks/useDependencies';
 import { Button, Input, Spinner } from '@shared/ui/primitives';
 import { FormField } from '@shared/ui/composed';
-import type { RegisterRole } from '@features/auth/models/auth.types';
+import type { RegisterRole } from '../models/auth.types';
 import styles from '@shared/styles/themes/components/RegisterForm.module.scss';
 
 interface RegisterFormProps {

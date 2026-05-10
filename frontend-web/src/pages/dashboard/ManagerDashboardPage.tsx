@@ -8,12 +8,10 @@ import {
   AlertCircleIcon,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe } from '@features/auth';
-import { useManagerStats } from '@features/analytics/hooks/useManagerStats';
-import { SaleDetailDrawer } from '@features/sales/components/SaleDetailDrawer';
+import { useManagerStats } from '@features/analytics';
+import { SaleDetailDrawer } from '@features/sales';
 import { SectionErrorBoundary } from '@app/providers';
-import { Skeleton, Badge } from '@shared/ui/primitives';
+import { KpiCard, Skeleton, Badge } from '@shared/ui';
 import {
   WeeklySalesBarChart,
   SalesDonutChart,
@@ -23,12 +21,12 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@shared/ui/composed';
-import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { formatOrderId } from '@shared/lib/formatters';
-import { APP_ROUTES } from '@shared/config/routes';
-import type { BadgeVariant } from '@shared/ui/primitives';
+} from '@shared/ui';
+import { formatCurrency, formatOrderId } from '@shared/lib';
+import { APP_ROUTES } from '@shared/config';
+import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
+import { DashboardShell, DashboardHeader } from '@widgets/dashboard';
+import type { BadgeVariant } from '@shared/ui';
 import type { Sale } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/ManagerDashboard.module.scss';
 
@@ -43,21 +41,11 @@ function statusVariant(status: string): BadgeVariant {
   return map[status as SaleStatus] ?? 'neutral';
 }
 
-function todayLabel(locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date());
-}
-
 const SKELETON_ROWS = 5;
 
 export function ManagerDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { i18n } = useTranslation();
-  const { data: me } = useAuthMe();
   const { navigateTo } = useRoutingAdapter();
   const {
     weeklyRevenue,
@@ -75,117 +63,63 @@ export function ManagerDashboardPage(): React.ReactElement {
   } = useManagerStats();
 
   const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
-  const firstName = me?.username.split(' ')[0] ?? '';
 
   return (
-    <div className={styles['page']}>
-      <header className={styles['header']}>
-        <div className={styles['headerMeta']}>
-          <h1 className={styles['greeting']}>
-            {t('managerDashboard.greeting')}, {firstName}
-          </h1>
-          <p className={styles['dateLabel']}>{todayLabel(i18n.language)}</p>
-        </div>
-      </header>
+    <DashboardShell>
+      <DashboardHeader greetingKey="managerDashboard.greeting" />
 
-      {/* KPI strip */}
-      <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
-              <DollarSignIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('managerDashboard.kpi.weeklyRevenue')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? (
-                <Skeleton className={styles['kpiSkeleton']} />
-              ) : (
-                formatCurrency(weeklyRevenue, currency)
-              )}
-            </div>
-          </div>
-        </div>
+      <DashboardShell.KpiGrid aria-label={t('dashboard.kpiAriaLabel')}>
+        <KpiCard
+          label={t('managerDashboard.kpi.weeklyRevenue')}
+          icon={<DollarSignIcon />}
+          accent="primary"
+          isLoading={isLoading}
+          value={formatCurrency(weeklyRevenue, currency)}
+        />
+        <KpiCard
+          label={t('managerDashboard.kpi.weeklyOrders')}
+          icon={<ShoppingBagIcon />}
+          accent="success"
+          isLoading={isLoading}
+          value={weeklyOrders}
+        />
+        <KpiCard
+          label={t('managerDashboard.kpi.pendingOrders')}
+          icon={<ClockIcon />}
+          accent="warning"
+          isLoading={isLoading}
+          value={pendingOrders}
+          subtext={t('managerDashboard.kpi.completedOrders', { count: completedOrders })}
+        />
+        <KpiCard
+          label={t('managerDashboard.kpi.team')}
+          icon={<UsersRoundIcon />}
+          accent="neutral"
+          isLoading={isLoading}
+          value={activeEmployees}
+          subtext={t('managerDashboard.kpi.teamOf', { total: totalEmployees })}
+        />
+      </DashboardShell.KpiGrid>
 
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSuccess']}`}>
-              <ShoppingBagIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('managerDashboard.kpi.weeklyOrders')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : weeklyOrders}
-            </div>
-          </div>
-        </div>
-
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentWarning']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconWarning']}`}>
-              <ClockIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('managerDashboard.kpi.pendingOrders')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : pendingOrders}
-            </div>
-            {!isLoading && (
-              <p className={styles['kpiSubtext']}>
-                {t('managerDashboard.kpi.completedOrders', { count: completedOrders })}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentNeutral']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
-              <UsersRoundIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('managerDashboard.kpi.team')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : activeEmployees}
-            </div>
-            {!isLoading && (
-              <p className={styles['kpiSubtext']}>
-                {t('managerDashboard.kpi.teamOf', { total: totalEmployees })}
-              </p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Charts */}
-      <div className={styles['chartsGrid']}>
+      <DashboardShell.ChartsGrid>
         <SectionErrorBoundary label={t('managerDashboard.salesTrend')}>
           <div className={styles['chartCard']}>
             <h3 className={styles['chartTitle']}>{t('managerDashboard.salesTrend')}</h3>
             <WeeklySalesBarChart data={salesPeriod} isLoading={isLoading} />
           </div>
         </SectionErrorBoundary>
-
         <SectionErrorBoundary label={t('managerDashboard.salesByStatus')}>
           <div className={styles['chartCard']}>
             <h3 className={styles['chartTitle']}>{t('managerDashboard.salesByStatus')}</h3>
             <SalesDonutChart data={statusSlices} isLoading={isLoading} />
           </div>
         </SectionErrorBoundary>
-      </div>
+      </DashboardShell.ChartsGrid>
 
-      {/* Low stock alerts */}
       <div className={styles['sectionCard']}>
         <div className={styles['sectionHeader']}>
           <h2 className={styles['sectionTitle']}>
-            <AlertCircleIcon
-              size={16}
-              style={{ display: 'inline', marginRight: 6, color: 'var(--color-error)' }}
-            />
+            <AlertCircleIcon size={16} aria-hidden="true" className={styles['alertIcon']} />
             {t('managerDashboard.stockAlerts')}
           </h2>
           <button
@@ -221,7 +155,6 @@ export function ManagerDashboardPage(): React.ReactElement {
         )}
       </div>
 
-      {/* Recent sales */}
       <div className={styles['sectionCard']}>
         <div className={styles['sectionHeader']}>
           <h2 className={styles['sectionTitle']}>{t('managerDashboard.recentSales')}</h2>
@@ -296,6 +229,6 @@ export function ManagerDashboardPage(): React.ReactElement {
           if (!open) setDetailSale(null);
         }}
       />
-    </div>
+    </DashboardShell>
   );
 }

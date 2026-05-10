@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useOpenCashSession } from '@features/sales/hooks/useOpenCashSession';
+import { useOpenCashSession } from '../hooks/useOpenCashSession';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';

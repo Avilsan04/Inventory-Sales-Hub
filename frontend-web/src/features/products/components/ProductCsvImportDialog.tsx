@@ -27,12 +27,22 @@ interface ParsedProduct extends CreateProductDTO {
   _error?: string;
 }
 
-function rowToDTO(row: ParsedRow, index: number): ParsedProduct {
-  const priceRaw = parseFloat(row['price'] ?? '0');
+const VALID_UOMS = new Set<string>(['unit', 'kg', 'litre', 'box', 'pack']);
+
+function toValidUom(v: string | undefined): CreateProductDTO['uom'] {
+  return VALID_UOMS.has(v ?? '') ? (v as CreateProductDTO['uom']) : 'unit';
+}
+
+function validateRow(row: ParsedRow, priceRaw: number): string | undefined {
   const errors: string[] = [];
   if (!row['name']) errors.push('name required');
   if (!row['sku'] || row['sku'].length < 3) errors.push('sku min 3 chars');
   if (isNaN(priceRaw) || priceRaw < 0) errors.push('invalid price');
+  return errors.length > 0 ? errors.join(', ') : undefined;
+}
+
+function rowToDTO(row: ParsedRow, index: number): ParsedProduct {
+  const priceRaw = parseFloat(row['price'] ?? '0');
   return {
     name: row['name'] ?? '',
     sku: row['sku'] ?? '',
@@ -40,14 +50,9 @@ function rowToDTO(row: ParsedRow, index: number): ParsedProduct {
     currency: row['currency'] || 'EUR',
     description: row['description'] || undefined,
     categoryId: row['categoryId'] || undefined,
-    uom: ((): CreateProductDTO['uom'] => {
-      const v = row['uom'];
-      return v && ['unit', 'kg', 'litre', 'box', 'pack'].includes(v)
-        ? (v as CreateProductDTO['uom'])
-        : 'unit';
-    })(),
+    uom: toValidUom(row['uom']),
     _rowIndex: index,
-    _error: errors.length > 0 ? errors.join(', ') : undefined,
+    _error: validateRow(row, priceRaw),
   };
 }
 

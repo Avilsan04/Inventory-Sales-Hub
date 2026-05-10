@@ -1,6 +1,61 @@
+import * as Sentry from '@sentry/react';
 import { env } from '@core/config/env';
 import { logger } from './logger';
 
+// ── PII sanitization ─────────────────────────────────────────────────────────
+// Fields that may contain Personally Identifiable Information (GDPR).
+// Sanitize client-side before data leaves the browser (defense layer 1).
+// Configure Sentry "Advanced Data Scrubbing" in the Sentry admin panel
+// (Settings → Security & Privacy → Advanced Data Scrubbing) as layer 2.
+const PII_KEYS = new Set([
+  'email',
+  'phone',
+  'name',
+  'firstName',
+  'lastName',
+  'customerName',
+  'username',
+  'password',
+  'token',
+  'address',
+]);
+
+function sanitizePII(obj: unknown): unknown {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(sanitizePII);
+  const sanitized: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+    sanitized[key] = PII_KEYS.has(key.toLowerCase()) ? '[REDACTED]' : sanitizePII(value);
+  }
+  return sanitized;
+}
+
+// ── Sentry initialization ────────────────────────────────────────────────────
+const SENTRY_DSN = env.VITE_SENTRY_DSN;
+const sentryEnabled = typeof SENTRY_DSN === 'string' && SENTRY_DSN.length > 0;
+
+if (sentryEnabled) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: env.MODE,
+    release: env.VITE_APP_VERSION ?? 'unknown',
+    // Capture 100% of sessions in dev, 10% in production
+    tracesSampleRate: env.MODE === 'production' ? 0.1 : 1.0,
+    // Defense layer 1: sanitize PII before events leave the browser (GDPR)
+    beforeSend(event) {
+      const req = event.request;
+      if (req != null && req.data != null) {
+        req.data = sanitizePII(req.data) as typeof req.data;
+      }
+      if (event.extra != null) {
+        event.extra = sanitizePII(event.extra) as typeof event.extra;
+      }
+      return event;
+    },
+  });
+}
+
+// ── Custom lightweight telemetry (fallback when Sentry is not configured) ────
 interface TelemetryContext {
   componentStack?: string;
   [key: string]: unknown;
@@ -53,36 +108,37 @@ function baseEvent(type: string, data?: Record<string, unknown>): TelemetryEvent
   };
 }
 
-/**
- * Thin telemetry adapter.
- * Replace the stub bodies with Sentry/Datadog calls when API keys are available:
- *   import * as Sentry from '@sentry/react';
- *   captureException: (e, ctx) => Sentry.captureException(e, { extra: ctx }),
- */
 export const telemetry = {
   captureException(error: Error, context?: TelemetryContext): void {
-    logger.error('[Telemetry] Uncaught exception', { error: error.message, ...context });
-    sendTelemetry(baseEvent('exception', { message: error.message, ...context }));
+    if (sentryEnabled) {
+      Sentry.captureException(error, { extra: context });
+    } else {
+      logger.error('[Telemetry] Uncaught exception', { error: error.message, ...context });
+      sendTelemetry(baseEvent('exception', { message: error.message, ...context }));
+    }
   },
 
   captureMessage(message: string, context?: TelemetryContext): void {
-    logger.warn('[Telemetry] ' + message, context);
-    sendTelemetry(baseEvent('message', { message, ...context }));
+    if (sentryEnabled) {
+      Sentry.captureMessage(message, { extra: context });
+    } else {
+      logger.warn('[Telemetry] ' + message, context);
+      sendTelemetry(baseEvent('message', { message, ...context }));
+    }
   },
 } as const;
 
 let rumStarted = false;
 
-/** Starts lightweight RUM/perf telemetry when VITE_TELEMETRY_URL is configured. */
 export function initRum(): void {
-  if (rumStarted || !TELEMETRY_ENABLED || typeof window === 'undefined') return;
+  if (rumStarted || typeof window === 'undefined') return;
   rumStarted = true;
 
   try {
     const nav = performance.getEntriesByType('navigation')[0] as
       | PerformanceNavigationTiming
       | undefined;
-    if (nav) {
+    if (nav && !sentryEnabled) {
       sendTelemetry(
         baseEvent('navigation', {
           ttfb: nav.responseStart,
@@ -96,37 +152,31 @@ export function initRum(): void {
     // ignore
   }
 
-  if (typeof PerformanceObserver === 'undefined') return;
+  if (!sentryEnabled && typeof PerformanceObserver !== 'undefined' && TELEMETRY_ENABLED) {
+    const observe = (entryType: string, handler: (entry: PerformanceEntry) => void): void => {
+      try {
+        const obs = new PerformanceObserver((list) => {
+          list.getEntries().forEach(handler);
+        });
+        obs.observe({ type: entryType, buffered: true });
+      } catch {
+        /* ignore unsupported entry types */
+      }
+    };
 
-  const observe = (entryType: string, handler: (entry: PerformanceEntry) => void): void => {
-    try {
-      const obs = new PerformanceObserver((list) => {
-        list.getEntries().forEach(handler);
-      });
-      obs.observe({ type: entryType, buffered: true });
-    } catch {
-      // ignore unsupported entry types
-    }
-  };
-
-  observe('paint', (entry) => {
-    sendTelemetry(baseEvent('paint', { name: entry.name, value: entry.startTime }));
-  });
-
-  observe('largest-contentful-paint', (entry) => {
-    sendTelemetry(baseEvent('lcp', { value: entry.startTime }));
-  });
-
-  observe('first-input', (entry) => {
-    const firstInput = entry as PerformanceEventTiming;
-    sendTelemetry(
-      baseEvent('first-input', { delay: firstInput.processingStart - firstInput.startTime })
-    );
-  });
-
-  observe('layout-shift', (entry) => {
-    const shift = entry as PerformanceEntry & { value: number; hadRecentInput?: boolean };
-    if (shift.hadRecentInput) return;
-    sendTelemetry(baseEvent('cls', { value: shift.value }));
-  });
+    observe('paint', (e) => {
+      sendTelemetry(baseEvent('paint', { name: e.name, value: e.startTime }));
+    });
+    observe('largest-contentful-paint', (e) => {
+      sendTelemetry(baseEvent('lcp', { value: e.startTime }));
+    });
+    observe('first-input', (e) => {
+      const fi = e as PerformanceEventTiming;
+      sendTelemetry(baseEvent('first-input', { delay: fi.processingStart - fi.startTime }));
+    });
+    observe('layout-shift', (e) => {
+      const shift = e as PerformanceEntry & { value: number; hadRecentInput?: boolean };
+      if (!shift.hadRecentInput) sendTelemetry(baseEvent('cls', { value: shift.value }));
+    });
+  }
 }

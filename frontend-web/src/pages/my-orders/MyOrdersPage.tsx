@@ -3,7 +3,7 @@ import { ShoppingCartIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSales } from '@features/sales';
 import { useAuthMe } from '@features/auth';
-import { SaleDetailDrawer } from '@features/sales/components/SaleDetailDrawer';
+import { SaleDetailDrawer } from '@features/sales';
 import { Skeleton, Badge, Button } from '@shared/ui/primitives';
 import {
   Card,

@@ -1,6 +1,6 @@
 import { onlineManager } from '@core/api/queryClient';
 import { HttpError } from '@core/http';
-import { syncDb } from '@shared/lib/db/syncDb';
+import { syncDb } from '@shared/lib';
 import { salesApi } from '../api/salesApi';
 import type { CreateSaleDTO } from '@entities/sale';
 

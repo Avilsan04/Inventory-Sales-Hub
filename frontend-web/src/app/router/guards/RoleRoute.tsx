@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthMe } from '@features/auth';
-import { useEffectiveRole } from '@features/auth/hooks/useEffectiveRole';
+import { useEffectiveRole } from '@features/auth';
 import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
-import type { UserRole, UserProfile } from '@features/auth/models/auth.types';
+import type { UserRole, UserProfile } from '@features/auth';
 
 const ROLE_DEFAULT_PATH: Record<UserRole, string> = {
   admin: APP_ROUTES.INVENTORY,

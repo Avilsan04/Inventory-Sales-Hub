@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { salesApi } from '../api/salesApi';
 import { saleKeys } from './useSales';
 import { calculateSaleTotals } from '../lib/saleCalculations';
-import { syncDb } from '@shared/lib/db/syncDb';
+import { syncDb } from '@shared/lib';
 import type { Sale, CreateSaleDTO } from '@entities/sale';
 
 export function useCreateSale(): UseMutationResult<

@@ -20,8 +20,8 @@ import {
   EmptyState,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
-import { SupplierCreateDialog } from '@features/suppliers/components/SupplierCreateDialog';
-import { SupplierEditDialog } from '@features/suppliers/components/SupplierEditDialog';
+import { SupplierCreateDialog } from '@features/suppliers';
+import { SupplierEditDialog } from '@features/suppliers';
 import type { Supplier } from '@entities/supplier';
 import { useTableFilters } from '@shared/hooks';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';

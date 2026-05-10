@@ -16,7 +16,7 @@ import {
   ScrollTextIcon,
   type LucideIcon,
 } from 'lucide-react';
-import type { UserRole } from '@features/auth/models/auth.types';
+import type { UserRole } from '@features/auth';
 import { APP_ROUTES } from '@shared/config/routes';
 
 export interface RouteMeta {

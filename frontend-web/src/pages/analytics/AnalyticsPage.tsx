@@ -11,8 +11,8 @@ import {
 import { PermissionGuard } from '@features/auth';
 import { useSaleSummary } from '@features/sales';
 import { exportToCsv } from '@shared/lib/exportCsv';
-import { Spinner, Skeleton, Button } from '@shared/ui/primitives';
-import { cn } from '@shared/lib/cn';
+import { Spinner, Skeleton, Button } from '@shared/ui';
+import { cn } from '@shared/lib';
 import {
   Card,
   CardHeader,
@@ -25,8 +25,8 @@ import {
   DateRangePicker,
   type DateRange,
   type StatusSlice,
-} from '@shared/ui/composed';
-import type { SalesAnalyticsParams } from '@entities/analytics';
+} from '@shared/ui';
+import type { SalesAnalyticsParams, DashboardKpi } from '@entities/analytics';
 import {
   AnalyticsTopProductsTable,
   AnalyticsTopCustomersTable,
@@ -44,21 +44,69 @@ const DATE_RANGES = [
 type DateRangeId = (typeof DATE_RANGES)[number]['id'];
 type KpiIconKey = 'revenue' | 'orders' | 'customers' | 'products';
 
-function todayStr(): string {
-  return new Date().toISOString().slice(0, 10);
+const KPI_ICON_MAP: Record<KpiIconKey, React.ReactElement> = {
+  revenue: <TrendingUpIcon aria-hidden="true" />,
+  orders: <ShoppingCartIcon aria-hidden="true" />,
+  customers: <UsersIcon aria-hidden="true" />,
+  products: <PackageIcon aria-hidden="true" />,
+};
+
+interface KpiCardDef {
+  key: string;
+  titleKey: string;
+  value: string | number;
+  iconKey: KpiIconKey;
+  trend?: string;
 }
 
-function renderKpiIcon(key: KpiIconKey): React.ReactElement {
-  switch (key) {
-    case 'revenue':
-      return <TrendingUpIcon aria-hidden="true" />;
-    case 'orders':
-      return <ShoppingCartIcon aria-hidden="true" />;
-    case 'customers':
-      return <UsersIcon aria-hidden="true" />;
-    case 'products':
-      return <PackageIcon aria-hidden="true" />;
-  }
+function buildKpiCards(kpi: DashboardKpi | undefined): KpiCardDef[] {
+  const growthStr = (v: number): string => `${v >= 0 ? '+' : ''}${String(v)}%`;
+  return [
+    {
+      key: 'revenue',
+      titleKey: 'analytics.totalRevenue',
+      iconKey: 'revenue',
+      value: kpi ? `${kpi.currency} ${kpi.totalRevenue.toLocaleString()}` : '0',
+      trend: kpi ? growthStr(kpi.revenueGrowth) : undefined,
+    },
+    {
+      key: 'orders',
+      titleKey: 'analytics.totalOrders',
+      iconKey: 'orders',
+      value: kpi?.totalOrders ?? 0,
+      trend: kpi ? growthStr(kpi.ordersGrowth) : undefined,
+    },
+    {
+      key: 'customers',
+      titleKey: 'analytics.totalCustomers',
+      iconKey: 'customers',
+      value: kpi?.totalCustomers ?? 0,
+    },
+    {
+      key: 'products',
+      titleKey: 'analytics.totalProducts',
+      iconKey: 'products',
+      value: kpi?.totalProducts ?? 0,
+    },
+  ];
+}
+
+function buildDonutData(
+  saleSummary: { byStatus?: Array<{ status: string; count: number; revenue: number }> } | undefined
+): StatusSlice[] {
+  return (
+    saleSummary?.byStatus?.map((b) => ({ status: b.status, count: b.count, revenue: b.revenue })) ??
+    []
+  );
+}
+
+function buildSalesParams(dateRange: DateRangeId, customRange: DateRange): SalesAnalyticsParams {
+  if (dateRange === 'custom') return { from: customRange.from, to: customRange.to };
+  return { period: dateRange };
+}
+
+function todayStr(): string {
+  return new Date().toISOString().slice(0, 10);
 }
 
 export function AnalyticsPage(): React.ReactElement {
@@ -69,10 +117,10 @@ export function AnalyticsPage(): React.ReactElement {
     to: todayStr(),
   });
 
-  const salesParams = React.useMemo((): SalesAnalyticsParams => {
-    if (dateRange === 'custom') return { from: customRange.from, to: customRange.to };
-    return { period: dateRange };
-  }, [dateRange, customRange]);
+  const salesParams = React.useMemo(
+    () => buildSalesParams(dateRange, customRange),
+    [dateRange, customRange]
+  );
 
   const { data: kpi, isLoading: kpiLoading, isError: kpiError } = useDashboardKpi();
   const { data: topProds, isLoading: prodsLoading, isError: prodsError } = useTopProducts();
@@ -81,8 +129,8 @@ export function AnalyticsPage(): React.ReactElement {
   const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(salesParams);
   const { data: saleSummary, isLoading: summaryLoading } = useSaleSummary();
 
-  const anyLoading = kpiLoading || prodsLoading || custsLoading || alertsLoading;
-  const anyError = kpiError || prodsError || custsError || alertsError;
+  const anyLoading = [kpiLoading, prodsLoading, custsLoading, alertsLoading].some(Boolean);
+  const anyError = [kpiError, prodsError, custsError, alertsError].some(Boolean);
   const currency = kpi?.currency ?? '';
 
   if (anyLoading && !kpi) {
@@ -101,44 +149,8 @@ export function AnalyticsPage(): React.ReactElement {
     );
   }
 
-  const kpiCards: Array<{
-    key: string;
-    titleKey: string;
-    value: string | number;
-    iconKey: KpiIconKey;
-    trend?: string;
-  }> = [
-    {
-      key: 'revenue',
-      titleKey: 'analytics.totalRevenue',
-      value: kpi ? `${kpi.currency} ${kpi.totalRevenue.toLocaleString()}` : '0',
-      iconKey: 'revenue',
-      trend: kpi ? `${kpi.revenueGrowth >= 0 ? '+' : ''}${String(kpi.revenueGrowth)}%` : undefined,
-    },
-    {
-      key: 'orders',
-      titleKey: 'analytics.totalOrders',
-      value: kpi?.totalOrders ?? 0,
-      iconKey: 'orders',
-      trend: kpi ? `${kpi.ordersGrowth >= 0 ? '+' : ''}${String(kpi.ordersGrowth)}%` : undefined,
-    },
-    {
-      key: 'customers',
-      titleKey: 'analytics.totalCustomers',
-      value: kpi?.totalCustomers ?? 0,
-      iconKey: 'customers',
-    },
-    {
-      key: 'products',
-      titleKey: 'analytics.totalProducts',
-      value: kpi?.totalProducts ?? 0,
-      iconKey: 'products',
-    },
-  ];
-
-  const donutData: StatusSlice[] =
-    saleSummary?.byStatus?.map((b) => ({ status: b.status, count: b.count, revenue: b.revenue })) ??
-    [];
+  const kpiCards = buildKpiCards(kpi);
+  const donutData = buildDonutData(saleSummary);
 
   const handleExportProducts = (): void => {
     exportToCsv(
@@ -188,7 +200,7 @@ export function AnalyticsPage(): React.ReactElement {
             <button
               key={id}
               type="button"
-              onClick={() => {
+              onClick={(): void => {
                 setDateRange(id);
               }}
               className={cn(
@@ -212,7 +224,7 @@ export function AnalyticsPage(): React.ReactElement {
             <CardHeader>
               <CardTitle className={styles['kpiTitle']}>{t(card.titleKey)}</CardTitle>
               <CardAction>
-                <span className={styles['kpiIcon']}>{renderKpiIcon(card.iconKey)}</span>
+                <span className={styles['kpiIcon']}>{KPI_ICON_MAP[card.iconKey]}</span>
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -282,7 +294,6 @@ export function AnalyticsPage(): React.ReactElement {
         <AnalyticsTopProductsTable data={topProds} isLoading={prodsLoading} currency={currency} />
         <AnalyticsTopCustomersTable data={topCusts} isLoading={custsLoading} currency={currency} />
       </div>
-
       <AnalyticsLowStockTable data={alerts} isLoading={alertsLoading} />
     </div>
   );

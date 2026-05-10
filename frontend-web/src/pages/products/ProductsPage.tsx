@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { PackageIcon, TagIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useProducts, useCategories, useDeleteProduct } from '@features/products';
+import {
+  useProducts,
+  useCategories,
+  useDeleteProduct,
+  ProductCreateDialog,
+  ProductEditDialog,
+  ProductCsvImportDialog,
+} from '@features/products';
 import { PermissionGuard } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { Skeleton, Button, Pagination } from '@shared/ui/primitives';
+import { formatCurrency } from '@shared/lib';
+import { Skeleton, Button, Pagination } from '@shared/ui';
 import {
   Card,
   CardHeader,
@@ -20,18 +27,59 @@ import {
   TableHead,
   TableCell,
   ConfirmDialog,
-} from '@shared/ui/composed';
+} from '@shared/ui';
 import { SectionErrorBoundary } from '@app/providers';
-import { ProductCreateDialog } from '@features/products/components/ProductCreateDialog';
-import { ProductEditDialog } from '@features/products/components/ProductEditDialog';
-import { ProductCsvImportDialog } from '@features/products/components/ProductCsvImportDialog';
 import { useTableFilters } from '@shared/hooks';
 import type { Product } from '@entities/product';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const PRODUCT_PAGE_SIZE = 20;
-
 const SKELETON_ROWS = 5;
+
+function matchesProduct(p: Product, q: string): boolean {
+  return (
+    p.name.toLowerCase().includes(q) ||
+    p.sku.toLowerCase().includes(q) ||
+    (p.category?.name ?? '').toLowerCase().includes(q)
+  );
+}
+
+interface RowActionsProps {
+  product: Product;
+  onEdit: (p: Product) => void;
+  onDelete: (id: string) => void;
+}
+
+function ProductRowActions({ product, onEdit, onDelete }: RowActionsProps): React.ReactElement {
+  return (
+    <div className={styles['cellActions']}>
+      <PermissionGuard permission="create:product">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Editar producto"
+          onClick={(): void => {
+            onEdit(product);
+          }}
+        >
+          <PencilIcon size={14} aria-hidden="true" />
+        </Button>
+      </PermissionGuard>
+      <PermissionGuard permission="delete:product">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Eliminar producto"
+          onClick={(): void => {
+            onDelete(product.id);
+          }}
+        >
+          <TrashIcon size={14} aria-hidden="true" />
+        </Button>
+      </PermissionGuard>
+    </div>
+  );
+}
 
 export function ProductsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
@@ -46,25 +94,24 @@ export function ProductsPage(): React.ReactElement {
 
   const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Product>(
     data,
-    (p, q) =>
-      p.name.toLowerCase().includes(q) ||
-      p.sku.toLowerCase().includes(q) ||
-      (p.category?.name ?? '').toLowerCase().includes(q),
+    matchesProduct,
     PRODUCT_PAGE_SIZE
   );
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
     deleteProduct(deleteId, {
-      onSuccess: () => {
+      onSuccess: (): void => {
         toast({ title: 'Product deleted' });
         setDeleteId(null);
       },
-      onError: (err) => {
+      onError: (err): void => {
         toast({ title: 'Delete failed', description: err.message, variant: 'destructive' });
       },
     });
   };
+
+  const totalProducts = data?.length ?? 0;
 
   if (isError) {
     return (
@@ -86,7 +133,7 @@ export function ProductsPage(): React.ReactElement {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => {
+              onClick={(): void => {
                 setImportOpen(true);
               }}
             >
@@ -94,12 +141,10 @@ export function ProductsPage(): React.ReactElement {
             </Button>
             <Button
               size="sm"
-              onClick={() => {
+              onClick={(): void => {
                 setCreateOpen(true);
               }}
-            >
-              {`+ ${t('inventory.addProduct')}`}
-            </Button>
+            >{`+ ${t('inventory.addProduct')}`}</Button>
           </div>
         </PermissionGuard>
       </header>
@@ -178,32 +223,11 @@ export function ProductsPage(): React.ReactElement {
                         <TableCell>{formatCurrency(p.price, p.currency)}</TableCell>
                         <TableCell>{p.category?.name ?? '—'}</TableCell>
                         <TableCell>
-                          <div className={styles['cellActions']}>
-                            <PermissionGuard permission="create:product">
-                              <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                aria-label="Editar producto"
-                                onClick={() => {
-                                  setEditProduct(p);
-                                }}
-                              >
-                                <PencilIcon size={14} aria-hidden="true" />
-                              </Button>
-                            </PermissionGuard>
-                            <PermissionGuard permission="delete:product">
-                              <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                aria-label="Eliminar producto"
-                                onClick={() => {
-                                  setDeleteId(p.id);
-                                }}
-                              >
-                                <TrashIcon size={14} aria-hidden="true" />
-                              </Button>
-                            </PermissionGuard>
-                          </div>
+                          <ProductRowActions
+                            product={p}
+                            onEdit={setEditProduct}
+                            onDelete={setDeleteId}
+                          />
                         </TableCell>
                       </TableRow>
                     ))
@@ -214,8 +238,8 @@ export function ProductsPage(): React.ReactElement {
             {pageCount > 1 && (
               <div className={styles['tableFooter']}>
                 <span>
-                  {Math.min((page - 1) * PRODUCT_PAGE_SIZE + 1, data?.length ?? 0)}–
-                  {Math.min(page * PRODUCT_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+                  {Math.min((page - 1) * PRODUCT_PAGE_SIZE + 1, totalProducts)}–
+                  {Math.min(page * PRODUCT_PAGE_SIZE, totalProducts)} / {totalProducts}
                 </span>
                 <Pagination
                   page={page}
@@ -235,13 +259,13 @@ export function ProductsPage(): React.ReactElement {
       <ProductEditDialog
         product={editProduct}
         open={editProduct !== null}
-        onOpenChange={(open) => {
+        onOpenChange={(open): void => {
           if (!open) setEditProduct(null);
         }}
       />
       <ConfirmDialog
         open={deleteId !== null}
-        onOpenChange={(open) => {
+        onOpenChange={(open): void => {
           if (!open) setDeleteId(null);
         }}
         title={t('products.deleteProduct')}

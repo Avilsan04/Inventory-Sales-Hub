@@ -65,9 +65,14 @@ function ChartTooltip({ active, payload, label }: TooltipContentProps): React.Re
 interface Props {
   data: SalesPeriod[] | undefined;
   isLoading: boolean;
+  ariaLabel?: string;
 }
 
-export function RevenueAreaChart({ data, isLoading }: Props): React.ReactElement {
+export function RevenueAreaChart({
+  data,
+  isLoading,
+  ariaLabel = 'Revenue and orders area chart',
+}: Props): React.ReactElement {
   const colors = useChartColors();
 
   if (isLoading || !data) {
@@ -86,63 +91,65 @@ export function RevenueAreaChart({ data, isLoading }: Props): React.ReactElement
   };
 
   return (
-    <ResponsiveContainer width="100%" height={240}>
-      <AreaChart data={chartData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
-        <defs>
-          <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={colors.color1} stopOpacity={0.18} />
-            <stop offset="95%" stopColor={colors.color1} stopOpacity={0} />
-          </linearGradient>
-          <linearGradient id="gradOrders" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={colors.color2} stopOpacity={0.18} />
-            <stop offset="95%" stopColor={colors.color2} stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke={colors.border} vertical={false} />
-        <XAxis
-          dataKey="month"
-          tick={{ fill: colors.textMuted, fontSize: 11 }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <YAxis
-          yAxisId="left"
-          tick={{ fill: colors.textMuted, fontSize: 11 }}
-          axisLine={false}
-          tickLine={false}
-          tickFormatter={formatYAxis}
-          width={48}
-        />
-        <YAxis
-          yAxisId="right"
-          orientation="right"
-          tick={{ fill: colors.textMuted, fontSize: 11 }}
-          axisLine={false}
-          tickLine={false}
-          width={32}
-        />
-        <Tooltip content={ChartTooltip} />
-        <Area
-          yAxisId="left"
-          type="monotone"
-          dataKey="Revenue"
-          stroke={colors.color1}
-          fill="url(#gradRevenue)"
-          strokeWidth={2}
-          dot={false}
-          activeDot={{ r: 4, strokeWidth: 0 }}
-        />
-        <Area
-          yAxisId="right"
-          type="monotone"
-          dataKey="Orders"
-          stroke={colors.color2}
-          fill="url(#gradOrders)"
-          strokeWidth={2}
-          dot={false}
-          activeDot={{ r: 4, strokeWidth: 0 }}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
+    <div role="img" aria-label={ariaLabel}>
+      <ResponsiveContainer width="100%" height={240}>
+        <AreaChart data={chartData} margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id="gradRevenue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={colors.color1} stopOpacity={0.18} />
+              <stop offset="95%" stopColor={colors.color1} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="gradOrders" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={colors.color2} stopOpacity={0.18} />
+              <stop offset="95%" stopColor={colors.color2} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke={colors.border} vertical={false} />
+          <XAxis
+            dataKey="month"
+            tick={{ fill: colors.textMuted, fontSize: 11 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            yAxisId="left"
+            tick={{ fill: colors.textMuted, fontSize: 11 }}
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={formatYAxis}
+            width={48}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tick={{ fill: colors.textMuted, fontSize: 11 }}
+            axisLine={false}
+            tickLine={false}
+            width={32}
+          />
+          <Tooltip content={ChartTooltip} />
+          <Area
+            yAxisId="left"
+            type="monotone"
+            dataKey="Revenue"
+            stroke={colors.color1}
+            fill="url(#gradRevenue)"
+            strokeWidth={2}
+            dot={false}
+            activeDot={{ r: 4, strokeWidth: 0 }}
+          />
+          <Area
+            yAxisId="right"
+            type="monotone"
+            dataKey="Orders"
+            stroke={colors.color2}
+            fill="url(#gradOrders)"
+            strokeWidth={2}
+            dot={false}
+            activeDot={{ r: 4, strokeWidth: 0 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

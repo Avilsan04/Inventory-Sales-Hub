@@ -20,8 +20,8 @@ import {
   EmptyState,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
-import { CustomerCreateDialog } from '@features/customers/components/CustomerCreateDialog';
-import { CustomerEditDialog } from '@features/customers/components/CustomerEditDialog';
+import { CustomerCreateDialog } from '@features/customers';
+import { CustomerEditDialog } from '@features/customers';
 import type { Customer } from '@entities/customer';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Customers.module.scss';

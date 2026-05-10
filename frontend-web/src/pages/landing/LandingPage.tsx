@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
 } from '@shared/ui/composed';
 import { APP_ROUTES } from '@shared/config/routes';
-import { activateDemoMode } from '@features/auth/lib/demoMode';
+import { activateDemoMode } from '@features/auth';
 
 import { HeroSection } from './sections/HeroSection';
 import { FeaturesSection } from './sections/FeaturesSection';

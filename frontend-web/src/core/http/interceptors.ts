@@ -16,6 +16,11 @@ function toHttpError(error: AxiosError): HttpError {
   return new HttpError(error.message, error.response?.status ?? 0);
 }
 
+function toRetryError(err: unknown): HttpError {
+  if (err instanceof HttpError) return err;
+  return new HttpError(err instanceof Error ? err.message : String(err), 401);
+}
+
 export function setupRequestInterceptor(
   client: AxiosInstance,
   getToken: () => string | null,
@@ -54,6 +59,38 @@ function normalizeError(error: unknown): Error {
   return error instanceof Error ? error : new Error(String(error));
 }
 
+function enqueueRequest(
+  client: AxiosInstance,
+  originalRequest: InternalAxiosRequestConfig | undefined
+): Promise<unknown> {
+  if (failedQueue.length >= MAX_QUEUE_SIZE) {
+    return Promise.reject(
+      new Error('Token refresh queue overflow — too many concurrent requests.')
+    );
+  }
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error('Token refresh queue timeout.'));
+    }, QUEUE_TIMEOUT_MS);
+    failedQueue.push({
+      resolve: (value): void => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      reject: (reason): void => {
+        clearTimeout(timer);
+        reject(reason);
+      },
+    });
+  }).then((token) => {
+    if (originalRequest) {
+      originalRequest.headers.set('Authorization', `Bearer ${String(token)}`);
+      return client(originalRequest);
+    }
+    return Promise.reject(new Error('No original request to retry'));
+  });
+}
+
 function processQueue(error: unknown, token: string | null = null): void {
   const rejection = error === null ? null : normalizeError(error);
   failedQueue.forEach(({ resolve, reject }) => {
@@ -85,32 +122,7 @@ export function setupResponseInterceptor(
       }
 
       if (isRefreshing) {
-        if (failedQueue.length >= MAX_QUEUE_SIZE) {
-          return Promise.reject(
-            new Error('Token refresh queue overflow — too many concurrent requests.')
-          );
-        }
-        return new Promise((resolve, reject) => {
-          const timer = setTimeout(() => {
-            reject(new Error('Token refresh queue timeout.'));
-          }, QUEUE_TIMEOUT_MS);
-          failedQueue.push({
-            resolve: (value) => {
-              clearTimeout(timer);
-              resolve(value);
-            },
-            reject: (reason) => {
-              clearTimeout(timer);
-              reject(reason);
-            },
-          });
-        }).then((token) => {
-          if (originalRequest) {
-            originalRequest.headers.set('Authorization', `Bearer ${String(token)}`);
-            return client(originalRequest);
-          }
-          return Promise.reject(new Error('No original request to retry'));
-        });
+        return enqueueRequest(client, originalRequest);
       }
 
       if (originalRequest) {
@@ -129,12 +141,7 @@ export function setupResponseInterceptor(
       } catch (refreshError) {
         processQueue(refreshError, null);
         onUnauthorized();
-        throw refreshError instanceof HttpError
-          ? refreshError
-          : new HttpError(
-              refreshError instanceof Error ? refreshError.message : String(refreshError),
-              401
-            );
+        throw toRetryError(refreshError);
       } finally {
         isRefreshing = false;
       }

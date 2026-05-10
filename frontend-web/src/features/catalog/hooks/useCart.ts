@@ -1,4 +1,4 @@
-import { useCartStore } from '@features/sales/stores/cartStore';
+import { useCartStore } from '@features/sales';
 
 /** Catalog-facing CartItem shape (name/price instead of productName/unitPrice). */
 export interface CartItem {

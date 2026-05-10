@@ -10,12 +10,9 @@ import {
   BarChart2Icon,
   TruckIcon,
 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe } from '@features/auth';
-import { useCompanyStats } from '@features/analytics/hooks/useCompanyStats';
+import { useCompanyStats } from '@features/analytics';
 import { SectionErrorBoundary } from '@app/providers';
-import { Skeleton } from '@shared/ui/primitives';
+import { KpiCard, Skeleton } from '@shared/ui';
 import {
   RevenueAreaChart,
   Table,
@@ -24,27 +21,31 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@shared/ui/composed';
-import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { APP_ROUTES } from '@shared/config/routes';
+} from '@shared/ui';
+import { formatCurrency } from '@shared/lib';
+import { APP_ROUTES } from '@shared/config';
+import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
+import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
+import type { QuickAction } from '@widgets/dashboard';
 import styles from '@shared/styles/themes/pages/CompanyDashboard.module.scss';
-
-function todayLabel(locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date());
-}
 
 const SKELETON_ROWS = 5;
 
+function GrowthBadge({ growth, vsKey }: { growth: number; vsKey: string }): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+  const positive = growth >= 0;
+  return (
+    <div
+      className={`${styles['kpiGrowth']} ${positive ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']}`}
+    >
+      {positive ? <TrendingUpIcon size={12} /> : <TrendingDownIcon size={12} />}
+      {Math.abs(growth).toFixed(1)}% {t(vsKey)}
+    </div>
+  );
+}
+
 export function CompanyDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { i18n } = useTranslation();
-  const { data: me } = useAuthMe();
   const { navigateTo } = useRoutingAdapter();
   const {
     totalRevenue,
@@ -61,108 +62,71 @@ export function CompanyDashboardPage(): React.ReactElement {
     isLoading,
   } = useCompanyStats();
 
-  const firstName = me?.username.split(' ')[0] ?? '';
+  const quickActions: QuickAction[] = [
+    {
+      icon: <BarChart2Icon />,
+      labelKey: 'companyDashboard.actions.analytics',
+      descKey: 'companyDashboard.actions.analyticsDesc',
+      onClick: (): void => {
+        navigateTo(APP_ROUTES.ANALYTICS);
+      },
+    },
+    {
+      icon: <UsersRoundIcon />,
+      labelKey: 'companyDashboard.actions.employees',
+      descKey: 'companyDashboard.actions.employeesDesc',
+      onClick: (): void => {
+        navigateTo(APP_ROUTES.EMPLOYEES);
+      },
+    },
+    {
+      icon: <TruckIcon />,
+      labelKey: 'companyDashboard.actions.suppliers',
+      descKey: 'companyDashboard.actions.suppliersDesc',
+      onClick: (): void => {
+        navigateTo(APP_ROUTES.SUPPLIERS);
+      },
+    },
+  ];
 
   return (
-    <div className={styles['page']}>
-      <header className={styles['header']}>
-        <div className={styles['headerMeta']}>
-          <h1 className={styles['greeting']}>
-            {t('companyDashboard.greeting')}, {firstName}
-          </h1>
-          <p className={styles['dateLabel']}>{todayLabel(i18n.language)}</p>
-        </div>
-      </header>
+    <DashboardShell>
+      <DashboardHeader greetingKey="companyDashboard.greeting" />
 
-      {/* KPI strip */}
-      <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
-              <DollarSignIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('companyDashboard.kpi.revenue')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? (
-                <Skeleton className={styles['kpiSkeleton']} />
-              ) : (
-                formatCurrency(totalRevenue, currency)
-              )}
-            </div>
-            {!isLoading && (
-              <div
-                className={`${styles['kpiGrowth']} ${
-                  revenueGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
-                }`}
-              >
-                {revenueGrowth >= 0 ? <TrendingUpIcon size={12} /> : <TrendingDownIcon size={12} />}
-                {Math.abs(revenueGrowth).toFixed(1)}% {t('dashboard.vsLastMonth')}
-              </div>
-            )}
-          </div>
-        </div>
+      <DashboardShell.KpiGrid aria-label={t('dashboard.kpiAriaLabel')}>
+        <KpiCard
+          label={t('companyDashboard.kpi.revenue')}
+          icon={<DollarSignIcon />}
+          accent="primary"
+          isLoading={isLoading}
+          value={formatCurrency(totalRevenue, currency)}
+          subtext={<GrowthBadge growth={revenueGrowth} vsKey="dashboard.vsLastMonth" />}
+        />
+        <KpiCard
+          label={t('companyDashboard.kpi.orders')}
+          icon={<ShoppingBagIcon />}
+          accent="success"
+          isLoading={isLoading}
+          value={totalOrders}
+          subtext={<GrowthBadge growth={ordersGrowth} vsKey="dashboard.vsLastMonth" />}
+        />
+        <KpiCard
+          label={t('companyDashboard.kpi.customers')}
+          icon={<UsersIcon />}
+          accent="neutral"
+          isLoading={isLoading}
+          value={totalCustomers}
+        />
+        <KpiCard
+          label={t('companyDashboard.kpi.employees')}
+          icon={<UsersRoundIcon />}
+          accent="purple"
+          isLoading={isLoading}
+          value={activeEmployees}
+          subtext={t('companyDashboard.kpi.employeesOf', { total: totalEmployees })}
+        />
+      </DashboardShell.KpiGrid>
 
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSuccess']}`}>
-              <ShoppingBagIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('companyDashboard.kpi.orders')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : totalOrders}
-            </div>
-            {!isLoading && (
-              <div
-                className={`${styles['kpiGrowth']} ${
-                  ordersGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
-                }`}
-              >
-                {ordersGrowth >= 0 ? <TrendingUpIcon size={12} /> : <TrendingDownIcon size={12} />}
-                {Math.abs(ordersGrowth).toFixed(1)}% {t('dashboard.vsLastMonth')}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentNeutral']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
-              <UsersIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('companyDashboard.kpi.customers')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : totalCustomers}
-            </div>
-          </div>
-        </div>
-
-        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPurple']}`}>
-          <div className={styles['kpiTopRow']}>
-            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPurple']}`}>
-              <UsersRoundIcon />
-            </div>
-          </div>
-          <div>
-            <p className={styles['kpiLabel']}>{t('companyDashboard.kpi.employees')}</p>
-            <div className={styles['kpiValue']}>
-              {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : activeEmployees}
-            </div>
-            {!isLoading && (
-              <p className={styles['kpiSubtext']}>
-                {t('companyDashboard.kpi.employeesOf', { total: totalEmployees })}
-              </p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Revenue chart */}
       <SectionErrorBoundary label={t('companyDashboard.revenueChart')}>
         <div className={styles['chartCard']}>
           <div className={styles['chartHeader']}>
@@ -172,8 +136,7 @@ export function CompanyDashboardPage(): React.ReactElement {
         </div>
       </SectionErrorBoundary>
 
-      {/* Top products + top customers */}
-      <div className={styles['tablesGrid']}>
+      <DashboardShell.TablesGrid>
         <div className={styles['sectionCard']}>
           <div className={styles['sectionHeader']}>
             <h2 className={styles['sectionTitle']}>{t('companyDashboard.topProducts')}</h2>
@@ -216,15 +179,7 @@ export function CompanyDashboardPage(): React.ReactElement {
                   <TableRow key={p.productId}>
                     <TableCell>
                       <span
-                        className={`${styles['rankBadge']} ${
-                          i === 0
-                            ? styles['rankOne']
-                            : i === 1
-                              ? styles['rankTwo']
-                              : i === 2
-                                ? styles['rankThree']
-                                : ''
-                        }`}
+                        className={`${styles['rankBadge']} ${i === 0 ? styles['rankOne'] : i === 1 ? styles['rankTwo'] : i === 2 ? styles['rankThree'] : ''}`}
                       >
                         {i + 1}
                       </span>
@@ -281,15 +236,7 @@ export function CompanyDashboardPage(): React.ReactElement {
                   <TableRow key={c.customerId}>
                     <TableCell>
                       <span
-                        className={`${styles['rankBadge']} ${
-                          i === 0
-                            ? styles['rankOne']
-                            : i === 1
-                              ? styles['rankTwo']
-                              : i === 2
-                                ? styles['rankThree']
-                                : ''
-                        }`}
+                        className={`${styles['rankBadge']} ${i === 0 ? styles['rankOne'] : i === 1 ? styles['rankTwo'] : i === 2 ? styles['rankThree'] : ''}`}
                       >
                         {i + 1}
                       </span>
@@ -303,63 +250,9 @@ export function CompanyDashboardPage(): React.ReactElement {
             </TableBody>
           </Table>
         </div>
-      </div>
+      </DashboardShell.TablesGrid>
 
-      {/* Quick actions */}
-      <div className={styles['sectionCard']}>
-        <div className={styles['sectionHeader']}>
-          <h2 className={styles['sectionTitle']}>{t('dashboard.quickActions.title')}</h2>
-        </div>
-        <div className={styles['quickActions']}>
-          <button
-            type="button"
-            className={styles['quickActionCard']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.ANALYTICS);
-            }}
-          >
-            <div className={styles['quickActionIcon']}>
-              <BarChart2Icon />
-            </div>
-            <p className={styles['quickActionLabel']}>{t('companyDashboard.actions.analytics')}</p>
-            <p className={styles['quickActionDesc']}>
-              {t('companyDashboard.actions.analyticsDesc')}
-            </p>
-          </button>
-
-          <button
-            type="button"
-            className={styles['quickActionCard']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.EMPLOYEES);
-            }}
-          >
-            <div className={styles['quickActionIcon']}>
-              <UsersRoundIcon />
-            </div>
-            <p className={styles['quickActionLabel']}>{t('companyDashboard.actions.employees')}</p>
-            <p className={styles['quickActionDesc']}>
-              {t('companyDashboard.actions.employeesDesc')}
-            </p>
-          </button>
-
-          <button
-            type="button"
-            className={styles['quickActionCard']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.SUPPLIERS);
-            }}
-          >
-            <div className={styles['quickActionIcon']}>
-              <TruckIcon />
-            </div>
-            <p className={styles['quickActionLabel']}>{t('companyDashboard.actions.suppliers')}</p>
-            <p className={styles['quickActionDesc']}>
-              {t('companyDashboard.actions.suppliersDesc')}
-            </p>
-          </button>
-        </div>
-      </div>
-    </div>
+      <DashboardQuickActions actions={quickActions} />
+    </DashboardShell>
   );
 }

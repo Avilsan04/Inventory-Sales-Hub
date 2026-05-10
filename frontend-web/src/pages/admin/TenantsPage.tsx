@@ -6,7 +6,7 @@ import { useAdminMetrics } from '@features/admin';
 import { toast } from '@shared/hooks/useToast';
 import { Spinner } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardAction, CardContent } from '@shared/ui/composed';
-import { TenantTable } from '@features/admin/components/TenantTable';
+import { TenantTable } from '@features/admin';
 import { SectionErrorBoundary } from '@app/providers';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 

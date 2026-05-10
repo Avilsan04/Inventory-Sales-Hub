@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useEffectiveRole } from '@features/auth';
-import type { UserRole } from '@features/auth/models/auth.types';
+import type { UserRole } from '@features/auth';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 
 interface QuickAction {
