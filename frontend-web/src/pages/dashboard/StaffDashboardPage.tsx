@@ -6,12 +6,16 @@ import {
   MonitorIcon,
   ListOrderedIcon,
   PackageIcon,
+  TriangleAlertIcon,
 } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthMe } from '@features/auth';
 import { useStaffStats } from '@features/analytics/hooks/useStaffStats';
 import { SaleDetailDrawer } from '@features/sales/components/SaleDetailDrawer';
-import { Skeleton, Badge } from '@shared/ui/primitives';
+import { OpenCashSessionDialog } from '@features/sales/components/OpenCashSessionDialog';
+import { CloseCashSessionDialog } from '@features/sales/components/CloseCashSessionDialog';
+import { isStaleSession } from '@features/sales/lib/sessionUtils';
+import { Skeleton, Badge, Button } from '@shared/ui/primitives';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
 import { formatCurrency } from '@shared/lib/formatCurrency';
@@ -64,8 +68,13 @@ export function StaffDashboardPage(): React.ReactElement {
   } = useStaffStats();
 
   const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
+  const [openDialogOpen, setOpenDialogOpen] = React.useState(false);
+  const [closeDialogOpen, setCloseDialogOpen] = React.useState(false);
+
   const firstName = me?.username.split(' ')[0] ?? '';
   const sessionOpen = cashSession?.status === 'open';
+  const stale = cashSession != null && sessionOpen && isStaleSession(cashSession.openedAt);
+  const expectedBalance = cashSession != null ? cashSession.openingBalance + sessionRevenue : 0;
 
   return (
     <div className={styles['page']}>
@@ -95,27 +104,54 @@ export function StaffDashboardPage(): React.ReactElement {
             {sessionOpen ? t('staffDashboard.session.open') : t('staffDashboard.session.closed')}
           </div>
           <p className={styles['sessionTitle']}>{t('staffDashboard.session.title')}</p>
+
           {cashSession != null ? (
             <>
               <p className={styles['sessionBalance']}>
-                {formatCurrency(cashSession.openingBalance, currency)}
+                {formatCurrency(expectedBalance, currency)}
               </p>
               <p className={styles['sessionOpenedAt']}>
+                {t('staffDashboard.session.expectedBalance')}
+              </p>
+              <p className={styles['sessionDetail']}>
+                {t('staffDashboard.session.openedWith', {
+                  amount: formatCurrency(cashSession.openingBalance, currency),
+                })}
+              </p>
+              <p className={styles['sessionDetail']}>
                 {t('staffDashboard.session.openedAt', { time: formatTime(cashSession.openedAt) })}
               </p>
+              {stale && (
+                <p className={styles['sessionStaleWarning']}>
+                  <TriangleAlertIcon size={14} aria-hidden="true" />
+                  {t('staffDashboard.session.staleWarning')}
+                </p>
+              )}
+              <Button
+                size="sm"
+                variant={stale ? 'destructive' : 'outline'}
+                onClick={() => {
+                  setCloseDialogOpen(true);
+                }}
+              >
+                {stale
+                  ? t('staffDashboard.session.closePreviousShift')
+                  : t('staffDashboard.session.closeShift')}
+              </Button>
             </>
           ) : (
-            <p className={styles['sessionDetail']}>{t('staffDashboard.session.noSession')}</p>
+            <>
+              <p className={styles['sessionDetail']}>{t('staffDashboard.session.noSession')}</p>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setOpenDialogOpen(true);
+                }}
+              >
+                {t('staffDashboard.session.openShift')}
+              </Button>
+            </>
           )}
-          <button
-            type="button"
-            className={styles['viewAllBtn']}
-            onClick={() => {
-              navigateTo(APP_ROUTES.SALES);
-            }}
-          >
-            {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-          </button>
         </div>
 
         {/* Session revenue stat */}
@@ -338,6 +374,16 @@ export function StaffDashboardPage(): React.ReactElement {
           if (!open) setDetailSale(null);
         }}
       />
+
+      <OpenCashSessionDialog open={openDialogOpen} onOpenChange={setOpenDialogOpen} />
+
+      {cashSession != null && (
+        <CloseCashSessionDialog
+          session={cashSession}
+          open={closeDialogOpen}
+          onOpenChange={setCloseDialogOpen}
+        />
+      )}
     </div>
   );
 }

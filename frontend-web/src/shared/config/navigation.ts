@@ -14,6 +14,7 @@ export type NavIconKey =
   | 'shipments'
   | 'notifications'
   | 'tenants'
+  | 'audit'
   | 'settings'
   | 'profile';
 
@@ -53,12 +54,17 @@ const COMPANY_NAV_GROUPS: readonly NavGroup[] = [
   },
   {
     labelKey: 'nav.section.operations',
-    items: [{ to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' }],
+    items: [
+      { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
+      { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
+      { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
+    ],
   },
   {
     labelKey: 'nav.section.system',
     items: [
       { to: APP_ROUTES.ADMIN_TENANTS, labelKey: 'nav.tenants', iconKey: 'tenants' },
+      { to: APP_ROUTES.AUDIT, labelKey: 'nav.audit', iconKey: 'audit' },
       { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
     ],
   },
@@ -86,6 +92,7 @@ const ADMIN_NAV_GROUPS: readonly NavGroup[] = [
     labelKey: 'nav.section.system',
     items: [
       { to: APP_ROUTES.ADMIN_TENANTS, labelKey: 'nav.tenants', iconKey: 'tenants' },
+      { to: APP_ROUTES.AUDIT, labelKey: 'nav.audit', iconKey: 'audit' },
       { to: APP_ROUTES.NOTIFICATIONS, labelKey: 'nav.notifications', iconKey: 'notifications' },
     ],
   },
@@ -106,6 +113,7 @@ const MANAGER_NAV_GROUPS: readonly NavGroup[] = [
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
+      { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
     ],
   },
   {
@@ -117,6 +125,10 @@ const MANAGER_NAV_GROUPS: readonly NavGroup[] = [
 ];
 
 const STAFF_NAV_GROUPS: readonly NavGroup[] = [
+  {
+    labelKey: 'nav.section.overview',
+    items: [{ to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard', iconKey: 'dashboard' }],
+  },
   {
     labelKey: 'nav.section.operations',
     items: [
@@ -140,7 +152,7 @@ export const NAV_GROUPS_BY_ROLE: Record<NavRole, readonly NavGroup[]> = {
   admin: ADMIN_NAV_GROUPS,
   manager: MANAGER_NAV_GROUPS,
   staff: STAFF_NAV_GROUPS,
-  test: STAFF_NAV_GROUPS,
+  test: ADMIN_NAV_GROUPS,
 };
 
 export const FOOTER_NAV_GROUP: NavGroup = {

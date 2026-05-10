@@ -123,6 +123,10 @@ const MyOrdersPage = React.lazy(() =>
   import('@pages/my-orders/MyOrdersPage').then((module) => ({ default: module.MyOrdersPage }))
 );
 
+const AuditPage = React.lazy(() =>
+  import('@pages/audit/AuditPage').then((module) => ({ default: module.AuditPage }))
+);
+
 function DashboardResolver(): React.ReactElement {
   const role = useEffectiveRole();
   if (role === 'customer') return <CustomerDashboardPage />;
@@ -185,12 +189,24 @@ export function AppRouter(): React.ReactElement {
             <Route element={<RoleLayout />}>
               {/* Customer/company-accessible routes */}
               <Route path={APP_ROUTES.DASHBOARD} element={<DashboardResolver />} />
-              <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
-              <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
               <Route path={APP_ROUTES.PROFILE} element={<ProfilePage />} />
               <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
               <Route path={APP_ROUTES.CATALOG} element={<CatalogPage />} />
               <Route path={APP_ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
+
+              {/* COMPANY + ADMIN + MANAGER + STAFF: sales */}
+              <Route
+                element={
+                  <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company', 'test']} />
+                }
+              >
+                <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
+              </Route>
+
+              {/* ADMIN + MANAGER: product management */}
+              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'test']} />}>
+                <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
+              </Route>
 
               {/* ADMIN + MANAGER + STAFF: inventory */}
               <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
@@ -202,8 +218,8 @@ export function AppRouter(): React.ReactElement {
                 <Route path={APP_ROUTES.EMPLOYEES} element={<EmployeesPage />} />
               </Route>
 
-              {/* ADMIN + MANAGER: supplier management */}
-              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'test']} />}>
+              {/* COMPANY + ADMIN + MANAGER: supplier management */}
+              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company', 'test']} />}>
                 <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
               </Route>
 
@@ -232,6 +248,11 @@ export function AppRouter(): React.ReactElement {
               {/* COMPANY + ADMIN: tenant/permission management */}
               <Route element={<RoleRoute allowedRoles={['admin', 'company', 'test']} />}>
                 <Route path={APP_ROUTES.ADMIN_TENANTS} element={<TenantsPage />} />
+              </Route>
+
+              {/* COMPANY + ADMIN: audit log */}
+              <Route element={<RoleRoute allowedRoles={['admin', 'company', 'test']} />}>
+                <Route path={APP_ROUTES.AUDIT} element={<AuditPage />} />
               </Route>
             </Route>
           </Route>

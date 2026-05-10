@@ -61,6 +61,7 @@ export function ManagerDashboardPage(): React.ReactElement {
     weeklyRevenue,
     weeklyOrders,
     pendingOrders,
+    completedOrders,
     currency,
     salesPeriod,
     statusSlices,
@@ -142,6 +143,11 @@ export function ManagerDashboardPage(): React.ReactElement {
             <div className={styles['kpiValue']}>
               {isLoading ? <Skeleton className={styles['kpiSkeleton']} /> : pendingOrders}
             </div>
+            {!isLoading && (
+              <p className={styles['kpiSubtext']}>
+                {t('managerDashboard.kpi.completedOrders', { count: completedOrders })}
+              </p>
+            )}
           </div>
         </div>
 

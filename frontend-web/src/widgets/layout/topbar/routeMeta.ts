@@ -13,6 +13,7 @@ import {
   ShoppingBagIcon,
   ClipboardListIcon,
   ScanBarcodeIcon,
+  ScrollTextIcon,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '@features/auth/models/auth.types';
@@ -83,5 +84,10 @@ export const ROUTE_META: Readonly<Record<string, RouteMeta>> = {
     title: 'Punto de Venta',
     Icon: ScanBarcodeIcon,
     roles: ['admin', 'manager', 'staff', 'customer', 'test'],
+  },
+  [APP_ROUTES.AUDIT]: {
+    title: 'Auditoría',
+    Icon: ScrollTextIcon,
+    roles: ['admin', 'company', 'test'],
   },
 } as const;

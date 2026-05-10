@@ -121,6 +121,15 @@
   color: var(--color-text-muted);
 }
 
+.sessionStaleWarning {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-warning);
+}
+
 // ── Stat cards (smaller) ──────────────────────────────────────────────────
 .statCard {
   position: relative;

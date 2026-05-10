@@ -34,10 +34,10 @@
   margin: 0;
 }
 
-// ── KPI grid (3 cards) ───────────────────────────────────────────────────
+// ── KPI grid (4 cards) ───────────────────────────────────────────────────
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: $spacing-5;
 
   @media (max-width: $breakpoint-lg) {
@@ -172,6 +172,26 @@
   height: $size-8;
   width: $size-24;
   border-radius: var(--radius-md);
+}
+
+.kpiSubtext {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: $spacing-1 0 0;
+}
+
+.kpiGrowthPositive {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-success);
+  margin: $spacing-1 0 0;
+}
+
+.kpiGrowthNegative {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-error);
+  margin: $spacing-1 0 0;
 }
 
 // ── C-level analytics widgets grid ───────────────────────────────────────

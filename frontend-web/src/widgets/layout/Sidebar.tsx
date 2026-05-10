@@ -17,6 +17,7 @@ import {
   UserRoundIcon,
   PlusIcon,
   StoreIcon,
+  ScrollTextIcon,
 } from 'lucide-react';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -60,6 +61,8 @@ function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
       return <BellIcon aria-hidden="true" />;
     case 'tenants':
       return <Building2Icon aria-hidden="true" />;
+    case 'audit':
+      return <ScrollTextIcon aria-hidden="true" />;
     case 'settings':
       return <SlidersHorizontalIcon aria-hidden="true" />;
     case 'profile':

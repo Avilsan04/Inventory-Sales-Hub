@@ -67,6 +67,7 @@
     "orders": "Pedidos",
     "shipments": "Envíos",
     "tenants": "Organizaciones",
+    "audit": "Registro de auditoría",
     "catalog": "Catálogo",
     "myOrders": "Mis Pedidos",
     "pos": "Punto de Venta",
@@ -190,7 +191,9 @@
       "monthlySales": "Ventas mensuales",
       "activeOrders": "Pedidos activos",
       "lowStock": "Stock bajo",
-      "newCustomers": "Nuevos clientes"
+      "newCustomers": "Nuevos clientes",
+      "totalCustomers": "Total clientes",
+      "vsLastMonth": "vs mes anterior"
     },
     "recentOrders": {
       "title": "Pedidos recientes",
@@ -680,6 +683,7 @@
       "weeklyRevenue": "Ingresos semanales",
       "weeklyOrders": "Pedidos semanales",
       "pendingOrders": "Pedidos pendientes",
+      "completedOrders": "{{count}} completados",
       "team": "Equipo activo",
       "teamOf": "de {{total}} empleados"
     },
@@ -695,7 +699,13 @@
       "open": "Abierto",
       "closed": "Cerrado",
       "openedAt": "Abierto a las {{time}}",
-      "noSession": "Sin sesión abierta"
+      "noSession": "Sin sesión abierta",
+      "expectedBalance": "Saldo esperado",
+      "openedWith": "Abierto con: {{amount}}",
+      "openShift": "Abrir turno",
+      "closeShift": "Cerrar turno",
+      "closePreviousShift": "Cerrar turno anterior",
+      "staleWarning": "Sesión de un día anterior"
     },
     "kpi": {
       "sessionRevenue": "Ingresos del turno",
@@ -711,6 +721,27 @@
       "salesDesc": "Ver tus transacciones",
       "inventory": "Inventario",
       "inventoryDesc": "Consultar niveles de stock"
+    }
+  },
+  "audit": {
+    "title": "Registro de auditoría",
+    "subtitle": "Historial de actividad del sistema",
+    "loadMore": "Cargar más",
+    "cols": {
+      "timestamp": "Fecha y hora",
+      "user": "Usuario",
+      "action": "Acción",
+      "entity": "Entidad",
+      "details": "Detalles"
+    },
+    "actions": {
+      "create": "Crear",
+      "update": "Actualizar",
+      "delete": "Eliminar",
+      "adjust_stock": "Ajuste de stock",
+      "status_change": "Cambio de estado",
+      "login": "Inicio de sesión",
+      "logout": "Cierre de sesión"
     }
   },
   "settings": {

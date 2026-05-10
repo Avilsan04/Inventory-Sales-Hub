@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { ArrowRightIcon, DollarSignIcon, ShoppingCartIcon, AlertCircleIcon } from 'lucide-react';
+import {
+  ArrowRightIcon,
+  DollarSignIcon,
+  ShoppingCartIcon,
+  AlertCircleIcon,
+  UsersRoundIcon,
+  TrendingUpIcon,
+  TrendingDownIcon,
+} from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useDashboardStats } from '@features/analytics';
 import { PermissionGuard } from '@features/auth';
@@ -65,6 +73,7 @@ export function DashboardPage(): React.ReactElement {
 
       {/* KPI row */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
+        {/* Monthly revenue + growth */}
         <div className={styles['kpiCard']}>
           <div
             className={`${styles['kpiCardBg']} ${styles['kpiCardBgPrimary']}`}
@@ -86,9 +95,24 @@ export function DashboardPage(): React.ReactElement {
                 '—'
               )}
             </div>
+            {!kpiLoading && kpi && (
+              <p
+                className={
+                  kpi.revenueGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
+                }
+              >
+                {kpi.revenueGrowth >= 0 ? (
+                  <TrendingUpIcon size={12} aria-hidden="true" />
+                ) : (
+                  <TrendingDownIcon size={12} aria-hidden="true" />
+                )}{' '}
+                {Math.abs(kpi.revenueGrowth).toFixed(1)}% {t('dashboard.stats.vsLastMonth')}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* Active orders + growth */}
         <div className={styles['kpiCard']}>
           <div
             className={`${styles['kpiCardBg']} ${styles['kpiCardBgNeutral']}`}
@@ -108,9 +132,47 @@ export function DashboardPage(): React.ReactElement {
                 (kpi?.totalOrders ?? '—')
               )}
             </div>
+            {!kpiLoading && kpi && (
+              <p
+                className={
+                  kpi.ordersGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
+                }
+              >
+                {kpi.ordersGrowth >= 0 ? (
+                  <TrendingUpIcon size={12} aria-hidden="true" />
+                ) : (
+                  <TrendingDownIcon size={12} aria-hidden="true" />
+                )}{' '}
+                {Math.abs(kpi.ordersGrowth).toFixed(1)}% {t('dashboard.stats.vsLastMonth')}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* Total customers */}
+        <div className={styles['kpiCard']}>
+          <div
+            className={`${styles['kpiCardBg']} ${styles['kpiCardBgNeutral']}`}
+            aria-hidden="true"
+          />
+          <div className={styles['kpiTopRow']}>
+            <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
+              <UsersRoundIcon />
+            </div>
+          </div>
+          <div>
+            <p className={styles['kpiLabel']}>{t('dashboard.stats.totalCustomers')}</p>
+            <div className={styles['kpiValue']}>
+              {kpiLoading ? (
+                <Skeleton className={styles['kpiSkeleton']} />
+              ) : (
+                (kpi?.totalCustomers ?? '—')
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Low stock alerts */}
         <div className={styles['kpiCard']}>
           <div
             className={`${styles['kpiCardBg']} ${styles['kpiCardBgError']}`}
