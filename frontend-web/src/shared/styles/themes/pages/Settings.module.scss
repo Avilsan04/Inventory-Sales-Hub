@@ -18,6 +18,10 @@
   background: transparent;
   overflow-x: auto;
   scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .navItem {

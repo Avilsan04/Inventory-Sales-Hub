@@ -8,7 +8,7 @@ import { hasPermission } from '@shared/lib/permissions';
 import { toast } from '@shared/hooks/useToast';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { fromCents } from '@shared/lib/formatCurrency';
-import { Spinner, Button, Pagination, Input } from '@shared/ui/primitives';
+import { Button, Pagination, Input } from '@shared/ui/primitives';
 import { Card, ConfirmDialog, EmptyState } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
 import { InventoryTableWidget } from '@widgets/inventory';
@@ -83,14 +83,6 @@ export function InventoryPage(): React.ReactElement {
       },
     });
   };
-
-  if (isPending) {
-    return (
-      <div className={styles['placeholderContainer']} aria-busy="true" aria-live="polite">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
 
   if (isError) {
     if (error instanceof Error) {
@@ -195,7 +187,7 @@ export function InventoryPage(): React.ReactElement {
         </div>
 
         <SectionErrorBoundary label="Inventory">
-          {filtered.length === 0 ? (
+          {!isPending && filtered.length === 0 ? (
             <EmptyState
               icon={<PackageIcon size={24} />}
               title={t('inventory.emptyTitle')}
@@ -214,6 +206,7 @@ export function InventoryPage(): React.ReactElement {
           ) : (
             <InventoryTableWidget
               data={paginated}
+              isPending={isPending}
               onEdit={
                 hasPermission(role, 'create:inventory')
                   ? (item): void => {

@@ -25,6 +25,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $spacing-2;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .gridOffset {

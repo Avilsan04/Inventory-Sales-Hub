@@ -15,12 +15,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@shared/ui/composed';
-import { Badge } from '@shared/ui/primitives';
+import { Badge, Skeleton } from '@shared/ui/primitives';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/widgets/InventoryTable.module.scss';
 
 interface InventoryTableWidgetProps {
   data: InventoryItem[];
+  isPending?: boolean;
   onEdit?: (item: InventoryItem) => void;
   onAdjustStock?: (item: InventoryItem) => void;
   onDelete?: (id: string) => void;
@@ -53,6 +54,7 @@ function stockExtraClass(status: InventoryItem['status']): string | undefined {
 
 export function InventoryTableWidget({
   data,
+  isPending = false,
   onEdit,
   onAdjustStock,
   onDelete,
@@ -81,77 +83,85 @@ export function InventoryTableWidget({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell className={styles['skuCell']}>{item.sku}</TableCell>
-              <TableCell className={styles['nameCell']}>{item.name}</TableCell>
-              <TableCell className={styles['categoryCell']}>{item.category ?? '—'}</TableCell>
-              <TableCell className={cn(styles['numCell'], stockExtraClass(item.status))}>
-                {item.quantity}
-              </TableCell>
-              <TableCell className={cn(styles['numCell'], styles['reorderCell'])}>
-                {item.reorderThreshold !== undefined ? item.reorderThreshold : '—'}
-              </TableCell>
-              <TableCell className={styles['priceCell']}>
-                {formatCurrency(item.price, item.currency)}
-              </TableCell>
-              <TableCell>
-                <Badge variant={statusBadgeVariant(item.status)} showDot>
-                  {t(`inventory.status_${item.status}`)}
-                </Badge>
-              </TableCell>
-              {hasActions && (
-                <TableCell className={styles['dotsCell']}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button type="button" className={styles['dotsBtn']} aria-label="Actions">
-                        <EllipsisIcon size={16} aria-hidden="true" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {onEdit !== undefined && (
-                        <DropdownMenuItem
-                          onClick={() => {
-                            onEdit(item);
-                          }}
-                        >
-                          Edit
-                        </DropdownMenuItem>
-                      )}
-                      {onAdjustStock !== undefined && (
-                        <DropdownMenuItem
-                          onClick={() => {
-                            onAdjustStock(item);
-                          }}
-                        >
-                          Adjust stock
-                        </DropdownMenuItem>
-                      )}
-                      {onViewHistory !== undefined && (
-                        <DropdownMenuItem
-                          onClick={() => {
-                            onViewHistory(item);
-                          }}
-                        >
-                          View history
-                        </DropdownMenuItem>
-                      )}
-                      {onDelete !== undefined && (
-                        <DropdownMenuItem
-                          onClick={() => {
-                            onDelete(item.id);
-                          }}
-                          style={{ color: 'var(--color-destructive)' }}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              )}
-            </TableRow>
-          ))}
+          {isPending
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell colSpan={hasActions ? 8 : 7}>
+                    <Skeleton className={styles['skeletonRow']} />
+                  </TableCell>
+                </TableRow>
+              ))
+            : data.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className={styles['skuCell']}>{item.sku}</TableCell>
+                  <TableCell className={styles['nameCell']}>{item.name}</TableCell>
+                  <TableCell className={styles['categoryCell']}>{item.category ?? '—'}</TableCell>
+                  <TableCell className={cn(styles['numCell'], stockExtraClass(item.status))}>
+                    {item.quantity}
+                  </TableCell>
+                  <TableCell className={cn(styles['numCell'], styles['reorderCell'])}>
+                    {item.reorderThreshold !== undefined ? item.reorderThreshold : '—'}
+                  </TableCell>
+                  <TableCell className={styles['priceCell']}>
+                    {formatCurrency(item.price, item.currency)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={statusBadgeVariant(item.status)} showDot>
+                      {t(`inventory.status_${item.status}`)}
+                    </Badge>
+                  </TableCell>
+                  {hasActions && (
+                    <TableCell className={styles['dotsCell']}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button type="button" className={styles['dotsBtn']} aria-label="Actions">
+                            <EllipsisIcon size={16} aria-hidden="true" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {onEdit !== undefined && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onEdit(item);
+                              }}
+                            >
+                              Edit
+                            </DropdownMenuItem>
+                          )}
+                          {onAdjustStock !== undefined && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onAdjustStock(item);
+                              }}
+                            >
+                              Adjust stock
+                            </DropdownMenuItem>
+                          )}
+                          {onViewHistory !== undefined && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onViewHistory(item);
+                              }}
+                            >
+                              View history
+                            </DropdownMenuItem>
+                          )}
+                          {onDelete !== undefined && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onDelete(item.id);
+                              }}
+                              style={{ color: 'var(--color-destructive)' }}
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
     </div>
