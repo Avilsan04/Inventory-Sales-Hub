@@ -628,6 +628,91 @@
     "emptyTitle": "No orders yet",
     "emptyDescription": "Your placed orders will appear here."
   },
+  "customerDashboard": {
+    "greeting": "Hello",
+    "kpi": {
+      "totalOrders": "Total orders",
+      "completed": "Delivered",
+      "pending": "Processing",
+      "totalSpent": "Total spent"
+    },
+    "recentOrders": "Recent orders",
+    "featuredProducts": "Featured products",
+    "actions": {
+      "browseStore": "Browse store",
+      "browseStoreDesc": "Discover new products",
+      "myOrdersDesc": "Track all your orders",
+      "cartDesc": "Continue your purchase"
+    }
+  },
+  "companyDashboard": {
+    "greeting": "Welcome",
+    "kpi": {
+      "revenue": "Total revenue",
+      "orders": "Total orders",
+      "customers": "Total customers",
+      "employees": "Active employees",
+      "employeesOf": "of {{total}} total"
+    },
+    "revenueChart": "Revenue — last 12 months",
+    "topProducts": "Top products",
+    "topCustomers": "Top customers",
+    "cols": {
+      "product": "Product",
+      "sold": "Units sold",
+      "revenue": "Revenue",
+      "customer": "Customer",
+      "orders": "Orders",
+      "spent": "Total spent"
+    },
+    "actions": {
+      "analytics": "Analytics",
+      "analyticsDesc": "Revenue and performance reports",
+      "employees": "Employees",
+      "employeesDesc": "Manage your team",
+      "suppliers": "Suppliers",
+      "suppliersDesc": "Manage your suppliers"
+    }
+  },
+  "managerDashboard": {
+    "greeting": "Good morning",
+    "kpi": {
+      "weeklyRevenue": "Weekly revenue",
+      "weeklyOrders": "Weekly orders",
+      "pendingOrders": "Pending orders",
+      "team": "Active team",
+      "teamOf": "of {{total}} employees"
+    },
+    "salesTrend": "Sales trend (7 days)",
+    "salesByStatus": "Sales by status",
+    "stockAlerts": "Low stock alerts",
+    "recentSales": "Recent sales"
+  },
+  "staffDashboard": {
+    "greeting": "Welcome",
+    "session": {
+      "title": "Shift session",
+      "open": "Open",
+      "closed": "Closed",
+      "openedAt": "Opened at {{time}}",
+      "noSession": "No session open"
+    },
+    "kpi": {
+      "sessionRevenue": "Session revenue",
+      "sessionOrders": "orders this session",
+      "lowStock": "Low stock alerts"
+    },
+    "recentSales": "Recent sales",
+    "stockAlerts": "Critical stock",
+    "actions": {
+      "pos": "Point of sale",
+      "posDesc": "Open the cash register",
+      "sales": "My sales",
+      "salesDesc": "View your transactions",
+      "inventory": "Inventory",
+      "inventoryDesc": "Check stock levels"
+    }
+  },
   "settings": {
     "nav": {
       "appearance": "Appearance",

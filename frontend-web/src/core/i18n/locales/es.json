@@ -628,6 +628,91 @@
     "emptyTitle": "Sin pedidos todavía",
     "emptyDescription": "Tus pedidos realizados aparecerán aquí."
   },
+  "customerDashboard": {
+    "greeting": "Hola",
+    "kpi": {
+      "totalOrders": "Pedidos totales",
+      "completed": "Entregados",
+      "pending": "En proceso",
+      "totalSpent": "Total gastado"
+    },
+    "recentOrders": "Pedidos recientes",
+    "featuredProducts": "Productos destacados",
+    "actions": {
+      "browseStore": "Explorar tienda",
+      "browseStoreDesc": "Descubre nuevos productos",
+      "myOrdersDesc": "Consulta todos tus pedidos",
+      "cartDesc": "Continúa tu compra"
+    }
+  },
+  "companyDashboard": {
+    "greeting": "Bienvenido",
+    "kpi": {
+      "revenue": "Ingresos totales",
+      "orders": "Pedidos totales",
+      "customers": "Clientes totales",
+      "employees": "Empleados activos",
+      "employeesOf": "de {{total}} en total"
+    },
+    "revenueChart": "Ingresos — últimos 12 meses",
+    "topProducts": "Productos más vendidos",
+    "topCustomers": "Mejores clientes",
+    "cols": {
+      "product": "Producto",
+      "sold": "Unidades vendidas",
+      "revenue": "Ingresos",
+      "customer": "Cliente",
+      "orders": "Pedidos",
+      "spent": "Total gastado"
+    },
+    "actions": {
+      "analytics": "Analítica",
+      "analyticsDesc": "Informes de rendimiento e ingresos",
+      "employees": "Empleados",
+      "employeesDesc": "Gestiona tu equipo",
+      "suppliers": "Proveedores",
+      "suppliersDesc": "Gestiona tus proveedores"
+    }
+  },
+  "managerDashboard": {
+    "greeting": "Buenos días",
+    "kpi": {
+      "weeklyRevenue": "Ingresos semanales",
+      "weeklyOrders": "Pedidos semanales",
+      "pendingOrders": "Pedidos pendientes",
+      "team": "Equipo activo",
+      "teamOf": "de {{total}} empleados"
+    },
+    "salesTrend": "Tendencia de ventas (7 días)",
+    "salesByStatus": "Ventas por estado",
+    "stockAlerts": "Alertas de stock bajo",
+    "recentSales": "Ventas recientes"
+  },
+  "staffDashboard": {
+    "greeting": "Bienvenido",
+    "session": {
+      "title": "Sesión de turno",
+      "open": "Abierto",
+      "closed": "Cerrado",
+      "openedAt": "Abierto a las {{time}}",
+      "noSession": "Sin sesión abierta"
+    },
+    "kpi": {
+      "sessionRevenue": "Ingresos del turno",
+      "sessionOrders": "pedidos en este turno",
+      "lowStock": "Alertas de stock"
+    },
+    "recentSales": "Ventas recientes",
+    "stockAlerts": "Stock crítico",
+    "actions": {
+      "pos": "Punto de venta",
+      "posDesc": "Abrir la caja registradora",
+      "sales": "Mis ventas",
+      "salesDesc": "Ver tus transacciones",
+      "inventory": "Inventario",
+      "inventoryDesc": "Consultar niveles de stock"
+    }
+  },
   "settings": {
     "nav": {
       "appearance": "Apariencia",
