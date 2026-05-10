@@ -9,7 +9,8 @@ import './core/i18n';
 
 async function bootstrapApplication(): Promise<void> {
   try {
-    if (env.VITE_MOCK_ENABLED || import.meta.env.DEV) {
+    const shouldMock = env.VITE_MOCK_ENABLED || sessionStorage.getItem('ish.demo') === 'true';
+    if (shouldMock) {
       const { worker } = await import('./app/mock/browser');
       const { seed } = await import('./app/mock/seed');
       const { db } = await import('./app/mock/db');

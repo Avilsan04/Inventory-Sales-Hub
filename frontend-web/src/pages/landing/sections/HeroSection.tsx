@@ -8,15 +8,13 @@ import styles from '@shared/styles/themes/pages/Landing.module.scss';
 interface HeroSectionProps {
   readonly onGetStarted: () => void;
   readonly onTestMode: () => void;
-  readonly isTestModeLoading: boolean;
 }
 
-export function HeroSection({ onGetStarted, onTestMode, isTestModeLoading }: HeroSectionProps): React.ReactElement {
+export function HeroSection({ onGetStarted, onTestMode }: HeroSectionProps): React.ReactElement {
   const { translate } = useTranslationAdapter();
 
   return (
     <section className={styles['hero']} aria-labelledby="hero-heading">
-
       {/* Left column — text content */}
       <div className={styles['heroText']}>
         <FadeIn delay={0}>
@@ -37,9 +35,7 @@ export function HeroSection({ onGetStarted, onTestMode, isTestModeLoading }: Her
         </FadeIn>
 
         <FadeIn delay={0.3}>
-          <p className={styles['heroDescription']}>
-            {translate('landing.hero.description')}
-          </p>
+          <p className={styles['heroDescription']}>{translate('landing.hero.description')}</p>
         </FadeIn>
 
         <FadeIn delay={0.45}>
@@ -48,8 +44,8 @@ export function HeroSection({ onGetStarted, onTestMode, isTestModeLoading }: Her
               {translate('landing.hero.cta')}
               <ArrowRightIcon aria-hidden="true" />
             </Button>
-            <Button variant="outline" size="lg" onClick={onTestMode} disabled={isTestModeLoading}>
-              {isTestModeLoading ? '...' : translate('landing.hero.secondaryCta')}
+            <Button variant="outline" size="lg" onClick={onTestMode}>
+              {translate('landing.hero.secondaryCta')}
             </Button>
           </div>
         </FadeIn>
@@ -58,20 +54,36 @@ export function HeroSection({ onGetStarted, onTestMode, isTestModeLoading }: Her
           <div className={styles['heroStats']}>
             <div className={styles['heroStat']}>
               <TrendingUpIcon className={styles['heroStatIconUp']} aria-hidden="true" />
-              <span className={styles['heroStatValue']}>{translate('landing.hero.stat1.value')}</span>
-              <span className={styles['heroStatLabel']}>{translate('landing.hero.stat1.label')}</span>
+              <span className={styles['heroStatValue']}>
+                {translate('landing.hero.stat1.value')}
+              </span>
+              <span className={styles['heroStatLabel']}>
+                {translate('landing.hero.stat1.label')}
+              </span>
             </div>
-            <span className={styles['heroStatSep']} aria-hidden="true">·</span>
+            <span className={styles['heroStatSep']} aria-hidden="true">
+              ·
+            </span>
             <div className={styles['heroStat']}>
               <TrendingUpIcon className={styles['heroStatIconUp']} aria-hidden="true" />
-              <span className={styles['heroStatValue']}>{translate('landing.hero.stat2.value')}</span>
-              <span className={styles['heroStatLabel']}>{translate('landing.hero.stat2.label')}</span>
+              <span className={styles['heroStatValue']}>
+                {translate('landing.hero.stat2.value')}
+              </span>
+              <span className={styles['heroStatLabel']}>
+                {translate('landing.hero.stat2.label')}
+              </span>
             </div>
-            <span className={styles['heroStatSep']} aria-hidden="true">·</span>
+            <span className={styles['heroStatSep']} aria-hidden="true">
+              ·
+            </span>
             <div className={styles['heroStat']}>
               <ClockIcon className={styles['heroStatIconClock']} aria-hidden="true" />
-              <span className={styles['heroStatValue']}>{translate('landing.hero.stat3.value')}</span>
-              <span className={styles['heroStatLabel']}>{translate('landing.hero.stat3.label')}</span>
+              <span className={styles['heroStatValue']}>
+                {translate('landing.hero.stat3.value')}
+              </span>
+              <span className={styles['heroStatLabel']}>
+                {translate('landing.hero.stat3.label')}
+              </span>
             </div>
           </div>
         </FadeIn>
@@ -150,7 +162,6 @@ export function HeroSection({ onGetStarted, onTestMode, isTestModeLoading }: Her
           </div>
         </div>
       </FadeIn>
-
     </section>
   );
 }

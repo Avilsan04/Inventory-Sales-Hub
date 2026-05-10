@@ -2,13 +2,12 @@ import { useAuthMe } from './useAuthMe';
 import { useViewMode } from '../context/ViewModeContext';
 import type { UserProfile } from '../models/auth.types';
 
-const isMockEnabled = import.meta.env.DEV || import.meta.env.VITE_MOCK_ENABLED === 'true';
+const VISTA_ROLES = ['company', 'admin', 'manager', 'test'] as const;
 
 export function useEffectiveRole(): UserProfile['role'] | undefined {
   const { data: user } = useAuthMe();
   const { viewAs } = useViewMode();
 
-  // viewAs substitution only active when mocks are enabled — never in production.
-  if (user?.role === 'test' && isMockEnabled) return viewAs;
+  if (user?.role && (VISTA_ROLES as readonly string[]).includes(user.role)) return viewAs;
   return user?.role;
 }

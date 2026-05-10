@@ -48,7 +48,11 @@ export const authHandlers = [
   http.post(`${API_BASE_URL}/auth/login`, async ({ request }) => {
     await delay(1000);
     const body = (await request.json()) as LoginRequest;
-    _activeUser = CREDENTIAL_MAP[body.email] ?? 'admin';
+    const userType = CREDENTIAL_MAP[body.email];
+    if (!userType) {
+      return new HttpResponse(null, { status: 401 });
+    }
+    _activeUser = userType;
     _isLoggedIn = true;
     persistSession(_activeUser);
     return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });

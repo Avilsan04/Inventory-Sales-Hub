@@ -1,16 +1,26 @@
 import * as React from 'react';
 import { APP_ENV } from '@core/config/env';
 
-export type ViewRole = 'admin' | 'customer' | 'company';
+export type ViewRole = 'company' | 'admin' | 'manager' | 'staff' | 'customer';
 
 const STORAGE_KEY = `ish.${APP_ENV}.viewMode`;
+const IS_MOCK =
+  import.meta.env.DEV ||
+  import.meta.env.VITE_MOCK_ENABLED === 'true' ||
+  sessionStorage.getItem('ish.demo') === 'true';
+const VALID_VIEW_ROLES: ReadonlyArray<string> = [
+  'company',
+  'admin',
+  'manager',
+  'staff',
+  'customer',
+];
 
 function readPersistedRole(): ViewRole {
+  if (IS_MOCK) return 'admin';
   try {
     const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (stored === 'admin' || stored === 'customer' || stored === 'company') {
-      return stored;
-    }
+    if (stored && VALID_VIEW_ROLES.includes(stored)) return stored as ViewRole;
   } catch {
     // sessionStorage unavailable (e.g. private mode restrictions)
   }
@@ -31,10 +41,12 @@ export function ViewModeProvider({ children }: { children: React.ReactNode }): R
   const [viewAs, setViewAsState] = React.useState<ViewRole>(readPersistedRole);
 
   const setViewAs = React.useCallback((role: ViewRole): void => {
-    try {
-      sessionStorage.setItem(STORAGE_KEY, role);
-    } catch {
-      // Storage write failure is non-fatal
+    if (!IS_MOCK) {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, role);
+      } catch {
+        // Storage write failure is non-fatal
+      }
     }
     setViewAsState(role);
   }, []);

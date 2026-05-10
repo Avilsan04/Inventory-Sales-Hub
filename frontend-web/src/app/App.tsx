@@ -7,9 +7,6 @@ import { OfflineBanner } from '@shared/ui/composed';
 import { ViewModeProvider } from './providers/ViewModeContext';
 import { startSalesSyncWorker } from '@features/sales/services/salesSyncWorker';
 import { SalesSyncBanner } from '@features/sales/components/SalesSyncBanner';
-import { env } from '@core/config/env';
-
-const isMockEnabled = env.VITE_MOCK_ENABLED || import.meta.env.DEV;
 
 function AppContent(): React.ReactElement {
   React.useEffect(() => {
@@ -34,13 +31,9 @@ export function App(): React.ReactElement {
     <GlobalErrorBoundary>
       <DependencyProvider>
         <QueryProvider>
-          {isMockEnabled ? (
-            <ViewModeProvider>
-              <AppContent />
-            </ViewModeProvider>
-          ) : (
+          <ViewModeProvider>
             <AppContent />
-          )}
+          </ViewModeProvider>
         </QueryProvider>
       </DependencyProvider>
     </GlobalErrorBoundary>

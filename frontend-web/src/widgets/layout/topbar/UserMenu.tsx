@@ -21,7 +21,8 @@ import type { UserRole } from '@features/auth/models/auth.types';
 import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 
-const DEV_ROLES: ReadonlyArray<UserRole> = ['company', 'admin', 'manager', 'staff', 'customer'];
+const VISTA_ROLES: ReadonlyArray<UserRole> = ['company', 'admin', 'manager', 'staff', 'customer'];
+const VISTA_ALLOWED_ROLES: ReadonlyArray<UserRole> = ['company', 'admin', 'manager', 'test'];
 
 const ROLE_CHIP_CLASS: Record<UserRole, string> = {
   admin: styles['roleChipAdmin'] ?? '',
@@ -76,7 +77,7 @@ export function UserMenu(): React.ReactElement {
           </div>
         </div>
 
-        {import.meta.env.DEV && (
+        {!!user?.role && VISTA_ALLOWED_ROLES.includes(user.role) && (
           <>
             <DropdownMenuSeparator />
             <div className={styles['devSwitcher']}>
@@ -87,11 +88,11 @@ export function UserMenu(): React.ReactElement {
                   setViewAs(v as ViewRole);
                 }}
               >
-                <SelectTrigger size="sm" aria-label="Dev: cambiar rol">
+                <SelectTrigger size="sm" aria-label="Cambiar vista de rol">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {DEV_ROLES.map((r) => (
+                  {VISTA_ROLES.map((r) => (
                     <SelectItem key={r} value={r}>
                       {r}
                     </SelectItem>
