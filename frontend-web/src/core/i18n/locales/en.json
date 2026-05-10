@@ -48,7 +48,8 @@
     "items": "items",
     "dateRange": "Date range",
     "updating": "Updating…",
-    "processing": "Processing…"
+    "processing": "Processing…",
+    "comingSoon": "Coming soon"
   },
   "nav": {
     "home": "Home",
@@ -301,7 +302,7 @@
     "totalProducts": "Total products",
     "totalCategories": "Categories",
     "importCsv": "Import CSV",
-    "newProduct": "New Product",
+    "newProduct": "Add new product",
     "deleteProduct": "Delete product?",
     "isVariant": "Is a variant of another product",
     "parentProduct": "Parent product",
@@ -315,7 +316,7 @@
     "description": "Description",
     "optional": "Optional",
     "creating": "Creating…",
-    "editProduct": "Edit Product",
+    "editProduct": "Edit product details",
     "noVariants": "No variants",
     "importFromCsv": "Import Products from CSV",
     "csvColumnsHint": "CSV columns: name, sku, price, currency, description, categoryId, uom",
@@ -433,14 +434,14 @@
     "addCustomer": "Add customer",
     "emptyTitle": "No customers registered",
     "emptyDescription": "Add your first customer to start tracking relationships",
-    "newCustomer": "New Customer",
+    "newCustomer": "Add new customer",
     "deleteCustomer": "Delete customer?",
     "fullNamePlaceholder": "Full name",
     "emailPlaceholder": "email@example.com",
     "phonePlaceholder": "+1 555 000 0000",
     "addressPlaceholder": "123 Main St",
     "eyebrow": "PEOPLE",
-    "editCustomer": "Edit Customer"
+    "editCustomer": "Update customer details"
   },
   "employees": {
     "title": "Employees",
@@ -455,8 +456,8 @@
     "active": "Active",
     "inactive": "Inactive",
     "addEmployee": "+ Add Employee",
-    "newEmployee": "New Employee",
-    "editEmployee": "Edit Employee",
+    "newEmployee": "Add new employee",
+    "editEmployee": "Update employee details",
     "emailPlaceholder": "employee@company.com",
     "roles": {
       "admin": "Admin",
@@ -474,8 +475,8 @@
     "contactPerson": "Contact person",
     "addSupplier": "+ Add Supplier",
     "deleteSupplier": "Delete supplier?",
-    "newSupplier": "New Supplier",
-    "editSupplier": "Edit Supplier",
+    "newSupplier": "Add new supplier",
+    "editSupplier": "Update supplier details",
     "companyName": "Company name",
     "companyNamePlaceholder": "Acme Corp",
     "emailPlaceholder": "orders@supplier.com",
@@ -526,6 +527,10 @@
     "unread": "{{count}} unread",
     "markAllRead": "Mark all as read",
     "noNotifications": "No notifications yet",
+    "groupToday": "Today",
+    "groupYesterday": "Yesterday",
+    "groupThisWeek": "This week",
+    "groupOlder": "Older",
     "types": {
       "info": "Info",
       "warning": "Warning",

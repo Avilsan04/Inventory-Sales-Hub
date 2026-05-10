@@ -28,7 +28,14 @@ import {
   TableRow,
   TableHead,
   TableCell,
+  EmptyState,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
 } from '@shared/ui/composed';
+import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
+import { APP_ROUTES } from '@shared/config/routes';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { formatOrderId } from '@shared/lib/formatters';
 import type { BadgeVariant } from '@shared/ui/primitives';
@@ -47,6 +54,7 @@ function saleStatusBadge(status: string): BadgeVariant {
 
 export function DashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { navigateTo } = useRoutingAdapter();
   const {
     kpi,
     kpiLoading,
@@ -66,19 +74,24 @@ export function DashboardPage(): React.ReactElement {
           <h1 className={styles['title']}>{t('dashboard.title')}</h1>
           <p className={styles['subtitle']}>{t('topbar.subtitle.dashboard')}</p>
         </div>
-        <Button variant="outline" size="sm" disabled>
-          {t('dashboard.exportReport')}
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button variant="outline" size="sm" disabled>
+                  {t('dashboard.exportReport')}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>{t('common.comingSoon')}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </header>
 
       {/* KPI row */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
         {/* Monthly revenue + growth */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgPrimary']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
               <DollarSignIcon />
@@ -95,7 +108,9 @@ export function DashboardPage(): React.ReactElement {
                 '—'
               )}
             </div>
-            {!kpiLoading && kpi && (
+            {kpiLoading ? (
+              <Skeleton className={styles['kpiGrowthSkeleton']} />
+            ) : kpi ? (
               <p
                 className={
                   kpi.revenueGrowth >= 0 ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
@@ -108,16 +123,12 @@ export function DashboardPage(): React.ReactElement {
                 )}{' '}
                 {Math.abs(kpi.revenueGrowth).toFixed(1)}% {t('dashboard.stats.vsLastMonth')}
               </p>
-            )}
+            ) : null}
           </div>
         </div>
 
         {/* Active orders + growth */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgNeutral']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentNeutral']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
               <ShoppingCartIcon />
@@ -150,11 +161,7 @@ export function DashboardPage(): React.ReactElement {
         </div>
 
         {/* Total customers */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgNeutral']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
               <UsersRoundIcon />
@@ -173,11 +180,7 @@ export function DashboardPage(): React.ReactElement {
         </div>
 
         {/* Low stock alerts */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgError']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentError']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconError']}`}>
               <AlertCircleIcon />
@@ -238,7 +241,13 @@ export function DashboardPage(): React.ReactElement {
         <div className={styles['transactionsCard']}>
           <div className={styles['transactionsHeader']}>
             <h3 className={styles['transactionsTitle']}>{t('dashboard.recentTransactions')}</h3>
-            <button type="button" className={styles['viewAllBtn']}>
+            <button
+              type="button"
+              className={styles['viewAllBtn']}
+              onClick={() => {
+                navigateTo(APP_ROUTES.SALES);
+              }}
+            >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
             </button>
           </div>
@@ -262,8 +271,8 @@ export function DashboardPage(): React.ReactElement {
                 ))
               ) : recentSales.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className={styles['emptyCell']}>
-                    {t('common.noData')}
+                  <TableCell colSpan={4}>
+                    <EmptyState icon={<ShoppingCartIcon size={24} />} title={t('common.noData')} />
                   </TableCell>
                 </TableRow>
               ) : (

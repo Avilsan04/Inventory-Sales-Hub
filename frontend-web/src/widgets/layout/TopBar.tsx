@@ -16,15 +16,10 @@ import { CartButton } from './topbar/CartButton';
 import { NotificationPanel } from './topbar/NotificationPanel';
 import { UserMenu } from './topbar/UserMenu';
 
-const LANGUAGE_OPTIONS: { value: Language; label: string; flag: string }[] = [
-  { value: 'en', label: 'English', flag: '/flags/en.svg' },
-  { value: 'es', label: 'Español', flag: '/flags/es.svg' },
+const LANGUAGE_OPTIONS: { value: Language; label: string }[] = [
+  { value: 'en', label: 'English' },
+  { value: 'es', label: 'Español' },
 ];
-
-const LANGUAGE_MAP: Record<Language, { label: string; flag: string }> = {
-  en: { label: 'English', flag: '/flags/en.svg' },
-  es: { label: 'Español', flag: '/flags/es.svg' },
-};
 
 interface TopBarProps {
   onToggleSidebar?: () => void;
@@ -33,8 +28,6 @@ interface TopBarProps {
 export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
   const { resolvedTheme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
-
-  const current = LANGUAGE_MAP[language];
 
   return (
     <header className={styles['topbar']}>
@@ -60,15 +53,16 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
         <QuickActionBtn />
         <CartButton />
 
+        <div className={styles['topbarSeparator']} aria-hidden="true" />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button type="button" className={styles['langBtn']} aria-label="Select language">
-              <img src={current.flag} alt={current.label} className={styles['langFlag']} />
               <span>{language.toUpperCase()}</span>
               <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" style={{ minWidth: '130px' }}>
+          <DropdownMenuContent align="end" className={styles['langMenu']}>
             {LANGUAGE_OPTIONS.map((lang) => (
               <DropdownMenuItem
                 key={lang.value}
@@ -77,7 +71,6 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
                 }}
                 className={lang.value === language ? styles['langItemActive'] : undefined}
               >
-                <img src={lang.flag} alt={lang.label} className={styles['langFlag']} />
                 <span>{lang.label}</span>
               </DropdownMenuItem>
             ))}
@@ -88,7 +81,7 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
           type="button"
           className={styles['iconBtn']}
           onClick={toggleTheme}
-          aria-label={resolvedTheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {resolvedTheme === 'dark' ? (
             <SunIcon aria-hidden="true" />

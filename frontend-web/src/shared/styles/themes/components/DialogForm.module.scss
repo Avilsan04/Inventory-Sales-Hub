@@ -77,6 +77,16 @@
   margin: 0 0 $spacing-2;
 }
 
+// ── Inline checkbox row (isVariant, isActive, etc.) ──────────────────────────
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
 // Delete button in sale item row needs top margin only on first row
 // (first row has labels above, rest don't)
 .deleteBtn {

@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $spacing-4 $spacing-5;
+  padding: $spacing-4 $spacing-6;
   border-bottom: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
   flex-shrink: 0;
@@ -81,7 +81,7 @@
 
 .splitPanelCheckoutOnly {
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   padding: $spacing-6;
   background-color: var(--color-surface-low);
 
@@ -180,7 +180,7 @@
     border-color $duration-fast ease;
 
   &:hover {
-    box-shadow: $shadow-kpi-card;
+    box-shadow: var(--shadow-card);
     border-color: var(--color-primary);
   }
 }
@@ -613,11 +613,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, $color-sidebar-accent 0%, $color-sidebar-bg 100%);
+  background: linear-gradient(135deg, $color-dark-bg-secondary 0%, $color-dark-bg-primary 100%);
   border-radius: var(--radius-lg);
   padding: $spacing-3 $spacing-4;
   margin-bottom: $spacing-3;
-  color: $color-primary-foreground;
+  color: $color-dark-text-primary;
   box-shadow: $shadow-mini-card;
 }
 
@@ -626,14 +626,14 @@
   font-style: italic;
   font-size: $font-size-lg;
   letter-spacing: $letter-spacing-super-tight;
-  color: $color-dark-primary-hover;
+  color: $color-dark-primary;
 }
 
 .miniCardNumber {
   font-family: $font-family-mono;
   font-size: $font-size-sm;
   letter-spacing: $letter-spacing-mono;
-  color: $color-sidebar-nav-inactive;
+  color: $color-dark-text-secondary;
 }
 
 // ── Payment detail form ────────────────────────────────────────────────────────

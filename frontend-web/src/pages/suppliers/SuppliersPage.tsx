@@ -37,7 +37,7 @@ export function SuppliersPage(): React.ReactElement {
   const [editSupplier, setEditSupplier] = React.useState<Supplier | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
 
-  const { page, setPage, pageCount, paginated } = useTableFilters<Supplier>(
+  const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Supplier>(
     data,
     (s, q) =>
       s.name.toLowerCase().includes(q) ||
@@ -184,7 +184,13 @@ export function SuppliersPage(): React.ReactElement {
                   {Math.min((page - 1) * SUPPLIER_PAGE_SIZE + 1, data?.length ?? 0)}–
                   {Math.min(page * SUPPLIER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
                 </span>
-                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+                <Pagination
+                  page={page}
+                  pageCount={pageCount}
+                  onPageChange={setPage}
+                  pageSize={pageSize}
+                  onPageSizeChange={setPageSize}
+                />
               </div>
             )}
           </Card>

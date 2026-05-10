@@ -8,6 +8,7 @@ import {
   PackageIcon,
   TriangleAlertIcon,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthMe } from '@features/auth';
 import { useStaffStats } from '@features/analytics/hooks/useStaffStats';
@@ -36,8 +37,8 @@ function statusVariant(status: string): BadgeVariant {
   return map[status as SaleStatus] ?? 'neutral';
 }
 
-function todayLabel(): string {
-  return new Intl.DateTimeFormat(undefined, {
+function todayLabel(locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -45,8 +46,8 @@ function todayLabel(): string {
   }).format(new Date());
 }
 
-function formatTime(iso: string): string {
-  return new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' }).format(
+function formatTime(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(
     new Date(iso)
   );
 }
@@ -55,6 +56,7 @@ const SKELETON_ROWS = 5;
 
 export function StaffDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { i18n } = useTranslation();
   const { data: me } = useAuthMe();
   const { navigateTo } = useRoutingAdapter();
   const {
@@ -83,7 +85,7 @@ export function StaffDashboardPage(): React.ReactElement {
           <h1 className={styles['greeting']}>
             {t('staffDashboard.greeting')}, {firstName}
           </h1>
-          <p className={styles['dateLabel']}>{todayLabel()}</p>
+          <p className={styles['dateLabel']}>{todayLabel(i18n.language)}</p>
         </div>
       </header>
 
@@ -119,7 +121,9 @@ export function StaffDashboardPage(): React.ReactElement {
                 })}
               </p>
               <p className={styles['sessionDetail']}>
-                {t('staffDashboard.session.openedAt', { time: formatTime(cashSession.openedAt) })}
+                {t('staffDashboard.session.openedAt', {
+                  time: formatTime(cashSession.openedAt, i18n.language),
+                })}
               </p>
               {stale && (
                 <p className={styles['sessionStaleWarning']}>
@@ -268,7 +272,7 @@ export function StaffDashboardPage(): React.ReactElement {
                 >
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>
                   <TableCell>
-                    {new Intl.DateTimeFormat(undefined, {
+                    {new Intl.DateTimeFormat(i18n.language, {
                       day: '2-digit',
                       month: 'short',
                       hour: '2-digit',

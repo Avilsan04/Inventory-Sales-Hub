@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
@@ -61,41 +61,25 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: $shadow-kpi-card;
+  box-shadow: var(--shadow-card);
   transition: box-shadow $duration-fast ease;
 
   &:hover {
-    box-shadow: $shadow-kpi-card-hover;
+    box-shadow: var(--shadow-elevated);
   }
 }
 
-.kpiCardBg {
-  position: absolute;
-  top: $offset-kpi-blob;
-  right: $offset-kpi-blob;
-  width: $size-32;
-  height: $size-32;
-  border-radius: var(--radius-full);
-  opacity: 0.05;
-  pointer-events: none;
-  transition: transform $duration-base ease;
-
-  .kpiCard:hover & {
-    transform: scale(1.1);
-  }
+.kpiCardAccentPrimary {
+  border-left: 3px solid var(--color-primary);
 }
-
-.kpiCardBgPrimary {
-  background-color: var(--color-primary);
+.kpiCardAccentSuccess {
+  border-left: 3px solid var(--color-success);
 }
-.kpiCardBgSuccess {
-  background-color: var(--color-success);
+.kpiCardAccentWarning {
+  border-left: 3px solid var(--color-warning);
 }
-.kpiCardBgWarning {
-  background-color: var(--color-warning);
-}
-.kpiCardBgNeutral {
-  background-color: var(--color-secondary);
+.kpiCardAccentNeutral {
+  border-left: 3px solid var(--color-text-muted);
 }
 
 .kpiTopRow {
@@ -181,7 +165,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
@@ -199,7 +183,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 

@@ -35,7 +35,7 @@
   -webkit-backdrop-filter: blur($blur-2xl);
   background: linear-gradient(135deg, $color-auth-glass-bg-from 0%, $color-auth-glass-bg-to 100%);
   border: $border-width-base solid $color-auth-glass-white-border;
-  box-shadow: $shadow-auth-glass;
+  box-shadow: var(--shadow-elevated);
   pointer-events: none;
 }
 

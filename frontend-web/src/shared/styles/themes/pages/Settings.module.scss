@@ -1,57 +1,54 @@
 // ── Layout ────────────────────────────────────────────────────────────────────
 .layout {
-  display: grid;
-  grid-template-columns: $settings-nav-width 1fr;
-  gap: $spacing-8;
-  align-items: start;
-  max-width: $container-settings;
-
-  @media (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr;
-  }
-}
-
-// ── Secondary nav ─────────────────────────────────────────────────────────────
-.nav {
-  position: sticky;
-  top: $spacing-6;
   display: flex;
   flex-direction: column;
-  gap: $spacing-1;
-  padding: $spacing-2;
-  border: $border-width-base solid var(--color-border);
-  border-radius: $radius-xl;
-  background-color: var(--color-card);
+  gap: $spacing-6;
+  max-width: $container-settings;
+}
+
+// ── Horizontal tab nav ────────────────────────────────────────────────────────
+.nav {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+  border: none;
+  border-bottom: $border-width-base solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .navItem {
   display: flex;
   align-items: center;
-  gap: $spacing-3;
-  width: 100%;
-  padding: $spacing-2 $spacing-3;
-  border-radius: $border-radius-full;
+  gap: $spacing-2;
+  flex-shrink: 0;
+  padding: $spacing-2-5 $spacing-4;
+  border-radius: 0;
   border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
   background: none;
   color: var(--color-text-secondary);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   font-family: $font-family-base;
-  text-align: left;
   cursor: pointer;
+  white-space: nowrap;
   transition:
-    background-color $duration-fast ease,
-    color $duration-fast ease;
+    color $duration-fast ease,
+    border-bottom-color $duration-fast ease;
 
   &:hover {
-    background-color: var(--color-surface-high);
     color: var(--color-text-primary);
   }
 }
 
 .navItemActive {
-  background-color: var(--color-surface-high);
   color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 
   .navIcon {
     color: var(--color-primary);
@@ -101,7 +98,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $border-radius-2xl;
   overflow: hidden;
-  box-shadow: $shadow-card-main;
+  box-shadow: var(--shadow-subtle);
 }
 
 // ── Individual section within card ────────────────────────────────────────────
@@ -189,7 +186,7 @@
   background-color: var(--color-card);
   border: $border-width-base solid var(--color-border);
   border-radius: $border-radius-2xl;
-  box-shadow: $shadow-card-access;
+  box-shadow: var(--shadow-subtle);
   transition: border-color $duration-fast ease;
 
   &:hover {

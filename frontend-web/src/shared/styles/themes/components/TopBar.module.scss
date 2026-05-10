@@ -9,7 +9,7 @@
   height: $navbar-height;
   padding: 0 $spacing-6;
   border-bottom: $border-width-base solid var(--color-border);
-  box-shadow: $shadow-topbar;
+  box-shadow: var(--shadow-subtle);
   background-color: var(--color-background);
   backdrop-filter: blur($blur-sm);
   flex-shrink: 0;
@@ -82,6 +82,14 @@
   }
 }
 
+.topbarSeparator {
+  width: $border-width-base;
+  height: $size-4;
+  background-color: var(--color-border);
+  flex-shrink: 0;
+  margin: 0 $spacing-1;
+}
+
 // ── Page title ────────────────────────────────────────────────────────────
 .pageTitle {
   display: flex;
@@ -117,7 +125,7 @@
   padding: 0 $spacing-3;
   border-radius: var(--radius-md);
   border: $border-width-base solid var(--color-border);
-  background: var(--color-input);
+  background: var(--color-bg-secondary);
   cursor: pointer;
   color: var(--color-muted-foreground);
   font-size: $font-size-sm;
@@ -294,6 +302,10 @@
   height: $size-3;
   color: var(--color-muted-foreground);
   flex-shrink: 0;
+}
+
+.langMenu {
+  min-width: $size-32;
 }
 
 .langItemActive {

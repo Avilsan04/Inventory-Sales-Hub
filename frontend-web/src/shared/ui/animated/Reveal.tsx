@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { motion, type HTMLMotionProps } from 'framer-motion';
+import { motion, useReducedMotion, type HTMLMotionProps } from 'framer-motion';
 
 type RevealTag = 'div' | 'section' | 'article' | 'span' | 'li' | 'p';
 type Direction = 'up' | 'down' | 'left' | 'right' | 'scale' | 'fade';
@@ -55,11 +55,13 @@ export function Reveal({
   lift = false,
   className,
 }: RevealProps): React.ReactElement {
+  const reducedMotion = useReducedMotion();
   const Component = MOTION_COMPONENTS[as];
+  const effectiveDirection: Direction = reducedMotion ? 'fade' : direction;
   const variants = {
-    hidden: HIDDEN[direction],
+    hidden: HIDDEN[effectiveDirection],
     visible: {
-      ...VISIBLE[direction],
+      ...VISIBLE[effectiveDirection],
       transition: { duration: 0.5, delay, ease: 'easeOut' as const },
     },
   };
@@ -72,7 +74,9 @@ export function Reveal({
       whileInView="visible"
       viewport={{ once: true, amount: 0.1 }}
       whileHover={
-        lift ? { y: -4, transition: { duration: 0.15, ease: 'easeOut' as const } } : undefined
+        lift && !reducedMotion
+          ? { y: -4, transition: { duration: 0.15, ease: 'easeOut' as const } }
+          : undefined
       }
     >
       {children}

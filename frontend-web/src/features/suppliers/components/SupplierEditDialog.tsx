@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CheckIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -36,6 +37,7 @@ interface Props {
 export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateSupplier(supplier?.id ?? '');
+  const [saved, setSaved] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -60,6 +62,7 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
 
   const onClose = (): void => {
     reset();
+    setSaved(false);
     onOpenChange(false);
   };
 
@@ -68,7 +71,10 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
     mutate(data, {
       onSuccess: () => {
         toast({ title: 'Supplier updated' });
-        onClose();
+        setSaved(true);
+        setTimeout(() => {
+          onClose();
+        }, 400);
       },
       onError: (err) => {
         toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
@@ -91,25 +97,29 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
             <FormField label={t('suppliers.companyName')} required error={errors.name?.message}>
               <Input {...register('name')} />
             </FormField>
-            <FormField label={t('suppliers.email')} error={errors.email?.message}>
-              <Input {...register('email')} type="email" />
-            </FormField>
-            <FormField label={t('suppliers.phone')} error={errors.phone?.message}>
-              <Input {...register('phone')} />
-            </FormField>
-            <FormField label={t('suppliers.address')} error={errors.address?.message}>
-              <Input {...register('address')} />
-            </FormField>
-            <FormField label={t('suppliers.contactPerson')} error={errors.contactPerson?.message}>
-              <Input {...register('contactPerson')} />
-            </FormField>
+            <div className={styles['grid2']}>
+              <FormField label={t('suppliers.email')} error={errors.email?.message}>
+                <Input {...register('email')} type="email" />
+              </FormField>
+              <FormField label={t('suppliers.phone')} error={errors.phone?.message}>
+                <Input {...register('phone')} />
+              </FormField>
+            </div>
+            <div className={styles['grid2']}>
+              <FormField label={t('suppliers.address')} error={errors.address?.message}>
+                <Input {...register('address')} />
+              </FormField>
+              <FormField label={t('suppliers.contactPerson')} error={errors.contactPerson?.message}>
+                <Input {...register('contactPerson')} />
+              </FormField>
+            </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.saving') : t('common.save')}
+            <Button type="submit" disabled={isPending || saved}>
+              {saved ? <CheckIcon size={14} /> : isPending ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

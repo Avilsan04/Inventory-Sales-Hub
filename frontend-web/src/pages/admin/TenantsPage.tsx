@@ -66,7 +66,6 @@ export function TenantsPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div>
-          <span className={styles['eyebrow']}>SUPER ADMIN</span>
           <h1 className={styles['title']}>{t('admin.title')}</h1>
           <p className={styles['subtitle']}>{t('admin.subtitle')}</p>
         </div>

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { CheckIcon } from 'lucide-react';
 import { useUpdateEmployee } from '@features/employees';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -40,6 +41,7 @@ interface Props {
 export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateEmployee(employee?.id ?? '');
+  const [saved, setSaved] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -65,6 +67,7 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
 
   const onClose = (): void => {
     reset();
+    setSaved(false);
     onOpenChange(false);
   };
 
@@ -73,7 +76,10 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
     mutate(data, {
       onSuccess: () => {
         toast({ title: 'Employee updated' });
-        onClose();
+        setSaved(true);
+        setTimeout(() => {
+          onClose();
+        }, 400);
       },
       onError: (err) => {
         toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
@@ -93,12 +99,14 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
           }}
         >
           <div className={styles['body']}>
-            <FormField label={t('employees.name')} required error={errors.name?.message}>
-              <Input {...register('name')} />
-            </FormField>
-            <FormField label={t('employees.email')} required error={errors.email?.message}>
-              <Input {...register('email')} type="email" />
-            </FormField>
+            <div className={styles['grid2']}>
+              <FormField label={t('employees.name')} required error={errors.name?.message}>
+                <Input {...register('name')} />
+              </FormField>
+              <FormField label={t('employees.email')} required error={errors.email?.message}>
+                <Input {...register('email')} type="email" />
+              </FormField>
+            </div>
             <FormField label={t('employees.role')} required error={errors.role?.message}>
               <Controller
                 name="role"
@@ -132,8 +140,8 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.saving') : t('common.save')}
+            <Button type="submit" disabled={isPending || saved}>
+              {saved ? <CheckIcon size={14} /> : isPending ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

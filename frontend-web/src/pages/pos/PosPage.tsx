@@ -15,7 +15,6 @@ import { toast } from '@shared/hooks/useToast';
 import { Button } from '@shared/ui/primitives';
 import { PosProductBrowser, PosCart } from '@widgets/pos';
 import type { PosCheckoutPayload } from '@widgets/pos';
-import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
 export function PosPage(): React.ReactElement {
@@ -23,21 +22,13 @@ export function PosPage(): React.ReactElement {
   const { data: inventory, isPending } = useInventory();
   const { data: customers } = useCustomers();
   const { mutate: createSale, isPending: isCreating } = useCreateSale();
-  const { addItem, clearCart, items: cartItems } = useCart();
+  const { addItem, clearCart } = useCart();
   const { data: cashSession, isLoading: isSessionLoading } = useCashSession();
   const role = useEffectiveRole();
 
   const [completedSale, setCompletedSale] = React.useState<Sale | null>(null);
   const [openSessionDialog, setOpenSessionDialog] = React.useState(false);
   const [closeSessionDialog, setCloseSessionDialog] = React.useState(false);
-
-  const visibleInventory = React.useMemo((): InventoryItem[] | undefined => {
-    if (!inventory) return undefined;
-    if (cartItems.length === 0) return [];
-    const cartSkus = new Set(cartItems.map((i) => i.sku).filter(Boolean));
-    const cartNames = new Set(cartItems.map((i) => i.productName));
-    return inventory.filter((item) => cartSkus.has(item.sku) || cartNames.has(item.name));
-  }, [inventory, cartItems]);
 
   const addToCart = (item: InventoryItem): void => {
     addItem({
@@ -126,15 +117,8 @@ export function PosPage(): React.ReactElement {
         </div>
       )}
 
-      <div
-        className={cn(
-          styles['splitPanel'],
-          cartItems.length === 0 && styles['splitPanelCheckoutOnly']
-        )}
-      >
-        {cartItems.length > 0 && (
-          <PosProductBrowser inventory={visibleInventory} isPending={isPending} onAdd={addToCart} />
-        )}
+      <div className={styles['splitPanel']}>
+        <PosProductBrowser inventory={inventory} isPending={isPending} onAdd={addToCart} />
         <PosCart customers={customers} isCreating={isCreating} onCheckout={handleCheckout} />
       </div>
 

@@ -48,7 +48,8 @@
     "items": "artículos",
     "dateRange": "Rango de fechas",
     "updating": "Actualizando…",
-    "processing": "Procesando…"
+    "processing": "Procesando…",
+    "comingSoon": "Próximamente"
   },
   "nav": {
     "home": "Inicio",
@@ -301,7 +302,7 @@
     "totalProducts": "Total de productos",
     "totalCategories": "Categorías",
     "importCsv": "Importar CSV",
-    "newProduct": "Nuevo producto",
+    "newProduct": "Añadir nuevo producto",
     "deleteProduct": "¿Eliminar producto?",
     "isVariant": "Es variante de otro producto",
     "parentProduct": "Producto padre",
@@ -315,7 +316,7 @@
     "description": "Descripción",
     "optional": "Opcional",
     "creating": "Creando…",
-    "editProduct": "Editar producto",
+    "editProduct": "Editar detalles del producto",
     "noVariants": "Sin variantes",
     "importFromCsv": "Importar productos desde CSV",
     "csvColumnsHint": "Columnas CSV: name, sku, price, currency, description, categoryId, uom",
@@ -433,14 +434,14 @@
     "addCustomer": "Añadir cliente",
     "emptyTitle": "Sin clientes registrados",
     "emptyDescription": "Añade tu primer cliente para gestionar las relaciones",
-    "newCustomer": "Nuevo cliente",
+    "newCustomer": "Añadir nuevo cliente",
     "deleteCustomer": "¿Eliminar cliente?",
     "fullNamePlaceholder": "Nombre completo",
     "emailPlaceholder": "correo@ejemplo.com",
     "phonePlaceholder": "+34 600 000 000",
     "addressPlaceholder": "Calle Mayor, 1",
     "eyebrow": "PERSONAS",
-    "editCustomer": "Editar cliente"
+    "editCustomer": "Actualizar datos del cliente"
   },
   "employees": {
     "title": "Empleados",
@@ -455,8 +456,8 @@
     "active": "Activo",
     "inactive": "Inactivo",
     "addEmployee": "+ Añadir empleado",
-    "newEmployee": "Nuevo empleado",
-    "editEmployee": "Editar empleado",
+    "newEmployee": "Añadir nuevo empleado",
+    "editEmployee": "Actualizar datos del empleado",
     "emailPlaceholder": "empleado@empresa.com",
     "roles": {
       "admin": "Administrador",
@@ -474,8 +475,8 @@
     "contactPerson": "Persona de contacto",
     "addSupplier": "+ Añadir proveedor",
     "deleteSupplier": "¿Eliminar proveedor?",
-    "newSupplier": "Nuevo proveedor",
-    "editSupplier": "Editar proveedor",
+    "newSupplier": "Añadir nuevo proveedor",
+    "editSupplier": "Actualizar datos del proveedor",
     "companyName": "Nombre de empresa",
     "companyNamePlaceholder": "Acme Corp",
     "emailPlaceholder": "pedidos@proveedor.com",
@@ -526,6 +527,10 @@
     "unread": "{{count}} sin leer",
     "markAllRead": "Marcar todo como leído",
     "noNotifications": "No hay notificaciones",
+    "groupToday": "Hoy",
+    "groupYesterday": "Ayer",
+    "groupThisWeek": "Esta semana",
+    "groupOlder": "Anteriores",
     "types": {
       "info": "Info",
       "warning": "Aviso",

@@ -115,7 +115,6 @@ export function SalesPage(): React.ReactElement {
     <div className={pageStyles['page']}>
       <header className={styles['pageHeader']}>
         <div>
-          <span className={styles['eyebrow']}>{t('sales.eyebrow')}</span>
           <h1 className={styles['title']}>{t('nav.orders')}</h1>
           <p className={styles['subtitle']}>{t('sales.orderHistory')}</p>
         </div>

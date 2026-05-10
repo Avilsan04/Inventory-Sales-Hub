@@ -104,6 +104,8 @@ interface ToastReturn {
 
 export function toast(props: ToastInput): ToastReturn {
   const id = genId();
+  const duration = props.variant === 'destructive' ? Infinity : 2500;
+
   const update = (updateProps: Partial<ToasterToast>): void => {
     dispatch({ type: 'UPDATE_TOAST', toast: { ...updateProps, id } });
   };
@@ -117,6 +119,7 @@ export function toast(props: ToastInput): ToastReturn {
     toast: {
       ...props,
       id,
+      duration,
       open: true,
       onOpenChange: (open: boolean) => {
         if (!open) {

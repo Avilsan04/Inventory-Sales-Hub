@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CheckIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -34,6 +35,7 @@ interface Props {
 export function SupplierCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateSupplier();
+  const [saved, setSaved] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -46,6 +48,7 @@ export function SupplierCreateDialog({ open, onOpenChange }: Props): React.React
 
   const onClose = (): void => {
     reset();
+    setSaved(false);
     onOpenChange(false);
   };
 
@@ -53,7 +56,10 @@ export function SupplierCreateDialog({ open, onOpenChange }: Props): React.React
     mutate(data, {
       onSuccess: () => {
         toast({ title: 'Supplier added' });
-        onClose();
+        setSaved(true);
+        setTimeout(() => {
+          onClose();
+        }, 400);
       },
       onError: (err) => {
         toast({ title: 'Failed to add', description: err.message, variant: 'destructive' });
@@ -76,32 +82,42 @@ export function SupplierCreateDialog({ open, onOpenChange }: Props): React.React
             <FormField label={t('suppliers.companyName')} required error={errors.name?.message}>
               <Input {...register('name')} placeholder={t('suppliers.companyNamePlaceholder')} />
             </FormField>
-            <FormField label={t('suppliers.email')} error={errors.email?.message}>
-              <Input
-                {...register('email')}
-                type="email"
-                placeholder={t('suppliers.emailPlaceholder')}
-              />
-            </FormField>
-            <FormField label={t('suppliers.phone')} error={errors.phone?.message}>
-              <Input {...register('phone')} placeholder={t('suppliers.phonePlaceholder')} />
-            </FormField>
-            <FormField label={t('suppliers.address')} error={errors.address?.message}>
-              <Input {...register('address')} placeholder={t('suppliers.addressPlaceholder')} />
-            </FormField>
-            <FormField label={t('suppliers.contactPerson')} error={errors.contactPerson?.message}>
-              <Input
-                {...register('contactPerson')}
-                placeholder={t('suppliers.contactPersonPlaceholder')}
-              />
-            </FormField>
+            <div className={styles['grid2']}>
+              <FormField label={t('suppliers.email')} error={errors.email?.message}>
+                <Input
+                  {...register('email')}
+                  type="email"
+                  placeholder={t('suppliers.emailPlaceholder')}
+                />
+              </FormField>
+              <FormField label={t('suppliers.phone')} error={errors.phone?.message}>
+                <Input {...register('phone')} placeholder={t('suppliers.phonePlaceholder')} />
+              </FormField>
+            </div>
+            <div className={styles['grid2']}>
+              <FormField label={t('suppliers.address')} error={errors.address?.message}>
+                <Input {...register('address')} placeholder={t('suppliers.addressPlaceholder')} />
+              </FormField>
+              <FormField label={t('suppliers.contactPerson')} error={errors.contactPerson?.message}>
+                <Input
+                  {...register('contactPerson')}
+                  placeholder={t('suppliers.contactPersonPlaceholder')}
+                />
+              </FormField>
+            </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.adding') : t('suppliers.addSupplier')}
+            <Button type="submit" disabled={isPending || saved}>
+              {saved ? (
+                <CheckIcon size={14} />
+              ) : isPending ? (
+                t('common.adding')
+              ) : (
+                t('suppliers.addSupplier')
+              )}
             </Button>
           </DialogFooter>
         </form>

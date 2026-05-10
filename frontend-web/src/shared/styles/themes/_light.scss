@@ -158,4 +158,10 @@
   --shadow-soft-card: #{$shadow-soft-card};
   --shadow-glow-purple: #{$shadow-glow-purple};
   --shadow-glow-blue-sm: #{$shadow-glow-blue-sm};
+
+  // ── Semantic shadows (4-tier scale) ──────────────────────────
+  --shadow-subtle: 0 1px 3px rgb(15 23 42 / 0.06), 0 1px 2px rgb(15 23 42 / 0.04);
+  --shadow-card: 0 4px 12px rgb(15 23 42 / 0.08);
+  --shadow-elevated: 0 8px 24px rgb(15 23 42 / 0.12);
+  --shadow-overlay: 0 20px 40px -8px rgb(15 23 42 / 0.18);
 }

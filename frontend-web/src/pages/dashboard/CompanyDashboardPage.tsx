@@ -10,6 +10,7 @@ import {
   BarChart2Icon,
   TruckIcon,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthMe } from '@features/auth';
 import { useCompanyStats } from '@features/analytics/hooks/useCompanyStats';
@@ -29,8 +30,8 @@ import { formatCurrency } from '@shared/lib/formatCurrency';
 import { APP_ROUTES } from '@shared/config/routes';
 import styles from '@shared/styles/themes/pages/CompanyDashboard.module.scss';
 
-function todayLabel(): string {
-  return new Intl.DateTimeFormat(undefined, {
+function todayLabel(locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -42,6 +43,7 @@ const SKELETON_ROWS = 5;
 
 export function CompanyDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { i18n } = useTranslation();
   const { data: me } = useAuthMe();
   const { navigateTo } = useRoutingAdapter();
   const {
@@ -68,17 +70,13 @@ export function CompanyDashboardPage(): React.ReactElement {
           <h1 className={styles['greeting']}>
             {t('companyDashboard.greeting')}, {firstName}
           </h1>
-          <p className={styles['dateLabel']}>{todayLabel()}</p>
+          <p className={styles['dateLabel']}>{todayLabel(i18n.language)}</p>
         </div>
       </header>
 
       {/* KPI strip */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgPrimary']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
               <DollarSignIcon />
@@ -106,11 +104,7 @@ export function CompanyDashboardPage(): React.ReactElement {
           </div>
         </div>
 
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgSuccess']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSuccess']}`}>
               <ShoppingBagIcon />
@@ -134,11 +128,7 @@ export function CompanyDashboardPage(): React.ReactElement {
           </div>
         </div>
 
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgNeutral']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentNeutral']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconNeutral']}`}>
               <UsersIcon />
@@ -152,11 +142,7 @@ export function CompanyDashboardPage(): React.ReactElement {
           </div>
         </div>
 
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgPurple']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPurple']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPurple']}`}>
               <UsersRoundIcon />

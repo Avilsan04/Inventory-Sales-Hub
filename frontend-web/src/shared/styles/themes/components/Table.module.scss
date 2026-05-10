@@ -43,24 +43,22 @@
   transition: background-color $duration-fast ease;
 
   &:hover {
-    background-color: var(--color-bg-secondary);
+    background-color: color-mix(in srgb, var(--color-primary) 4%, transparent);
   }
 }
 
 .tableHead {
-  padding: $spacing-2 $spacing-4;
+  padding: $spacing-3 $spacing-4;
   text-align: left;
   vertical-align: middle;
-  font-size: $font-size-table-header;
+  font-size: $font-size-xs; // 12px — readable without being heavy
   font-weight: $font-weight-semibold;
-  text-transform: uppercase;
-  letter-spacing: $letter-spacing-widest;
   white-space: nowrap;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .tableCell {
-  padding: $spacing-3 $spacing-4;
+  padding: $spacing-3-5 $spacing-4; // 14px vertical → row height ≥ 52px
   vertical-align: middle;
   white-space: nowrap;
 }

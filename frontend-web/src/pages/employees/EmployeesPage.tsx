@@ -48,7 +48,7 @@ export function EmployeesPage(): React.ReactElement {
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editEmployee, setEditEmployee] = React.useState<Employee | null>(null);
 
-  const { page, setPage, pageCount, paginated } = useTableFilters<Employee>(
+  const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Employee>(
     data,
     () => true,
     EMPLOYEE_PAGE_SIZE
@@ -211,7 +211,13 @@ export function EmployeesPage(): React.ReactElement {
                   {Math.min((page - 1) * EMPLOYEE_PAGE_SIZE + 1, totalEmployees)}–
                   {Math.min(page * EMPLOYEE_PAGE_SIZE, totalEmployees)} / {totalEmployees}
                 </span>
-                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+                <Pagination
+                  page={page}
+                  pageCount={pageCount}
+                  onPageChange={setPage}
+                  pageSize={pageSize}
+                  onPageSizeChange={setPageSize}
+                />
               </div>
             )}
           </Card>

@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
@@ -141,6 +141,20 @@
   align-items: center;
   justify-content: flex-end;
   gap: $spacing-1;
+
+  // Hide on pointer devices — show only on row hover
+  @media (hover: hover) and (pointer: fine) {
+    opacity: 0;
+    transition: opacity var(--duration-fast) ease;
+  }
+}
+
+// Reveal when the table row is hovered (pointer devices only)
+// tr is an element selector — not scoped by CSS modules, intentional
+tr:hover .cellActions {
+  @media (hover: hover) and (pointer: fine) {
+    opacity: 1;
+  }
 }
 
 .tableFooter {

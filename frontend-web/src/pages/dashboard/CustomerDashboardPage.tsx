@@ -9,6 +9,7 @@ import {
   ListOrderedIcon,
   ShoppingCartIcon,
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthMe } from '@features/auth';
 import { useCatalog, useCart, ProductCard } from '@features/catalog';
@@ -43,16 +44,16 @@ function statusVariant(status: string): BadgeVariant {
   return map[status as SaleStatus] ?? 'neutral';
 }
 
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+function formatDate(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
   }).format(new Date(iso));
 }
 
-function todayLabel(): string {
-  return new Intl.DateTimeFormat(undefined, {
+function todayLabel(locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -65,6 +66,7 @@ const SKELETON_ROWS = 4;
 
 export function CustomerDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { i18n } = useTranslation();
   const { data: me } = useAuthMe();
   const { navigateTo } = useRoutingAdapter();
   const { data: products } = useCatalog();
@@ -91,20 +93,16 @@ export function CustomerDashboardPage(): React.ReactElement {
       <header className={styles['header']}>
         <div className={styles['headerMeta']}>
           <h1 className={styles['greeting']}>
-            {t('customerDashboard.greeting')}, {firstName} 👋
+            {t('customerDashboard.greeting')}, {firstName}
           </h1>
-          <p className={styles['dateLabel']}>{todayLabel()}</p>
+          <p className={styles['dateLabel']}>{todayLabel(i18n.language)}</p>
         </div>
       </header>
 
       {/* KPI strip */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
         {/* Total orders */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgPrimary']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentPrimary']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconPrimary']}`}>
               <ShoppingBagIcon />
@@ -119,11 +117,7 @@ export function CustomerDashboardPage(): React.ReactElement {
         </div>
 
         {/* Completed */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgSuccess']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSuccess']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSuccess']}`}>
               <CheckCircleIcon />
@@ -138,11 +132,7 @@ export function CustomerDashboardPage(): React.ReactElement {
         </div>
 
         {/* Pending */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgWarning']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentWarning']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconWarning']}`}>
               <ClockIcon />
@@ -157,11 +147,7 @@ export function CustomerDashboardPage(): React.ReactElement {
         </div>
 
         {/* Total spent */}
-        <div className={styles['kpiCard']}>
-          <div
-            className={`${styles['kpiCardBg']} ${styles['kpiCardBgSpent']}`}
-            aria-hidden="true"
-          />
+        <div className={`${styles['kpiCard']} ${styles['kpiCardAccentSpent']}`}>
           <div className={styles['kpiTopRow']}>
             <div className={`${styles['kpiIconContainer']} ${styles['kpiIconSpent']}`}>
               <CreditCardIcon />
@@ -233,7 +219,7 @@ export function CustomerDashboardPage(): React.ReactElement {
                   }}
                 >
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>
-                  <TableCell>{formatDate(s.createdAt)}</TableCell>
+                  <TableCell>{formatDate(s.createdAt, i18n.language)}</TableCell>
                   <TableCell>{s.items.length}</TableCell>
                   <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
                   <TableCell>

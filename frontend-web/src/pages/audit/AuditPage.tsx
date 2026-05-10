@@ -1,8 +1,18 @@
 import * as React from 'react';
+import { ScrollTextIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuditLog } from '@features/audit';
 import { Skeleton, Badge, Button } from '@shared/ui/primitives';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
+import {
+  EmptyState,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@shared/ui/composed';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { AuditAction } from '@entities/audit';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
@@ -19,8 +29,8 @@ function actionVariant(action: AuditAction): BadgeVariant {
   return map[action] ?? 'neutral';
 }
 
-function formatTimestamp(iso: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+function formatTimestamp(iso: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -31,6 +41,7 @@ function formatTimestamp(iso: string): string {
 
 export function AuditPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { i18n } = useTranslation();
   const { data: logs, isLoading } = useAuditLog();
 
   const [visibleCount, setVisibleCount] = React.useState(PAGE_SIZE);
@@ -77,15 +88,8 @@ export function AuditPage(): React.ReactElement {
               ))
             ) : allLogs.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={5}
-                  style={{
-                    textAlign: 'center',
-                    color: 'var(--color-text-muted)',
-                    padding: 'var(--spacing-8) 0',
-                  }}
-                >
-                  {t('common.noData')}
+                <TableCell colSpan={5}>
+                  <EmptyState icon={<ScrollTextIcon size={24} />} title={t('common.noData')} />
                 </TableCell>
               </TableRow>
             ) : (
@@ -99,7 +103,7 @@ export function AuditPage(): React.ReactElement {
                       color: 'var(--color-text-muted)',
                     }}
                   >
-                    {formatTimestamp(log.timestamp)}
+                    {formatTimestamp(log.timestamp, i18n.language)}
                   </TableCell>
                   <TableCell>{log.userName}</TableCell>
                   <TableCell>

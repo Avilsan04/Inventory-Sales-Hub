@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CheckIcon } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -38,6 +39,7 @@ interface Props {
 export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateEmployee();
+  const [saved, setSaved] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -52,6 +54,7 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
 
   const onClose = (): void => {
     reset();
+    setSaved(false);
     onOpenChange(false);
   };
 
@@ -59,7 +62,10 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
     mutate(data, {
       onSuccess: () => {
         toast({ title: 'Employee added' });
-        onClose();
+        setSaved(true);
+        setTimeout(() => {
+          onClose();
+        }, 400);
       },
       onError: (err) => {
         toast({ title: 'Failed to add', description: err.message, variant: 'destructive' });
@@ -79,16 +85,18 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
           }}
         >
           <div className={styles['body']}>
-            <FormField label={t('employees.name')} required error={errors.name?.message}>
-              <Input {...register('name')} placeholder={t('auth.fullNamePlaceholder')} />
-            </FormField>
-            <FormField label={t('employees.email')} required error={errors.email?.message}>
-              <Input
-                {...register('email')}
-                type="email"
-                placeholder={t('employees.emailPlaceholder')}
-              />
-            </FormField>
+            <div className={styles['grid2']}>
+              <FormField label={t('employees.name')} required error={errors.name?.message}>
+                <Input {...register('name')} placeholder={t('auth.fullNamePlaceholder')} />
+              </FormField>
+              <FormField label={t('employees.email')} required error={errors.email?.message}>
+                <Input
+                  {...register('email')}
+                  type="email"
+                  placeholder={t('employees.emailPlaceholder')}
+                />
+              </FormField>
+            </div>
             <FormField label={t('employees.role')} required error={errors.role?.message}>
               <Controller
                 name="role"
@@ -126,8 +134,14 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.adding') : t('employees.addEmployee')}
+            <Button type="submit" disabled={isPending || saved}>
+              {saved ? (
+                <CheckIcon size={14} />
+              ) : isPending ? (
+                t('common.adding')
+              ) : (
+                t('employees.addEmployee')
+              )}
             </Button>
           </DialogFooter>
         </form>

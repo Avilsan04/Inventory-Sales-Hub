@@ -12,6 +12,7 @@ import {
   CardTitle,
   CardAction,
   CardContent,
+  EmptyState,
   Table,
   TableHeader,
   TableBody,
@@ -43,7 +44,7 @@ export function ProductsPage(): React.ReactElement {
   const [editProduct, setEditProduct] = React.useState<Product | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
 
-  const { page, setPage, pageCount, paginated } = useTableFilters<Product>(
+  const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Product>(
     data,
     (p, q) =>
       p.name.toLowerCase().includes(q) ||
@@ -166,9 +167,7 @@ export function ProductsPage(): React.ReactElement {
                   ) : paginated.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5}>
-                        <div className={styles['placeholderContainer']}>
-                          <p className={styles['placeholder']}>{t('common.noData')}</p>
-                        </div>
+                        <EmptyState icon={<PackageIcon size={24} />} title={t('common.noData')} />
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -218,7 +217,13 @@ export function ProductsPage(): React.ReactElement {
                   {Math.min((page - 1) * PRODUCT_PAGE_SIZE + 1, data?.length ?? 0)}–
                   {Math.min(page * PRODUCT_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
                 </span>
-                <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+                <Pagination
+                  page={page}
+                  pageCount={pageCount}
+                  onPageChange={setPage}
+                  pageSize={pageSize}
+                  onPageSizeChange={setPageSize}
+                />
               </div>
             )}
           </Card>

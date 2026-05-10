@@ -101,9 +101,7 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
           }}
         >
           <div className={styles['body']}>
-            <label
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem' }}
-            >
+            <label className={styles['checkboxLabel']}>
               <input
                 type="checkbox"
                 checked={isVariant}

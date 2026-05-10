@@ -15,7 +15,6 @@ import {
   LayoutGridIcon,
   ClipboardListIcon,
   UserRoundIcon,
-  PlusIcon,
   StoreIcon,
   ScrollTextIcon,
 } from 'lucide-react';
@@ -113,7 +112,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const effectiveRole = useEffectiveRole();
 
   const navGroups = NAV_GROUPS_BY_ROLE[effectiveRole ?? 'staff'];
-  const showAddProduct = effectiveRole === 'admin' || effectiveRole === 'manager';
 
   return (
     <>
@@ -131,18 +129,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
           <BrandMark size={32} />
           <div className={styles['brandText']}>
             <span className={styles['brandName']}>{t('common.appName')}</span>
-            <span className={styles['brandSub']}>Enterprise Suite</span>
+            <span className={styles['brandSub']}>Platform</span>
           </div>
         </div>
-
-        {showAddProduct && (
-          <div className={styles['ctaWrapper']}>
-            <NavLink to={APP_ROUTES.INVENTORY} className={styles['cta']} onClick={onClose}>
-              <PlusIcon className={styles['ctaIcon']} aria-hidden="true" />
-              Add Product
-            </NavLink>
-          </div>
-        )}
 
         <nav className={styles['nav']}>
           {navGroups.map((group, idx) => (

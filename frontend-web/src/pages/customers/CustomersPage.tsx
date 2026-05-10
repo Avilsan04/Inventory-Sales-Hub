@@ -55,15 +55,24 @@ export function CustomersPage(): React.ReactElement {
   const [editCustomer, setEditCustomer] = React.useState<Customer | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
 
-  const { search, setSearch, debouncedSearch, page, setPage, pageCount, paginated } =
-    useTableFilters<Customer>(
-      data,
-      (c, q) =>
-        c.name.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q) ||
-        (c.phone ?? '').toLowerCase().includes(q),
-      CUSTOMER_PAGE_SIZE
-    );
+  const {
+    search,
+    setSearch,
+    debouncedSearch,
+    page,
+    setPage,
+    pageCount,
+    pageSize,
+    setPageSize,
+    paginated,
+  } = useTableFilters<Customer>(
+    data,
+    (c, q) =>
+      c.name.toLowerCase().includes(q) ||
+      c.email.toLowerCase().includes(q) ||
+      (c.phone ?? '').toLowerCase().includes(q),
+    CUSTOMER_PAGE_SIZE
+  );
 
   const topMap = React.useMemo(() => {
     const map = new Map<string, { totalOrders: number; totalSpent: number }>();
@@ -114,7 +123,6 @@ export function CustomersPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div className={styles['headerText']}>
-          <span className={styles['eyebrow']}>{t('customers.eyebrow')}</span>
           <h1 className={styles['title']}>{t('customers.title')}</h1>
           <p className={styles['subtitle']}>{t('customers.subtitle')}</p>
         </div>
@@ -222,7 +230,7 @@ export function CustomersPage(): React.ReactElement {
                         )}
                       </TableCell>
                       <TableCell>
-                        <div className={styles['cellActions']}>
+                        <div className={pageStyles['cellActions']}>
                           <Button
                             variant="ghost"
                             size="icon-sm"
@@ -255,7 +263,13 @@ export function CustomersPage(): React.ReactElement {
                 {Math.min((page - 1) * CUSTOMER_PAGE_SIZE + 1, data?.length ?? 0)}–
                 {Math.min(page * CUSTOMER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
               </span>
-              <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
+              <Pagination
+                page={page}
+                pageCount={pageCount}
+                onPageChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
+              />
             </div>
           )}
         </Card>

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
@@ -62,7 +62,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: $shadow-kpi-card;
+  box-shadow: var(--shadow-card);
 }
 
 .sessionCardOpen {
@@ -141,11 +141,11 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: $shadow-kpi-card;
+  box-shadow: var(--shadow-card);
   transition: box-shadow $duration-fast ease;
 
   &:hover {
-    box-shadow: $shadow-kpi-card-hover;
+    box-shadow: var(--shadow-elevated);
   }
 }
 
@@ -223,7 +223,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 

@@ -7,6 +7,7 @@ import { toast } from '@shared/hooks/useToast';
 import { formatCurrency, fromCents, toCents } from '@shared/lib/formatCurrency';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
+import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 import {
   Dialog,
   DialogContent,
@@ -109,7 +110,7 @@ export function CloseCashSessionDialog({
             void handleSubmit(onSubmit)(e);
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
+          <div className={styles['body']}>
             <div>
               <Label htmlFor="closingBalance">{t('pos.closingBalance')}</Label>
               <Input

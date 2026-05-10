@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
@@ -59,29 +59,26 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: $shadow-kpi-card;
+  box-shadow: var(--shadow-card);
   transition: box-shadow $duration-fast ease;
 
   &:hover {
-    box-shadow: $shadow-kpi-card-hover;
+    box-shadow: var(--shadow-elevated);
   }
 }
 
-// decorative bg blob
-.kpiCardBg {
-  position: absolute;
-  top: $offset-kpi-blob;
-  right: $offset-kpi-blob;
-  width: $size-32;
-  height: $size-32;
-  border-radius: var(--radius-full);
-  opacity: 0.05;
-  pointer-events: none;
-  transition: transform $duration-base ease;
-
-  .kpiCard:hover & {
-    transform: scale(1.1);
-  }
+// Left-border accent: data-driven colour identity without generic gradients
+.kpiCardAccentPrimary {
+  border-left: 3px solid var(--color-primary);
+}
+.kpiCardAccentNeutral {
+  border-left: 3px solid var(--color-text-muted);
+}
+.kpiCardAccentSuccess {
+  border-left: 3px solid var(--color-success);
+}
+.kpiCardAccentError {
+  border-left: 3px solid var(--color-error);
 }
 
 .kpiTopRow {
@@ -174,6 +171,13 @@
   border-radius: var(--radius-md);
 }
 
+.kpiGrowthSkeleton {
+  height: $spacing-4;
+  width: $size-28;
+  border-radius: var(--radius-sm);
+  margin-top: $spacing-1;
+}
+
 .kpiSubtext {
   font-size: $font-size-xs;
   color: var(--color-text-muted);
@@ -217,7 +221,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: $spacing-5;
@@ -251,7 +255,7 @@
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 15%, transparent);
   }
 }
 
@@ -260,7 +264,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
