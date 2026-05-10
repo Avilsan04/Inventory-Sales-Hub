@@ -46,8 +46,8 @@ function SaleRow({ sale, customerMap, t, onDetail }: SalesRowProps): React.React
       <TableCell>{lookupCustomer(sale.customerId, customerMap)}</TableCell>
       <TableCell className={styles['mono']}>{formatDate(sale.createdAt)}</TableCell>
       <TableCell>
-        <Badge variant={STATUS_VARIANT_MAP[sale.status as SaleStatus] ?? 'neutral'} showDot>
-          {t(STATUS_LABEL_KEYS[sale.status as SaleStatus] ?? 'sales.status.pending')}
+        <Badge variant={STATUS_VARIANT_MAP[sale.status] ?? 'neutral'} showDot>
+          {t(STATUS_LABEL_KEYS[sale.status] ?? 'sales.status.pending')}
         </Badge>
       </TableCell>
       <TableCell>{sale.items.length}</TableCell>

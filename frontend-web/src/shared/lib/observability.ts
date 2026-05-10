@@ -45,7 +45,7 @@ if (sentryEnabled) {
     beforeSend(event) {
       const req = event.request;
       if (req != null && req.data != null) {
-        req.data = sanitizePII(req.data) as typeof req.data;
+        req.data = sanitizePII(req.data);
       }
       if (event.extra != null) {
         event.extra = sanitizePII(event.extra) as typeof event.extra;
