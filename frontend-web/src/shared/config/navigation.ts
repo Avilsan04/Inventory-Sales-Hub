@@ -56,6 +56,7 @@ const COMPANY_NAV_GROUPS: readonly NavGroup[] = [
     labelKey: 'nav.section.operations',
     items: [
       { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
+      { to: APP_ROUTES.PRODUCTS, labelKey: 'nav.products', iconKey: 'products' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
     ],
@@ -83,6 +84,7 @@ const ADMIN_NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
+      { to: APP_ROUTES.PRODUCTS, labelKey: 'nav.products', iconKey: 'products' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
@@ -111,6 +113,7 @@ const MANAGER_NAV_GROUPS: readonly NavGroup[] = [
     items: [
       { to: APP_ROUTES.SALES, labelKey: 'nav.sales', iconKey: 'sales' },
       { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory', iconKey: 'inventory' },
+      { to: APP_ROUTES.PRODUCTS, labelKey: 'nav.products', iconKey: 'products' },
       { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers', iconKey: 'customers' },
       { to: APP_ROUTES.EMPLOYEES, labelKey: 'nav.employees', iconKey: 'employees' },
       { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments', iconKey: 'shipments' },
