@@ -23,6 +23,7 @@ export interface ProductType {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  imageUrl?: string;
   variants?: ProductType[];
 }
 
@@ -41,6 +42,7 @@ export const productSchema: z.ZodType<ProductType> = z.lazy(() =>
     isActive: z.boolean().default(true),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
+    imageUrl: z.url().optional(),
     variants: z.array(productSchema).optional(),
   })
 );

@@ -35,7 +35,14 @@ export const productHandlers = [
     await delay(600);
     const tenantId = resolveTenant(request);
     const products = getTenantBucket(tenantId, 'products', () => baseProducts);
-    return HttpResponse.json(products.filter((p) => p.isActive));
+    return HttpResponse.json(
+      products
+        .filter((p) => p.isActive)
+        .map((p) => ({
+          ...p,
+          imageUrl: `https://picsum.photos/seed/${p.sku.split('-')[1] ?? '100'}/300/225`,
+        }))
+    );
   }),
 
   http.get(`${API_BASE_URL}/products/:id`, async ({ params, request }) => {

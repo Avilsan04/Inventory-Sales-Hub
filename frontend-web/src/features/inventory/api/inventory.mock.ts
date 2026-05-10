@@ -12,14 +12,18 @@ export const inventoryHandlers = [
     await delay(800);
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    return HttpResponse.json(inventory.filter((i) => i.isActive));
+    return HttpResponse.json(inventory.filter((i) => (i.isActive as boolean | undefined) ?? true));
   }),
 
   http.get(`${API_BASE_URL}/inventory/low-stock`, async ({ request }) => {
     await delay(600);
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    return HttpResponse.json(inventory.filter((i) => i.isActive && i.status !== 'IN_STOCK'));
+    return HttpResponse.json(
+      inventory.filter(
+        (i) => ((i.isActive as boolean | undefined) ?? true) && i.status !== 'IN_STOCK'
+      )
+    );
   }),
 
   http.get(`${API_BASE_URL}/inventory/movements`, async ({ request }) => {

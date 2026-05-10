@@ -3,6 +3,7 @@ import { useCartStore } from '@features/sales/stores/cartStore';
 /** Catalog-facing CartItem shape (name/price instead of productName/unitPrice). */
 export interface CartItem {
   productId: string;
+  sku: string;
   name: string;
   price: number;
   currency: string;
@@ -32,6 +33,7 @@ export function useCart(): CartState & CartActions {
 
   const items: CartItem[] = store.items.map((i) => ({
     productId: i.productId,
+    sku: i.sku,
     name: i.productName,
     price: i.unitPrice,
     currency: i.currency,
@@ -43,7 +45,7 @@ export function useCart(): CartState & CartActions {
     store.addItem({
       productId: item.productId,
       productName: item.name,
-      sku: '',
+      sku: item.sku,
       unitPrice: item.price,
       currency: item.currency,
       maxStock: item.maxStock,

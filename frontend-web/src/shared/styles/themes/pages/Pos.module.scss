@@ -72,6 +72,22 @@
   overflow: hidden;
 }
 
+.splitPanelCheckoutOnly {
+  justify-content: center;
+  align-items: flex-start;
+  padding: $spacing-6;
+  background-color: var(--color-surface-low);
+
+  .cart {
+    width: min(560px, 100%);
+    border-left: none;
+    border: $border-width-base solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: $shadow-base;
+    overflow: auto;
+  }
+}
+
 // ── Left — product browser ────────────────────────────────────────────────────
 .products {
   flex: 1;

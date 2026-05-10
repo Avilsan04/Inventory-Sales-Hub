@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Badge } from '@shared/ui/primitives';
 import { formatCurrency } from '@shared/lib/formatCurrency';
@@ -18,6 +19,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   const handleAdd = (): void => {
     addItem({
       productId: product.id,
+      sku: product.sku,
       name: product.name,
       price: product.price,
       currency: product.currency,
@@ -37,6 +39,32 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
         background: 'var(--color-bg-card)',
       }}
     >
+      {product.imageUrl !== undefined ? (
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          style={{
+            width: '100%',
+            height: '140px',
+            objectFit: 'cover',
+            borderRadius: 'var(--radius-md)',
+          }}
+        />
+      ) : (
+        <div
+          style={{
+            height: '140px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--color-surface-low)',
+            borderRadius: 'var(--radius-md)',
+          }}
+        >
+          <PackageIcon size={32} aria-hidden="true" />
+        </div>
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <div style={{ fontWeight: 600, fontSize: '0.9375rem' }}>{product.name}</div>
