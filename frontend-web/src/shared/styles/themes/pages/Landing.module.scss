@@ -73,18 +73,45 @@
   gap: $spacing-2;
 }
 
-.langButton {
-  display: flex;
+.langBtn {
+  display: inline-flex;
   align-items: center;
-  gap: $spacing-1;
+  gap: $spacing-2;
+  height: $size-9;
+  padding: 0 $spacing-2;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-foreground);
+  font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  font-size: $font-size-sm;
-  letter-spacing: $letter-spacing-wider;
+  transition: background-color $duration-fast ease;
+  flex-shrink: 0;
 
-  svg {
-    width: $size-4;
-    height: $size-4;
+  &:hover {
+    background-color: var(--color-muted);
   }
+}
+
+.langFlag {
+  width: $size-4;
+  height: $size-4;
+  border-radius: $border-radius-sm;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.langChevron {
+  width: $size-3;
+  height: $size-3;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.langItemActive {
+  background-color: var(--color-muted);
+  font-weight: $font-weight-semibold;
 }
 
 // ── Main ─────────────────────────────────────────────────────────

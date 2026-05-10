@@ -394,7 +394,9 @@
       "maskedCard": "Card ending in {{last4}}",
       "orderPlaced": "Order placed!",
       "orderPlacedDesc": "Your order has been created successfully.",
-      "itemsError": "Add at least one item"
+      "itemsError": "Add at least one item",
+      "platformPayments": "Platform payments",
+      "comingSoon": "Coming soon"
     },
     "emptyTitle": "No sales recorded",
     "emptyDescription": "Create your first sale to start tracking revenue",

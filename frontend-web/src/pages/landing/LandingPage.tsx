@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { SunIcon, MoonIcon, GlobeIcon } from 'lucide-react';
+import { SunIcon, MoonIcon, ChevronDownIcon } from 'lucide-react';
 
 import { useTheme } from '@shared/hooks/useTheme';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
-import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
+import { useLanguageAdapter, type Language } from '@shared/adapters/useLanguageAdapter';
 import { Button } from '@shared/ui/primitives';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@shared/ui/composed';
 import { APP_ROUTES } from '@shared/config/routes';
 import { activateDemoMode } from '@features/auth/lib/demoMode';
 
@@ -15,6 +21,16 @@ import { AnalyticsSection } from './sections/AnalyticsSection';
 import { TrustedBySection } from './sections/TrustedBySection';
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
+const LANGUAGE_OPTIONS: { value: Language; label: string; flag: string }[] = [
+  { value: 'en', label: 'English', flag: '/flags/en.svg' },
+  { value: 'es', label: 'Español', flag: '/flags/es.svg' },
+];
+
+const LANGUAGE_MAP: Record<Language, { label: string; flag: string }> = {
+  en: { label: 'English', flag: '/flags/en.svg' },
+  es: { label: 'Español', flag: '/flags/es.svg' },
+};
+
 const CURRENT_YEAR = new Date().getFullYear();
 
 export function LandingPage(): React.ReactElement {
@@ -22,6 +38,7 @@ export function LandingPage(): React.ReactElement {
   const { navigateTo } = useRoutingAdapter();
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
+  const current = LANGUAGE_MAP[language];
   const handleNavigateToLogin = React.useCallback((): void => {
     navigateTo(APP_ROUTES.LOGIN);
   }, [navigateTo]);
@@ -126,16 +143,33 @@ export function LandingPage(): React.ReactElement {
           </button>
 
           <div className={styles['navbarActions']}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              aria-label={translate('common.switchLanguage')}
-              className={styles['langButton']}
-            >
-              <GlobeIcon aria-hidden="true" />
-              <span>{language === 'en' ? 'ES' : 'EN'}</span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={styles['langBtn']}
+                  aria-label={translate('common.switchLanguage')}
+                >
+                  <img src={current.flag} alt={current.label} className={styles['langFlag']} />
+                  <span>{language.toUpperCase()}</span>
+                  <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" style={{ minWidth: '130px' }}>
+                {LANGUAGE_OPTIONS.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.value}
+                    onClick={() => {
+                      if (lang.value !== language) toggleLanguage();
+                    }}
+                    className={lang.value === language ? styles['langItemActive'] : undefined}
+                  >
+                    <img src={lang.flag} alt={lang.label} className={styles['langFlag']} />
+                    <span>{lang.label}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant="ghost"
               size="icon-sm"

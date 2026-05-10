@@ -374,7 +374,9 @@
       "maskedCard": "Tarjeta terminada en {{last4}}",
       "orderPlaced": "¡Pedido realizado!",
       "orderPlacedDesc": "Tu pedido ha sido creado correctamente.",
-      "itemsError": "Añade al menos un artículo"
+      "itemsError": "Añade al menos un artículo",
+      "platformPayments": "Plataformas digitales",
+      "comingSoon": "Próximamente"
     },
     "title": "Ventas",
     "newSale": "Nueva venta",

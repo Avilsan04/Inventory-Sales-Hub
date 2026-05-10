@@ -1,18 +1,30 @@
 import * as React from 'react';
-import { ShoppingCartIcon, CreditCardIcon, BuildingIcon, BanknoteIcon } from 'lucide-react';
+import {
+  ShoppingCartIcon,
+  CreditCardIcon,
+  LandmarkIcon,
+  BanknoteIcon,
+  WalletCardsIcon,
+} from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCart } from '@features/sales';
 import type { CartItem } from '@features/sales';
 import { calculateSaleTotals } from '@features/sales/lib/saleCalculations';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { cn } from '@shared/lib/cn';
+import { Input, Label } from '@shared/ui/primitives';
 import type { Customer } from '@entities/customer';
 import type { PaymentMethod } from '@features/sales/models/checkout.types';
+import { MOCK_BANK_IBAN } from '@features/sales/models/checkout.types';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
-const PAYMENT_OPTIONS: Array<{ id: PaymentMethod; labelKey: string; icon: React.ReactElement }> = [
+const PAYMENT_OPTIONS: Array<{
+  id: PaymentMethod;
+  labelKey: string;
+  icon: React.ReactElement;
+}> = [
   { id: 'credit_card', labelKey: 'sales.checkout.creditCard', icon: <CreditCardIcon /> },
-  { id: 'bank_transfer', labelKey: 'sales.checkout.bankTransfer', icon: <BuildingIcon /> },
+  { id: 'bank_transfer', labelKey: 'sales.checkout.bankTransfer', icon: <LandmarkIcon /> },
   { id: 'cash_on_delivery', labelKey: 'sales.checkout.cashOnDelivery', icon: <BanknoteIcon /> },
 ];
 
@@ -23,6 +35,12 @@ export interface PosCheckoutPayload {
   discountPercent: number;
   taxPercent: number;
   items: CartItem[];
+  paymentDetails?: {
+    holderName?: string;
+    cardNumber?: string;
+    expiry?: string;
+    cvv?: string;
+  };
 }
 
 interface Props {
@@ -44,15 +62,33 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
   const [discountPercent, setDiscountPercent] = React.useState(0);
   const [taxPercent, setTaxPercent] = React.useState(0);
 
+  const [cardHolder, setCardHolder] = React.useState('');
+  const [cardNumber, setCardNumber] = React.useState('');
+  const [expiry, setExpiry] = React.useState('');
+  const [cvv, setCvv] = React.useState('');
+
   const saleTotals = React.useMemo(
     () => calculateSaleTotals({ items: cart, discountPercent, taxPercent }),
     [cart, discountPercent, taxPercent]
   );
   const currency = cart[0]?.currency ?? 'EUR';
 
+  const maskedCardSuffix = cardNumber.replace(/\s/g, '').slice(-4) || '••••';
+
   const handleCheckout = (): void => {
     if (cart.length === 0) return;
-    onCheckout({ customerId, currency, paymentMethod, discountPercent, taxPercent, items: cart });
+    onCheckout({
+      customerId,
+      currency,
+      paymentMethod,
+      discountPercent,
+      taxPercent,
+      items: cart,
+      paymentDetails:
+        paymentMethod === 'credit_card'
+          ? { holderName: cardHolder, cardNumber, expiry, cvv }
+          : undefined,
+    });
   };
 
   return (
@@ -180,23 +216,125 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
         </select>
 
         <div>
-          <p className={styles['payLabel']}>{t('sales.checkout.paymentTitle')}</p>
-          <div className={styles['payButtons']}>
+          {/* Section header with divider — Stitch pattern */}
+          <div className={styles['paySectionHeader']}>
+            <span className={styles['paySectionLabel']}>{t('sales.checkout.paymentTitle')}</span>
+            <hr className={styles['paySectionDivider']} />
+          </div>
+
+          {/* 2×2 horizontal payment method cards */}
+          <div className={styles['payGrid']}>
             {PAYMENT_OPTIONS.map(({ id, labelKey, icon }) => (
               <button
                 key={id}
                 type="button"
-                className={cn(styles['payBtn'], paymentMethod === id && styles['payBtnActive'])}
+                className={cn(styles['payCard'], paymentMethod === id && styles['payCardActive'])}
                 onClick={() => {
                   setPaymentMethod(id);
                 }}
                 aria-pressed={paymentMethod === id}
               >
-                {icon}
-                <span>{t(labelKey)}</span>
+                <span className={styles['payCardIcon']}>{icon}</span>
+                <span className={styles['payCardLabel']}>{t(labelKey)}</span>
               </button>
             ))}
+            <div
+              className={cn(styles['payCard'], styles['payCardDisabled'])}
+              aria-disabled="true"
+              role="button"
+            >
+              <span className={styles['payCardIcon']}>
+                <WalletCardsIcon aria-hidden="true" />
+              </span>
+              <span className={styles['payCardLabel']}>{t('sales.checkout.platformPayments')}</span>
+              <span className={styles['payCardBadge']}>{t('sales.checkout.comingSoon')}</span>
+            </div>
           </div>
+
+          {/* Credit card form with mini card preview */}
+          {paymentMethod === 'credit_card' && (
+            <div className={styles['paymentForm']}>
+              <div className={styles['miniCard']}>
+                <span className={styles['miniCardBrand']}>VISA</span>
+                <span className={styles['miniCardNumber']}>•••• {maskedCardSuffix}</span>
+              </div>
+              <div className={styles['paymentField']}>
+                <Label htmlFor="pos-holder">{t('sales.checkout.holderName')}</Label>
+                <Input
+                  id="pos-holder"
+                  value={cardHolder}
+                  onChange={(e) => {
+                    setCardHolder(e.target.value);
+                  }}
+                  placeholder={t('sales.checkout.holderNamePlaceholder')}
+                  className={styles['paymentInput']}
+                />
+              </div>
+              <div className={styles['paymentField']}>
+                <Label htmlFor="pos-card">{t('sales.checkout.cardNumber')}</Label>
+                <div className={styles['paymentInputWrapper']}>
+                  <CreditCardIcon className={styles['paymentInputIcon']} aria-hidden="true" />
+                  <Input
+                    id="pos-card"
+                    value={cardNumber}
+                    maxLength={19}
+                    placeholder={t('sales.checkout.cardNumberPlaceholder')}
+                    className={cn(styles['paymentInput'], styles['paymentInputWithIcon'])}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/\D/g, '').slice(0, 16);
+                      setCardNumber(raw.replace(/(.{4})/g, '$1 ').trim());
+                    }}
+                  />
+                </div>
+              </div>
+              <div className={styles['paymentGrid2']}>
+                <div className={styles['paymentField']}>
+                  <Label htmlFor="pos-expiry">{t('sales.checkout.expiry')}</Label>
+                  <Input
+                    id="pos-expiry"
+                    value={expiry}
+                    maxLength={5}
+                    placeholder={t('sales.checkout.expiryPlaceholder')}
+                    className={styles['paymentInput']}
+                    onChange={(e) => {
+                      let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                      if (v.length > 2) v = `${v.slice(0, 2)}/${v.slice(2)}`;
+                      setExpiry(v);
+                    }}
+                  />
+                </div>
+                <div className={styles['paymentField']}>
+                  <Label htmlFor="pos-cvv">{t('sales.checkout.cvv')}</Label>
+                  <Input
+                    id="pos-cvv"
+                    value={cvv}
+                    maxLength={4}
+                    type="password"
+                    placeholder={t('sales.checkout.cvvPlaceholder')}
+                    className={styles['paymentInput']}
+                    onChange={(e) => {
+                      setCvv(e.target.value.replace(/\D/g, '').slice(0, 4));
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bank transfer IBAN box */}
+          {paymentMethod === 'bank_transfer' && (
+            <div className={styles['paymentForm']}>
+              <div className={styles['paymentField']}>
+                <Label>{t('sales.checkout.ibanLabel')}</Label>
+                <div className={styles['ibanBox']}>{MOCK_BANK_IBAN}</div>
+              </div>
+            </div>
+          )}
+
+          {/* Cash on delivery info */}
+          {paymentMethod === 'cash_on_delivery' && (
+            <div className={styles['infoBox']}>{t('sales.checkout.cashNote')}</div>
+          )}
         </div>
 
         <button
