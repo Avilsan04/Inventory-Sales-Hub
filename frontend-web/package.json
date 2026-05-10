@@ -71,6 +71,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.1.5",
     "@welldone-software/why-did-you-render": "^10.0.1",
     "eslint": "^9.17.0",

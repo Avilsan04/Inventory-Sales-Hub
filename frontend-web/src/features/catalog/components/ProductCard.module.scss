@@ -38,6 +38,7 @@
 }
 
 .meta {
+  flex: 1;
   min-width: 0;
 }
 
@@ -52,6 +53,9 @@
 .sku {
   font-size: $font-size-xs;
   color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .description {
@@ -68,10 +72,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: $spacing-2;
   margin-top: auto;
 }
 
 .price {
   font-weight: $font-weight-bold;
   font-size: $font-size-lg;
+  flex-shrink: 0;
 }

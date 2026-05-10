@@ -7,7 +7,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import boundaries from 'eslint-plugin-boundaries';
 
 export default tseslint.config(
-  { ignores: ['dist', 'build', 'node_modules', '.expo', 'android', 'ios', 'public', 'e2e/**', 'playwright.config.ts'] },
+  { ignores: ['dist', 'build', 'node_modules', '.expo', 'android', 'ios', 'public', 'e2e/**', 'playwright.config.ts', 'coverage/**'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, eslintConfigPrettier],
     files: ['**/*.{ts,tsx}'],

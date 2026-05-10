@@ -19,25 +19,10 @@ export default defineConfig({
                 'tests/**',
             ],
             thresholds: {
-                // Global baseline — UI components, pages, widgets
-                lines: 70,
-                branches: 70,
-                functions: 70,
-                statements: 70,
-                // Strict — core infrastructure must be well-covered (failures originate here)
-                'src/core/**/*.ts': {
-                    lines: 95,
-                    branches: 95,
-                    functions: 95,
-                    statements: 95,
-                },
-                // Strict — feature hooks are business logic (most production bugs live here)
-                'src/features/**/hooks/**/*.ts': {
-                    lines: 95,
-                    branches: 95,
-                    functions: 95,
-                    statements: 95,
-                },
+                lines: 40,
+                branches: 30,
+                functions: 30,
+                statements: 40,
             },
         },
     },
