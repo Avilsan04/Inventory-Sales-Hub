@@ -1,16 +1,14 @@
 package com.inventory_sales_hub.app.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.math.BigDecimal;
 
-public record ProductResponse(
-        Long id,
+public record CreateInventoryParams(
         String name,
         String description,
         BigDecimal purchasePrice,
         BigDecimal salePrice,
         String sku,
-        CategoryResponse category,
-        @JsonProperty("is_active") boolean active
+        Long categoryId,
+        int quantity,
+        Integer minStock
 ) {}

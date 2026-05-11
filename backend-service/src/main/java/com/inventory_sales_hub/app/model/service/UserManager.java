@@ -24,20 +24,11 @@ public class UserManager {
     private static final long REFRESH_TOKEN_EXPIRY_DAYS = 7;
     private static final long RESET_TOKEN_EXPIRY_MINUTES = 60;
 
-    @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private RefreshTokenDao refreshTokenDao;
-
-    @Autowired
-    private PasswordResetTokenDao passwordResetTokenDao;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtManager jwtManager;
+    @Autowired private UserDao userDao;
+    @Autowired private RefreshTokenDao refreshTokenDao;
+    @Autowired private PasswordResetTokenDao passwordResetTokenDao;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private JwtManager jwtManager;
 
     public UserResponse registerUser(RegisterParams params) {
         if (userDao.existsByEmail(params.email())) throw new UserException("This email already exists");
@@ -49,9 +40,9 @@ public class UserManager {
         user.setPassword(passwordEncoder.encode(params.password()));
 
         User saved = userDao.save(user);
-        String accessToken = jwtManager.generateToken(saved.getUsername(), saved.getId());
+        String accessToken = jwtManager.generateToken(saved.getUsername(), saved.getId(), saved.getRole().name());
         String refreshToken = createRefreshToken(saved);
-        return new UserResponse(saved.getId(), saved.getUsername(), saved.getEmail(), accessToken, refreshToken);
+        return new UserResponse(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getRole().name(), accessToken, refreshToken);
     }
 
     public UserResponse loginUser(String email, String password) {
@@ -59,9 +50,9 @@ public class UserManager {
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new UserException("The password or email is incorrect");
         }
-        String accessToken = jwtManager.generateToken(user.getUsername(), user.getId());
+        String accessToken = jwtManager.generateToken(user.getUsername(), user.getId(), user.getRole().name());
         String refreshToken = createRefreshToken(user);
-        return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), accessToken, refreshToken);
+        return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole().name(), accessToken, refreshToken);
     }
 
     @Transactional
@@ -72,7 +63,7 @@ public class UserManager {
     public UserProfile getMe(Long userId) {
         User user = userDao.findById(userId)
                 .orElseThrow(() -> new UserException("User not found"));
-        return new UserProfile(user.getId(), user.getUsername(), user.getEmail());
+        return new UserProfile(user.getId(), user.getUsername(), user.getEmail(), user.getRole().name());
     }
 
     @Transactional
@@ -88,15 +79,15 @@ public class UserManager {
         User user = stored.getUser();
         refreshTokenDao.delete(stored);
 
-        String newAccessToken = jwtManager.generateToken(user.getUsername(), user.getId());
+        String newAccessToken = jwtManager.generateToken(user.getUsername(), user.getId(), user.getRole().name());
         String newRefreshToken = createRefreshToken(user);
-        return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), newAccessToken, newRefreshToken);
+        return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole().name(), newAccessToken, newRefreshToken);
     }
 
     @Transactional
     public void forgotPassword(String email) {
         User user = userDao.findByEmail(email);
-        if (user == null) return; // Don't reveal whether the email exists
+        if (user == null) return;
 
         passwordResetTokenDao.deleteByUser(user);
 
@@ -143,7 +134,7 @@ public class UserManager {
         }
 
         User saved = userDao.save(user);
-        return new UserProfile(saved.getId(), saved.getUsername(), saved.getEmail());
+        return new UserProfile(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getRole().name());
     }
 
     @Transactional

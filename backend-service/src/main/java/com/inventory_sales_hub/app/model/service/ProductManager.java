@@ -3,6 +3,7 @@ package com.inventory_sales_hub.app.model.service;
 import com.inventory_sales_hub.app.exceptions.ProductException;
 import com.inventory_sales_hub.app.model.dto.CategoryParams;
 import com.inventory_sales_hub.app.model.dto.CategoryResponse;
+import com.inventory_sales_hub.app.model.dto.PatchProductParams;
 import com.inventory_sales_hub.app.model.dto.ProductParams;
 import com.inventory_sales_hub.app.model.dto.ProductResponse;
 import com.inventory_sales_hub.app.model.entities.Category;
@@ -17,18 +18,15 @@ import java.util.List;
 
 @Service
 public class ProductManager {
-    @Autowired
-    private ProductDao productDao;
-
-    @Autowired
-    private CategoryDao categoryDao;
+    @Autowired private ProductDao productDao;
+    @Autowired private CategoryDao categoryDao;
 
     public List<ProductResponse> getAll() {
-        return productDao.findAll().stream().map(this::toResponse).toList();
+        return productDao.findAllByActiveTrue().stream().map(this::toResponse).toList();
     }
 
     public ProductResponse getById(Long id) {
-        return productDao.findById(id)
+        return productDao.findByIdAndActiveTrue(id)
                 .map(this::toResponse)
                 .orElseThrow(() -> new ProductException("Product not found"));
     }
@@ -43,14 +41,13 @@ public class ProductManager {
             throw new ProductException("A product with this SKU already exists");
         }
 
-        Category category = resolveCategory(params.categoryId());
-
         Product product = new Product();
         product.setName(params.name());
         product.setDescription(params.description());
-        product.setPrice(params.price());
+        product.setPurchasePrice(params.purchasePrice());
+        product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
-        product.setCategory(category);
+        product.setCategory(resolveCategory(params.categoryId()));
 
         return toResponse(productDao.save(product));
     }
@@ -66,9 +63,20 @@ public class ProductManager {
 
         product.setName(params.name());
         product.setDescription(params.description());
-        product.setPrice(params.price());
+        product.setPurchasePrice(params.purchasePrice());
+        product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
         product.setCategory(resolveCategory(params.categoryId()));
+
+        return toResponse(productDao.save(product));
+    }
+
+    @Transactional
+    public ProductResponse patch(Long id, PatchProductParams params) {
+        Product product = productDao.findById(id)
+                .orElseThrow(() -> new ProductException("Product not found"));
+
+        if (params.active() != null) product.setActive(params.active());
 
         return toResponse(productDao.save(product));
     }
@@ -96,12 +104,12 @@ public class ProductManager {
                 .orElseThrow(() -> new ProductException("Category not found"));
     }
 
-    private CategoryResponse toCategoryResponse(Category c) {
+    CategoryResponse toCategoryResponse(Category c) {
         return new CategoryResponse(c.getId(), c.getName(), c.getDescription());
     }
 
-    private ProductResponse toResponse(Product p) {
+    ProductResponse toResponse(Product p) {
         CategoryResponse category = p.getCategory() != null ? toCategoryResponse(p.getCategory()) : null;
-        return new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPrice(), p.getSku(), category);
+        return new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPurchasePrice(), p.getSalePrice(), p.getSku(), category, p.isActive());
     }
 }

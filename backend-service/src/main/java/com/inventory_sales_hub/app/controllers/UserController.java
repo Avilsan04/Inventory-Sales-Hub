@@ -4,29 +4,41 @@ import com.inventory_sales_hub.app.exceptions.UserException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.service.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Duration;
+import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("api/auth")
 public class UserController {
     @Autowired
     private UserManager userManager;
 
-    @RequestMapping(
+    @PostMapping(
             value = {"/signup", "/register"},
-            method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> registerUser(@RequestBody RegisterParams params) {
         try {
-            return new ResponseEntity<>(userManager.registerUser(params), HttpStatus.CREATED);
+            UserResponse result = userManager.registerUser(params);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header(HttpHeaders.SET_COOKIE, buildRefreshCookie(result.refreshToken()).toString())
+                    .body(toBody(result));
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -37,7 +49,10 @@ public class UserController {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> loginUser(@RequestBody LoginParams params) {
         try {
-            return ResponseEntity.ok(userManager.loginUser(params.email(), params.password()));
+            UserResponse result = userManager.loginUser(params.email(), params.password());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, buildRefreshCookie(result.refreshToken()).toString())
+                    .body(toBody(result));
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -45,11 +60,13 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> logout(@RequestBody RefreshParams params) {
+    @PostMapping(path = "/logout")
+    public ResponseEntity<?> logout(@CookieValue(value = "refresh_token", required = false) String refreshToken) {
         try {
-            userManager.logout(params.refreshToken());
-            return ResponseEntity.ok().build();
+            if (refreshToken != null) userManager.logout(refreshToken);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                    .build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
@@ -67,10 +84,14 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/refresh", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshParams params) {
+    @PostMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> refreshToken(@CookieValue(value = "refresh_token", required = false) String refreshToken) {
         try {
-            return ResponseEntity.ok(userManager.refreshToken(params.refreshToken()));
+            if (refreshToken == null) return ResponseEntity.badRequest().body("Missing refresh token");
+            UserResponse result = userManager.refreshToken(refreshToken);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, buildRefreshCookie(result.refreshToken()).toString())
+                    .body(toBody(result));
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -123,5 +144,29 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
+
+    private ResponseCookie buildRefreshCookie(String token) {
+        return ResponseCookie.from("refresh_token", token)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/api/auth/refresh")
+                .maxAge(Duration.ofDays(7))
+                .build();
+    }
+
+    private ResponseCookie clearRefreshCookie() {
+        return ResponseCookie.from("refresh_token", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/api/auth/refresh")
+                .maxAge(0)
+                .build();
+    }
+
+    private Map<String, Object> toBody(UserResponse r) {
+        return Map.of("id", r.id(), "username", r.username(), "email", r.email(), "role", r.role(), "accessToken", r.accessToken());
     }
 }

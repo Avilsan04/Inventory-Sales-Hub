@@ -5,7 +5,8 @@ import java.math.BigDecimal;
 public record ProductParams(
         String name,
         String description,
-        BigDecimal price,
+        BigDecimal purchasePrice,
+        BigDecimal salePrice,
         String sku,
         Long categoryId
 ) {}

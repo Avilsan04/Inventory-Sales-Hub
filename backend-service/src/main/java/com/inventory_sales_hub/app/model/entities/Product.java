@@ -20,7 +20,10 @@ public class Product {
     private String description;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    private BigDecimal purchasePrice;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal salePrice;
 
     @Column(unique = true)
     private String sku;
@@ -28,4 +31,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean active = true;
 }
