@@ -4,7 +4,7 @@
   align-items: center;
   gap: $spacing-6;
   width: 100%;
-  max-width: 400px;
+  max-width: $container-login-form;
 }
 
 .brand {
@@ -24,7 +24,25 @@
   width: 100%;
   padding-top: $spacing-8 !important;
   padding-bottom: $spacing-8 !important;
-  gap: $spacing-6 !important;
+  // Glassmorphism (Stitch: Luminous Enterprise)
+  background: $color-auth-form-bg-light !important;
+  backdrop-filter: blur($blur-lg);
+  -webkit-backdrop-filter: blur($blur-lg);
+  border-top: $border-width-base solid $color-auth-form-border-light !important;
+  border-left: $border-width-base solid $color-auth-form-border-left-light !important;
+  box-shadow: $shadow-auth-form !important;
+
+  :global([data-theme='dark']) & {
+    background: $color-auth-form-bg-dark !important;
+    border-top-color: $color-auth-form-border-dark !important;
+    border-left-color: $color-auth-form-border-dark-left !important;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
 }
 
 .content {

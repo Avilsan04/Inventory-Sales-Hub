@@ -3,11 +3,40 @@ import { productsApi } from '../api/productsApi';
 import { productKeys } from './useProducts';
 import type { Product, UpdateProductDTO } from '@entities/product';
 
-export function useUpdateProduct(id: string): UseMutationResult<Product, Error, UpdateProductDTO> {
+interface UpdateContext {
+  previousList: Product[] | undefined;
+  previousDetail: Product | undefined;
+}
+
+export function useUpdateProduct(
+  id: string
+): UseMutationResult<Product, Error, UpdateProductDTO, UpdateContext> {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => productsApi.updateProduct(id, data),
-    onSuccess: () => {
+    onMutate: async (data): Promise<UpdateContext> => {
+      await queryClient.cancelQueries({ queryKey: productKeys.lists() });
+      await queryClient.cancelQueries({ queryKey: productKeys.detail(id) });
+      const previousList = queryClient.getQueryData<Product[]>(productKeys.lists());
+      const previousDetail = queryClient.getQueryData<Product>(productKeys.detail(id));
+      queryClient.setQueryData<Product[]>(
+        productKeys.lists(),
+        (old) => old?.map((p) => (p.id === id ? { ...p, ...data } : p)) ?? []
+      );
+      queryClient.setQueryData<Product>(productKeys.detail(id), (old) =>
+        old !== undefined ? { ...old, ...data } : undefined
+      );
+      return { previousList, previousDetail };
+    },
+    onError: (_err, _data, context) => {
+      if (context?.previousList !== undefined) {
+        queryClient.setQueryData(productKeys.lists(), context.previousList);
+      }
+      if (context?.previousDetail !== undefined) {
+        queryClient.setQueryData(productKeys.detail(id), context.previousDetail);
+      }
+    },
+    onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: productKeys.lists() });
       void queryClient.invalidateQueries({ queryKey: productKeys.detail(id) });
     },

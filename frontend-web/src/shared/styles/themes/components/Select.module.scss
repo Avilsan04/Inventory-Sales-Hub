@@ -15,7 +15,10 @@
   box-shadow: var(--shadow-xs);
   outline: none;
   cursor: pointer;
-  transition: color $duration-fast ease, box-shadow $duration-fast ease, border-color $duration-fast ease;
+  transition:
+    color $duration-fast ease,
+    box-shadow $duration-fast ease,
+    border-color $duration-fast ease;
 
   &:focus-visible {
     border-color: var(--color-ring);
@@ -46,7 +49,7 @@
 
 .selectContent {
   position: relative;
-  z-index: 50;
+  z-index: $z-overlay;
   max-height: var(--radix-select-content-available-height, 20rem);
   min-width: $dropdown-min-width;
   overflow-x: hidden;

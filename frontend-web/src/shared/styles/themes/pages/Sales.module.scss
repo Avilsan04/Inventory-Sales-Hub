@@ -35,6 +35,36 @@
   flex-shrink: 0;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-shrink: 0;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: 0 0 $spacing-2;
+}
+
+.filterLabel {
+  font-size: $font-size-sm;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+}
+
+.filterPills {
+  display: flex;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
 .tableCard {
   overflow: hidden;
   padding: 0 !important;
@@ -46,16 +76,21 @@
   align-items: center;
   gap: $spacing-3;
   padding: $spacing-3 $spacing-4;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
 }
 
 .searchBox {
   flex: 1;
-  max-width: 320px;
+  max-width: $size-80;
 }
 
 .mono {
   font-family: $font-family-mono;
   font-size: $font-size-xs;
   color: var(--color-text-muted);
+}
+
+.skeletonRow {
+  height: $spacing-6;
+  width: 100%;
 }

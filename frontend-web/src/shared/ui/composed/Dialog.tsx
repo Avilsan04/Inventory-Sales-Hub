@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-redundant-type-constituents */
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
@@ -33,12 +32,7 @@ function DialogOverlay({
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Overlay>): React.ReactElement {
-  return (
-    <DialogPrimitive.Overlay
-      className={cn(styles.dialogOverlay, className)}
-      {...props}
-    />
-  );
+  return <DialogPrimitive.Overlay className={cn(styles.dialogOverlay, className)} {...props} />;
 }
 
 function DialogContent({
@@ -52,10 +46,7 @@ function DialogContent({
   return (
     <DialogPortal>
       <DialogOverlay />
-      <DialogPrimitive.Content
-        className={cn(styles.dialogContent, className)}
-        {...props}
-      >
+      <DialogPrimitive.Content className={cn(styles.dialogContent, className)} {...props}>
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close className={styles.dialogClose}>
@@ -68,17 +59,11 @@ function DialogContent({
   );
 }
 
-function DialogHeader({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function DialogHeader({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.dialogHeader, className)} {...props} />;
 }
 
-function DialogFooter({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function DialogFooter({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.dialogFooter, className)} {...props} />;
 }
 
@@ -86,25 +71,15 @@ function DialogTitle({
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Title>): React.ReactElement {
-  return (
-    <DialogPrimitive.Title
-      className={cn(styles.dialogTitle, className)}
-      {...props}
-    />
-  );
+  return <DialogPrimitive.Title className={cn(styles.dialogTitle, className)} {...props} />;
 }
 
 function DialogDescription({
   className,
   ...props
-}: React.ComponentProps<
-  typeof DialogPrimitive.Description
->): React.ReactElement {
+}: React.ComponentProps<typeof DialogPrimitive.Description>): React.ReactElement {
   return (
-    <DialogPrimitive.Description
-      className={cn(styles.dialogDescription, className)}
-      {...props}
-    />
+    <DialogPrimitive.Description className={cn(styles.dialogDescription, className)} {...props} />
   );
 }
 

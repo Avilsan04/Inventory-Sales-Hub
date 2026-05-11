@@ -2,58 +2,90 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboardIcon,
-  PackageIcon,
-  ShoppingCartIcon,
+  TrendingUpIcon,
+  WarehouseIcon,
+  TagIcon,
+  ReceiptIcon,
   UsersIcon,
-  TruckIcon,
-  SettingsIcon,
+  BriefcaseIcon,
+  FactoryIcon,
+  BellIcon,
+  Building2Icon,
+  SlidersHorizontalIcon,
+  LayoutGridIcon,
+  ClipboardListIcon,
+  UserRoundIcon,
+  StoreIcon,
+  ScrollTextIcon,
 } from 'lucide-react';
 
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe } from '@features/auth';
-import { Avatar, AvatarFallback, BrandMark } from '@shared/ui/primitives';
+import { useEffectiveRole } from '@features/auth';
+import { BrandMark } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { APP_ROUTES } from '@shared/config/routes';
+import {
+  type NavIconKey,
+  type NavGroup,
+  NAV_GROUPS_BY_ROLE,
+  FOOTER_NAV_GROUP,
+} from '@shared/config/navigation';
 import styles from '@shared/styles/themes/components/Sidebar.module.scss';
 
-type NavIconKey = 'dashboard' | 'inventory' | 'orders' | 'customers' | 'shipments' | 'settings';
-
-interface NavItem {
-  to: string;
-  labelKey: string;
-  iconKey: NavIconKey;
-}
-
-const NAV_ITEMS: readonly NavItem[] = [
-  { to: APP_ROUTES.DASHBOARD, labelKey: 'nav.dashboard',  iconKey: 'dashboard'  },
-  { to: APP_ROUTES.INVENTORY, labelKey: 'nav.inventory',  iconKey: 'inventory'  },
-  { to: APP_ROUTES.SALES,     labelKey: 'nav.orders',     iconKey: 'orders'     },
-  { to: APP_ROUTES.CUSTOMERS, labelKey: 'nav.customers',  iconKey: 'customers'  },
-  { to: APP_ROUTES.SUPPLIERS, labelKey: 'nav.shipments',  iconKey: 'shipments'  },
-] as const;
-
-const FOOTER_NAV: readonly NavItem[] = [
-  { to: APP_ROUTES.SETTINGS, labelKey: 'nav.settings', iconKey: 'settings' },
-] as const;
+const NAV_ICON_MAP: Record<NavIconKey, React.ReactElement> = {
+  dashboard: <LayoutDashboardIcon aria-hidden="true" />,
+  analytics: <TrendingUpIcon aria-hidden="true" />,
+  inventory: <WarehouseIcon aria-hidden="true" />,
+  products: <TagIcon aria-hidden="true" />,
+  sales: <ReceiptIcon aria-hidden="true" />,
+  pos: <StoreIcon aria-hidden="true" />,
+  myOrders: <ClipboardListIcon aria-hidden="true" />,
+  catalog: <LayoutGridIcon aria-hidden="true" />,
+  customers: <UsersIcon aria-hidden="true" />,
+  employees: <BriefcaseIcon aria-hidden="true" />,
+  shipments: <FactoryIcon aria-hidden="true" />,
+  notifications: <BellIcon aria-hidden="true" />,
+  tenants: <Building2Icon aria-hidden="true" />,
+  audit: <ScrollTextIcon aria-hidden="true" />,
+  settings: <SlidersHorizontalIcon aria-hidden="true" />,
+  profile: <UserRoundIcon aria-hidden="true" />,
+};
 
 function renderNavIcon(iconKey: NavIconKey): React.ReactElement {
-  switch (iconKey) {
-    case 'dashboard':  return <LayoutDashboardIcon aria-hidden="true" />;
-    case 'inventory':  return <PackageIcon         aria-hidden="true" />;
-    case 'orders':     return <ShoppingCartIcon    aria-hidden="true" />;
-    case 'customers':  return <UsersIcon           aria-hidden="true" />;
-    case 'shipments':  return <TruckIcon           aria-hidden="true" />;
-    case 'settings':   return <SettingsIcon        aria-hidden="true" />;
-  }
+  return NAV_ICON_MAP[iconKey];
 }
 
-function initials(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
+interface NavGroupSectionProps {
+  group: NavGroup;
+  t: (key: string) => string;
+  onClose: () => void;
+}
+
+function NavGroupSection({ group, t, onClose }: NavGroupSectionProps): React.ReactElement {
+  return (
+    <div className={styles['navGroup']}>
+      {group.labelKey !== undefined && (
+        <span className={styles['navSectionLabel']}>{t(group.labelKey)}</span>
+      )}
+      <ul className={styles['navList']} role="list">
+        {group.items.map((item) => (
+          <li key={item.to}>
+            <NavLink
+              to={item.to}
+              end={item.to === APP_ROUTES.DASHBOARD}
+              className={({ isActive }): string =>
+                cn(styles['navItem'], isActive && styles['navItemActive'])
+              }
+              onClick={onClose}
+            >
+              <span className={styles['navIcon']}>{renderNavIcon(item.iconKey)}</span>
+              <span>{t(item.labelKey)}</span>
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export interface SidebarProps {
@@ -63,9 +95,9 @@ export interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: user } = useAuthMe();
+  const effectiveRole = useEffectiveRole();
 
-  const userInitials = user ? initials(user.username) : '..';
+  const navGroups = NAV_GROUPS_BY_ROLE[effectiveRole ?? 'staff'];
 
   return (
     <>
@@ -81,58 +113,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
       >
         <div className={styles['brand']}>
           <BrandMark size={32} />
-          <span className={styles['brandName']}>{t('common.appName')}</span>
+          <div className={styles['brandText']}>
+            <span className={styles['brandName']}>{t('common.appName')}</span>
+            <span className={styles['brandSub']}>Platform</span>
+          </div>
         </div>
 
         <nav className={styles['nav']}>
-          <ul className={styles['navList']} role="list">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.to === APP_ROUTES.DASHBOARD}
-                  className={({ isActive }): string =>
-                    cn(styles['navItem'], isActive && styles['navItemActive'])
-                  }
-                  onClick={onClose}
-                >
-                  <span className={styles['navIcon']}>{renderNavIcon(item.iconKey)}</span>
-                  <span>{t(item.labelKey)}</span>
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+          {navGroups.map((group, idx) => (
+            <NavGroupSection key={idx} group={group} t={t} onClose={onClose} />
+          ))}
         </nav>
 
         <div className={styles['footerNav']}>
-          <ul className={styles['navList']} role="list">
-            {FOOTER_NAV.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  className={({ isActive }): string =>
-                    cn(styles['navItem'], isActive && styles['navItemActive'])
-                  }
-                  onClick={onClose}
-                >
-                  <span className={styles['navIcon']}>{renderNavIcon(item.iconKey)}</span>
-                  <span>{t(item.labelKey)}</span>
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className={styles['userFooter']}>
-          <Avatar>
-            <AvatarFallback>{userInitials}</AvatarFallback>
-          </Avatar>
-          <div className={styles['userInfo']}>
-            <div className={styles['userName']}>{user?.username ?? '—'}</div>
-            {user?.email !== undefined && (
-              <div className={styles['userEmail']}>{user.email}</div>
-            )}
-          </div>
+          <NavGroupSection group={FOOTER_NAV_GROUP} t={t} onClose={onClose} />
         </div>
       </aside>
     </>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-redundant-type-constituents */
 import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
@@ -13,25 +12,19 @@ function DropdownMenu({
 
 function DropdownMenuTrigger({
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.Trigger
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>): React.ReactElement {
   return <DropdownMenuPrimitive.Trigger {...props} />;
 }
 
 function DropdownMenuGroup({
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.Group
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Group>): React.ReactElement {
   return <DropdownMenuPrimitive.Group {...props} />;
 }
 
 function DropdownMenuPortal({
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.Portal
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>): React.ReactElement {
   return <DropdownMenuPrimitive.Portal {...props} />;
 }
 
@@ -39,9 +32,7 @@ function DropdownMenuContent({
   className,
   sideOffset = 4,
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.Content
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>): React.ReactElement {
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
@@ -68,7 +59,7 @@ function DropdownMenuItem({
       className={cn(
         styles.dropdownItem,
         variant === 'destructive' && styles.dropdownItemDestructive,
-        className,
+        className
       )}
       {...props}
     />
@@ -80,9 +71,7 @@ function DropdownMenuCheckboxItem({
   children,
   checked,
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.CheckboxItem
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>): React.ReactElement {
   return (
     <DropdownMenuPrimitive.CheckboxItem
       className={cn(styles.dropdownCheckboxItem, className)}
@@ -101,9 +90,7 @@ function DropdownMenuCheckboxItem({
 
 function DropdownMenuRadioGroup({
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.RadioGroup
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>): React.ReactElement {
   return <DropdownMenuPrimitive.RadioGroup {...props} />;
 }
 
@@ -111,14 +98,9 @@ function DropdownMenuRadioItem({
   className,
   children,
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.RadioItem
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>): React.ReactElement {
   return (
-    <DropdownMenuPrimitive.RadioItem
-      className={cn(styles.dropdownRadioItem, className)}
-      {...props}
-    >
+    <DropdownMenuPrimitive.RadioItem className={cn(styles.dropdownRadioItem, className)} {...props}>
       <span className={styles.dropdownItemIndicator}>
         <DropdownMenuPrimitive.ItemIndicator>
           <CircleIcon />
@@ -148,9 +130,7 @@ function DropdownMenuLabel({
 function DropdownMenuSeparator({
   className,
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.Separator
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>): React.ReactElement {
   return (
     <DropdownMenuPrimitive.Separator
       className={cn(styles.dropdownSeparator, className)}
@@ -195,9 +175,7 @@ function DropdownMenuSubTrigger({
 function DropdownMenuSubContent({
   className,
   ...props
-}: React.ComponentProps<
-  typeof DropdownMenuPrimitive.SubContent
->): React.ReactElement {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>): React.ReactElement {
   return (
     <DropdownMenuPrimitive.SubContent
       className={cn(styles.dropdownSubContent, className)}

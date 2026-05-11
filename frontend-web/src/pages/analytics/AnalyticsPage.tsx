@@ -1,31 +1,137 @@
 import * as React from 'react';
 import { TrendingUpIcon, ShoppingCartIcon, UsersIcon, PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useDashboardKpi, useTopProducts, useTopCustomers, useLowStockAlerts } from '@features/analytics';
-import { Spinner, Skeleton } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardAction, CardContent, Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
+import {
+  useDashboardKpi,
+  useTopProducts,
+  useTopCustomers,
+  useLowStockAlerts,
+  useSalesAnalytics,
+} from '@features/analytics';
+import { PermissionGuard } from '@features/auth';
+import { useSaleSummary } from '@features/sales';
+import { exportToCsv } from '@shared/lib/exportCsv';
+import { Spinner, Skeleton, Button } from '@shared/ui';
+import { cn } from '@shared/lib';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardAction,
+  CardContent,
+  RevenueAreaChart,
+  SalesDonutChart,
+  TopProductsBarChart,
+  DateRangePicker,
+  type DateRange,
+  type StatusSlice,
+} from '@shared/ui';
+import type { SalesAnalyticsParams, DashboardKpi } from '@entities/analytics';
+import {
+  AnalyticsTopProductsTable,
+  AnalyticsTopCustomersTable,
+  AnalyticsLowStockTable,
+} from '@widgets/analytics';
 import styles from '@shared/styles/themes/pages/Analytics.module.scss';
 
+const DATE_RANGES = [
+  { id: '7d', labelKey: 'analytics.range7d' },
+  { id: '30d', labelKey: 'analytics.rangeMonthly' },
+  { id: '90d', labelKey: 'analytics.range90d' },
+  { id: 'custom', labelKey: 'analytics.rangeCustom' },
+] as const;
+
+type DateRangeId = (typeof DATE_RANGES)[number]['id'];
 type KpiIconKey = 'revenue' | 'orders' | 'customers' | 'products';
 
-function renderKpiIcon(key: KpiIconKey): React.ReactElement {
-  switch (key) {
-    case 'revenue':   return <TrendingUpIcon   aria-hidden="true" />;
-    case 'orders':    return <ShoppingCartIcon aria-hidden="true" />;
-    case 'customers': return <UsersIcon        aria-hidden="true" />;
-    case 'products':  return <PackageIcon      aria-hidden="true" />;
-  }
+const KPI_ICON_MAP: Record<KpiIconKey, React.ReactElement> = {
+  revenue: <TrendingUpIcon aria-hidden="true" />,
+  orders: <ShoppingCartIcon aria-hidden="true" />,
+  customers: <UsersIcon aria-hidden="true" />,
+  products: <PackageIcon aria-hidden="true" />,
+};
+
+interface KpiCardDef {
+  key: string;
+  titleKey: string;
+  value: string | number;
+  iconKey: KpiIconKey;
+  trend?: string;
+}
+
+function buildKpiCards(kpi: DashboardKpi | undefined): KpiCardDef[] {
+  const growthStr = (v: number): string => `${v >= 0 ? '+' : ''}${String(v)}%`;
+  return [
+    {
+      key: 'revenue',
+      titleKey: 'analytics.totalRevenue',
+      iconKey: 'revenue',
+      value: kpi ? `${kpi.currency} ${kpi.totalRevenue.toLocaleString()}` : '0',
+      trend: kpi ? growthStr(kpi.revenueGrowth) : undefined,
+    },
+    {
+      key: 'orders',
+      titleKey: 'analytics.totalOrders',
+      iconKey: 'orders',
+      value: kpi?.totalOrders ?? 0,
+      trend: kpi ? growthStr(kpi.ordersGrowth) : undefined,
+    },
+    {
+      key: 'customers',
+      titleKey: 'analytics.totalCustomers',
+      iconKey: 'customers',
+      value: kpi?.totalCustomers ?? 0,
+    },
+    {
+      key: 'products',
+      titleKey: 'analytics.totalProducts',
+      iconKey: 'products',
+      value: kpi?.totalProducts ?? 0,
+    },
+  ];
+}
+
+function buildDonutData(
+  saleSummary: { byStatus?: Array<{ status: string; count: number; revenue: number }> } | undefined
+): StatusSlice[] {
+  return (
+    saleSummary?.byStatus?.map((b) => ({ status: b.status, count: b.count, revenue: b.revenue })) ??
+    []
+  );
+}
+
+function buildSalesParams(dateRange: DateRangeId, customRange: DateRange): SalesAnalyticsParams {
+  if (dateRange === 'custom') return { from: customRange.from, to: customRange.to };
+  return { period: dateRange };
+}
+
+function todayStr(): string {
+  return new Date().toISOString().slice(0, 10);
 }
 
 export function AnalyticsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: kpi,      isLoading: kpiLoading,      isError: kpiError      } = useDashboardKpi();
-  const { data: topProds, isLoading: prodsLoading,    isError: prodsError    } = useTopProducts();
-  const { data: topCusts, isLoading: custsLoading,    isError: custsError    } = useTopCustomers();
-  const { data: alerts,   isLoading: alertsLoading,   isError: alertsError   } = useLowStockAlerts();
+  const [dateRange, setDateRange] = React.useState<DateRangeId>('7d');
+  const [customRange, setCustomRange] = React.useState<DateRange>({
+    from: todayStr(),
+    to: todayStr(),
+  });
 
-  const anyLoading = kpiLoading || prodsLoading || custsLoading || alertsLoading;
-  const anyError   = kpiError   || prodsError   || custsError   || alertsError;
+  const salesParams = React.useMemo(
+    () => buildSalesParams(dateRange, customRange),
+    [dateRange, customRange]
+  );
+
+  const { data: kpi, isLoading: kpiLoading, isError: kpiError } = useDashboardKpi();
+  const { data: topProds, isLoading: prodsLoading, isError: prodsError } = useTopProducts();
+  const { data: topCusts, isLoading: custsLoading, isError: custsError } = useTopCustomers();
+  const { data: alerts, isLoading: alertsLoading, isError: alertsError } = useLowStockAlerts();
+  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(salesParams);
+  const { data: saleSummary, isLoading: summaryLoading } = useSaleSummary();
+
+  const anyLoading = [kpiLoading, prodsLoading, custsLoading, alertsLoading].some(Boolean);
+  const anyError = [kpiError, prodsError, custsError, alertsError].some(Boolean);
+  const currency = kpi?.currency ?? '';
 
   if (anyLoading && !kpi) {
     return (
@@ -43,69 +149,89 @@ export function AnalyticsPage(): React.ReactElement {
     );
   }
 
-  const kpiLoaded = !kpiLoading;
+  const kpiCards = buildKpiCards(kpi);
+  const donutData = buildDonutData(saleSummary);
 
-  const kpiCards: Array<{
-    key: string;
-    titleKey: string;
-    value: string | number;
-    iconKey: KpiIconKey;
-    trend?: string;
-  }> = [
-    {
-      key: 'revenue',
-      titleKey: 'analytics.totalRevenue',
-      value: kpi ? `${kpi.currency} ${kpi.totalRevenue.toLocaleString()}` : '0',
-      iconKey: 'revenue',
-      trend: kpi
-        ? `${kpi.revenueGrowth >= 0 ? '+' : ''}${String(kpi.revenueGrowth)}%`
-        : undefined,
-    },
-    {
-      key: 'orders',
-      titleKey: 'analytics.totalOrders',
-      value: kpi?.totalOrders ?? 0,
-      iconKey: 'orders',
-      trend: kpi
-        ? `${kpi.ordersGrowth >= 0 ? '+' : ''}${String(kpi.ordersGrowth)}%`
-        : undefined,
-    },
-    {
-      key: 'customers',
-      titleKey: 'analytics.totalCustomers',
-      value: kpi?.totalCustomers ?? 0,
-      iconKey: 'customers',
-    },
-    {
-      key: 'products',
-      titleKey: 'analytics.totalProducts',
-      value: kpi?.totalProducts ?? 0,
-      iconKey: 'products',
-    },
-  ];
+  const handleExportProducts = (): void => {
+    exportToCsv(
+      (topProds ?? []).map((p) => ({
+        product: p.productName,
+        sku: p.sku,
+        sold: p.totalSold,
+        revenue: p.revenue,
+      })),
+      'top-products'
+    );
+  };
+
+  const handleExportCustomers = (): void => {
+    exportToCsv(
+      (topCusts ?? []).map((c) => ({
+        customer: c.customerName,
+        orders: c.totalOrders,
+        spent: c.totalSpent,
+      })),
+      'top-customers'
+    );
+  };
 
   return (
     <div className={styles['page']}>
       <header className={styles['header']}>
-        <h1 className={styles['title']}>{t('analytics.title')}</h1>
-        <p className={styles['subtitle']}>{t('analytics.subtitle')}</p>
+        <div className={styles['headerMeta']}>
+          <h1 className={styles['title']}>{t('analytics.title')}</h1>
+          <p className={styles['subtitle']}>{t('analytics.subtitle')}</p>
+        </div>
+        <div className={styles['headerActions']}>
+          <PermissionGuard permission="export:csv">
+            <Button variant="outline" size="sm" onClick={handleExportProducts}>
+              {t('analytics.exportProducts')}
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleExportCustomers}>
+              {t('analytics.exportCustomers')}
+            </Button>
+          </PermissionGuard>
+        </div>
       </header>
 
-      {/* KPI grid */}
+      <div className={styles['dateRangeRow']}>
+        <div className={styles['dateRangePills']} role="group" aria-label="Período">
+          {DATE_RANGES.map(({ id, labelKey }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={(): void => {
+                setDateRange(id);
+              }}
+              className={cn(
+                styles['dateRangePill'],
+                dateRange === id && styles['dateRangePillActive']
+              )}
+              aria-pressed={dateRange === id}
+            >
+              {t(labelKey)}
+            </button>
+          ))}
+        </div>
+        {dateRange === 'custom' && (
+          <DateRangePicker value={customRange} onChange={setCustomRange} />
+        )}
+      </div>
+
       <section className={styles['kpiGrid']} aria-label="Key performance indicators">
         {kpiCards.map((card) => (
           <Card key={card.key}>
             <CardHeader>
               <CardTitle className={styles['kpiTitle']}>{t(card.titleKey)}</CardTitle>
               <CardAction>
-                <span className={styles['kpiIcon']}>{renderKpiIcon(card.iconKey)}</span>
+                <span className={styles['kpiIcon']}>{KPI_ICON_MAP[card.iconKey]}</span>
               </CardAction>
             </CardHeader>
             <CardContent>
               <div className={styles['kpiValue']}>
-                {kpiLoaded ? card.value : <Skeleton className={styles['kpiSkeleton']} />}
+                {!kpiLoading ? card.value : <Skeleton className={styles['kpiSkeleton']} />}
               </div>
-              {kpiLoaded && card.trend !== undefined && (
+              {!kpiLoading && card.trend !== undefined && (
                 <p className={styles['kpiTrend']}>
                   {card.trend} {t('analytics.vsLastMonth')}
                 </p>
@@ -115,127 +241,60 @@ export function AnalyticsPage(): React.ReactElement {
         ))}
       </section>
 
-      {/* Top Products + Top Customers (2-col grid) */}
+      <Card>
+        <CardHeader>
+          <div className={styles['chartSection']}>
+            <CardTitle>{t('analytics.revenueOverTime')}</CardTitle>
+            <p className={styles['chartSubtitle']}>{t('analytics.revenueOverTimeSubtitle')}</p>
+          </div>
+          <CardAction>
+            <div className={styles['chartLegend']}>
+              <span className={styles['chartLegendItem']}>
+                <span
+                  className={styles['chartLegendDot']}
+                  style={{ background: 'var(--color-chart-1)' }}
+                />
+                {t('analytics.revenue')}
+              </span>
+              <span className={styles['chartLegendItem']}>
+                <span
+                  className={styles['chartLegendDot']}
+                  style={{ background: 'var(--color-chart-2)' }}
+                />
+                {t('analytics.orders')}
+              </span>
+            </div>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <RevenueAreaChart data={salesPeriod} isLoading={periodLoading} />
+        </CardContent>
+      </Card>
+
       <div className={styles['sectionsGrid']}>
         <Card>
           <CardHeader>
-            <CardTitle>{t('analytics.topProducts')}</CardTitle>
+            <CardTitle>{t('analytics.salesByStatus')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('analytics.col.product')}</TableHead>
-                  <TableHead>{t('analytics.col.sku')}</TableHead>
-                  <TableHead>{t('analytics.col.sold')}</TableHead>
-                  <TableHead>{t('analytics.col.revenue')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {prodsLoading ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={4}><Skeleton style={{ height: '1.25rem' }} /></TableCell>
-                    </TableRow>
-                  ))
-                ) : !topProds || topProds.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4}>{t('common.noData')}</TableCell>
-                  </TableRow>
-                ) : (
-                  topProds.map((p) => (
-                    <TableRow key={p.productId}>
-                      <TableCell>{p.productName}</TableCell>
-                      <TableCell>{p.sku}</TableCell>
-                      <TableCell>{p.totalSold}</TableCell>
-                      <TableCell>{kpi?.currency ?? ''} {p.revenue.toLocaleString()}</TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+            <SalesDonutChart data={donutData} isLoading={summaryLoading} />
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
-            <CardTitle>{t('analytics.topCustomers')}</CardTitle>
+            <CardTitle>{t('analytics.topProductsRevenue')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('analytics.col.customer')}</TableHead>
-                  <TableHead>{t('analytics.col.orders')}</TableHead>
-                  <TableHead>{t('analytics.col.spent')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {custsLoading ? (
-                  Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell colSpan={3}><Skeleton style={{ height: '1.25rem' }} /></TableCell>
-                    </TableRow>
-                  ))
-                ) : !topCusts || topCusts.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={3}>{t('common.noData')}</TableCell>
-                  </TableRow>
-                ) : (
-                  topCusts.map((c) => (
-                    <TableRow key={c.customerId}>
-                      <TableCell>{c.customerName}</TableCell>
-                      <TableCell>{c.totalOrders}</TableCell>
-                      <TableCell>{kpi?.currency ?? ''} {c.totalSpent.toLocaleString()}</TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+            <TopProductsBarChart data={topProds} isLoading={prodsLoading} />
           </CardContent>
         </Card>
       </div>
 
-      {/* Low Stock Alerts (full width) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('analytics.lowStockAlerts')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('analytics.col.item')}</TableHead>
-                <TableHead>{t('analytics.col.sku')}</TableHead>
-                <TableHead>{t('analytics.col.qty')}</TableHead>
-                <TableHead>{t('analytics.col.threshold')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {alertsLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell colSpan={4}><Skeleton style={{ height: '1.25rem' }} /></TableCell>
-                  </TableRow>
-                ))
-              ) : !alerts || alerts.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4}>{t('common.noData')}</TableCell>
-                </TableRow>
-              ) : (
-                alerts.map((a) => (
-                  <TableRow key={a.itemId}>
-                    <TableCell>{a.name}</TableCell>
-                    <TableCell>{a.sku}</TableCell>
-                    <TableCell>{a.currentQuantity}</TableCell>
-                    <TableCell>{a.threshold}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <div className={styles['sectionsGrid']}>
+        <AnalyticsTopProductsTable data={topProds} isLoading={prodsLoading} currency={currency} />
+        <AnalyticsTopCustomersTable data={topCusts} isLoading={custsLoading} currency={currency} />
+      </div>
+      <AnalyticsLowStockTable data={alerts} isLoading={alertsLoading} />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-redundant-type-constituents */
 import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
@@ -70,12 +69,7 @@ function SelectLabel({
   className,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Label>): React.ReactElement {
-  return (
-    <SelectPrimitive.Label
-      className={cn(styles.selectLabel, className)}
-      {...props}
-    />
-  );
+  return <SelectPrimitive.Label className={cn(styles.selectLabel, className)} {...props} />;
 }
 
 function SelectItem({
@@ -84,10 +78,7 @@ function SelectItem({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Item>): React.ReactElement {
   return (
-    <SelectPrimitive.Item
-      className={cn(styles.selectItem, className)}
-      {...props}
-    >
+    <SelectPrimitive.Item className={cn(styles.selectItem, className)} {...props}>
       <span className={styles.selectItemIndicator}>
         <SelectPrimitive.ItemIndicator>
           <CheckIcon />
@@ -102,25 +93,15 @@ function SelectSeparator({
   className,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Separator>): React.ReactElement {
-  return (
-    <SelectPrimitive.Separator
-      className={cn(styles.selectSeparator, className)}
-      {...props}
-    />
-  );
+  return <SelectPrimitive.Separator className={cn(styles.selectSeparator, className)} {...props} />;
 }
 
 function SelectScrollUpButton({
   className,
   ...props
-}: React.ComponentProps<
-  typeof SelectPrimitive.ScrollUpButton
->): React.ReactElement {
+}: React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>): React.ReactElement {
   return (
-    <SelectPrimitive.ScrollUpButton
-      className={cn(styles.selectScrollButton, className)}
-      {...props}
-    >
+    <SelectPrimitive.ScrollUpButton className={cn(styles.selectScrollButton, className)} {...props}>
       <ChevronUpIcon />
     </SelectPrimitive.ScrollUpButton>
   );
@@ -129,9 +110,7 @@ function SelectScrollUpButton({
 function SelectScrollDownButton({
   className,
   ...props
-}: React.ComponentProps<
-  typeof SelectPrimitive.ScrollDownButton
->): React.ReactElement {
+}: React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>): React.ReactElement {
   return (
     <SelectPrimitive.ScrollDownButton
       className={cn(styles.selectScrollButton, className)}

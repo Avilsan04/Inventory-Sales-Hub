@@ -1,0 +1,83 @@
+.container {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  padding: $spacing-5;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-3;
+}
+
+.card {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: $border-radius-base;
+  padding: $spacing-4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-2;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background $duration-fast,
+    border-color $duration-fast,
+    box-shadow $duration-fast;
+
+  &:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-primary);
+    box-shadow: $shadow-xs;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.icon {
+  color: var(--color-primary);
+  display: flex;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.desc {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: $line-height-base;
+}

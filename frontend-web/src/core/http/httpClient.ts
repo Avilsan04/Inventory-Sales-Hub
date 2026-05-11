@@ -2,11 +2,13 @@ import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from '@core/config';
 import { tokenStorage } from '../storage/tokenStorage';
+import { tenantStorage } from '../storage/tenantStorage';
 import { setupRequestInterceptor, setupResponseInterceptor } from './interceptors';
 import type { HttpClient, HttpRequestConfig } from './http.types';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true, // forwards HttpOnly refresh_token cookie on every request
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,17 +20,42 @@ const mapConfig = (config?: HttpRequestConfig): AxiosRequestConfig => ({
   signal: config?.signal,
 });
 
-// Architectural Correction: Strict signature returning a cleanup function
 export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
-  const reqInterceptorId = setupRequestInterceptor(axiosInstance, () => tokenStorage.getToken());
+  const reqInterceptorId = setupRequestInterceptor(
+    axiosInstance,
+    () => tokenStorage.getToken(),
+    () => {
+      try {
+        const raw = sessionStorage.getItem('ish.impersonation');
+        if (!raw) return null;
+        const session = JSON.parse(raw) as { token: string; expiresAt: number };
+        if (Date.now() > session.expiresAt) {
+          sessionStorage.removeItem('ish.impersonation');
+          return null;
+        }
+        return session.token;
+      } catch {
+        return null;
+      }
+    },
+    () => tenantStorage.getTenantId()
+  );
 
-  const resInterceptorId = setupResponseInterceptor(axiosInstance, () => {
-    // Centralize token destruction logic here before firing the navigation event
-    tokenStorage.removeToken();
-    onUnauthorized();
-  });
+  const resInterceptorId = setupResponseInterceptor(
+    axiosInstance,
+    async () => {
+      // Browser automatically sends the HttpOnly refresh_token cookie here
+      const response = await axiosInstance.post<{ token: string }>('/auth/refresh');
+      const newToken = response.data.token;
+      tokenStorage.saveToken(newToken);
+      return newToken;
+    },
+    () => {
+      tokenStorage.removeToken();
+      onUnauthorized();
+    }
+  );
 
-  // Return the Teardown function to prevent Axios listener leaks
   return (): void => {
     axiosInstance.interceptors.request.eject(reqInterceptorId);
     axiosInstance.interceptors.response.eject(resInterceptorId);

@@ -9,8 +9,10 @@
   border: $border-width-focus solid transparent;
   color: inherit;
   outline: none;
-  transition: background-color $duration-fast ease, box-shadow $duration-fast ease;
-  background-color: var(--color-input);
+  transition:
+    background-color $duration-fast ease,
+    box-shadow $duration-fast ease;
+  background-color: var(--color-border);
 
   &:focus-visible {
     border-color: var(--color-ring);

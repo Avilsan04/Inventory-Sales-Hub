@@ -1,7 +1,7 @@
 .toastViewport {
   position: fixed;
   top: 0;
-  z-index: 100;
+  z-index: $z-toast;
   display: flex;
   max-height: $height-screen;
   width: 100%;
@@ -30,7 +30,9 @@
   padding: $spacing-6;
   padding-right: $spacing-8;
   box-shadow: var(--shadow-lg);
-  transition: transform $duration-slower ease, opacity $duration-slower ease;
+  transition:
+    transform $duration-slower ease,
+    opacity $duration-slower ease;
 
   &[data-state='open'] {
     animation: slideInFromBottom $duration-slower ease-out;

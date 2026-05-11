@@ -12,6 +12,10 @@
 }
 
 .tableHeader {
+  position: sticky;
+  top: 0;
+  z-index: $z-base;
+
   tr {
     background-color: var(--color-bg-secondary);
     border-bottom: $border-width-base solid var(--color-border);
@@ -39,24 +43,22 @@
   transition: background-color $duration-fast ease;
 
   &:hover {
-    background-color: var(--color-bg-secondary);
+    background-color: color-mix(in srgb, var(--color-primary) 4%, transparent);
   }
 }
 
 .tableHead {
-  padding: $spacing-2 $spacing-4;
+  padding: $spacing-3 $spacing-4;
   text-align: left;
   vertical-align: middle;
-  font-size: 11px;
+  font-size: $font-size-xs; // 12px — readable without being heavy
   font-weight: $font-weight-semibold;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   white-space: nowrap;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .tableCell {
-  padding: $spacing-3 $spacing-4;
+  padding: $spacing-3-5 $spacing-4; // 14px vertical → row height ≥ 52px
   vertical-align: middle;
   white-space: nowrap;
 }
@@ -65,4 +67,20 @@
   margin-top: $spacing-4;
   font-size: $font-size-sm;
   color: var(--color-muted-foreground);
+}
+
+// ── Semantic cell modifiers ─────────────────────────────────
+.tableCellMono {
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+}
+
+.tableCellNumeric {
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+}
+
+.tableHeadNumeric {
+  text-align: right;
 }

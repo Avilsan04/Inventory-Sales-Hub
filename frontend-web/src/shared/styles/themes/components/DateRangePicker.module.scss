@@ -1,0 +1,18 @@
+// DateRangePicker component styles
+
+.container {
+  display: flex;
+  gap: $spacing-2;
+  align-items: center;
+}
+
+.dateInput {
+  width: $size-date-input;
+}
+
+.separator {
+  color: var(--color-muted-foreground);
+  font-size: $font-size-sm;
+  flex-shrink: 0;
+  user-select: none;
+}
