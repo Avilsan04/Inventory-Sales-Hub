@@ -1,0 +1,284 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $page-padding;
+  min-height: 100%;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.greeting {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: $letter-spacing-tighter;
+}
+
+.dateLabel {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+// ── KPI grid (4 cards) ───────────────────────────────────────────────────
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-5;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpiCard {
+  position: relative;
+  overflow: hidden;
+  padding: $spacing-5;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  border: $border-width-base solid var(--color-border);
+  border-radius: $radius-xl;
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow $duration-fast ease;
+
+  &:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+}
+
+.kpiCardAccentPrimary {
+  border-left: 3px solid var(--color-primary);
+}
+.kpiCardAccentSuccess {
+  border-left: 3px solid var(--color-success);
+}
+.kpiCardAccentWarning {
+  border-left: 3px solid var(--color-warning);
+}
+.kpiCardAccentNeutral {
+  border-left: 3px solid var(--color-text-muted);
+}
+
+.kpiTopRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.kpiIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $size-11;
+  height: $size-11;
+  border-radius: $radius-md;
+
+  svg {
+    width: $size-5;
+    height: $size-5;
+  }
+}
+
+.kpiIconPrimary {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-on-container);
+}
+
+.kpiIconSuccess {
+  background-color: var(--color-success-bg);
+  color: var(--color-success-fg);
+}
+
+.kpiIconWarning {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning-fg);
+}
+
+.kpiIconNeutral {
+  background-color: var(--color-surface-high);
+  color: var(--color-text-primary);
+}
+
+.kpiLabel {
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.kpiValue {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: $spacing-1 0 0;
+  letter-spacing: $letter-spacing-tighter;
+  line-height: 1.1;
+}
+
+.kpiSubtext {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: $spacing-1 0 0;
+}
+
+.kpiSkeleton {
+  height: $size-8;
+  width: $size-24;
+  border-radius: var(--radius-md);
+}
+
+// ── Charts grid ───────────────────────────────────────────────────────────
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: $spacing-5;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard {
+  padding: $spacing-5;
+  border: $border-width-base solid var(--color-border);
+  border-radius: $radius-xl;
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.chartTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+// ── Section shared ────────────────────────────────────────────────────────
+.sectionCard {
+  border: $border-width-base solid var(--color-border);
+  border-radius: $radius-xl;
+  background-color: var(--color-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-4 $spacing-5;
+  border-bottom: $border-width-base solid var(--color-border);
+}
+
+.sectionTitle {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.viewAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color $duration-fast ease;
+
+  &:hover {
+    color: var(--color-primary-hover);
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+  }
+}
+
+.orderIdCell {
+  font-family: $font-family-mono;
+  color: var(--color-primary);
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+}
+
+.clickableRow {
+  cursor: pointer;
+
+  &:hover td {
+    background-color: var(--color-surface-low);
+  }
+}
+
+.emptyCell {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: $spacing-8 0;
+}
+
+.skeletonRow {
+  height: $spacing-6;
+  width: 100%;
+}
+
+.alertRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 $spacing-5;
+  border-bottom: $border-width-base solid var(--color-border);
+  gap: $spacing-3;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.alertName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-primary);
+}
+
+.alertSku {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  font-family: $font-family-mono;
+}
+
+.alertQty {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-error);
+  white-space: nowrap;
+}

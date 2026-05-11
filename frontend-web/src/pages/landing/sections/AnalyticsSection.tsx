@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { Reveal } from '@shared/ui/animated';
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
@@ -72,7 +71,7 @@ export function AnalyticsSection(): React.ReactElement {
               <span className={styles['mockupDotYellow']} aria-hidden="true" />
               <span className={styles['mockupDotGreen']} aria-hidden="true" />
               <span className={styles['mockupBrand']}>
-                <PackageIcon aria-hidden="true" />
+                <img src="/logo-mark.svg" alt="" aria-hidden="true" width={14} height={14} />
                 Inventory Sales Hub
               </span>
             </div>

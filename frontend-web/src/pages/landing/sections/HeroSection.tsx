@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PackageIcon, ArrowRightIcon, TrendingUpIcon, ClockIcon } from 'lucide-react';
+import { ArrowRightIcon, TrendingUpIcon, ClockIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { FadeIn } from '@shared/ui/animated';
 import { Button } from '@shared/ui/primitives';
@@ -7,20 +7,20 @@ import styles from '@shared/styles/themes/pages/Landing.module.scss';
 
 interface HeroSectionProps {
   readonly onGetStarted: () => void;
+  readonly onTestMode: () => void;
 }
 
-export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElement {
+export function HeroSection({ onGetStarted, onTestMode }: HeroSectionProps): React.ReactElement {
   const { translate } = useTranslationAdapter();
 
   return (
     <section className={styles['hero']} aria-labelledby="hero-heading">
-
       {/* Left column — text content */}
       <div className={styles['heroText']}>
         <FadeIn delay={0}>
           <div className={styles['heroBadge']}>
             <span className={styles['heroBadgeDot']} aria-hidden="true" />
-            <PackageIcon aria-hidden="true" />
+            <img src="/logo-mark.svg" alt="" aria-hidden="true" width={16} height={16} />
             <span>{translate('landing.hero.badge')}</span>
           </div>
         </FadeIn>
@@ -35,9 +35,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
         </FadeIn>
 
         <FadeIn delay={0.3}>
-          <p className={styles['heroDescription']}>
-            {translate('landing.hero.description')}
-          </p>
+          <p className={styles['heroDescription']}>{translate('landing.hero.description')}</p>
         </FadeIn>
 
         <FadeIn delay={0.45}>
@@ -46,7 +44,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
               {translate('landing.hero.cta')}
               <ArrowRightIcon aria-hidden="true" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" onClick={onTestMode}>
               {translate('landing.hero.secondaryCta')}
             </Button>
           </div>
@@ -56,20 +54,36 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
           <div className={styles['heroStats']}>
             <div className={styles['heroStat']}>
               <TrendingUpIcon className={styles['heroStatIconUp']} aria-hidden="true" />
-              <span className={styles['heroStatValue']}>{translate('landing.hero.stat1.value')}</span>
-              <span className={styles['heroStatLabel']}>{translate('landing.hero.stat1.label')}</span>
+              <span className={styles['heroStatValue']}>
+                {translate('landing.hero.stat1.value')}
+              </span>
+              <span className={styles['heroStatLabel']}>
+                {translate('landing.hero.stat1.label')}
+              </span>
             </div>
-            <span className={styles['heroStatSep']} aria-hidden="true">·</span>
+            <span className={styles['heroStatSep']} aria-hidden="true">
+              ·
+            </span>
             <div className={styles['heroStat']}>
               <TrendingUpIcon className={styles['heroStatIconUp']} aria-hidden="true" />
-              <span className={styles['heroStatValue']}>{translate('landing.hero.stat2.value')}</span>
-              <span className={styles['heroStatLabel']}>{translate('landing.hero.stat2.label')}</span>
+              <span className={styles['heroStatValue']}>
+                {translate('landing.hero.stat2.value')}
+              </span>
+              <span className={styles['heroStatLabel']}>
+                {translate('landing.hero.stat2.label')}
+              </span>
             </div>
-            <span className={styles['heroStatSep']} aria-hidden="true">·</span>
+            <span className={styles['heroStatSep']} aria-hidden="true">
+              ·
+            </span>
             <div className={styles['heroStat']}>
               <ClockIcon className={styles['heroStatIconClock']} aria-hidden="true" />
-              <span className={styles['heroStatValue']}>{translate('landing.hero.stat3.value')}</span>
-              <span className={styles['heroStatLabel']}>{translate('landing.hero.stat3.label')}</span>
+              <span className={styles['heroStatValue']}>
+                {translate('landing.hero.stat3.value')}
+              </span>
+              <span className={styles['heroStatLabel']}>
+                {translate('landing.hero.stat3.label')}
+              </span>
             </div>
           </div>
         </FadeIn>
@@ -83,7 +97,7 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
             <span className={styles['mockupDotYellow']} aria-hidden="true" />
             <span className={styles['mockupDotGreen']} aria-hidden="true" />
             <span className={styles['mockupBrand']}>
-              <PackageIcon aria-hidden="true" />
+              <img src="/logo-mark.svg" alt="" aria-hidden="true" width={14} height={14} />
               Inventory Sales Hub
             </span>
           </div>
@@ -148,7 +162,6 @@ export function HeroSection({ onGetStarted }: HeroSectionProps): React.ReactElem
           </div>
         </div>
       </FadeIn>
-
     </section>
   );
 }

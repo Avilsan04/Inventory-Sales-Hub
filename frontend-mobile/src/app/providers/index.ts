@@ -1,1 +1,2 @@
-// Global context providers will be registered here
+export { AuthProvider, useAuth } from '@features/auth/context';
+export { CartProvider, useCart } from '@features/cart/context';

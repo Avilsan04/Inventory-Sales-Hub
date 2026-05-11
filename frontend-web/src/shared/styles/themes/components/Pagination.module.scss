@@ -1,0 +1,40 @@
+// ── Pagination ─────────────────────────────────────────────────────
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.pageInfo {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  min-width: $size-16;
+  text-align: center;
+}
+
+.icon {
+  width: $size-3-5;
+  height: $size-3-5;
+}
+
+.pageSizeSelect {
+  margin-right: $spacing-2;
+}
+
+.select {
+  height: $size-8;
+  padding: 0 $spacing-2;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-size: $font-size-sm;
+  cursor: pointer;
+  outline: none;
+
+  &:focus-visible {
+    border-color: var(--color-ring);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 25%, transparent);
+  }
+}

@@ -1,113 +1,114 @@
-// @features/auth/hooks/useRegisterPresenter.ts
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { UseFormRegister, UseFormHandleSubmit, FieldErrors } from 'react-hook-form';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import type { RegisterRequest } from '../models/auth.types';
+import {
+  registerCustomerSchema,
+  registerAdminSchema,
+  registerCompanySchema,
+  type RegisterCustomerValues,
+  type RegisterAdminValues,
+  type RegisterCompanyValues,
+} from '../models/auth.schemas';
+import type { RegisterRequest, RegisterRole } from '../models/auth.types';
 import type { IAuthService } from '../services/IAuthService';
-import { AUTH_VALIDATION_RULES } from '../models/auth.constants';
+import { telemetry } from '@shared/lib/observability';
 
-// Architectural Correction: Strict Immutability
-export interface RegisterFormData {
-  readonly username: string;
-  readonly email: string;
-  readonly password: string;
-  readonly confirmPassword: string;
-}
+// Union of all register form value shapes
+type RegisterFormValues = RegisterCustomerValues | RegisterAdminValues | RegisterCompanyValues;
 
 export interface IRegisterPresenterProps {
   readonly onSuccess: () => void;
   readonly authService: IAuthService;
+  readonly role: RegisterRole;
 }
 
 export interface IRegisterPresenter {
-  readonly formData: RegisterFormData;
+  readonly register: UseFormRegister<RegisterFormValues>;
+  readonly handleSubmit: UseFormHandleSubmit<RegisterFormValues>;
+  readonly errors: FieldErrors<RegisterFormValues>;
   readonly isLoading: boolean;
   readonly error: string | null;
-  readonly isFormValid: boolean;
-  readonly handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  readonly handleSubmit: (e: React.SyntheticEvent<HTMLFormElement>) => Promise<void>;
+  readonly isValid: boolean;
+  readonly onSubmit: (data: RegisterFormValues) => Promise<void>;
+}
+
+function schemaForRole(
+  role: RegisterRole
+): typeof registerCustomerSchema | typeof registerAdminSchema | typeof registerCompanySchema {
+  if (role === 'admin') return registerAdminSchema;
+  if (role === 'company') return registerCompanySchema;
+  return registerCustomerSchema;
+}
+
+function buildRegisterRequest(data: RegisterFormValues, role: RegisterRole): RegisterRequest {
+  if (role === 'company') {
+    const d = data as RegisterCompanyValues;
+    return {
+      username: d.companyName,
+      email: d.legalEmail,
+      password: d.password,
+      role,
+      companyName: d.companyName,
+      cif: d.cif,
+      legalRepresentative: d.legalRepresentative,
+      phone: d.phone,
+    };
+  }
+  if (role === 'admin') {
+    const d = data as RegisterAdminValues;
+    return {
+      username: d.username,
+      email: d.email,
+      password: d.password,
+      role,
+      fullName: d.fullName,
+      adminCode: d.adminCode,
+    };
+  }
+  const d = data as RegisterCustomerValues;
+  return { username: d.username, email: d.email, password: d.password, role };
 }
 
 export function useRegisterPresenter({
   onSuccess,
   authService,
+  role,
 }: IRegisterPresenterProps): IRegisterPresenter {
   const { translate } = useTranslationAdapter();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [formData, setFormData] = React.useState<RegisterFormData>({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+
+  const schema = React.useMemo(() => schemaForRole(role), [role]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<RegisterFormValues>({
+    mode: 'onTouched',
+    resolver: zodResolver(schema),
   });
 
-  const isFormValid = React.useMemo((): boolean => {
-    return (
-      formData.username.trim().length >= AUTH_VALIDATION_RULES.MIN_USERNAME_LENGTH &&
-      formData.email.trim().length > 0 &&
-      formData.password.length >= AUTH_VALIDATION_RULES.MIN_PASSWORD_LENGTH &&
-      formData.password === formData.confirmPassword
-    );
-  }, [formData]);
-
-  const handleInputChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>): void => {
-      const { name, value } = e.target;
-
-      // Architectural Correction: Never sanitize passwords. 
-      // Only sanitize non-credential inputs.
-      const isPasswordField = name === 'password' || name === 'confirmPassword';
-      const sanitizedValue = isPasswordField ? value : value.replace(/[<>]/g, '');
-
-      setFormData((prev) => ({ ...prev, [name]: sanitizedValue }));
-      setError(null);
-    },
-    []
-  );
-
-  const handleSubmit = React.useCallback(
-    async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
-      e.preventDefault();
-
-      if (!isFormValid) {
-        if (formData.password !== formData.confirmPassword) {
-          setError(translate('auth.passwordMismatch'));
-        } else {
-          setError(translate('auth.validationError'));
-        }
-        return;
-      }
-
+  const onSubmit = React.useCallback(
+    async (data: RegisterFormValues): Promise<void> => {
       setIsLoading(true);
       setError(null);
-
-      const registerData: RegisterRequest = {
-        username: formData.username.trim(),
-        email: formData.email.trim(),
-        password: formData.password,
-      };
-
       try {
-        await authService.register(registerData);
+        await authService.register(buildRegisterRequest(data, role));
         onSuccess();
       } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown infrastructure error';
-        console.error('[Telemetry] Registration Failure:', errorMessage);
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        telemetry.captureMessage('Registration failure', { message });
         setError(translate('auth.registerError'));
       } finally {
         setIsLoading(false);
       }
     },
-    [formData, onSuccess, isFormValid, translate, authService]
+    [onSuccess, translate, authService, role]
   );
 
-  return {
-    formData,
-    isLoading,
-    error,
-    isFormValid,
-    handleInputChange,
-    handleSubmit,
-  };
+  return { register, handleSubmit, errors, isLoading, error, isValid, onSubmit };
 }

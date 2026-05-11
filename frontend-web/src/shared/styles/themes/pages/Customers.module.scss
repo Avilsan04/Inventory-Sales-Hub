@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
@@ -53,12 +53,19 @@
   align-items: center;
   gap: $spacing-3;
   padding: $spacing-3 $spacing-4;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
 }
 
 .searchBox {
   flex: 1;
-  max-width: 320px;
+  max-width: $size-80;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-shrink: 0;
 }
 
 // Avatar + name cell
@@ -99,6 +106,11 @@
   font-family: $font-family-mono;
   font-size: $font-size-sm;
   color: var(--color-text-muted);
+}
+
+.skeletonRow {
+  height: $spacing-6;
+  width: 100%;
 }
 
 .placeholderContainer {

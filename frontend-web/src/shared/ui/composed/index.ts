@@ -43,7 +43,7 @@ export {
   DropdownMenuRadioGroup,
 } from './DropdownMenu';
 
-export { Popover, PopoverTrigger, PopoverContent } from './Popover';
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './Popover';
 
 export { ScrollArea, ScrollBar } from './ScrollArea';
 
@@ -99,9 +99,15 @@ export {
 
 export { Toaster } from './Toaster';
 
-export {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from './Tooltip';
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './Tooltip';
+
+export { RevenueAreaChart } from './RevenueAreaChart';
+export { SalesDonutChart, type StatusSlice } from './SalesDonutChart';
+export { TopProductsBarChart } from './TopProductsBarChart';
+export { SparklineChart } from './SparklineChart';
+export { WeeklySalesBarChart } from './WeeklySalesBarChart';
+export { FormField, type FormFieldProps } from './FormField';
+export { ConfirmDialog, type ConfirmDialogProps } from './ConfirmDialog';
+export { EmptyState } from './EmptyState';
+export { DateRangePicker, type DateRange } from './DateRangePicker';
+export { OfflineBanner } from './OfflineBanner';

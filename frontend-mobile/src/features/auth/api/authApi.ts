@@ -1,18 +1,46 @@
 import { httpClient } from '@core/http';
-import type { LoginRequest, LoginResponse, RegisterRequest, UserResponse } from '../models';
+import { ENABLE_MOCK, mockUser } from '@core/mock/mockData';
+import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, UserProfile } from '../models';
 
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    // httpClient.post<T> directly returns T. It already unwrapped response.data.
-    return await httpClient.post<LoginResponse>('/auth/login', credentials);
+    if (ENABLE_MOCK) {
+      await new Promise(r => setTimeout(r, 800));
+      if (!credentials.email || !credentials.password) {
+        throw new Error('Credenciales incorrectas');
+      }
+      return { accessToken: mockUser.token, refreshToken: 'mock-refresh-token' };
+    }
+    return await httpClient.post<LoginResponse>('/api/auth/login', credentials);
   },
 
-  register: async (data: RegisterRequest): Promise<UserResponse> => {
-    return await httpClient.post<UserResponse>('/auth/register', data);
+  register: async (data: RegisterRequest): Promise<RegisterResponse> => {
+    if (ENABLE_MOCK) {
+      await new Promise(r => setTimeout(r, 800));
+      return {
+        id: mockUser.id,
+        username: data.username,
+        email: data.email,
+        accessToken: mockUser.token,
+        refreshToken: 'mock-refresh-token',
+      };
+    }
+    return await httpClient.post<RegisterResponse>('/api/auth/register', data);
   },
-  
-  // Future method example
-  logout: async (): Promise<void> => {
-    return await httpClient.post<void>('/auth/logout');
-  }
+
+  getMe: async (): Promise<UserProfile> => {
+    if (ENABLE_MOCK) {
+      await new Promise(r => setTimeout(r, 400));
+      return { id: mockUser.id, username: mockUser.username, email: mockUser.email };
+    }
+    return await httpClient.get<UserProfile>('/api/auth/me');
+  },
+
+  logout: async (refreshToken: string): Promise<void> => {
+    if (ENABLE_MOCK) {
+      await new Promise(r => setTimeout(r, 300));
+      return;
+    }
+    return await httpClient.post<void>('/api/auth/logout', { refreshToken });
+  },
 };

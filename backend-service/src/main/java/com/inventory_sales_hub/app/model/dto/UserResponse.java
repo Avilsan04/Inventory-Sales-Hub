@@ -4,5 +4,7 @@ public record UserResponse(
         Long id,
         String username,
         String email,
-        String token
+        String role,
+        String accessToken,
+        String refreshToken
 ) {}

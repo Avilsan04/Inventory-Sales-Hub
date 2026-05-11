@@ -17,14 +17,25 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
 .header {
   display: flex;
-  flex-direction: column;
-  gap: $spacing-2;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-6;
+}
+
+.eyebrow {
+  display: block;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin-bottom: $spacing-1;
 }
 
 .title {
@@ -38,6 +49,13 @@
   font-size: $font-size-base;
   color: var(--color-text-muted);
   margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-shrink: 0;
 }
 
 .statsRow {
@@ -95,4 +113,67 @@
   min-height: $min-section-height;
   color: var(--color-error);
   font-size: $font-size-sm;
+}
+
+.skeletonRow {
+  height: $spacing-6;
+  width: 100%;
+}
+.skeletonValue {
+  height: $spacing-8;
+  width: $spacing-16;
+  border-radius: var(--radius-md);
+}
+
+.searchFilter {
+  margin-bottom: $spacing-6;
+  max-width: $container-2xs;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($size-grid-card-min, 1fr));
+  gap: $spacing-4;
+}
+
+.cellActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-1;
+
+  // Hide on pointer devices — show only on row hover
+  @media (hover: hover) and (pointer: fine) {
+    opacity: 0;
+    transition: opacity var(--duration-fast) ease;
+  }
+}
+
+// Reveal when the table row is hovered (pointer devices only)
+// tr is an element selector — not scoped by CSS modules, intentional
+tr:hover .cellActions {
+  @media (hover: hover) and (pointer: fine) {
+    opacity: 1;
+  }
+}
+
+.tableFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 $spacing-4;
+  border-top: 1px solid var(--color-border);
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+}
+
+.auditSection {
+  margin-top: $spacing-6;
+}
+
+.auditTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin: 0 0 $spacing-3;
 }

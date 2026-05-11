@@ -1,3 +1,3 @@
 export { httpClient, setupHttpEvents } from './httpClient';
-export { setupRequestInterceptor, setupResponseInterceptor } from './interceptors';
+export { setupRequestInterceptor, setupResponseInterceptor, HttpError } from './interceptors';
 export * from './http.types';

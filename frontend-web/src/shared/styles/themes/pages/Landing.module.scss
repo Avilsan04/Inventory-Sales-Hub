@@ -23,7 +23,7 @@
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: $z-overlay;
   border-bottom: $border-width-base solid var(--color-border);
   background-color: color-mix(in srgb, var(--color-bg-primary) 80%, transparent);
   backdrop-filter: blur($blur-md);
@@ -73,18 +73,45 @@
   gap: $spacing-2;
 }
 
-.langButton {
-  display: flex;
+.langBtn {
+  display: inline-flex;
   align-items: center;
-  gap: $spacing-1;
+  gap: $spacing-2;
+  height: $size-9;
+  padding: 0 $spacing-2;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-foreground);
+  font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  font-size: $font-size-sm;
-  letter-spacing: $letter-spacing-wider;
+  transition: background-color $duration-fast ease;
+  flex-shrink: 0;
 
-  svg {
-    width: $size-4;
-    height: $size-4;
+  &:hover {
+    background-color: var(--color-muted);
   }
+}
+
+.langFlag {
+  width: $size-4;
+  height: $size-4;
+  border-radius: $border-radius-sm;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.langChevron {
+  width: $size-3;
+  height: $size-3;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.langItemActive {
+  background-color: var(--color-muted);
+  font-weight: $font-weight-semibold;
 }
 
 // ── Main ─────────────────────────────────────────────────────────
@@ -287,7 +314,7 @@
 
 .mockupWindow {
   width: 100%;
-  max-width: 28rem;
+  max-width: $container-mockup;
   border-radius: $border-radius-xl;
   border: $border-width-base solid var(--color-border);
   background-color: var(--color-bg-primary);
@@ -296,7 +323,7 @@
 }
 
 .mockupWindowLg {
-  max-width: 34rem;
+  max-width: $container-mockup-lg;
 }
 
 .mockupTitlebar {
@@ -481,7 +508,9 @@
   border-radius: var(--radius-lg);
   border: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color $duration-feedback ease,
+    box-shadow $duration-feedback ease;
 
   &:hover {
     border-color: var(--color-primary);
@@ -661,7 +690,7 @@
   color: var(--color-text-muted);
   letter-spacing: $letter-spacing-tight;
   opacity: 0.5;
-  transition: opacity 0.2s ease;
+  transition: opacity $duration-feedback ease;
   display: flex;
   align-items: center;
   gap: $spacing-2;

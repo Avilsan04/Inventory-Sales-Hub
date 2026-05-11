@@ -1,6 +1,3 @@
-// Component-scoped constant: tabs list visual inset (not a semantic spacing value)
-$_tabs-list-padding: 3px;
-
 .tabs {
   display: flex;
   flex-direction: column;
@@ -16,7 +13,7 @@ $_tabs-list-padding: 3px;
   border-radius: var(--radius-lg);
   background-color: var(--color-muted);
   color: var(--color-muted-foreground);
-  padding: $_tabs-list-padding;
+  padding: $spacing-0-75;
 }
 
 .tabsTrigger {
@@ -37,7 +34,10 @@ $_tabs-list-padding: 3px;
   cursor: pointer;
   outline: none;
   color: var(--color-foreground);
-  transition: color $duration-fast ease, box-shadow $duration-fast ease, background-color $duration-fast ease;
+  transition:
+    color $duration-fast ease,
+    box-shadow $duration-fast ease,
+    background-color $duration-fast ease;
 
   &:focus-visible {
     border-color: var(--color-ring);
