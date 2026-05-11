@@ -1,10 +1,6 @@
 // Shared layout primitives for forms rendered inside Dialog components.
 // All dialogs import this single module — avoids repeating flex/grid declarations.
 
-$short-col: 5rem;         // ~80px — currency / short inputs
-$qty-col: 3.75rem;        // ~60px — quantity field
-$price-col: 5.5rem;       // ~88px — unit price field
-
 .body {
   display: flex;
   flex-direction: column;
@@ -29,24 +25,32 @@ $price-col: 5.5rem;       // ~88px — unit price field
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $spacing-2;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridOffset {
+  margin-top: $spacing-3;
 }
 
 .gridPriceShort {
   display: grid;
-  grid-template-columns: 1fr $short-col;
+  grid-template-columns: 1fr $dialog-col-short;
   gap: $spacing-2;
 }
 
 .gridQtyPriceShort {
   display: grid;
-  grid-template-columns: 1fr 1fr $short-col;
+  grid-template-columns: 1fr 1fr $dialog-col-short;
   gap: $spacing-2;
 }
 
 // 4-col row for sale item: product | qty | price | delete
 .saleItemRow {
   display: grid;
-  grid-template-columns: 1fr $qty-col $price-col auto;
+  grid-template-columns: 1fr $dialog-col-qty $dialog-col-price auto;
   gap: $spacing-1;
   margin-bottom: $spacing-2;
   align-items: end;
@@ -77,10 +81,25 @@ $price-col: 5.5rem;       // ~88px — unit price field
   margin: 0 0 $spacing-2;
 }
 
+// ── Inline checkbox row (isVariant, isActive, etc.) ──────────────────────────
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
 // Delete button in sale item row needs top margin only on first row
 // (first row has labels above, rest don't)
-.deleteBtn { align-self: end; }
-.deleteBtnFirst { align-self: end; margin-top: 1.375rem; }
+.deleteBtn {
+  align-self: end;
+}
+.deleteBtnFirst {
+  align-self: end;
+  margin-top: $spacing-5-5;
+}
 
 // ── Checkout wizard ───────────────────────────────────────────────────
 
@@ -187,7 +206,9 @@ $price-col: 5.5rem;       // ~88px — unit price field
   border: $border-width-base solid var(--color-border);
   background-color: var(--color-bg-secondary);
   cursor: pointer;
-  transition: border-color $duration-fast ease, background-color $duration-fast ease;
+  transition:
+    border-color $duration-fast ease,
+    background-color $duration-fast ease;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
   color: var(--color-text-secondary);

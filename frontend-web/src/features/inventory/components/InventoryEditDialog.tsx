@@ -2,7 +2,9 @@ import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useUpdateInventoryItem } from '@features/inventory';
+import { useQueryClient } from '@tanstack/react-query';
+import { inventoryApi } from '../api/inventoryApi';
+import { inventoryKeys } from '../hooks/useInventory';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
@@ -38,7 +40,9 @@ interface Props {
 
 export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { mutate, isPending } = useUpdateInventoryItem(item?.id ?? '');
+  const queryClient = useQueryClient();
+  const [isSaving, setIsSaving] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -68,29 +72,37 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
 
   const onSubmit = (data: FormValues): void => {
     if (item === null) return;
-    // Send explicit DTO fields — avoid leaking item id/lastUpdated into request body
-    mutate(
-      {
-        sku: item.sku,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        currency: item.currency,
-        category: item.category,
-        quantity: data.quantity,
-        status: data.status,
-        reorderThreshold: data.reorderThreshold,
-      },
-      {
-        onSuccess: () => {
-          toast({ title: 'Item updated' });
-          onClose();
-        },
-        onError: (err) => {
-          toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
-        },
-      }
-    );
+    setIsSaving(true);
+
+    const calls: Promise<unknown>[] = [];
+
+    if (data.quantity !== item.quantity) {
+      calls.push(inventoryApi.adjustStock(item.id, { quantity: data.quantity }));
+    }
+
+    if (data.reorderThreshold !== item.reorderThreshold) {
+      calls.push(inventoryApi.updateItem(item.id, { minStock: data.reorderThreshold }));
+    }
+
+    const finish = (): void => {
+      void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: inventoryKeys.detail(item.id) });
+      toast({ title: 'Item updated' });
+      setIsSaving(false);
+      onClose();
+    };
+
+    if (calls.length === 0) {
+      finish();
+      return;
+    }
+
+    Promise.all(calls)
+      .then(finish)
+      .catch((err: Error) => {
+        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+        setIsSaving(false);
+      });
   };
 
   return (
@@ -152,8 +164,8 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.saving') : t('common.save')}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? t('common.saving') : t('common.save')}
             </Button>
           </DialogFooter>
         </form>

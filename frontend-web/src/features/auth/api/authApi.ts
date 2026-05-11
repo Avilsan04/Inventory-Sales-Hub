@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { httpClient } from '@core/http';
 import type {
   LoginRequest,
@@ -12,35 +13,63 @@ import type {
   RefreshTokenResponse,
 } from '../models';
 
+const loginResponseSchema = z.object({ accessToken: z.string().min(1) });
+const refreshResponseSchema = z.object({ accessToken: z.string().min(1) });
+const userProfileSchema = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: z.string(),
+  role: z.string().transform((r) => r.toLowerCase() as import('../models').UserRole),
+  createdAt: z.string().optional(),
+  tenantId: z.string().optional(),
+});
+const userResponseSchema = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: z.string(),
+  role: z.string().optional(),
+  accessToken: z.string().min(1),
+});
+
 export const authApi = {
-  login: async (credentials: LoginRequest): Promise<LoginResponse> =>
-    httpClient.post<LoginResponse>('/auth/login', credentials),
-
-  register: async (data: RegisterRequest): Promise<UserResponse> =>
-    httpClient.post<UserResponse>('/auth/register', data),
-
-  logout: async (): Promise<void> => {
-    await httpClient.post<unknown>('/auth/logout');
+  login: async (credentials: LoginRequest): Promise<LoginResponse> => {
+    const data = await httpClient.post<unknown>('/auth/login', credentials);
+    return loginResponseSchema.parse(data);
   },
 
-  getMe: async (): Promise<UserProfile> =>
-    httpClient.get<UserProfile>('/auth/me'),
+  register: async (data: RegisterRequest): Promise<UserResponse> => {
+    const response = await httpClient.post<unknown>('/auth/register', data);
+    return userResponseSchema.parse(response);
+  },
 
-  refresh: async (): Promise<RefreshTokenResponse> =>
-    httpClient.post<RefreshTokenResponse>('/auth/refresh'),
+  logout: async (): Promise<void> => {
+    await httpClient.post('/auth/logout');
+  },
+
+  getMe: async (): Promise<UserProfile> => {
+    const data = await httpClient.get<unknown>('/auth/me');
+    return userProfileSchema.parse(data);
+  },
+
+  refresh: async (): Promise<RefreshTokenResponse> => {
+    const data = await httpClient.post<unknown>('/auth/refresh');
+    return refreshResponseSchema.parse(data);
+  },
 
   forgotPassword: async (payload: ForgotPasswordRequest): Promise<void> => {
-    await httpClient.post<unknown>('/auth/forgot-password', payload);
+    await httpClient.post('/auth/forgot-password', payload);
   },
 
   resetPassword: async (payload: ResetPasswordRequest): Promise<void> => {
-    await httpClient.post<unknown>('/auth/reset-password', payload);
+    await httpClient.post('/auth/reset-password', payload);
   },
 
-  updateProfile: async (payload: UpdateProfileRequest): Promise<UserProfile> =>
-    httpClient.patch<UserProfile>('/auth/me', payload),
+  updateProfile: async (payload: UpdateProfileRequest): Promise<UserProfile> => {
+    const data = await httpClient.patch<unknown>('/auth/me', payload);
+    return userProfileSchema.parse(data);
+  },
 
   changePassword: async (payload: ChangePasswordRequest): Promise<void> => {
-    await httpClient.patch<unknown>('/auth/me/password', payload);
+    await httpClient.patch('/auth/me/password', payload);
   },
 };

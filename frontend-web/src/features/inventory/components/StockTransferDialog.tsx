@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type Control } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useWarehouses } from '../hooks/useWarehouses';
 import { useTransferStock } from '../hooks/useTransferStock';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { Button, Input, Label } from '@shared/ui/primitives';
+import { Button, Input, Label } from '@shared/ui';
+import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 import {
   Dialog,
   DialogContent,
@@ -19,14 +20,60 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@shared/ui/composed';
+} from '@shared/ui';
 import type { InventoryItem } from '@entities/inventory';
 
-type FormValues = {
-  quantity: number;
-  fromWarehouseId: string;
-  toWarehouseId: string;
-};
+type FormValues = { quantity: number; fromWarehouseId: string; toWarehouseId: string };
+
+function buildTransferDefaults(item: InventoryItem | null): FormValues {
+  return { quantity: 1, fromWarehouseId: item?.warehouseId ?? '', toWarehouseId: '' };
+}
+
+interface WarehouseOption {
+  id: string;
+  name: string;
+}
+
+interface WarehouseSelectFieldProps {
+  name: 'fromWarehouseId' | 'toWarehouseId';
+  label: string;
+  error: string | undefined;
+  control: Control<FormValues>;
+  options: WarehouseOption[];
+  placeholder: string;
+}
+
+function WarehouseSelectField({
+  name,
+  label,
+  error,
+  control,
+  options,
+  placeholder,
+}: WarehouseSelectFieldProps): React.ReactElement {
+  return (
+    <FormField label={label} error={error}>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }): React.ReactElement => (
+          <Select value={field.value} onValueChange={field.onChange}>
+            <SelectTrigger>
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((w) => (
+                <SelectItem key={w.id} value={w.id}>
+                  {w.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      />
+    </FormField>
+  );
+}
 
 interface StockTransferDialogProps {
   item: InventoryItem | null;
@@ -66,17 +113,11 @@ export function StockTransferDialog({
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      quantity: 1,
-      fromWarehouseId: item?.warehouseId ?? '',
-      toWarehouseId: '',
-    },
+    defaultValues: buildTransferDefaults(item),
   });
 
   React.useEffect(() => {
-    if (open) {
-      reset({ quantity: 1, fromWarehouseId: item?.warehouseId ?? '', toWarehouseId: '' });
-    }
+    if (open) reset(buildTransferDefaults(item));
   }, [open, item, reset]);
 
   const onSubmit = (values: FormValues): void => {
@@ -84,11 +125,11 @@ export function StockTransferDialog({
     transfer(
       { itemId: item.id, ...values },
       {
-        onSuccess: () => {
+        onSuccess: (): void => {
           toast({ title: 'Stock transferred' });
           onOpenChange(false);
         },
-        onError: (err) => {
+        onError: (err): void => {
           toast({ title: 'Transfer failed', description: err.message, variant: 'destructive' });
         },
       }
@@ -99,102 +140,55 @@ export function StockTransferDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent style={{ maxWidth: '420px' }}>
+      <DialogContent className={styles['dialogNarrow']}>
         <DialogHeader>
           <DialogTitle>{t('inventory.transferTitle', { name: item?.name ?? '' })}</DialogTitle>
         </DialogHeader>
-
         <form
-          onSubmit={(e) => {
+          onSubmit={(e): void => {
             void handleSubmit(onSubmit)(e);
           }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
-            <FormField
+          <div className={styles['body']}>
+            <WarehouseSelectField
+              name="fromWarehouseId"
               label={t('inventory.sourceWarehouse')}
               error={errors.fromWarehouseId?.message}
-            >
-              <Controller
-                name="fromWarehouseId"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('inventory.selectWarehouse')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {activeWarehouses.map((w) => (
-                        <SelectItem key={w.id} value={w.id}>
-                          {w.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </FormField>
-
-            <FormField label={t('inventory.targetWarehouse')} error={errors.toWarehouseId?.message}>
-              <Controller
-                name="toWarehouseId"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('inventory.selectWarehouse')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {activeWarehouses.map((w) => (
-                        <SelectItem key={w.id} value={w.id}>
-                          {w.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </FormField>
-
+              control={control}
+              options={activeWarehouses}
+              placeholder={t('inventory.selectWarehouse')}
+            />
+            <WarehouseSelectField
+              name="toWarehouseId"
+              label={t('inventory.targetWarehouse')}
+              error={errors.toWarehouseId?.message}
+              control={control}
+              options={activeWarehouses}
+              placeholder={t('inventory.selectWarehouse')}
+            />
             <div>
               <Label htmlFor="transfer-qty">{t('inventory.quantity')}</Label>
               <Input
                 id="transfer-qty"
                 type="number"
                 min={1}
-                max={item?.quantity ?? undefined}
-                style={{ marginTop: '0.375rem' }}
+                max={item?.quantity}
+                className={styles['fieldInput']}
                 {...register('quantity', { valueAsNumber: true })}
               />
-              {errors.quantity && (
-                <p
-                  style={{
-                    color: 'var(--color-destructive)',
-                    fontSize: '0.75rem',
-                    marginTop: '0.25rem',
-                  }}
-                >
-                  {errors.quantity.message}
-                </p>
-              )}
+              {errors.quantity && <p className={styles['fieldError']}>{errors.quantity.message}</p>}
               {item && (
-                <p
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--color-muted-foreground)',
-                    marginTop: '0.25rem',
-                  }}
-                >
+                <p className={styles['fieldHint']}>
                   {t('inventory.available', { qty: item.quantity })}
                 </p>
               )}
             </div>
           </div>
-
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
-              onClick={() => {
+              onClick={(): void => {
                 onOpenChange(false);
               }}
             >

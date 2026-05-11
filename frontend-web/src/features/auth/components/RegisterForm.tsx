@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useRegisterPresenter } from '@features/auth/hooks/useRegisterPresenter';
+import { useRegisterPresenter } from '../hooks/useRegisterPresenter';
 import { useDependencies } from '@shared/hooks/useDependencies';
 import { Button, Input, Spinner } from '@shared/ui/primitives';
 import { FormField } from '@shared/ui/composed';
-import type { RegisterRole } from '@features/auth/models/auth.types';
+import type { RegisterRole } from '../models/auth.types';
 import styles from '@shared/styles/themes/components/RegisterForm.module.scss';
 
 interface RegisterFormProps {
@@ -20,8 +20,7 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
     useRegisterPresenter({ onSuccess, authService, role });
 
   const fieldError = (name: string): string | undefined => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-    const e = (errors as any)[name] as { message?: string } | undefined;
+    const e = (errors as Record<string, { message?: string } | undefined>)[name];
     return e?.message;
   };
 

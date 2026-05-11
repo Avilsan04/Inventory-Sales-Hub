@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
+import { env } from './core/config/env';
+import { bootstrapAuth } from './features/auth/lib/bootstrapAuth';
+import { initRum } from './shared/lib/observability';
 import '@assets/styles/main.scss';
 import './core/i18n';
-import './core/config/env';
 
 async function bootstrapApplication(): Promise<void> {
   try {
-    if (import.meta.env.DEV) {
+    const shouldMock = env.VITE_MOCK_ENABLED || sessionStorage.getItem('ish.demo') === 'true';
+    if (shouldMock) {
       const { worker } = await import('./app/mock/browser');
       const { seed } = await import('./app/mock/seed');
       const { db } = await import('./app/mock/db');
@@ -26,12 +29,14 @@ async function bootstrapApplication(): Promise<void> {
     }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown bootstrap error';
-    console.error(
-      '[Bootstrap Exception] Critical failure during application startup:',
-      errorMessage
-    );
-    // Note: Do not block execution in DEV if mocking fails, unless strict simulation is required.
+    console.error('[Bootstrap] Critical failure during startup:', errorMessage);
   }
+
+  initRum();
+
+  // Attempt silent token refresh before mounting the React tree.
+  // This ensures ProtectedRoute sees a valid token after a hard page refresh.
+  await bootstrapAuth();
 
   const container = document.getElementById('root');
 

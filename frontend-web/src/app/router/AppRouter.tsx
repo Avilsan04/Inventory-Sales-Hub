@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AdminLayout, CompanyLayout, ClientLayout } from '@widgets';
-import { useEffectiveRole } from '@features/auth';
+import { useEffectiveRole, useAuthMe } from '@features/auth';
 import { ProtectedRoute } from './guards/ProtectedRoute';
 import { PublicRoute } from './guards/PublicRoute';
 import { RoleRoute } from './guards/RoleRoute';
 import { APP_ROUTES } from '@shared/config/routes';
 import { Spinner } from '@shared/ui/primitives';
 import { HttpInterceptorSetup } from '@app/providers/HttpInterceptorSetup';
+import { useTabSync } from '@features/auth';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const LandingPage = React.lazy(() =>
@@ -34,6 +35,30 @@ const ResetPasswordPage = React.lazy(() =>
 
 const DashboardPage = React.lazy(() =>
   import('@pages/dashboard/DashboardPage').then((module) => ({ default: module.DashboardPage }))
+);
+
+const CustomerDashboardPage = React.lazy(() =>
+  import('@pages/dashboard/CustomerDashboardPage').then((module) => ({
+    default: module.CustomerDashboardPage,
+  }))
+);
+
+const CompanyDashboardPage = React.lazy(() =>
+  import('@pages/dashboard/CompanyDashboardPage').then((module) => ({
+    default: module.CompanyDashboardPage,
+  }))
+);
+
+const ManagerDashboardPage = React.lazy(() =>
+  import('@pages/dashboard/ManagerDashboardPage').then((module) => ({
+    default: module.ManagerDashboardPage,
+  }))
+);
+
+const StaffDashboardPage = React.lazy(() =>
+  import('@pages/dashboard/StaffDashboardPage').then((module) => ({
+    default: module.StaffDashboardPage,
+  }))
 );
 
 const InventoryPage = React.lazy(() =>
@@ -98,17 +123,48 @@ const MyOrdersPage = React.lazy(() =>
   import('@pages/my-orders/MyOrdersPage').then((module) => ({ default: module.MyOrdersPage }))
 );
 
-function RoleLayout(): React.ReactElement {
+const AuditPage = React.lazy(() =>
+  import('@pages/audit/AuditPage').then((module) => ({ default: module.AuditPage }))
+);
+
+function DashboardResolver(): React.ReactElement {
   const role = useEffectiveRole();
+  if (role === 'customer') return <CustomerDashboardPage />;
+  if (role === 'company') return <CompanyDashboardPage />;
+  if (role === 'manager') return <ManagerDashboardPage />;
+  if (role === 'staff') return <StaffDashboardPage />;
+  return <DashboardPage />;
+}
+
+function RoleLayout(): React.ReactElement {
+  const { isLoading } = useAuthMe();
+  const role = useEffectiveRole();
+
+  if (isLoading) {
+    return (
+      <div
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}
+      >
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
   if (role === 'company') return <CompanyLayout />;
   if (role === 'customer') return <ClientLayout />;
   return <AdminLayout />;
+}
+
+function TabSyncSetup(): null {
+  useTabSync();
+  return null;
 }
 
 export function AppRouter(): React.ReactElement {
   return (
     <BrowserRouter>
       <HttpInterceptorSetup />
+      <TabSyncSetup />
       <React.Suspense
         fallback={
           <div className={styles.appLoading}>
@@ -132,13 +188,25 @@ export function AppRouter(): React.ReactElement {
           <Route element={<ProtectedRoute />}>
             <Route element={<RoleLayout />}>
               {/* Customer/company-accessible routes */}
-              <Route path={APP_ROUTES.DASHBOARD} element={<DashboardPage />} />
-              <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
-              <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
+              <Route path={APP_ROUTES.DASHBOARD} element={<DashboardResolver />} />
               <Route path={APP_ROUTES.PROFILE} element={<ProfilePage />} />
               <Route path={APP_ROUTES.SETTINGS} element={<SettingsPage />} />
               <Route path={APP_ROUTES.CATALOG} element={<CatalogPage />} />
               <Route path={APP_ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
+
+              {/* COMPANY + ADMIN + MANAGER + STAFF: sales */}
+              <Route
+                element={
+                  <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company', 'test']} />
+                }
+              >
+                <Route path={APP_ROUTES.SALES} element={<SalesPage />} />
+              </Route>
+
+              {/* ADMIN + MANAGER: product management */}
+              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'test']} />}>
+                <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
+              </Route>
 
               {/* ADMIN + MANAGER + STAFF: inventory */}
               <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
@@ -150,8 +218,8 @@ export function AppRouter(): React.ReactElement {
                 <Route path={APP_ROUTES.EMPLOYEES} element={<EmployeesPage />} />
               </Route>
 
-              {/* ADMIN + MANAGER: supplier management */}
-              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'test']} />}>
+              {/* COMPANY + ADMIN + MANAGER: supplier management */}
+              <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company', 'test']} />}>
                 <Route path={APP_ROUTES.SUPPLIERS} element={<SuppliersPage />} />
               </Route>
 
@@ -180,6 +248,11 @@ export function AppRouter(): React.ReactElement {
               {/* COMPANY + ADMIN: tenant/permission management */}
               <Route element={<RoleRoute allowedRoles={['admin', 'company', 'test']} />}>
                 <Route path={APP_ROUTES.ADMIN_TENANTS} element={<TenantsPage />} />
+              </Route>
+
+              {/* COMPANY + ADMIN: audit log */}
+              <Route element={<RoleRoute allowedRoles={['admin', 'company', 'test']} />}>
+                <Route path={APP_ROUTES.AUDIT} element={<AuditPage />} />
               </Route>
             </Route>
           </Route>

@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { ShieldIcon, ShoppingBagIcon, BuildingIcon } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useViewMode } from '@features/auth/context/ViewModeContext';
-import { ResetDemoDataButton } from '@features/auth/components/ResetDemoDataButton';
-import type { ViewRole } from '@features/auth/context/ViewModeContext';
+import { useViewMode } from '@features/auth';
+import { ResetDemoDataButton } from '@features/auth';
+import type { ViewRole } from '@features/auth';
 import { APP_ROUTES } from '@shared/config/routes';
 import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/TestModeBanner.module.scss';
@@ -11,7 +12,7 @@ import styles from '@shared/styles/themes/components/TestModeBanner.module.scss'
 interface RoleConfig {
   readonly role: ViewRole;
   readonly labelKey: string;
-  readonly icon: string;
+  readonly icon: React.ReactElement;
   readonly allowedRoutes?: Set<string>; // undefined = unrestricted
 }
 
@@ -19,12 +20,12 @@ const ROLE_CONFIGS: ReadonlyArray<RoleConfig> = [
   {
     role: 'admin',
     labelKey: 'common.viewAsAdmin',
-    icon: '🛡️',
+    icon: <ShieldIcon aria-hidden="true" />,
   },
   {
     role: 'customer',
     labelKey: 'common.viewAsCustomer',
-    icon: '🛍️',
+    icon: <ShoppingBagIcon aria-hidden="true" />,
     allowedRoutes: new Set([
       APP_ROUTES.DASHBOARD,
       APP_ROUTES.SALES,
@@ -35,7 +36,7 @@ const ROLE_CONFIGS: ReadonlyArray<RoleConfig> = [
   {
     role: 'company',
     labelKey: 'common.viewAsCompany',
-    icon: '🏢',
+    icon: <BuildingIcon aria-hidden="true" />,
     allowedRoutes: new Set([
       APP_ROUTES.DASHBOARD,
       APP_ROUTES.PRODUCTS,

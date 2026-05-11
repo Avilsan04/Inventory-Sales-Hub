@@ -1,5 +1,6 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
+import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
 import type { AuditLog, AuditEntityType } from '@entities/audit';
 
 const seededLogs: AuditLog[] = [
@@ -63,11 +64,15 @@ const seededLogs: AuditLog[] = [
 export const auditHandlers = [
   http.get(`${API_BASE_URL}/audit`, async ({ request }) => {
     await delay(400);
+    const denied = requirePermission(request, 'view:audit');
+    if (denied) return denied;
+    const tenantId = resolveTenant(request);
+    const tenantLogs = getTenantBucket(tenantId, 'auditLogs', () => seededLogs);
     const url = new URL(request.url);
     const entityType = url.searchParams.get('entityType') as AuditEntityType | null;
     const userId = url.searchParams.get('userId');
 
-    let filtered = seededLogs;
+    let filtered = tenantLogs;
     if (entityType) filtered = filtered.filter((l) => l.entityType === entityType);
     if (userId) filtered = filtered.filter((l) => l.userId === userId);
 

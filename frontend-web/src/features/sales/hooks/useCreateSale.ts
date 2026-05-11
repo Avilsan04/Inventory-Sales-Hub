@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
 import { salesApi } from '../api/salesApi';
 import { saleKeys } from './useSales';
-import { calculateSaleTotals } from '@shared/lib/saleCalculations';
-import { syncDb } from '@shared/lib/db/syncDb';
+import { calculateSaleTotals } from '../lib/saleCalculations';
+import { syncDb } from '@shared/lib';
 import type { Sale, CreateSaleDTO } from '@entities/sale';
 
 export function useCreateSale(): UseMutationResult<
@@ -54,8 +54,9 @@ export function useCreateSale(): UseMutationResult<
 
       const optimisticSale: Sale = {
         id: crypto.randomUUID(),
-        customerId: dto.customerId,
+        customerId: dto.customerId ?? undefined,
         employeeId: undefined,
+        processedBy: undefined,
         status: 'pending',
         subtotal,
         discountPercent: dto.discountPercent,
@@ -70,8 +71,8 @@ export function useCreateSale(): UseMutationResult<
           productId: item.productId,
           productName: '',
           quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          subtotal: item.quantity * item.unitPrice,
+          unitPrice: item.unitPrice ?? 0,
+          subtotal: item.quantity * (item.unitPrice ?? 0),
         })),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SaleCreateDialog } from '@features/sales/components/SaleCreateDialog';
+import { SaleCreateDialog } from '@features/sales';
 import { useCustomers } from '@features/customers';
 import { useProducts } from '@features/products';
 

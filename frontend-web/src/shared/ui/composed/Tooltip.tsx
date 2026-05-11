@@ -4,7 +4,7 @@ import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/Tooltip.module.scss';
 
 function TooltipProvider({
-  delayDuration = 0,
+  delayDuration = 200,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>): React.ReactElement {
   return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;

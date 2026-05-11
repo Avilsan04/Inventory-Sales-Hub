@@ -2,6 +2,7 @@ package com.inventory_sales_hub.app.controllers;
 
 import com.inventory_sales_hub.app.exceptions.ProductException;
 import com.inventory_sales_hub.app.model.dto.CategoryParams;
+import com.inventory_sales_hub.app.model.dto.PatchProductParams;
 import com.inventory_sales_hub.app.model.dto.ProductParams;
 import com.inventory_sales_hub.app.model.service.ProductManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("api/products")
 public class ProductController {
     @Autowired
@@ -61,6 +61,17 @@ public class ProductController {
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductParams params) {
         try {
             return ResponseEntity.ok(productManager.update(id, params));
+        } catch (ProductException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> patch(@PathVariable Long id, @RequestBody PatchProductParams params) {
+        try {
+            return ResponseEntity.ok(productManager.patch(id, params));
         } catch (ProductException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

@@ -13,6 +13,7 @@ import {
 } from '../models/auth.schemas';
 import type { RegisterRequest, RegisterRole } from '../models/auth.types';
 import type { IAuthService } from '../services/IAuthService';
+import { telemetry } from '@shared/lib/observability';
 
 // Union of all register form value shapes
 type RegisterFormValues = RegisterCustomerValues | RegisterAdminValues | RegisterCompanyValues;
@@ -24,12 +25,9 @@ export interface IRegisterPresenterProps {
 }
 
 export interface IRegisterPresenter {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly register: UseFormRegister<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly handleSubmit: UseFormHandleSubmit<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly errors: FieldErrors<any>;
+  readonly register: UseFormRegister<RegisterFormValues>;
+  readonly handleSubmit: UseFormHandleSubmit<RegisterFormValues>;
+  readonly errors: FieldErrors<RegisterFormValues>;
   readonly isLoading: boolean;
   readonly error: string | null;
   readonly isValid: boolean;
@@ -102,9 +100,9 @@ export function useRegisterPresenter({
         await authService.register(buildRegisterRequest(data, role));
         onSuccess();
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[Telemetry] Registration Failure:', message);
-        setError(translate('auth.registerError'));
+        const message = err instanceof Error ? err.message : translate('auth.registerError');
+        telemetry.captureMessage('Registration failure', { message });
+        setError(message);
       } finally {
         setIsLoading(false);
       }

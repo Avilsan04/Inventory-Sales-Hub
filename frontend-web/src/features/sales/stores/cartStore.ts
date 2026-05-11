@@ -14,7 +14,7 @@ export interface CartItem {
   maxStock: number;
 }
 
-interface CartState {
+export interface CartState {
   items: CartItem[];
   customerId: string | null;
   paymentMethod: PaymentMethod;
@@ -31,7 +31,7 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       items: [],
       customerId: null,
-      paymentMethod: 'cash_on_delivery' as PaymentMethod,
+      paymentMethod: 'cash_on_delivery',
 
       addItem: (item) =>
         set((state) => {

@@ -46,6 +46,10 @@
   --color-muted: #{$color-dark-muted};
   --color-muted-foreground: #{$color-dark-muted-foreground};
 
+  // ── Surface levels ────────────────────────────────────────────
+  --color-surface-high: #{$color-dark-surface-high};
+  --color-surface-highest: #{$color-dark-surface-highest};
+
   // ── Card & Popover surfaces ───────────────────────────────────
   --color-card: #{$color-dark-card};
   --color-card-foreground: #{$color-dark-card-foreground};

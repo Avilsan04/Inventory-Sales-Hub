@@ -5,6 +5,7 @@ import type { UseFormRegister, UseFormHandleSubmit, FieldErrors } from 'react-ho
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { loginFormSchema, type LoginFormValues } from '../models/auth.schemas';
 import type { IAuthService } from '../services/IAuthService';
+import { telemetry } from '@shared/lib/observability';
 
 export interface IAuthPresenterProps {
   readonly onSuccess: () => void;
@@ -44,9 +45,9 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
         await authService.login({ email: data.email, password: data.password });
         onSuccess();
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : 'Unknown error';
-        console.error('[Telemetry] Authentication Failure:', message);
-        setError(translate('auth.invalidCredentials'));
+        const message = err instanceof Error ? err.message : translate('auth.invalidCredentials');
+        telemetry.captureMessage('Authentication failure', { message });
+        setError(message);
       } finally {
         setIsLoading(false);
       }

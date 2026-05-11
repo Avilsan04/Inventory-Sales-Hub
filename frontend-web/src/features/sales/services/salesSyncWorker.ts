@@ -1,5 +1,6 @@
 import { onlineManager } from '@core/api/queryClient';
-import { syncDb } from '@shared/lib/db/syncDb';
+import { HttpError } from '@core/http';
+import { syncDb } from '@shared/lib';
 import { salesApi } from '../api/salesApi';
 import type { CreateSaleDTO } from '@entities/sale';
 
@@ -8,8 +9,8 @@ import type { CreateSaleDTO } from '@entities/sale';
 const HARD_ERROR_STATUSES = new Set([400, 401, 403, 404, 405, 409, 410, 422]);
 
 function isHardError(error: unknown): boolean {
-  if (error instanceof Error && 'status' in error) {
-    return HARD_ERROR_STATUSES.has((error as Error & { status: number }).status);
+  if (error instanceof HttpError) {
+    return HARD_ERROR_STATUSES.has(error.status);
   }
   return false;
 }

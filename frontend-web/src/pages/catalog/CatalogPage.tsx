@@ -6,7 +6,7 @@ import { CartDrawer } from '@features/catalog';
 import { useDebounce } from '@shared/hooks';
 import { Spinner, Input } from '@shared/ui/primitives';
 import { EmptyState } from '@shared/ui/composed';
-import { ProductCard } from '@features/catalog/components/ProductCard';
+import { ProductCard } from '@features/catalog';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 export function CatalogPage(): React.ReactElement {
@@ -43,14 +43,13 @@ export function CatalogPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div>
-          <span className={styles['eyebrow']}>{t('catalog.storeEyebrow')}</span>
           <h1 className={styles['title']}>{t('catalog.title')}</h1>
           <p className={styles['subtitle']}>{t('catalog.subtitle')}</p>
         </div>
         <CartDrawer />
       </header>
 
-      <div style={{ marginBottom: '1.5rem', maxWidth: '24rem' }}>
+      <div className={styles['searchFilter']}>
         <Input
           type="search"
           placeholder={`${t('common.filter')} SKU, ${t('inventory.name').toLowerCase()}…`}
@@ -69,13 +68,7 @@ export function CatalogPage(): React.ReactElement {
           description={t('catalog.emptyDescription')}
         />
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-            gap: '1rem',
-          }}
-        >
+        <div className={styles['productGrid']}>
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

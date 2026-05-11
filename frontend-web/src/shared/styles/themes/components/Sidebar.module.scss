@@ -1,11 +1,8 @@
-// Active nav indicator bar width — not on standard spacing scale
-$_nav-indicator-width: 0.1875rem;
-
 // ── Mobile overlay ──────────────────────────────────────────────────────
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 39;
+  z-index: $z-sidebar;
   background-color: var(--color-overlay);
   opacity: 0;
   transition: opacity $duration-base ease;
@@ -41,7 +38,7 @@ $_nav-indicator-width: 0.1875rem;
     top: 0;
     left: 0;
     height: $height-screen;
-    z-index: 40;
+    z-index: $z-sidebar-mobile;
     transform: translateX(-100%);
     transition: transform $duration-slow ease;
   }
@@ -89,41 +86,6 @@ $_nav-indicator-width: 0.1875rem;
   text-overflow: ellipsis;
 }
 
-// ── CTA button (Add Product) ────────────────────────────────────────────
-.ctaWrapper {
-  padding: $spacing-3 $spacing-4;
-  flex-shrink: 0;
-}
-
-.cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $spacing-2;
-  width: 100%;
-  padding: $spacing-3 $spacing-4;
-  border-radius: $radius-md;
-  background-color: var(--color-sidebar-primary);
-  color: $color-sidebar-primary-foreground;
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: background-color $duration-fast ease;
-
-  &:hover {
-    background-color: var(--color-primary-hover);
-    color: $color-sidebar-primary-foreground;
-  }
-}
-
-.ctaIcon {
-  width: $size-4;
-  height: $size-4;
-  flex-shrink: 0;
-}
-
 // ── Navigation ──────────────────────────────────────────────────────────
 .nav {
   flex: 1;
@@ -169,10 +131,9 @@ $_nav-indicator-width: 0.1875rem;
   margin-bottom: $spacing-2;
   margin-top: $spacing-1;
   font-size: $font-size-xs;
-  font-weight: $font-weight-semibold;
+  font-weight: $font-weight-medium;
   color: $color-dark-text-muted;
-  letter-spacing: $letter-spacing-wider;
-  text-transform: uppercase;
+  letter-spacing: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -183,7 +144,7 @@ $_nav-indicator-width: 0.1875rem;
   display: flex;
   align-items: center;
   gap: $spacing-3;
-  padding: $spacing-2 $spacing-4;
+  padding: $spacing-3 $spacing-4;
   border-radius: var(--radius-md);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
@@ -208,17 +169,6 @@ $_nav-indicator-width: 0.1875rem;
   background-color: var(--color-sidebar-active-bg);
   color: var(--color-sidebar-active-fg);
   font-weight: $font-weight-semibold;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 20%;
-    bottom: 20%;
-    width: $_nav-indicator-width;
-    border-radius: 0 $radius-sm $radius-sm 0;
-    background-color: var(--color-sidebar-primary);
-  }
 
   .navIcon {
     color: var(--color-sidebar-active-fg);

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
-  padding: $spacing-6;
+  padding: $page-padding;
   min-height: 100%;
 }
 
@@ -25,7 +25,7 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
 }
 
 .subtitle {
@@ -34,10 +34,10 @@
   margin: 0;
 }
 
-// ── KPI grid (3 cards) ───────────────────────────────────────────────────
+// ── KPI grid (4 cards) ───────────────────────────────────────────────────
 .kpiGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: $spacing-5;
 
   @media (max-width: $breakpoint-lg) {
@@ -56,42 +56,29 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   transition: box-shadow $duration-fast ease;
 
   &:hover {
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    box-shadow: var(--shadow-elevated);
   }
 }
 
-// decorative bg blob
-.kpiCardBg {
-  position: absolute;
-  top: -2rem;
-  right: -2rem;
-  width: 8rem;
-  height: 8rem;
-  border-radius: var(--radius-full);
-  opacity: 0.05;
-  pointer-events: none;
-  transition: transform $duration-base ease;
-
-  .kpiCard:hover & {
-    transform: scale(1.1);
-  }
+// Left-border accent: data-driven colour identity without generic gradients
+.kpiCardAccentPrimary {
+  border-left: 3px solid var(--color-primary);
 }
-
-.kpiCardBgPrimary {
-  background-color: var(--color-primary);
+.kpiCardAccentNeutral {
+  border-left: 3px solid var(--color-text-muted);
 }
-.kpiCardBgNeutral {
-  background-color: var(--color-text-primary);
+.kpiCardAccentSuccess {
+  border-left: 3px solid var(--color-success);
 }
-.kpiCardBgError {
-  background-color: var(--color-error);
+.kpiCardAccentError {
+  border-left: 3px solid var(--color-error);
 }
 
 .kpiTopRow {
@@ -129,14 +116,11 @@
   color: var(--color-on-error-container);
 }
 
-// kpiTrendBadge uses sub-scale gaps — component-scoped constants
-$_trend-badge-padding-y: 0.1875rem;
-
 .kpiTrendBadge {
   display: inline-flex;
   align-items: center;
   gap: $spacing-0-5;
-  padding: $_trend-badge-padding-y $spacing-2;
+  padding: $spacing-0-75 $spacing-2;
   border-radius: var(--radius-full);
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
@@ -173,7 +157,7 @@ $_trend-badge-padding-y: 0.1875rem;
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: $spacing-1 0 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
   line-height: 1.1;
 }
 
@@ -185,6 +169,40 @@ $_trend-badge-padding-y: 0.1875rem;
   height: $size-8;
   width: $size-24;
   border-radius: var(--radius-md);
+}
+
+.kpiGrowthSkeleton {
+  height: $spacing-4;
+  width: $size-28;
+  border-radius: var(--radius-sm);
+  margin-top: $spacing-1;
+}
+
+.kpiSubtext {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: $spacing-1 0 0;
+}
+
+.kpiGrowthPositive {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-success);
+  margin: $spacing-1 0 0;
+}
+
+.kpiGrowthNegative {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-error);
+  margin: $spacing-1 0 0;
+}
+
+// ── C-level analytics widgets grid ───────────────────────────────────────
+.widgetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $spacing-4;
 }
 
 // ── Charts grid (2:1) ────────────────────────────────────────────────────
@@ -200,10 +218,10 @@ $_trend-badge-padding-y: 0.1875rem;
 
 .chartCard {
   padding: $spacing-5;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
   gap: $spacing-5;
@@ -225,7 +243,7 @@ $_trend-badge-padding-y: 0.1875rem;
 
 .periodSelect {
   appearance: none;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-md;
   background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
@@ -237,16 +255,16 @@ $_trend-badge-padding-y: 0.1875rem;
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 $focus-ring-spread color-mix(in srgb, var(--color-primary) 15%, transparent);
   }
 }
 
 // ── Transactions table card ──────────────────────────────────────────────
 .transactionsCard {
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
@@ -255,7 +273,7 @@ $_trend-badge-padding-y: 0.1875rem;
   align-items: center;
   justify-content: space-between;
   padding: $spacing-4 $spacing-5;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
 }
 
@@ -303,6 +321,6 @@ $_trend-badge-padding-y: 0.1875rem;
 }
 
 .skeletonRow {
-  height: $spacing-5;
+  height: $spacing-6;
   width: 100%;
 }

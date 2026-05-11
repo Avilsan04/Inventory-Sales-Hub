@@ -2,24 +2,25 @@ import * as React from 'react';
 import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useInventory, useDeleteInventoryItem } from '@features/inventory';
-import { useInventoryFilters, PAGE_SIZE } from '@features/inventory/hooks/useInventoryFilters';
+import { useInventoryFilters, PAGE_SIZE } from '@features/inventory';
 import { PermissionGuard, useEffectiveRole } from '@features/auth';
 import { hasPermission } from '@shared/lib/permissions';
 import { toast } from '@shared/hooks/useToast';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { fromCents } from '@shared/lib/formatCurrency';
-import { Spinner, Button, Pagination, Input } from '@shared/ui/primitives';
+import { Button, Pagination, Input } from '@shared/ui/primitives';
 import { Card, ConfirmDialog, EmptyState } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
 import { InventoryTableWidget } from '@widgets/inventory';
 import { AuditLogPanel } from '@widgets/audit';
-import { InventoryCreateDialog } from '@features/inventory/components/InventoryCreateDialog';
-import { InventoryEditDialog } from '@features/inventory/components/InventoryEditDialog';
-import { StockAdjustDialog } from '@features/inventory/components/StockAdjustDialog';
-import { MovementsHistoryPanel } from '@features/inventory/components/MovementsHistoryPanel';
-import { StockTransferDialog } from '@features/inventory/components/StockTransferDialog';
-import { useWarehouses } from '@features/inventory/hooks/useWarehouses';
+import { InventoryCreateDialog } from '@features/inventory';
+import { InventoryEditDialog } from '@features/inventory';
+import { StockAdjustDialog } from '@features/inventory';
+import { MovementsHistoryPanel } from '@features/inventory';
+import { StockTransferDialog } from '@features/inventory';
+import { useWarehouses } from '@features/inventory';
 import { cn } from '@shared/lib/cn';
+import { telemetry } from '@shared/lib/observability';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Inventory.module.scss';
 
@@ -83,16 +84,12 @@ export function InventoryPage(): React.ReactElement {
     });
   };
 
-  if (isPending) {
-    return (
-      <div className={styles['placeholderContainer']} aria-busy="true" aria-live="polite">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
   if (isError) {
-    console.error('[Telemetry] Inventory fetch error:', error);
+    if (error instanceof Error) {
+      telemetry.captureException(error, { source: 'InventoryPage' });
+    } else {
+      telemetry.captureMessage('Inventory fetch error', { source: 'InventoryPage', error });
+    }
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
@@ -114,13 +111,7 @@ export function InventoryPage(): React.ReactElement {
               onChange={(e) => {
                 setWarehouseFilter(e.target.value !== '' ? e.target.value : null);
               }}
-              style={{
-                padding: '0.375rem 0.5rem',
-                border: '1px solid var(--color-border)',
-                borderRadius: '0.375rem',
-                fontSize: '0.875rem',
-                background: 'var(--color-background)',
-              }}
+              className={styles['nativeSelect']}
               aria-label={t('inventory.filterByWarehouse')}
             >
               <option value="">{t('inventory.allWarehouses')}</option>
@@ -196,7 +187,7 @@ export function InventoryPage(): React.ReactElement {
         </div>
 
         <SectionErrorBoundary label="Inventory">
-          {filtered.length === 0 ? (
+          {!isPending && filtered.length === 0 ? (
             <EmptyState
               icon={<PackageIcon size={24} />}
               title={t('inventory.emptyTitle')}
@@ -215,6 +206,7 @@ export function InventoryPage(): React.ReactElement {
           ) : (
             <InventoryTableWidget
               data={paginated}
+              isPending={isPending}
               onEdit={
                 hasPermission(role, 'create:inventory')
                   ? (item): void => {
@@ -254,15 +246,11 @@ export function InventoryPage(): React.ReactElement {
       </Card>
 
       <PermissionGuard permission="view:audit">
-        <Card className={styles['tableCard']} style={{ marginTop: '1rem' }}>
-          <div style={{ padding: '1rem 1rem 0' }}>
-            <h3
-              style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, marginBottom: '0.75rem' }}
-            >
-              {t('common.auditLog')}
-            </h3>
+        <Card className={`${styles['tableCard']} ${styles['auditCard']}`}>
+          <div className={styles['auditCardHeader']}>
+            <h3 className={styles['auditTitle']}>{t('common.auditLog')}</h3>
           </div>
-          <div style={{ padding: '0 1rem 1rem' }}>
+          <div className={styles['auditCardBody']}>
             <AuditLogPanel entityType="inventory" />
           </div>
         </Card>

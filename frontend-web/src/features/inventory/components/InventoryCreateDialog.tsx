@@ -3,7 +3,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateInventoryItem } from '@features/inventory';
-import { toCents } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
@@ -63,7 +62,15 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
 
   const onSubmit = (data: FormValues): void => {
     mutate(
-      { ...data, price: toCents(data.price) },
+      {
+        name: data.name,
+        description: data.description,
+        sku: data.sku,
+        purchasePrice: data.price,
+        salePrice: data.price,
+        quantity: data.quantity,
+        minStock: data.reorderThreshold,
+      },
       {
         onSuccess: () => {
           toast({ title: 'Item added to inventory' });

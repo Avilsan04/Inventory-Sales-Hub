@@ -5,54 +5,64 @@ interface UsePosKeyboardOptions {
   onClearSearch: () => void;
 }
 
+function isEditableElement(target: EventTarget | null): boolean {
+  const tag = ((target as HTMLElement | null)?.tagName ?? '').toLowerCase();
+  return tag === 'input' || tag === 'textarea' || tag === 'select';
+}
+
+function navigatePosCards(direction: 1 | -1, e: KeyboardEvent): void {
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-pos-product]'));
+  const idx = cards.indexOf(document.activeElement as HTMLElement);
+  const next = idx + direction;
+  if (direction === 1 && idx !== -1 && next < cards.length) {
+    e.preventDefault();
+    cards[next]?.focus();
+  } else if (direction === -1 && idx > 0) {
+    e.preventDefault();
+    cards[idx - 1]?.focus();
+  }
+}
+
+function handleNavigation(e: KeyboardEvent, editable: boolean): void {
+  if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && !editable) {
+    navigatePosCards(1, e);
+  } else if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && !editable) {
+    navigatePosCards(-1, e);
+  }
+}
+
+function createKeyHandler(
+  searchRef: React.RefObject<HTMLInputElement | null>,
+  onClearSearch: () => void
+): (e: KeyboardEvent) => void {
+  return (e: KeyboardEvent): void => {
+    const editable = isEditableElement(e.target);
+
+    if (e.key === 'F2') {
+      e.preventDefault();
+      searchRef.current?.focus();
+      return;
+    }
+
+    if (e.key === 'Escape' && editable) {
+      onClearSearch();
+      searchRef.current?.blur();
+      return;
+    }
+
+    if (e.key === 'ArrowDown' && document.activeElement === searchRef.current) {
+      e.preventDefault();
+      document.querySelector<HTMLElement>('[data-pos-product]')?.focus();
+      return;
+    }
+
+    handleNavigation(e, editable);
+  };
+}
+
 export function usePosKeyboard({ searchRef, onClearSearch }: UsePosKeyboardOptions): void {
   React.useEffect(() => {
-    const handler = (e: KeyboardEvent): void => {
-      const tag = (e.target as HTMLElement).tagName.toLowerCase();
-      const isEditable = tag === 'input' || tag === 'textarea' || tag === 'select';
-
-      if (e.key === 'F2') {
-        e.preventDefault();
-        searchRef.current?.focus();
-        return;
-      }
-
-      if (e.key === 'Escape' && isEditable) {
-        onClearSearch();
-        searchRef.current?.blur();
-        return;
-      }
-
-      // ArrowDown from search → focus first product card
-      if (e.key === 'ArrowDown' && document.activeElement === searchRef.current) {
-        e.preventDefault();
-        const first = document.querySelector<HTMLElement>('[data-pos-product]');
-        first?.focus();
-        return;
-      }
-
-      // Arrow navigation between product cards
-      if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && !isEditable) {
-        const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-pos-product]'));
-        const idx = cards.indexOf(document.activeElement as HTMLElement);
-        if (idx !== -1 && idx < cards.length - 1) {
-          e.preventDefault();
-          cards[idx + 1]?.focus();
-        }
-        return;
-      }
-
-      if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && !isEditable) {
-        const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-pos-product]'));
-        const idx = cards.indexOf(document.activeElement as HTMLElement);
-        if (idx > 0) {
-          e.preventDefault();
-          cards[idx - 1]?.focus();
-        }
-        return;
-      }
-    };
-
+    const handler = createKeyHandler(searchRef, onClearSearch);
     window.addEventListener('keydown', handler);
     return (): void => {
       window.removeEventListener('keydown', handler);

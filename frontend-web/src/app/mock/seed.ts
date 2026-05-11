@@ -2,9 +2,7 @@ import type { AppDatabase } from './db';
 import type { Product } from '@entities/product';
 import type { InventoryItem } from '@entities/inventory';
 import type { Sale } from '@entities/sale';
-import type { Customer } from '@entities/customer';
 import type { Employee } from '@entities/employee';
-import type { Supplier } from '@entities/supplier';
 import type { Notification } from '@entities/notification';
 import { generateSixMonthsSales } from './seedGenerator';
 import mockData from './mock-data.json';
@@ -40,9 +38,9 @@ export async function seed(database: AppDatabase): Promise<void> {
   // Combine existing mock sales + 6-month generated history
   const generatedSales = generateSixMonthsSales(sales.length + 1);
   await database.sales.bulkAdd([...sales, ...generatedSales]);
-  await database.customers.bulkAdd(mockData.customers as unknown as Customer[]);
+  await database.customers.bulkAdd(mockData.customers);
   await database.employees.bulkAdd(mockData.employees as unknown as Employee[]);
-  await database.suppliers.bulkAdd(mockData.suppliers as unknown as Supplier[]);
+  await database.suppliers.bulkAdd(mockData.suppliers);
 
   await database.notifications.bulkAdd(mockData.notifications as unknown as Notification[]);
 

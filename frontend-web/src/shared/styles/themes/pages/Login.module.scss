@@ -1,14 +1,5 @@
 // ── Login Page ─────────────────────────────────────────────────────────
-// Centered card on a professional SaaS-style background:
-// dot grid + two subtle radial glows stacked via CSS background-image layers.
-
-// ── Layout-scoped constants ────────────────────────────────────────────
-$_page-bg:        #f0f4ff;
-$_form-max-width: 32rem;
-$_dot-color:      rgba(100 130 200 / 0.08);
-$_dot-size:       26px;
-$_glow-a:         rgba(90 110 255 / 0.10);   // bottom-left accent
-$_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
+// Stitch "Luminous Enterprise": mesh gradient + glassmorphism blobs
 
 // ── Page Shell ─────────────────────────────────────────────────────────
 
@@ -17,26 +8,101 @@ $_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
   align-items: center;
   justify-content: center;
   min-height: $height-screen;
-
-  background-color: $_page-bg;
-
-  background-image:
-    radial-gradient(circle at 22% 88%, $_glow-a 0%, transparent 42%),
-    radial-gradient(circle at 82% 8%,  $_glow-b 0%, transparent 38%),
-    radial-gradient(circle, $_dot-color 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, $_dot-size $_dot-size;
-
   position: relative;
   overflow: hidden;
+
+  background-color: $color-auth-mesh-base;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.4) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.3) 0px, transparent 50%);
 
   :global([data-theme='dark']) & {
     background-color: var(--color-bg-primary);
     background-image:
-      radial-gradient(circle at 22% 88%, rgba(90 110 255 / 0.07) 0%, transparent 42%),
-      radial-gradient(circle at 82% 8%,  rgba(60 140 255 / 0.05) 0%, transparent 38%),
-      radial-gradient(circle, rgba(255 255 255 / 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, $_dot-size $_dot-size;
+      radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.2) 0px, transparent 50%),
+      radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.12) 0px, transparent 50%);
   }
+}
+
+// ── Decorative Glass Blobs ─────────────────────────────────────────────
+
+.glassBlob {
+  position: absolute;
+  border-radius: 50%;
+  backdrop-filter: blur($blur-2xl);
+  -webkit-backdrop-filter: blur($blur-2xl);
+  background: linear-gradient(135deg, $color-auth-glass-bg-from 0%, $color-auth-glass-bg-to 100%);
+  border: $border-width-base solid $color-auth-glass-white-border;
+  box-shadow: var(--shadow-elevated);
+  pointer-events: none;
+}
+
+.blob1 {
+  width: $size-blob-md;
+  height: $size-blob-md;
+  top: $offset-blob-sm;
+  left: $offset-blob-sm;
+  opacity: 0.8;
+  filter: blur($blur-xl);
+  mix-blend-mode: overlay;
+}
+
+.blob2 {
+  width: $size-80;
+  height: $size-80;
+  top: 25%;
+  right: -10%;
+  opacity: 0.6;
+  filter: blur($blur-md);
+}
+
+.blob3 {
+  width: $size-blob-lg;
+  height: $size-blob-lg;
+  bottom: $offset-blob-md;
+  left: 33%;
+  opacity: 0.5;
+  filter: blur($blur-xxl);
+}
+
+// ── Floating Particles ─────────────────────────────────────────────────
+
+.particle {
+  position: absolute;
+  pointer-events: none;
+}
+
+.p1 {
+  top: 33%;
+  left: 25%;
+  width: $size-4;
+  height: $size-4;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  filter: blur($blur-xs);
+}
+
+.p2 {
+  bottom: 25%;
+  right: 33%;
+  width: $size-6;
+  height: $size-6;
+  border-radius: $border-radius-sm;
+  transform: rotate(45deg);
+  background: rgba(255, 255, 255, 0.3);
+  filter: blur($blur-2xs);
+}
+
+.p3 {
+  top: 66%;
+  left: 20%;
+  width: $size-3;
+  height: $size-3;
+  border-radius: 50%;
+  background: rgba(221, 225, 255, 0.5);
+  filter: blur($blur-2xs);
 }
 
 // ── Back to Landing Button ─────────────────────────────────────────────
@@ -45,7 +111,7 @@ $_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
   position: absolute;
   top: $spacing-4;
   left: $spacing-4;
-  z-index: 1;
+  z-index: $z-base;
   display: flex;
   align-items: center;
   gap: $spacing-1;
@@ -57,7 +123,9 @@ $_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
   cursor: pointer;
   padding: $spacing-2;
   border-radius: var(--radius-md);
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 
   &:hover {
     color: var(--color-text-primary);
@@ -69,8 +137,8 @@ $_glow-b:         rgba(60 140 255 / 0.07);   // top-right accent
 
 .container {
   width: 100%;
-  max-width: $_form-max-width;
+  max-width: $container-dialog;
   padding: 0 $spacing-4;
   position: relative;
-  z-index: 1;
+  z-index: $z-base;
 }

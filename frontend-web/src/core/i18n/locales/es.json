@@ -48,7 +48,8 @@
     "items": "artículos",
     "dateRange": "Rango de fechas",
     "updating": "Actualizando…",
-    "processing": "Procesando…"
+    "processing": "Procesando…",
+    "comingSoon": "Próximamente"
   },
   "nav": {
     "home": "Inicio",
@@ -67,6 +68,7 @@
     "orders": "Pedidos",
     "shipments": "Envíos",
     "tenants": "Organizaciones",
+    "audit": "Registro de auditoría",
     "catalog": "Catálogo",
     "myOrders": "Mis Pedidos",
     "pos": "Punto de Venta",
@@ -190,7 +192,9 @@
       "monthlySales": "Ventas mensuales",
       "activeOrders": "Pedidos activos",
       "lowStock": "Stock bajo",
-      "newCustomers": "Nuevos clientes"
+      "newCustomers": "Nuevos clientes",
+      "totalCustomers": "Total clientes",
+      "vsLastMonth": "vs mes anterior"
     },
     "recentOrders": {
       "title": "Pedidos recientes",
@@ -298,7 +302,7 @@
     "totalProducts": "Total de productos",
     "totalCategories": "Categorías",
     "importCsv": "Importar CSV",
-    "newProduct": "Nuevo producto",
+    "newProduct": "Añadir nuevo producto",
     "deleteProduct": "¿Eliminar producto?",
     "isVariant": "Es variante de otro producto",
     "parentProduct": "Producto padre",
@@ -312,10 +316,12 @@
     "description": "Descripción",
     "optional": "Opcional",
     "creating": "Creando…",
-    "editProduct": "Editar producto",
+    "editProduct": "Editar detalles del producto",
     "noVariants": "Sin variantes",
     "importFromCsv": "Importar productos desde CSV",
     "csvColumnsHint": "Columnas CSV: name, sku, price, currency, description, categoryId, uom",
+    "dropCsvHere": "Arrastra tu archivo CSV aquí",
+    "orClickToSelect": "o haz clic para seleccionar",
     "csvPreviewSummary": "{{valid}} válidos · {{invalid}} con errores",
     "importComplete": "Importación completada",
     "importResultSummary": "{{success}} importados · {{failed}} fallidos",
@@ -372,7 +378,9 @@
       "maskedCard": "Tarjeta terminada en {{last4}}",
       "orderPlaced": "¡Pedido realizado!",
       "orderPlacedDesc": "Tu pedido ha sido creado correctamente.",
-      "itemsError": "Añade al menos un artículo"
+      "itemsError": "Añade al menos un artículo",
+      "platformPayments": "Plataformas digitales",
+      "comingSoon": "Próximamente"
     },
     "title": "Ventas",
     "newSale": "Nueva venta",
@@ -426,14 +434,14 @@
     "addCustomer": "Añadir cliente",
     "emptyTitle": "Sin clientes registrados",
     "emptyDescription": "Añade tu primer cliente para gestionar las relaciones",
-    "newCustomer": "Nuevo cliente",
+    "newCustomer": "Añadir nuevo cliente",
     "deleteCustomer": "¿Eliminar cliente?",
     "fullNamePlaceholder": "Nombre completo",
     "emailPlaceholder": "correo@ejemplo.com",
     "phonePlaceholder": "+34 600 000 000",
     "addressPlaceholder": "Calle Mayor, 1",
     "eyebrow": "PERSONAS",
-    "editCustomer": "Editar cliente"
+    "editCustomer": "Actualizar datos del cliente"
   },
   "employees": {
     "title": "Empleados",
@@ -442,14 +450,15 @@
     "activeEmployees": "Activos",
     "adminCount": "Administradores",
     "name": "Nombre",
+    "username": "Nombre de usuario",
     "email": "Correo electrónico",
     "role": "Rol",
     "status": "Estado",
     "active": "Activo",
     "inactive": "Inactivo",
     "addEmployee": "+ Añadir empleado",
-    "newEmployee": "Nuevo empleado",
-    "editEmployee": "Editar empleado",
+    "newEmployee": "Añadir nuevo empleado",
+    "editEmployee": "Actualizar datos del empleado",
     "emailPlaceholder": "empleado@empresa.com",
     "roles": {
       "admin": "Administrador",
@@ -467,8 +476,8 @@
     "contactPerson": "Persona de contacto",
     "addSupplier": "+ Añadir proveedor",
     "deleteSupplier": "¿Eliminar proveedor?",
-    "newSupplier": "Nuevo proveedor",
-    "editSupplier": "Editar proveedor",
+    "newSupplier": "Añadir nuevo proveedor",
+    "editSupplier": "Actualizar datos del proveedor",
     "companyName": "Nombre de empresa",
     "companyNamePlaceholder": "Acme Corp",
     "emailPlaceholder": "pedidos@proveedor.com",
@@ -519,6 +528,10 @@
     "unread": "{{count}} sin leer",
     "markAllRead": "Marcar todo como leído",
     "noNotifications": "No hay notificaciones",
+    "groupToday": "Hoy",
+    "groupYesterday": "Ayer",
+    "groupThisWeek": "Esta semana",
+    "groupOlder": "Anteriores",
     "types": {
       "info": "Info",
       "warning": "Aviso",
@@ -623,6 +636,119 @@
     "subtitle": "Consulta el historial y estado de tus pedidos.",
     "emptyTitle": "Sin pedidos todavía",
     "emptyDescription": "Tus pedidos realizados aparecerán aquí."
+  },
+  "customerDashboard": {
+    "greeting": "Hola",
+    "kpi": {
+      "totalOrders": "Pedidos totales",
+      "completed": "Entregados",
+      "pending": "En proceso",
+      "totalSpent": "Total gastado"
+    },
+    "recentOrders": "Pedidos recientes",
+    "featuredProducts": "Productos destacados",
+    "actions": {
+      "browseStore": "Explorar tienda",
+      "browseStoreDesc": "Descubre nuevos productos",
+      "myOrdersDesc": "Consulta todos tus pedidos",
+      "cartDesc": "Continúa tu compra"
+    }
+  },
+  "companyDashboard": {
+    "greeting": "Bienvenido",
+    "kpi": {
+      "revenue": "Ingresos totales",
+      "orders": "Pedidos totales",
+      "customers": "Clientes totales",
+      "employees": "Empleados activos",
+      "employeesOf": "de {{total}} en total"
+    },
+    "revenueChart": "Ingresos — últimos 12 meses",
+    "topProducts": "Productos más vendidos",
+    "topCustomers": "Mejores clientes",
+    "cols": {
+      "product": "Producto",
+      "sold": "Unidades vendidas",
+      "revenue": "Ingresos",
+      "customer": "Cliente",
+      "orders": "Pedidos",
+      "spent": "Total gastado"
+    },
+    "actions": {
+      "analytics": "Analítica",
+      "analyticsDesc": "Informes de rendimiento e ingresos",
+      "employees": "Empleados",
+      "employeesDesc": "Gestiona tu equipo",
+      "suppliers": "Proveedores",
+      "suppliersDesc": "Gestiona tus proveedores"
+    }
+  },
+  "managerDashboard": {
+    "greeting": "Buenos días",
+    "kpi": {
+      "weeklyRevenue": "Ingresos semanales",
+      "weeklyOrders": "Pedidos semanales",
+      "pendingOrders": "Pedidos pendientes",
+      "completedOrders": "{{count}} completados",
+      "team": "Equipo activo",
+      "teamOf": "de {{total}} empleados"
+    },
+    "salesTrend": "Tendencia de ventas (7 días)",
+    "salesByStatus": "Ventas por estado",
+    "stockAlerts": "Alertas de stock bajo",
+    "recentSales": "Ventas recientes"
+  },
+  "staffDashboard": {
+    "greeting": "Bienvenido",
+    "session": {
+      "title": "Sesión de turno",
+      "open": "Abierto",
+      "closed": "Cerrado",
+      "openedAt": "Abierto a las {{time}}",
+      "noSession": "Sin sesión abierta",
+      "expectedBalance": "Saldo esperado",
+      "openedWith": "Abierto con: {{amount}}",
+      "openShift": "Abrir turno",
+      "closeShift": "Cerrar turno",
+      "closePreviousShift": "Cerrar turno anterior",
+      "staleWarning": "Sesión de un día anterior"
+    },
+    "kpi": {
+      "sessionRevenue": "Ingresos del turno",
+      "sessionOrders": "pedidos en este turno",
+      "lowStock": "Alertas de stock"
+    },
+    "recentSales": "Ventas recientes",
+    "stockAlerts": "Stock crítico",
+    "actions": {
+      "pos": "Punto de venta",
+      "posDesc": "Abrir la caja registradora",
+      "sales": "Mis ventas",
+      "salesDesc": "Ver tus transacciones",
+      "inventory": "Inventario",
+      "inventoryDesc": "Consultar niveles de stock"
+    }
+  },
+  "audit": {
+    "title": "Registro de auditoría",
+    "subtitle": "Historial de actividad del sistema",
+    "loadMore": "Cargar más",
+    "cols": {
+      "timestamp": "Fecha y hora",
+      "user": "Usuario",
+      "action": "Acción",
+      "entity": "Entidad",
+      "details": "Detalles"
+    },
+    "actions": {
+      "create": "Crear",
+      "update": "Actualizar",
+      "delete": "Eliminar",
+      "adjust_stock": "Ajuste de stock",
+      "status_change": "Cambio de estado",
+      "login": "Inicio de sesión",
+      "logout": "Cierre de sesión"
+    }
   },
   "settings": {
     "nav": {

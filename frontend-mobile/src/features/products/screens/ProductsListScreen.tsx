@@ -21,9 +21,9 @@ export default function ProductsListScreen({ navigation }: Props) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
-  const { addToCart, itemCount } = useCart();
+  const { addToCart } = useCart();
 
-  const fetch = async () => {
+  const fetchProducts = async () => {
     try {
       const data = await productsApi.getAll();
       setProducts(data);
@@ -32,10 +32,13 @@ export default function ProductsListScreen({ navigation }: Props) {
     finally { setLoading(false); setRefreshing(false); }
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => { fetchProducts(); }, []);
+
   useEffect(() => {
     const q = search.toLowerCase();
-    setFiltered(products.filter(p => p.name.toLowerCase().includes(q) || p.categoryName.toLowerCase().includes(q)));
+    setFiltered(products.filter(p =>
+      p.name.toLowerCase().includes(q) || p.categoryName.toLowerCase().includes(q)
+    ));
   }, [search, products]);
 
   if (loading) return <View style={s.center}><ActivityIndicator size="large" color="#6366f1" /></View>;
@@ -46,18 +49,32 @@ export default function ProductsListScreen({ navigation }: Props) {
         <Text style={s.heroTitle}>Inventory Sales Hub</Text>
         <Text style={s.heroSub}>Tu marketplace de confianza</Text>
       </View>
-      <TextInput style={s.search} placeholder="Buscar..." placeholderTextColor="#9ca3af"
-        value={search} onChangeText={setSearch} />
+      <TextInput
+        style={s.search}
+        placeholder="Buscar..."
+        placeholderTextColor="#9ca3af"
+        value={search}
+        onChangeText={setSearch}
+      />
       <FlatList
         data={filtered}
         keyExtractor={i => i.id.toString()}
         numColumns={2}
         columnWrapperStyle={s.row}
         contentContainerStyle={s.list}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetch(); }} colors={['#6366f1']} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => { setRefreshing(true); fetchProducts(); }}
+            colors={['#6366f1']}
+          />
+        }
         ListEmptyComponent={<Text style={s.empty}>Sin productos</Text>}
         renderItem={({ item }) => (
-          <TouchableOpacity style={s.card} onPress={() => navigation.navigate('ProductDetail', { productId: item.id })} activeOpacity={0.85}>
+          <TouchableOpacity
+            style={s.card}
+            onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+            activeOpacity={0.85}>
             {item.imageUrl
               ? <Image source={{ uri: item.imageUrl }} style={s.img} resizeMode="cover" />
               : <View style={s.imgPlaceholder}><Text style={s.imgPlaceholderText}>📦</Text></View>}

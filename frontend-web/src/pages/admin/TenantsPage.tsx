@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { BuildingIcon, CheckCircle2Icon, BanIcon, DollarSignIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useTenants, useActivateTenant, useSuspendTenant, useImpersonation } from '@features/admin';
 import { useAdminMetrics } from '@features/admin';
 import { toast } from '@shared/hooks/useToast';
 import { Spinner } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardAction, CardContent } from '@shared/ui/composed';
-import { TenantTable } from '@features/admin/components/TenantTable';
+import { TenantTable } from '@features/admin';
 import { SectionErrorBoundary } from '@app/providers';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
@@ -65,7 +66,6 @@ export function TenantsPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div>
-          <span className={styles['eyebrow']}>SUPER ADMIN</span>
           <h1 className={styles['title']}>{t('admin.title')}</h1>
           <p className={styles['subtitle']}>{t('admin.subtitle')}</p>
         </div>
@@ -79,7 +79,7 @@ export function TenantsPage(): React.ReactElement {
                 {t('admin.metrics.totalTenants')}
               </CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>🏢</span>
+                <BuildingIcon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -92,7 +92,7 @@ export function TenantsPage(): React.ReactElement {
                 {t('admin.metrics.activeTenants')}
               </CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>✅</span>
+                <CheckCircle2Icon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -105,7 +105,7 @@ export function TenantsPage(): React.ReactElement {
                 {t('admin.metrics.suspendedTenants')}
               </CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>⛔</span>
+                <BanIcon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>
@@ -116,7 +116,7 @@ export function TenantsPage(): React.ReactElement {
             <CardHeader>
               <CardTitle className={styles['statTitle']}>{t('admin.metrics.mrr')}</CardTitle>
               <CardAction>
-                <span className={styles['statIcon']}>💰</span>
+                <DollarSignIcon className={styles['statIcon']} aria-hidden="true" />
               </CardAction>
             </CardHeader>
             <CardContent>

@@ -12,16 +12,19 @@ import type {
   SalesAnalyticsParams,
 } from '@entities/analytics';
 
+import { withTenant } from '@core/api/queryKeys';
+
 export const analyticsKeys = {
-  all: ['analytics'] as const,
-  dashboard: () => [...analyticsKeys.all, 'dashboard'] as const,
-  sales: (params?: SalesAnalyticsParams) => [...analyticsKeys.all, 'sales', params] as const,
-  topProducts: () => [...analyticsKeys.all, 'top-products'] as const,
-  topCustomers: () => [...analyticsKeys.all, 'top-customers'] as const,
-  inventoryValue: () => [...analyticsKeys.all, 'inventory-value'] as const,
-  lowStockAlerts: () => [...analyticsKeys.all, 'low-stock-alerts'] as const,
-  cashFlow: () => [...analyticsKeys.all, 'cash-flow'] as const,
-  wasteAlerts: () => [...analyticsKeys.all, 'waste-alerts'] as const,
+  all: (): readonly unknown[] => withTenant(['analytics'] as const),
+  dashboard: (): readonly unknown[] => withTenant(['analytics', 'dashboard'] as const),
+  sales: (params?: SalesAnalyticsParams): readonly unknown[] =>
+    withTenant(['analytics', 'sales', params] as const),
+  topProducts: (): readonly unknown[] => withTenant(['analytics', 'top-products'] as const),
+  topCustomers: (): readonly unknown[] => withTenant(['analytics', 'top-customers'] as const),
+  inventoryValue: (): readonly unknown[] => withTenant(['analytics', 'inventory-value'] as const),
+  lowStockAlerts: (): readonly unknown[] => withTenant(['analytics', 'low-stock-alerts'] as const),
+  cashFlow: (): readonly unknown[] => withTenant(['analytics', 'cash-flow'] as const),
+  wasteAlerts: (): readonly unknown[] => withTenant(['analytics', 'waste-alerts'] as const),
 };
 
 export function useDashboardKpi(): UseQueryResult<DashboardKpi> {

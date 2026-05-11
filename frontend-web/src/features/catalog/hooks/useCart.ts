@@ -1,7 +1,9 @@
-import * as React from 'react';
+import { useCartStore } from '@features/sales';
 
+/** Catalog-facing CartItem shape (name/price instead of productName/unitPrice). */
 export interface CartItem {
   productId: string;
+  sku: string;
   name: string;
   price: number;
   currency: string;
@@ -20,25 +22,47 @@ export interface CartActions {
   clearCart: () => void;
 }
 
-export const CART_KEY = 'catalog_cart';
-
-export function loadCart(): CartItem[] {
-  try {
-    const raw = sessionStorage.getItem(CART_KEY);
-    return raw !== null ? (JSON.parse(raw) as CartItem[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveCart(items: CartItem[]): void {
-  sessionStorage.setItem(CART_KEY, JSON.stringify(items));
-}
-
-export const CartContext = React.createContext<(CartState & CartActions) | null>(null);
-
+/**
+ * Catalog adapter over the unified Zustand cart store.
+ * Translates between the catalog's (name/price) interface and
+ * the store's (productName/unitPrice) interface so catalog components
+ * need no changes.
+ */
 export function useCart(): CartState & CartActions {
-  const ctx = React.useContext(CartContext);
-  if (ctx === null) throw new Error('useCart must be used within CartProvider');
-  return ctx;
+  const store = useCartStore();
+
+  const items: CartItem[] = store.items.map((i) => ({
+    productId: i.productId,
+    sku: i.sku,
+    name: i.productName,
+    price: i.unitPrice,
+    currency: i.currency,
+    quantity: i.quantity,
+    maxStock: i.maxStock,
+  }));
+
+  const addItem = (item: Omit<CartItem, 'quantity'>): void => {
+    store.addItem({
+      productId: item.productId,
+      productName: item.name,
+      sku: item.sku,
+      unitPrice: item.price,
+      currency: item.currency,
+      maxStock: item.maxStock,
+    });
+  };
+
+  const updateQuantity = (productId: string, quantity: number): void => {
+    const current = store.items.find((i) => i.productId === productId);
+    const delta = quantity - (current?.quantity ?? 0);
+    if (delta !== 0) store.changeQty(productId, delta);
+  };
+
+  return {
+    items,
+    addItem,
+    removeItem: store.removeItem,
+    updateQuantity,
+    clearCart: store.clearCart,
+  };
 }

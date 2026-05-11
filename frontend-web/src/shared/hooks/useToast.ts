@@ -1,8 +1,10 @@
 // shadcn/ui toast pattern
 import * as React from 'react';
-import type { ToastActionElement, ToastProps } from '@shared/ui/composed/Toast';
+import type { ToastActionElement, ToastProps } from '@shared/ui';
 import { TIMING } from '@core/config/timing';
 
+// Single-toast design: each new notification replaces the previous one.
+// Prevents cognitive overload in POS/operational contexts where rapid actions are common.
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = TIMING.TOAST_DISPLAY_MS;
 
@@ -102,6 +104,8 @@ interface ToastReturn {
 
 export function toast(props: ToastInput): ToastReturn {
   const id = genId();
+  const duration = props.variant === 'destructive' ? Infinity : 2500;
+
   const update = (updateProps: Partial<ToasterToast>): void => {
     dispatch({ type: 'UPDATE_TOAST', toast: { ...updateProps, id } });
   };
@@ -115,6 +119,7 @@ export function toast(props: ToastInput): ToastReturn {
     toast: {
       ...props,
       id,
+      duration,
       open: true,
       onOpenChange: (open: boolean) => {
         if (!open) {
@@ -138,7 +143,7 @@ export function useToast(): State & { toast: typeof toast; dismiss: (toastId?: s
         listeners.splice(index, 1);
       }
     };
-  }, [state]);
+  }, []);
 
   return {
     ...state,

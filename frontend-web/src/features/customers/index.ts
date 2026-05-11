@@ -3,3 +3,6 @@ export { useCustomer } from './hooks/useCustomer';
 export { useCreateCustomer } from './hooks/useCreateCustomer';
 export { useUpdateCustomer } from './hooks/useUpdateCustomer';
 export { useDeleteCustomer } from './hooks/useDeleteCustomer';
+
+export { CustomerCreateDialog } from './components/CustomerCreateDialog';
+export { CustomerEditDialog } from './components/CustomerEditDialog';

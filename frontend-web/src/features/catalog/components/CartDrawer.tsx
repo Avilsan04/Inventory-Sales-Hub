@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { ShoppingCartIcon } from 'lucide-react';
-import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { Button } from '@shared/ui/primitives';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useTranslationAdapter } from '@adapters';
+import { useRoutingAdapter } from '@adapters';
+import { Button } from '@shared/ui';
+import { formatCurrency } from '@shared/lib';
+import { APP_ROUTES } from '@shared/config';
 import {
   Sheet,
   SheetTrigger,
@@ -10,39 +12,36 @@ import {
   SheetHeader,
   SheetTitle,
   SheetFooter,
-} from '@shared/ui/composed';
+} from '@shared/ui';
 import { CartItem } from './CartItem';
 import { useCart } from '../hooks/useCart';
+import styles from './CartDrawer.module.scss';
 
 export function CartDrawer(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { navigateTo } = useRoutingAdapter();
   const { items, clearCart } = useCart();
+
+  const [sheetOpen, setSheetOpen] = React.useState(false);
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const currency = items[0]?.currency ?? 'EUR';
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
+  const handleGoToCheckout = (): void => {
+    setSheetOpen(false);
+    navigateTo(APP_ROUTES.POS);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" style={{ position: 'relative' }}>
+        <Button variant="outline" size="sm" className={styles['trigger']}>
           <ShoppingCartIcon size={16} />
           {itemCount > 0 && (
             <span
-              style={{
-                position: 'absolute',
-                top: '-6px',
-                right: '-6px',
-                background: 'var(--color-primary)',
-                color: 'var(--color-primary-fg)',
-                borderRadius: '9999px',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                padding: '0 0.3rem',
-                lineHeight: '1.4',
-                minWidth: '1.1rem',
-                textAlign: 'center',
-              }}
+              className={styles['badge']}
+              aria-label={`${String(itemCount)} ${t('catalog.cart')}`}
             >
               {itemCount}
             </span>
@@ -58,26 +57,24 @@ export function CartDrawer(): React.ReactElement {
           </SheetTitle>
         </SheetHeader>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '0 1rem' }}>
+        <div className={styles['body']}>
           {items.length === 0 ? (
-            <div
-              style={{ textAlign: 'center', color: 'var(--color-text-muted)', padding: '2rem 0' }}
-            >
-              {t('catalog.emptyCart')}
-            </div>
+            <div className={styles['emptyState']}>{t('catalog.emptyCart')}</div>
           ) : (
             items.map((item) => <CartItem key={item.productId} item={item} />)
           )}
         </div>
 
         {items.length > 0 && (
-          <SheetFooter style={{ flexDirection: 'column', gap: '0.75rem', padding: '1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+          <SheetFooter className={styles['footer']}>
+            <div className={styles['total']}>
               <span>{t('catalog.total')}</span>
               <span>{formatCurrency(total, currency)}</span>
             </div>
-            <Button style={{ width: '100%' }}>{t('catalog.checkout')}</Button>
-            <Button variant="ghost" size="sm" onClick={clearCart} style={{ width: '100%' }}>
+            <Button className={styles['fullWidth']} onClick={handleGoToCheckout}>
+              {t('catalog.checkout')}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={clearCart} className={styles['fullWidth']}>
               {t('catalog.clearCart')}
             </Button>
           </SheetFooter>

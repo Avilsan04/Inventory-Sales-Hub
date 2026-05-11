@@ -2,35 +2,29 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { UserIcon, KeyIcon } from 'lucide-react';
+import { UserIcon, ShieldIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useAuthMe } from '@features/auth';
-import { useUpdateProfile } from '@features/auth/hooks/useUpdateProfile';
-import { useChangePassword } from '@features/auth/hooks/useChangePassword';
+import { useAuthMe, useUpdateProfile, useChangePassword } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
-import { Spinner, Button, Input, Badge } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardContent, FormField } from '@shared/ui/composed';
+import { Spinner, Button, Input, Badge } from '@shared/ui';
+import { Card, CardHeader, CardTitle, CardContent, FormField } from '@shared/ui';
 import baseStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Profile.module.scss';
 
 type RoleKey = 'admin' | 'manager' | 'staff';
 
-function roleBadgeVariant(role: RoleKey): 'default' | 'secondary' | 'outline' {
-  const map: Record<RoleKey, 'default' | 'secondary' | 'outline'> = {
-    admin: 'default',
-    manager: 'secondary',
-    staff: 'outline',
-  };
-  return map[role];
-}
+const ROLE_BADGE_MAP: Record<RoleKey, 'default' | 'secondary' | 'outline'> = {
+  admin: 'default',
+  manager: 'secondary',
+  staff: 'outline',
+};
 
-export function ProfilePage(): React.ReactElement {
+function ProfileInfoForm(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: user, isLoading, isError } = useAuthMe();
-  const { mutate: updateProfile, isPending: updatingProfile } = useUpdateProfile();
-  const { mutate: changePassword, isPending: changingPassword } = useChangePassword();
+  const { data: user } = useAuthMe();
+  const { mutate: updateProfile, isPending } = useUpdateProfile();
 
-  const profileSchema = React.useMemo(
+  const schema = React.useMemo(
     () =>
       z.object({
         username: z.string().min(2, t('profile.validationMinName')),
@@ -39,7 +33,69 @@ export function ProfilePage(): React.ReactElement {
     [t]
   );
 
-  const passwordSchema = React.useMemo(
+  type Values = z.infer<typeof schema>;
+
+  const form = useForm<Values>({
+    mode: 'onTouched',
+    resolver: zodResolver(schema),
+    defaultValues: { username: user?.username ?? '', email: user?.email ?? '' },
+  });
+
+  React.useEffect(() => {
+    if (user !== undefined) form.reset({ username: user.username, email: user.email });
+  }, [user, form]);
+
+  const onSubmit = (data: Values): void => {
+    updateProfile(data, {
+      onSuccess: (): void => {
+        toast({ title: 'Profile updated' });
+      },
+      onError: (err): void => {
+        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+      },
+    });
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <form
+          onSubmit={(e: React.SyntheticEvent): void => {
+            void form.handleSubmit(onSubmit)(e);
+          }}
+        >
+          <div className={styles['formBody']}>
+            <FormField
+              label={t('auth.username')}
+              required
+              error={form.formState.errors.username?.message}
+            >
+              <Input {...form.register('username')} />
+            </FormField>
+            <FormField
+              label={t('auth.email')}
+              required
+              error={form.formState.errors.email?.message}
+            >
+              <Input {...form.register('email')} type="email" />
+            </FormField>
+            <div className={styles['formActions']}>
+              <Button type="submit" size="sm" disabled={isPending}>
+                {isPending ? t('profile.savingChanges') : t('common.saveChanges')}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ProfileSecurityForm(): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+  const { mutate: changePassword, isPending } = useChangePassword();
+
+  const schema = React.useMemo(
     () =>
       z
         .object({
@@ -54,52 +110,75 @@ export function ProfilePage(): React.ReactElement {
     [t]
   );
 
-  type ProfileValues = z.infer<typeof profileSchema>;
-  type PasswordValues = z.infer<typeof passwordSchema>;
+  type Values = z.infer<typeof schema>;
 
-  const profileForm = useForm<ProfileValues>({
+  const form = useForm<Values>({
     mode: 'onTouched',
-    resolver: zodResolver(profileSchema),
-    defaultValues: { username: '', email: '' },
-  });
-
-  const passwordForm = useForm<PasswordValues>({
-    mode: 'onTouched',
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolver(schema),
     defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' },
   });
 
-  React.useEffect(() => {
-    if (user !== undefined) {
-      profileForm.reset({ username: user.username, email: user.email });
-    }
-  }, [user, profileForm]);
-
-  const onSubmitProfile = (data: ProfileValues): void => {
-    updateProfile(data, {
-      onSuccess: () => {
-        toast({ title: 'Profile updated' });
-      },
-      onError: (err) => {
-        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
-      },
-    });
-  };
-
-  const onSubmitPassword = (data: PasswordValues): void => {
+  const onSubmit = (data: Values): void => {
     changePassword(
       { currentPassword: data.currentPassword, newPassword: data.newPassword },
       {
-        onSuccess: () => {
+        onSuccess: (): void => {
           toast({ title: 'Password changed' });
-          passwordForm.reset();
+          form.reset();
         },
-        onError: (err) => {
+        onError: (err): void => {
           toast({ title: 'Change failed', description: err.message, variant: 'destructive' });
         },
       }
     );
   };
+
+  return (
+    <Card>
+      <CardContent>
+        <form
+          onSubmit={(e: React.SyntheticEvent): void => {
+            void form.handleSubmit(onSubmit)(e);
+          }}
+        >
+          <div className={styles['formBody']}>
+            <FormField
+              label={t('profile.currentPassword')}
+              required
+              error={form.formState.errors.currentPassword?.message}
+            >
+              <Input {...form.register('currentPassword')} type="password" />
+            </FormField>
+            <FormField
+              label={t('profile.newPassword')}
+              required
+              error={form.formState.errors.newPassword?.message}
+            >
+              <Input {...form.register('newPassword')} type="password" />
+            </FormField>
+            <FormField
+              label={t('profile.confirmNewPassword')}
+              required
+              error={form.formState.errors.confirmPassword?.message}
+            >
+              <Input {...form.register('confirmPassword')} type="password" />
+            </FormField>
+            <div className={styles['formActions']}>
+              <Button type="submit" size="sm" disabled={isPending}>
+                {isPending ? t('profile.changingPassword') : t('profile.changePassword')}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function ProfilePage(): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+  const { data: user, isLoading, isError } = useAuthMe();
+  const [formTab, setFormTab] = React.useState<'info' | 'security'>('info');
 
   if (isLoading) {
     return (
@@ -128,107 +207,54 @@ export function ProfilePage(): React.ReactElement {
       <header className={baseStyles['header']}>
         <h1 className={baseStyles['title']}>{t('nav.profile')}</h1>
       </header>
-
-      <div className={styles['sections']}>
-        <Card>
-          <CardHeader>
-            <CardTitle className={styles['cardTitleInner']}>
-              <UserIcon size={18} aria-hidden="true" />
-              {user.username}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className={styles['identityMeta']}>
-              <span>{user.email}</span>
-              <Badge variant={roleBadgeVariant(user.role as RoleKey)}>
-                {roleLabels[user.role as RoleKey]}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className={styles['cardTitleInner']}>
-              <UserIcon size={18} aria-hidden="true" />
+      <div className={styles['profileLayout']}>
+        <div className={styles['identityCol']}>
+          <Card>
+            <CardHeader>
+              <CardTitle className={styles['cardTitleInner']}>
+                <UserIcon size={18} aria-hidden="true" />
+                {user.username}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className={styles['identityMeta']}>
+                <span>{user.email}</span>
+                <Badge variant={ROLE_BADGE_MAP[user.role as RoleKey]}>
+                  {roleLabels[user.role as RoleKey]}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className={styles['formsCol']}>
+          <div className={styles['formTabs']} role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={formTab === 'info'}
+              onClick={(): void => {
+                setFormTab('info');
+              }}
+              className={`${styles['formTab']}${formTab === 'info' ? ` ${styles['formTabActive']}` : ''}`}
+            >
+              <UserIcon size={14} aria-hidden="true" />
               {t('profile.editProfile')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form
-              onSubmit={(e: React.SyntheticEvent) => {
-                void profileForm.handleSubmit(onSubmitProfile)(e);
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={formTab === 'security'}
+              onClick={(): void => {
+                setFormTab('security');
               }}
+              className={`${styles['formTab']}${formTab === 'security' ? ` ${styles['formTabActive']}` : ''}`}
             >
-              <div className={styles['formBody']}>
-                <FormField
-                  label={t('auth.username')}
-                  required
-                  error={profileForm.formState.errors.username?.message}
-                >
-                  <Input {...profileForm.register('username')} />
-                </FormField>
-                <FormField
-                  label={t('auth.email')}
-                  required
-                  error={profileForm.formState.errors.email?.message}
-                >
-                  <Input {...profileForm.register('email')} type="email" />
-                </FormField>
-                <div className={styles['formActions']}>
-                  <Button type="submit" size="sm" disabled={updatingProfile}>
-                    {updatingProfile ? t('profile.savingChanges') : t('common.saveChanges')}
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className={styles['cardTitleInner']}>
-              <KeyIcon size={18} aria-hidden="true" />
+              <ShieldIcon size={14} aria-hidden="true" />
               {t('profile.changePassword')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form
-              onSubmit={(e: React.SyntheticEvent) => {
-                void passwordForm.handleSubmit(onSubmitPassword)(e);
-              }}
-            >
-              <div className={styles['formBody']}>
-                <FormField
-                  label={t('profile.currentPassword')}
-                  required
-                  error={passwordForm.formState.errors.currentPassword?.message}
-                >
-                  <Input {...passwordForm.register('currentPassword')} type="password" />
-                </FormField>
-                <FormField
-                  label={t('profile.newPassword')}
-                  required
-                  error={passwordForm.formState.errors.newPassword?.message}
-                >
-                  <Input {...passwordForm.register('newPassword')} type="password" />
-                </FormField>
-                <FormField
-                  label={t('profile.confirmNewPassword')}
-                  required
-                  error={passwordForm.formState.errors.confirmPassword?.message}
-                >
-                  <Input {...passwordForm.register('confirmPassword')} type="password" />
-                </FormField>
-                <div className={styles['formActions']}>
-                  <Button type="submit" size="sm" disabled={changingPassword}>
-                    {changingPassword ? t('profile.changingPassword') : t('profile.changePassword')}
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+            </button>
+          </div>
+          {formTab === 'info' ? <ProfileInfoForm /> : <ProfileSecurityForm />}
+        </div>
       </div>
     </div>
   );

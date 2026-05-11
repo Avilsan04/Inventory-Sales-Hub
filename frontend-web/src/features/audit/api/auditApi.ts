@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import { parseOrThrow } from '@core/api/parseOrThrow';
 import { auditLogsSchema } from '@entities/audit';
 import type { AuditLog, AuditEntityType } from '@entities/audit';
 
@@ -10,6 +11,6 @@ export const auditApi = {
     const res = await httpClient.get<unknown>('/audit', {
       params: params as Record<string, unknown>,
     });
-    return auditLogsSchema.parse(res);
+    return parseOrThrow(auditLogsSchema, res);
   },
 };

@@ -1,20 +1,35 @@
 import * as React from 'react';
-import { SunIcon, MoonIcon, GlobeIcon } from 'lucide-react';
+import { SunIcon, MoonIcon, ChevronDownIcon } from 'lucide-react';
 
 import { useTheme } from '@shared/hooks/useTheme';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
-import { useLanguageAdapter } from '@shared/adapters/useLanguageAdapter';
-import { useDependencies } from '@shared/hooks/useDependencies';
+import { useLanguageAdapter, type Language } from '@shared/adapters/useLanguageAdapter';
 import { Button } from '@shared/ui/primitives';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@shared/ui/composed';
 import { APP_ROUTES } from '@shared/config/routes';
-import { TEST_CREDENTIALS } from '@features/auth/models/auth.constants';
+import { activateDemoMode } from '@features/auth';
 
 import { HeroSection } from './sections/HeroSection';
 import { FeaturesSection } from './sections/FeaturesSection';
 import { AnalyticsSection } from './sections/AnalyticsSection';
 import { TrustedBySection } from './sections/TrustedBySection';
 import styles from '@shared/styles/themes/pages/Landing.module.scss';
+
+const LANGUAGE_OPTIONS: { value: Language; label: string; flag: string }[] = [
+  { value: 'en', label: 'English', flag: '/flags/en.svg' },
+  { value: 'es', label: 'Español', flag: '/flags/es.svg' },
+];
+
+const LANGUAGE_MAP: Record<Language, { label: string; flag: string }> = {
+  en: { label: 'English', flag: '/flags/en.svg' },
+  es: { label: 'Español', flag: '/flags/es.svg' },
+};
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -23,23 +38,14 @@ export function LandingPage(): React.ReactElement {
   const { navigateTo } = useRoutingAdapter();
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
-  const { authService } = useDependencies();
-
-  const [isTestModeLoading, setIsTestModeLoading] = React.useState(false);
-
+  const current = LANGUAGE_MAP[language];
   const handleNavigateToLogin = React.useCallback((): void => {
     navigateTo(APP_ROUTES.LOGIN);
   }, [navigateTo]);
 
-  const handleTestMode = React.useCallback(async (): Promise<void> => {
-    setIsTestModeLoading(true);
-    try {
-      await authService.login(TEST_CREDENTIALS);
-      navigateTo(APP_ROUTES.DASHBOARD);
-    } finally {
-      setIsTestModeLoading(false);
-    }
-  }, [authService, navigateTo]);
+  const handleTestMode = React.useCallback((): void => {
+    activateDemoMode();
+  }, []);
 
   const handleScrollToTop = React.useCallback((e: React.MouseEvent | React.KeyboardEvent): void => {
     e.preventDefault();
@@ -137,16 +143,33 @@ export function LandingPage(): React.ReactElement {
           </button>
 
           <div className={styles['navbarActions']}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleLanguage}
-              aria-label={translate('common.switchLanguage')}
-              className={styles['langButton']}
-            >
-              <GlobeIcon aria-hidden="true" />
-              <span>{language === 'en' ? 'ES' : 'EN'}</span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className={styles['langBtn']}
+                  aria-label={translate('common.switchLanguage')}
+                >
+                  <img src={current.flag} alt={current.label} className={styles['langFlag']} />
+                  <span>{language.toUpperCase()}</span>
+                  <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" style={{ minWidth: '130px' }}>
+                {LANGUAGE_OPTIONS.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.value}
+                    onClick={() => {
+                      if (lang.value !== language) toggleLanguage();
+                    }}
+                    className={lang.value === language ? styles['langItemActive'] : undefined}
+                  >
+                    <img src={lang.flag} alt={lang.label} className={styles['langFlag']} />
+                    <span>{lang.label}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant="ghost"
               size="icon-sm"
@@ -163,13 +186,7 @@ export function LandingPage(): React.ReactElement {
       </header>
 
       <main className={styles['main']}>
-        <HeroSection
-          onGetStarted={handleNavigateToLogin}
-          onTestMode={() => {
-            void handleTestMode();
-          }}
-          isTestModeLoading={isTestModeLoading}
-        />
+        <HeroSection onGetStarted={handleNavigateToLogin} onTestMode={handleTestMode} />
         <FeaturesSection />
         <AnalyticsSection />
         <TrustedBySection />

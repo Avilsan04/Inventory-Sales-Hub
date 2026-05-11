@@ -57,7 +57,6 @@ export default function CartScreen() {
           </View>
         )}
       />
-
       <View style={s.footer}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 }}>
           <Text style={s.totalLabel}>{itemCount} artículo{itemCount !== 1 ? 's' : ''}</Text>
@@ -77,18 +76,15 @@ const s = StyleSheet.create({
   emptyText: { fontSize: 18, fontWeight: '600', color: '#374151', marginTop: 12 },
   emptySub: { fontSize: 14, color: '#9ca3af' },
   list: { padding: 14 },
-  item: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 10,
-    flexDirection: 'row', alignItems: 'center', elevation: 2 },
+  item: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 2 },
   itemName: { fontSize: 14, fontWeight: '600', color: '#111827', marginBottom: 4 },
   itemPrice: { fontSize: 16, fontWeight: '700', color: '#059669' },
   itemUnit: { fontSize: 11, color: '#9ca3af' },
   controls: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  ctrl: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#eef2ff',
-    justifyContent: 'center', alignItems: 'center' },
+  ctrl: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#eef2ff', justifyContent: 'center', alignItems: 'center' },
   ctrlTxt: { fontSize: 16, color: '#6366f1', fontWeight: '700' },
   qty: { fontSize: 15, fontWeight: '700', color: '#111827', minWidth: 20, textAlign: 'center' },
-  del: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#fef2f2',
-    justifyContent: 'center', alignItems: 'center', marginLeft: 4 },
+  del: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#fef2f2', justifyContent: 'center', alignItems: 'center', marginLeft: 4 },
   footer: { backgroundColor: '#fff', padding: 20, borderTopWidth: 1, borderTopColor: '#e5e7eb' },
   totalLabel: { fontSize: 15, color: '#6b7280' },
   total: { fontSize: 20, fontWeight: '700', color: '#111827' },

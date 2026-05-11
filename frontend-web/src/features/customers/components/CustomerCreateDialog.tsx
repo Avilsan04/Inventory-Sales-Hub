@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CheckIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -33,6 +34,7 @@ interface Props {
 export function CustomerCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateCustomer();
+  const [saved, setSaved] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -45,6 +47,7 @@ export function CustomerCreateDialog({ open, onOpenChange }: Props): React.React
 
   const onClose = (): void => {
     reset();
+    setSaved(false);
     onOpenChange(false);
   };
 
@@ -52,7 +55,10 @@ export function CustomerCreateDialog({ open, onOpenChange }: Props): React.React
     mutate(data, {
       onSuccess: () => {
         toast({ title: 'Customer added' });
-        onClose();
+        setSaved(true);
+        setTimeout(() => {
+          onClose();
+        }, 400);
       },
       onError: (err) => {
         toast({ title: 'Failed to add', description: err.message, variant: 'destructive' });
@@ -82,19 +88,27 @@ export function CustomerCreateDialog({ open, onOpenChange }: Props): React.React
                 placeholder={t('customers.emailPlaceholder')}
               />
             </FormField>
-            <FormField label={t('customers.phone')} error={errors.phone?.message}>
-              <Input {...register('phone')} placeholder={t('customers.phonePlaceholder')} />
-            </FormField>
-            <FormField label={t('customers.address')} error={errors.address?.message}>
-              <Input {...register('address')} placeholder={t('customers.addressPlaceholder')} />
-            </FormField>
+            <div className={styles['grid2']}>
+              <FormField label={t('customers.phone')} error={errors.phone?.message}>
+                <Input {...register('phone')} placeholder={t('customers.phonePlaceholder')} />
+              </FormField>
+              <FormField label={t('customers.address')} error={errors.address?.message}>
+                <Input {...register('address')} placeholder={t('customers.addressPlaceholder')} />
+              </FormField>
+            </div>
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.adding') : t('customers.addCustomer')}
+            <Button type="submit" disabled={isPending || saved}>
+              {saved ? (
+                <CheckIcon size={14} />
+              ) : isPending ? (
+                t('common.adding')
+              ) : (
+                t('customers.addCustomer')
+              )}
             </Button>
           </DialogFooter>
         </form>

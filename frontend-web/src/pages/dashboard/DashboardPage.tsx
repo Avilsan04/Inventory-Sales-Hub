@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { ArrowRightIcon } from 'lucide-react';
+import {
+  ArrowRightIcon,
+  DollarSignIcon,
+  ShoppingCartIcon,
+  AlertCircleIcon,
+  UsersRoundIcon,
+  TrendingUpIcon,
+  TrendingDownIcon,
+} from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useDashboardStats } from '@features/analytics';
 import { PermissionGuard } from '@features/auth';
@@ -10,7 +18,7 @@ import {
   TopProfitableWidget,
   WasteAlertsWidget,
 } from '@widgets/dashboard';
-import { Skeleton, Badge, Button } from '@shared/ui/primitives';
+import { KpiCard, Skeleton, Badge, Button } from '@shared/ui';
 import {
   SalesDonutChart,
   WeeklySalesBarChart,
@@ -20,25 +28,47 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@shared/ui/composed';
-import { formatCurrency } from '@shared/lib/formatCurrency';
-import { formatOrderId } from '@shared/lib/formatters';
-import type { BadgeVariant } from '@shared/ui/primitives';
+  EmptyState,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from '@shared/ui';
+import { useRoutingAdapter } from '@adapters';
+import { APP_ROUTES } from '@shared/config';
+import { formatCurrency, formatOrderId } from '@shared/lib';
+import type { BadgeVariant } from '@shared/ui';
 import styles from '@shared/styles/themes/pages/Dashboard.module.scss';
 
 type SaleStatus = 'pending' | 'completed' | 'cancelled';
 
+const SALE_STATUS_BADGE: Partial<Record<SaleStatus, BadgeVariant>> = {
+  completed: 'success',
+  pending: 'neutral',
+  cancelled: 'destructive',
+};
+
 function saleStatusBadge(status: string): BadgeVariant {
-  const map: Partial<Record<SaleStatus, BadgeVariant>> = {
-    completed: 'success',
-    pending: 'neutral',
-    cancelled: 'destructive',
-  };
-  return map[status as SaleStatus] ?? 'neutral';
+  return SALE_STATUS_BADGE[status as SaleStatus] ?? 'neutral';
+}
+
+function GrowthLabel({ growth, label }: { growth: number; label: string }): React.ReactElement {
+  const positive = growth >= 0;
+  return (
+    <p className={positive ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']}>
+      {positive ? (
+        <TrendingUpIcon size={12} aria-hidden="true" />
+      ) : (
+        <TrendingDownIcon size={12} aria-hidden="true" />
+      )}{' '}
+      {Math.abs(growth).toFixed(1)}% {label}
+    </p>
+  );
 }
 
 export function DashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { navigateTo } = useRoutingAdapter();
   const {
     kpi,
     kpiLoading,
@@ -58,52 +88,63 @@ export function DashboardPage(): React.ReactElement {
           <h1 className={styles['title']}>{t('dashboard.title')}</h1>
           <p className={styles['subtitle']}>{t('topbar.subtitle.dashboard')}</p>
         </div>
-        <Button variant="outline" size="sm" disabled>
-          {t('dashboard.exportReport')}
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button variant="outline" size="sm" disabled>
+                  {t('dashboard.exportReport')}
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>{t('common.comingSoon')}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </header>
 
-      {/* KPI row */}
       <section className={styles['kpiGrid']} aria-label={t('dashboard.kpiAriaLabel')}>
-        <div className={styles['kpiCard']}>
-          <p className={styles['kpiLabel']}>{t('dashboard.stats.monthlySales')}</p>
-          <div className={styles['kpiValue']}>
-            {kpiLoading ? (
-              <Skeleton className={styles['kpiSkeleton']} />
-            ) : kpi ? (
-              formatCurrency(kpi.totalRevenue, kpi.currency)
-            ) : (
-              '—'
-            )}
-          </div>
-        </div>
-        <div className={styles['kpiCard']}>
-          <p className={styles['kpiLabel']}>{t('dashboard.stats.activeOrders')}</p>
-          <div className={styles['kpiValue']}>
-            {kpiLoading ? (
-              <Skeleton className={styles['kpiSkeleton']} />
-            ) : (
-              (kpi?.totalOrders ?? '—')
-            )}
-          </div>
-        </div>
-        <div className={styles['kpiCard']}>
-          <p className={styles['kpiLabel']}>{t('dashboard.stats.lowStock')}</p>
-          <div className={styles['kpiValue']}>
-            {alerts?.length ?? 0} {t('common.items')}
-          </div>
-        </div>
+        <KpiCard
+          label={t('dashboard.stats.monthlySales')}
+          icon={<DollarSignIcon />}
+          accent="primary"
+          isLoading={kpiLoading}
+          value={kpi ? formatCurrency(kpi.totalRevenue, kpi.currency) : '—'}
+          subtext={
+            kpi ? (
+              <GrowthLabel growth={kpi.revenueGrowth} label={t('dashboard.stats.vsLastMonth')} />
+            ) : undefined
+          }
+        />
+        <KpiCard
+          label={t('dashboard.stats.activeOrders')}
+          icon={<ShoppingCartIcon />}
+          accent="neutral"
+          isLoading={kpiLoading}
+          value={kpi?.totalOrders ?? '—'}
+          subtext={
+            kpi ? (
+              <GrowthLabel growth={kpi.ordersGrowth} label={t('dashboard.stats.vsLastMonth')} />
+            ) : undefined
+          }
+        />
+        <KpiCard
+          label={t('dashboard.stats.totalCustomers')}
+          icon={<UsersRoundIcon />}
+          accent="success"
+          isLoading={kpiLoading}
+          value={kpi?.totalCustomers ?? '—'}
+        />
+        <KpiCard
+          label={t('dashboard.stats.lowStock')}
+          icon={<AlertCircleIcon />}
+          accent="error"
+          isLoading={kpiLoading}
+          value={`${String(alerts?.length ?? 0)} ${t('common.items')}`}
+        />
       </section>
 
-      {/* C-level widgets — admin/company/manager only */}
       <PermissionGuard permission="view:analytics">
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1rem',
-          }}
-        >
+        <section className={styles['widgetGrid']}>
           <SectionErrorBoundary label={t('dashboard.section.cashFlow')}>
             <CashFlowWidget />
           </SectionErrorBoundary>
@@ -119,7 +160,6 @@ export function DashboardPage(): React.ReactElement {
         </section>
       </PermissionGuard>
 
-      {/* Charts */}
       <div className={styles['chartsGrid']}>
         <SectionErrorBoundary label={t('dashboard.section.weeklySalesChart')}>
           <div className={styles['chartCard']}>
@@ -129,7 +169,6 @@ export function DashboardPage(): React.ReactElement {
             <WeeklySalesBarChart data={salesPeriod} isLoading={periodLoading} />
           </div>
         </SectionErrorBoundary>
-
         <SectionErrorBoundary label={t('dashboard.section.salesByStatusChart')}>
           <div className={styles['chartCard']}>
             <div className={styles['chartCardHeader']}>
@@ -140,12 +179,17 @@ export function DashboardPage(): React.ReactElement {
         </SectionErrorBoundary>
       </div>
 
-      {/* Recent transactions */}
       <SectionErrorBoundary label={t('dashboard.section.recentTransactionsSection')}>
         <div className={styles['transactionsCard']}>
           <div className={styles['transactionsHeader']}>
             <h3 className={styles['transactionsTitle']}>{t('dashboard.recentTransactions')}</h3>
-            <button type="button" className={styles['viewAllBtn']}>
+            <button
+              type="button"
+              className={styles['viewAllBtn']}
+              onClick={(): void => {
+                navigateTo(APP_ROUTES.SALES);
+              }}
+            >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
             </button>
           </div>
@@ -169,8 +213,8 @@ export function DashboardPage(): React.ReactElement {
                 ))
               ) : recentSales.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className={styles['emptyCell']}>
-                    {t('common.noData')}
+                  <TableCell colSpan={4}>
+                    <EmptyState icon={<ShoppingCartIcon size={24} />} title={t('common.noData')} />
                   </TableCell>
                 </TableRow>
               ) : (

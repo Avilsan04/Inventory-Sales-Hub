@@ -1,22 +1,48 @@
 import { z } from 'zod';
 
-export const employeeRoleSchema = z.enum(['admin', 'manager', 'staff']);
+export const employeeRoleSchema = z.enum(['admin', 'manager', 'staff', 'ADMIN', 'MANAGER', 'STAFF', 'CUSTOMER']).transform(
+  (r) => r.toLowerCase() as 'admin' | 'manager' | 'staff'
+);
 
-export const employeeSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  email: z.email(),
-  role: employeeRoleSchema,
-  isActive: z.boolean().default(true),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+const rawEmployeeSchema = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: z.string().email(),
+  role: z.string(),
 });
+
+export const employeeSchema = rawEmployeeSchema.transform(
+  (e): {
+    id: string;
+    name: string;
+    email: string;
+    role: 'admin' | 'manager' | 'staff';
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+  } => ({
+    id: String(e.id),
+    name: e.username,
+    email: e.email,
+    role: (e.role.toLowerCase() as 'admin' | 'manager' | 'staff') ?? 'staff',
+    isActive: true,
+    createdAt: new Date(0).toISOString(),
+    updatedAt: new Date(0).toISOString(),
+  })
+);
 
 export const employeeListSchema = z.array(employeeSchema);
-export const createEmployeeSchema = employeeSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+
+export const createEmployeeSchema = z.object({
+  username: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6),
+  role: z.enum(['admin', 'manager', 'staff']),
 });
-export const updateEmployeeSchema = createEmployeeSchema.partial();
-export const updateRoleSchema = z.object({ role: employeeRoleSchema });
+
+export const updateEmployeeSchema = z.object({
+  username: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+});
+
+export const updateRoleSchema = z.object({ role: z.enum(['admin', 'manager', 'staff']) });

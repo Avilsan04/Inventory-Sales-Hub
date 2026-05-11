@@ -2,8 +2,8 @@
 // Single source of truth for all color values
 
 // ── Core brand colors (light theme) ─────────────────────────────
-$color-primary: #2563eb;
-$color-primary-hover: #1d4ed8;
+$color-primary: #2455d4; // WCAG 4.5:1+ against white. Distinguishes from Tailwind Blue 600.
+$color-primary-hover: #1c45be;
 $color-primary-light: #dbeafe;
 $color-primary-foreground: #ffffff;
 
@@ -35,7 +35,7 @@ $color-text-inverse: #ffffff;
 
 // ── Border & focus (light) ──────────────────────────────────────
 $color-border: #c6c6cd;
-$color-border-focus: #2563eb;
+$color-border-focus: #2455d4;
 
 // ── Extended semantic tokens (light) ────────────────────────────
 $color-accent: #16a34a;
@@ -53,8 +53,8 @@ $color-card-foreground: #0b1c30;
 $color-popover-bg: #ffffff;
 $color-popover-foreground: #0b1c30;
 
-$color-input-bg: #e5eeff;
-$color-ring: #2563eb;
+$color-input-bg: #767680; // WCAG 1.4.11: 4.5:1 against #ffffff
+$color-ring: #2455d4;
 
 // ── Surface levels (Stitch Material tokens) ──────────────────────
 $color-surface-high: #dce9ff;
@@ -75,17 +75,17 @@ $color-github-text: #ffffff;
 $color-sidebar-bg: #0f172a;
 $color-sidebar-foreground: #f8fafc;
 $color-sidebar-nav-inactive: #94a3b8;
-$color-sidebar-primary: #2563eb;
+$color-sidebar-primary: #2455d4;
 $color-sidebar-primary-foreground: #ffffff;
 $color-sidebar-accent: #1e293b;
 $color-sidebar-accent-foreground: #ffffff;
 $color-sidebar-border: #1e293b;
-$color-sidebar-ring: #2563eb;
-$color-sidebar-active-bg: #2563eb;
+$color-sidebar-ring: #2455d4;
+$color-sidebar-active-bg: #2455d4;
 $color-sidebar-active-fg: #ffffff;
 
 // ── Chart colors (light) ────────────────────────────────────────
-$color-chart-1: #2563eb;
+$color-chart-1: #2455d4;
 $color-chart-2: #16a34a;
 $color-chart-3: #d97706;
 $color-chart-4: #0891b2;
@@ -106,6 +106,8 @@ $color-dark-error: #ef4444;
 $color-dark-bg-primary: #0f172a;
 $color-dark-bg-secondary: #1e293b;
 $color-dark-bg-tertiary: #334155;
+$color-dark-surface-high: #131d2e;
+$color-dark-surface-highest: #19283d;
 $color-dark-text-primary: #f8fafc;
 $color-dark-text-secondary: #cbd5e1;
 $color-dark-text-muted: #64748b;
@@ -113,7 +115,7 @@ $color-dark-text-inverse: #0f172a;
 $color-dark-border: #334155;
 $color-dark-border-focus: #60a5fa;
 $color-dark-ring: #60a5fa;
-$color-dark-input: #334155;
+$color-dark-input: #64748b; // WCAG 1.4.11: 3.8:1 against #0f172a
 $color-dark-accent: #22c55e;
 $color-dark-accent-foreground: #052e16;
 $color-dark-destructive: #ef4444;
@@ -148,3 +150,37 @@ $color-dark-warning-fg: #fcd34d;
 $color-test-bg: rgba(251, 146, 60, 0.1);
 $color-test-border: rgba(251, 146, 60, 0.25);
 $color-test-fg: #f97316;
+
+// ── Role chips (static, not theme-aware) ─────────────────────────
+$color-role-company-bg: #ede9fe;
+$color-role-company-fg: #6d28d9;
+
+// ── Auth pages (login/register branding) ─────────────────────────
+$color-auth-mesh-base: #eef2ff;
+$color-auth-bg-from: #eef2fb;
+$color-auth-bg-to: #f4f7ff;
+$color-auth-brand-text: rgba(218 226 253 / 0.95);
+$color-auth-brand-muted: rgba(197 198 205 / 0.8);
+$color-auth-brand-feature: rgba(197 198 205 / 0.85);
+$color-auth-check: #b9c7e0;
+$color-auth-glass-border: rgba(218 226 253 / 0.07);
+$color-auth-glass-border-md: rgba(218 226 253 / 0.15);
+$color-auth-glass-border-panel: rgba(218 226 253 / 0.06);
+$color-auth-glass-border-inner: rgba(218 226 253 / 0.05);
+$color-auth-icon-ring-bg: rgba(34 42 61 / 0.9);
+$color-auth-role-card-bg: rgba(11 19 38 / 0.55);
+$color-auth-role-icon-bg: rgba(57 72 90 / 0.8);
+// Auth glassmorphism decorative blobs
+$color-auth-glass-bg-from: rgba(255, 255, 255, 0.4);
+$color-auth-glass-bg-to: rgba(255, 255, 255, 0.1);
+$color-auth-glass-white-border: rgba(255, 255, 255, 0.5);
+// Auth form glass card
+$color-auth-form-bg-light: rgba(255, 255, 255, 0.85);
+$color-auth-form-border-light: rgba(255, 255, 255, 0.8);
+$color-auth-form-border-left-light: rgba(255, 255, 255, 0.6);
+$color-auth-form-bg-dark: rgba(15, 23, 42, 0.85);
+$color-auth-form-border-dark: rgba(255, 255, 255, 0.1);
+$color-auth-form-border-dark-left: rgba(255, 255, 255, 0.08);
+$color-auth-icon-ring-border: rgba(218 226 253 / 0.12);
+$color-auth-gradient-from: #0d1629;
+$color-auth-gradient-to: #131c35;

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports -- MSW mock handlers are dev-only infrastructure; mock files are intentionally internal and have no public API */
 import { setupWorker } from 'msw/browser';
 import { inventoryHandlers } from '@features/inventory/api/inventory.mock';
 import { authHandlers } from '@features/auth/api/auth.mock';

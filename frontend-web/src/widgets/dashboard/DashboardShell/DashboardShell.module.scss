@@ -1,0 +1,77 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  max-width: $container-xl;
+  margin: 0 auto;
+  width: 100%;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-4;
+    gap: $spacing-4;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    padding: $spacing-3;
+    gap: $spacing-3;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  @media (max-width: $breakpoint-md) {
+    gap: $spacing-4;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tablesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+}

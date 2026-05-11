@@ -22,7 +22,7 @@
   text-decoration: none;
   will-change: transform;
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.97);
   }
 

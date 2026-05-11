@@ -18,12 +18,11 @@ export function ResetDemoDataButton(): React.ReactElement | null {
   return (
     <>
       <Button
-        variant="outline"
+        variant="destructive"
         size="sm"
         onClick={() => {
           setOpen(true);
         }}
-        style={{ color: 'var(--color-destructive)', borderColor: 'var(--color-destructive)' }}
       >
         Reset demo data
       </Button>

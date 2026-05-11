@@ -6,8 +6,8 @@ import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { toast } from '@shared/hooks/useToast';
-import { useDebounce } from '@shared/hooks';
-import { Skeleton, Button, Input, Avatar, AvatarFallback } from '@shared/ui/primitives';
+import { useTableFilters } from '@shared/hooks';
+import { Skeleton, Button, Input, Avatar, AvatarFallback, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   Table,
@@ -20,10 +20,13 @@ import {
   EmptyState,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
-import { CustomerCreateDialog } from '@features/customers/components/CustomerCreateDialog';
-import { CustomerEditDialog } from '@features/customers/components/CustomerEditDialog';
+import { CustomerCreateDialog } from '@features/customers';
+import { CustomerEditDialog } from '@features/customers';
 import type { Customer } from '@entities/customer';
+import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Customers.module.scss';
+
+const CUSTOMER_PAGE_SIZE = 20;
 
 function initials(name: string): string {
   return name
@@ -48,11 +51,28 @@ export function CustomersPage(): React.ReactElement {
   const { data: topCustomers } = useTopCustomers();
   const { mutate: deleteCustomer, isPending: isDeleting } = useDeleteCustomer();
 
-  const [search, setSearch] = React.useState('');
-  const debouncedSearch = useDebounce(search);
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editCustomer, setEditCustomer] = React.useState<Customer | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
+
+  const {
+    search,
+    setSearch,
+    debouncedSearch,
+    page,
+    setPage,
+    pageCount,
+    pageSize,
+    setPageSize,
+    paginated,
+  } = useTableFilters<Customer>(
+    data,
+    (c, q) =>
+      c.name.toLowerCase().includes(q) ||
+      c.email.toLowerCase().includes(q) ||
+      (c.phone ?? '').toLowerCase().includes(q),
+    CUSTOMER_PAGE_SIZE
+  );
 
   const topMap = React.useMemo(() => {
     const map = new Map<string, { totalOrders: number; totalSpent: number }>();
@@ -77,18 +97,6 @@ export function CustomersPage(): React.ReactElement {
       'customers'
     );
   };
-
-  const filtered = React.useMemo(() => {
-    if (!data) return [];
-    if (!debouncedSearch) return data;
-    const q = debouncedSearch.toLowerCase();
-    return data.filter(
-      (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q) ||
-        (c.phone ?? '').toLowerCase().includes(q)
-    );
-  }, [data, debouncedSearch]);
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
@@ -115,11 +123,10 @@ export function CustomersPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['header']}>
         <div className={styles['headerText']}>
-          <span className={styles['eyebrow']}>{t('customers.eyebrow')}</span>
           <h1 className={styles['title']}>{t('customers.title')}</h1>
           <p className={styles['subtitle']}>{t('customers.subtitle')}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className={styles['headerActions']}>
           <PermissionGuard permission="export:csv">
             <Button variant="outline" size="sm" onClick={handleExport}>
               {t('common.export')}
@@ -165,11 +172,11 @@ export function CustomersPage(): React.ReactElement {
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
                     <TableCell colSpan={5}>
-                      <Skeleton style={{ height: '2rem', width: '100%' }} />
+                      <Skeleton className={styles['skeletonRow']} />
                     </TableCell>
                   </TableRow>
                 ))
-              ) : filtered.length === 0 ? (
+              ) : paginated.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5}>
                     <EmptyState
@@ -190,7 +197,7 @@ export function CustomersPage(): React.ReactElement {
                   </TableCell>
                 </TableRow>
               ) : (
-                filtered.map((c) => {
+                paginated.map((c) => {
                   const meta = topMap.get(c.email);
                   return (
                     <TableRow key={c.id}>
@@ -223,7 +230,7 @@ export function CustomersPage(): React.ReactElement {
                         )}
                       </TableCell>
                       <TableCell>
-                        <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
+                        <div className={pageStyles['cellActions']}>
                           <Button
                             variant="ghost"
                             size="icon-sm"
@@ -250,6 +257,21 @@ export function CustomersPage(): React.ReactElement {
               )}
             </TableBody>
           </Table>
+          {pageCount > 1 && (
+            <div className={pageStyles['tableFooter']}>
+              <span>
+                {Math.min((page - 1) * CUSTOMER_PAGE_SIZE + 1, data?.length ?? 0)}–
+                {Math.min(page * CUSTOMER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+              </span>
+              <Pagination
+                page={page}
+                pageCount={pageCount}
+                onPageChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
+              />
+            </div>
+          )}
         </Card>
       </SectionErrorBoundary>
 

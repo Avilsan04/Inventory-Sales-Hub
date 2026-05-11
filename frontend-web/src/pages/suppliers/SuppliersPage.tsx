@@ -3,7 +3,7 @@ import { TruckIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSuppliers, useDeleteSupplier } from '@features/suppliers';
 import { toast } from '@shared/hooks/useToast';
-import { Skeleton, Button } from '@shared/ui/primitives';
+import { Skeleton, Button, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -20,20 +20,33 @@ import {
   EmptyState,
 } from '@shared/ui/composed';
 import { SectionErrorBoundary } from '@app/providers';
-import { SupplierCreateDialog } from '@features/suppliers/components/SupplierCreateDialog';
-import { SupplierEditDialog } from '@features/suppliers/components/SupplierEditDialog';
+import { SupplierCreateDialog } from '@features/suppliers';
+import { SupplierEditDialog } from '@features/suppliers';
 import type { Supplier } from '@entities/supplier';
+import { useTableFilters } from '@shared/hooks';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
+
+const SUPPLIER_PAGE_SIZE = 20;
 
 export function SuppliersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data, isPending, isError } = useSuppliers();
-  const suppliers = data ?? [];
   const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editSupplier, setEditSupplier] = React.useState<Supplier | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
+
+  const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Supplier>(
+    data,
+    (s, q) =>
+      s.name.toLowerCase().includes(q) ||
+      (s.email ?? '').toLowerCase().includes(q) ||
+      (s.contactPerson ?? '').toLowerCase().includes(q),
+    SUPPLIER_PAGE_SIZE
+  );
+
+  const suppliers = paginated;
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
@@ -85,11 +98,7 @@ export function SuppliersPage(): React.ReactElement {
           </CardHeader>
           <CardContent>
             <div className={styles['statValue']}>
-              {isPending ? (
-                <Skeleton style={{ height: '2rem', width: '4rem' }} />
-              ) : (
-                suppliers.length
-              )}
+              {isPending ? <Skeleton className={styles['skeletonValue']} /> : suppliers.length}
             </div>
           </CardContent>
         </Card>
@@ -114,7 +123,7 @@ export function SuppliersPage(): React.ReactElement {
                     Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
                         <TableCell colSpan={5}>
-                          <Skeleton style={{ height: '2rem', width: '100%' }} />
+                          <Skeleton className={styles['skeletonRow']} />
                         </TableCell>
                       </TableRow>
                     ))
@@ -142,7 +151,7 @@ export function SuppliersPage(): React.ReactElement {
                         <TableCell>{s.phone ?? '—'}</TableCell>
                         <TableCell>{s.contactPerson ?? '—'}</TableCell>
                         <TableCell>
-                          <div style={{ display: 'flex', gap: 4, justifyContent: 'flex-end' }}>
+                          <div className={styles['cellActions']}>
                             <Button
                               variant="ghost"
                               size="icon-sm"
@@ -169,6 +178,21 @@ export function SuppliersPage(): React.ReactElement {
                 </TableBody>
               </Table>
             </CardContent>
+            {pageCount > 1 && (
+              <div className={styles['tableFooter']}>
+                <span>
+                  {Math.min((page - 1) * SUPPLIER_PAGE_SIZE + 1, data?.length ?? 0)}–
+                  {Math.min(page * SUPPLIER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+                </span>
+                <Pagination
+                  page={page}
+                  pageCount={pageCount}
+                  onPageChange={setPage}
+                  pageSize={pageSize}
+                  onPageSizeChange={setPageSize}
+                />
+              </div>
+            )}
           </Card>
         </SectionErrorBoundary>
       </section>

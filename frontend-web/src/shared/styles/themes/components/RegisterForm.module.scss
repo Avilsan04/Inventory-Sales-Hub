@@ -38,7 +38,7 @@
   font-weight: $font-weight-semibold;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: $letter-spacing-widest;
   margin: 0;
 }
 
@@ -57,7 +57,8 @@
 // ── Footer ─────────────────────────────────────────────────────────
 
 .footer {
-  padding: $spacing-4 $spacing-6 $spacing-6;
+  padding: $spacing-5 $spacing-6 $spacing-6;
+  border-top: $border-width-base solid var(--color-border);
 }
 
 .submitButton {

@@ -26,11 +26,11 @@ export interface UserResponse {
   id: number;
   username: string;
   email: string;
-  token: string;
+  accessToken: string;
 }
 
 export interface LoginResponse {
-  token: string;
+  accessToken: string;
 }
 
 export interface UserProfile {
@@ -38,7 +38,8 @@ export interface UserProfile {
   username: string;
   email: string;
   role: UserRole;
-  createdAt: string;
+  createdAt?: string;
+  tenantId?: string;
 }
 
 export interface UpdateProfileRequest {
@@ -61,5 +62,5 @@ export interface ResetPasswordRequest {
 }
 
 export interface RefreshTokenResponse {
-  token: string;
+  accessToken: string;
 }

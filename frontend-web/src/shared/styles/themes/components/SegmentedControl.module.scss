@@ -1,10 +1,10 @@
 .root {
   background-color: var(--color-surface-high);
-  padding: 5px;
+  padding: $spacing-px-5;
   border-radius: $border-radius-full;
   display: inline-flex;
   width: 100%;
-  gap: 2px;
+  gap: $spacing-0-5;
 }
 
 .item {
@@ -27,6 +27,11 @@
   &:hover:not(.active) {
     color: var(--color-text-primary);
     background-color: var(--color-surface-highest);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
   }
 }
 

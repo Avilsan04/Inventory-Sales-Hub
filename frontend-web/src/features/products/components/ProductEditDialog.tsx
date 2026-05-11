@@ -3,7 +3,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateProduct, useCategories } from '@features/products';
-import { toCents, fromCents } from '@shared/lib/formatCurrency';
 import { UOM_OPTIONS } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -64,7 +63,7 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
         name: product.name,
         sku: product.sku,
         description: product.description,
-        price: fromCents(product.price),
+        price: product.price,
         currency: product.currency,
         categoryId: product.categoryId,
         uom: product.uom,
@@ -80,7 +79,14 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
   const onSubmit = (data: FormValues): void => {
     if (product === null) return;
     mutate(
-      { ...data, price: toCents(data.price), categoryId: data.categoryId ?? undefined },
+      {
+        name: data.name,
+        description: data.description,
+        sku: data.sku,
+        purchasePrice: data.price,
+        salePrice: data.price,
+        categoryId: data.categoryId ? Number(data.categoryId) : undefined,
+      },
       {
         onSuccess: () => {
           toast({ title: 'Product updated' });

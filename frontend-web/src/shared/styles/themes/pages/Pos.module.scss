@@ -10,8 +10,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $spacing-4 $spacing-5;
-  border-bottom: 1px solid var(--color-border);
+  padding: $spacing-4 $spacing-6;
+  border-bottom: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
   flex-shrink: 0;
   gap: $spacing-3;
@@ -23,12 +23,36 @@
   gap: $spacing-3;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.sessionLabel {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+}
+
+.emptySession {
+  background: var(--color-muted);
+  border-radius: var(--radius-md);
+  padding: $spacing-8;
+  text-align: center;
+}
+
+.emptySessionText {
+  margin-bottom: $spacing-4;
+  color: var(--color-muted-foreground);
+  font-size: $font-size-sm;
+}
+
 .title {
   font-size: $font-size-xl;
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: $letter-spacing-tighter;
 }
 
 .orderBadge {
@@ -46,6 +70,29 @@
   flex: 1;
   display: flex;
   overflow: hidden;
+
+  // Mobile: stack products above cart
+  flex-direction: column;
+
+  @media (min-width: $breakpoint-lg) {
+    flex-direction: row;
+  }
+}
+
+.splitPanelCheckoutOnly {
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-6;
+  background-color: var(--color-surface-low);
+
+  .cart {
+    width: min($size-pos-checkout-cart, 100%);
+    border-left: none;
+    border: $border-width-base solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: $shadow-base;
+    overflow: auto;
+  }
 }
 
 // ── Left — product browser ────────────────────────────────────────────────────
@@ -74,7 +121,7 @@
 .pill {
   padding: $spacing-1 $spacing-3;
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background: none;
   color: var(--color-text-secondary);
   font-size: $font-size-sm;
@@ -89,6 +136,12 @@
   &:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+    border-color: var(--color-ring);
   }
 }
 
@@ -106,7 +159,7 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax($size-pos-product-card-min, 1fr));
   gap: $spacing-3;
   overflow-y: auto;
   padding-bottom: $spacing-2;
@@ -118,7 +171,7 @@
   flex-direction: column;
   gap: $spacing-2;
   padding: $spacing-3;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-xl;
   background-color: var(--color-card);
   cursor: pointer;
@@ -127,7 +180,7 @@
     border-color $duration-fast ease;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    box-shadow: var(--shadow-card);
     border-color: var(--color-primary);
   }
 }
@@ -217,6 +270,11 @@
     background-color: var(--color-primary-hover);
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+  }
+
   &:disabled {
     background-color: var(--color-border);
     cursor: not-allowed;
@@ -225,17 +283,26 @@
 
 // ── Right — cart panel ────────────────────────────────────────────────────────
 .cart {
-  width: 380px;
-  flex-shrink: 0;
+  // Mobile: full width stacked below products
+  width: 100%;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--color-border);
+  border-left: none;
+  border-top: $border-width-base solid var(--color-border);
   background-color: var(--color-card);
+
+  // Desktop: fixed-width side panel
+  @media (min-width: $breakpoint-lg) {
+    width: $size-pos-cart;
+    flex-shrink: 0;
+    border-left: $border-width-base solid var(--color-border);
+    border-top: none;
+  }
 }
 
 .cartHeader {
   padding: $spacing-4;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
   flex-shrink: 0;
 }
 
@@ -288,7 +355,7 @@
   align-items: center;
   gap: $spacing-3;
   padding: $spacing-2 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
 
   &:last-child {
     border-bottom: none;
@@ -330,7 +397,7 @@
   width: $size-6;
   height: $size-6;
   border-radius: $radius-md;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   background: none;
   color: var(--color-text-primary);
   cursor: pointer;
@@ -354,7 +421,7 @@
 // ── Cart footer ───────────────────────────────────────────────────────────────
 .cartFooter {
   padding: $spacing-4;
-  border-top: 1px solid var(--color-border);
+  border-top: $border-width-base solid var(--color-border);
   display: flex;
   flex-direction: column;
   gap: $spacing-3;
@@ -383,13 +450,41 @@
   font-weight: $font-weight-bold;
   color: var(--color-text-primary);
   padding-top: $spacing-2;
-  border-top: 1px solid var(--color-border);
+  border-top: $border-width-base solid var(--color-border);
+}
+
+.totalRowInner {
+  display: flex;
+  align-items: center;
+  gap: $spacing-1;
+}
+
+.percentInput {
+  width: $size-14;
+  padding: $spacing-0-5 $spacing-1;
+  border: $border-width-base solid var(--color-border);
+  border-radius: $border-radius-sm;
+  font-size: $font-size-xs;
+  font-family: $font-family-base;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  text-align: right;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-border-focus);
+  }
+}
+
+.percentSymbol {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
 }
 
 .customerSelect {
   width: 100%;
   padding: $spacing-2 $spacing-3;
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-md;
   background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
@@ -400,60 +495,214 @@
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-ring) 15%, transparent);
   }
 }
 
-// ── Payment method selector ───────────────────────────────────────────────────
-.payLabel {
+// ── Payment method selector — Stitch enterprise pattern ──────────────────────
+
+.paySectionHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  margin-bottom: $spacing-3;
+}
+
+.paySectionLabel {
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
-  color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: $letter-spacing-wider;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.paySectionDivider {
+  flex: 1;
+  border: none;
+  border-top: $border-width-base solid var(--color-border);
   margin: 0;
 }
 
-.payButtons {
+.payGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: $spacing-2;
+  margin-bottom: $spacing-3;
 }
 
-.payBtn {
+// Horizontal card: icon left, label right, left-border accent for active
+.payCard {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: $spacing-1;
-  padding: $spacing-2;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
-  background: none;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-3;
+  background-color: var(--color-card);
+  border: $border-width-base solid var(--color-border);
+  border-left: $border-width-accent solid transparent;
+  border-radius: var(--radius-lg);
   color: var(--color-text-secondary);
-  font-size: $font-size-xs;
   font-family: $font-family-base;
   cursor: pointer;
   transition:
     border-color $duration-fast ease,
     background-color $duration-fast ease,
     color $duration-fast ease;
+  text-align: left;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-bg-secondary);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
+  }
+}
+
+.payCardActive {
+  border-left-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 6%, var(--color-card));
+  color: var(--color-text-primary);
+}
+
+.payCardDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: var(--color-card);
+  }
+}
+
+.payCardIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 
   svg {
     width: $size-4;
     height: $size-4;
   }
-
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
 }
 
-.payBtnActive {
-  border-color: var(--color-primary);
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+.payCardLabel {
+  flex: 1;
+  font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+}
+
+.payCardBadge {
+  font-size: $font-size-2xs;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-muted);
+  border: $border-width-base solid var(--color-border);
+  border-radius: $border-radius-sm;
+  padding: $spacing-px $spacing-1;
+  line-height: 1.5;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+// ── Mini card preview widget ───────────────────────────────────────────────────
+.miniCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, $color-dark-bg-secondary 0%, $color-dark-bg-primary 100%);
+  border-radius: var(--radius-lg);
+  padding: $spacing-3 $spacing-4;
+  margin-bottom: $spacing-3;
+  color: $color-dark-text-primary;
+  box-shadow: $shadow-mini-card;
+}
+
+.miniCardBrand {
+  font-weight: $font-weight-bold;
+  font-style: italic;
+  font-size: $font-size-lg;
+  letter-spacing: $letter-spacing-super-tight;
+  color: $color-dark-primary;
+}
+
+.miniCardNumber {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  letter-spacing: $letter-spacing-mono;
+  color: $color-dark-text-secondary;
+}
+
+// ── Payment detail form ────────────────────────────────────────────────────────
+.paymentForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  border-radius: var(--radius-lg);
+  border: $border-width-base solid var(--color-border);
+  background-color: var(--color-card);
+  box-shadow: $shadow-form-panel;
+}
+
+.paymentField {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.paymentGrid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2;
+}
+
+.paymentInput {
+  width: 100%;
+  font-size: $font-size-sm;
+}
+
+.paymentInputWrapper {
+  position: relative;
+}
+
+.paymentInputIcon {
+  position: absolute;
+  left: $spacing-3;
+  top: 50%;
+  transform: translateY(-50%);
+  width: $size-4;
+  height: $size-4;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.paymentInputWithIcon {
+  padding-left: calc(#{$spacing-3} + #{$size-4} + #{$spacing-2}) !important;
+}
+
+.ibanBox {
+  padding: $spacing-2 $spacing-3;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-secondary);
+  border: $border-width-base solid var(--color-border);
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  color: var(--color-text-primary);
+  letter-spacing: $letter-spacing-wide-plus;
+}
+
+.infoBox {
+  padding: $spacing-3;
+  border-radius: var(--radius-lg);
+  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  border: $border-width-base solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  font-size: $font-size-sm;
+  color: var(--color-text-secondary);
+  line-height: $line-height-relaxed;
 }
 
 // ── CTA ───────────────────────────────────────────────────────────────────────
@@ -472,6 +721,11 @@
 
   &:hover:not(:disabled) {
     background-color: var(--color-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: $shadow-focus-ring;
   }
 
   &:disabled {

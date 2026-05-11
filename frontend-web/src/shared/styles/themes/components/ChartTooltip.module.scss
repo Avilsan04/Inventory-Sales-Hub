@@ -1,0 +1,124 @@
+// Shared chart tooltip + donut legend styles
+// Used by: RevenueAreaChart, SalesDonutChart, TopProductsBarChart, WeeklySalesBarChart
+
+// ── Tooltip container ─────────────────────────────────────────────
+.tooltipContainer {
+  position: relative;
+  z-index: $z-float;
+  background: var(--color-card);
+  border: $border-width-base solid var(--color-border);
+  border-radius: $border-radius-lg;
+  padding: $spacing-2-5 $spacing-3-5;
+  box-shadow: var(--shadow-sm);
+}
+
+.tooltipLabel {
+  color: var(--color-text-muted);
+  font-size: $font-size-xs;
+  margin: 0 0 $spacing-1-5 0;
+}
+
+.tooltipTitle {
+  margin: 0 0 $spacing-1 0;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+}
+
+.tooltipStat {
+  margin: 0 0 $spacing-0-5 0;
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ── Tooltip row (name + value) ────────────────────────────────────
+.tooltipRow {
+  display: flex;
+  gap: $spacing-2;
+  align-items: center;
+  margin-bottom: $spacing-0-5;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tooltipDot {
+  width: $size-2;
+  height: $size-2;
+  border-radius: $border-radius-full;
+  display: inline-block;
+  flex-shrink: 0;
+  // background set inline — dynamic per chart series color
+}
+
+.tooltipName {
+  color: var(--color-text-secondary);
+  font-size: $font-size-xs;
+}
+
+.tooltipValue {
+  color: var(--color-text-primary);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  margin-left: auto;
+  padding-left: $spacing-3;
+}
+
+// ── Donut chart outer wrapper ─────────────────────────────────────
+.donutWrapper {
+  display: flex;
+  gap: $spacing-4;
+  align-items: center;
+}
+
+// ── Donut chart legend ────────────────────────────────────────────
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.legendDot {
+  width: $size-2-5;
+  height: $size-2-5;
+  border-radius: $border-radius-full;
+  flex-shrink: 0;
+  // background set inline — dynamic per slice color
+}
+
+.legendLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.legendValue {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  margin-left: auto;
+  padding-left: $spacing-2;
+}
+
+// ── Skeleton placeholders ─────────────────────────────────────────
+.chartSkeleton {
+  height: $height-chart-area;
+  border-radius: $border-radius-lg;
+}
+
+.donutSkeleton {
+  height: $height-chart-donut;
+  border-radius: $border-radius-lg;
+}

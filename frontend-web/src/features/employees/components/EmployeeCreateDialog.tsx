@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { CheckIcon } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -18,14 +19,14 @@ import {
   SelectContent,
   SelectItem,
 } from '@shared/ui/composed';
-import { Button, Input, Switch, Label } from '@shared/ui/primitives';
+import { Button, Input } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 
 const schema = z.object({
-  name: z.string().min(1, 'Required'),
+  username: z.string().min(1, 'Required'),
   email: z.email('Invalid email'),
+  password: z.string().min(6, 'Min 6 characters'),
   role: z.enum(['admin', 'manager', 'staff']),
-  isActive: z.boolean(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -38,6 +39,7 @@ interface Props {
 export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateEmployee();
+  const [saved, setSaved] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -47,11 +49,12 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
-    defaultValues: { role: 'staff', isActive: true },
+    defaultValues: { role: 'staff' },
   });
 
   const onClose = (): void => {
     reset();
+    setSaved(false);
     onOpenChange(false);
   };
 
@@ -59,7 +62,10 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
     mutate(data, {
       onSuccess: () => {
         toast({ title: 'Employee added' });
-        onClose();
+        setSaved(true);
+        setTimeout(() => {
+          onClose();
+        }, 400);
       },
       onError: (err) => {
         toast({ title: 'Failed to add', description: err.message, variant: 'destructive' });
@@ -79,15 +85,20 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
           }}
         >
           <div className={styles['body']}>
-            <FormField label={t('employees.name')} required error={errors.name?.message}>
-              <Input {...register('name')} placeholder={t('auth.fullNamePlaceholder')} />
-            </FormField>
-            <FormField label={t('employees.email')} required error={errors.email?.message}>
-              <Input
-                {...register('email')}
-                type="email"
-                placeholder={t('employees.emailPlaceholder')}
-              />
+            <div className={styles['grid2']}>
+              <FormField label={t('employees.username')} required error={errors.username?.message}>
+                <Input {...register('username')} placeholder={t('auth.usernamePlaceholder')} />
+              </FormField>
+              <FormField label={t('employees.email')} required error={errors.email?.message}>
+                <Input
+                  {...register('email')}
+                  type="email"
+                  placeholder={t('employees.emailPlaceholder')}
+                />
+              </FormField>
+            </div>
+            <FormField label={t('auth.password')} required error={errors.password?.message}>
+              <Input {...register('password')} type="password" />
             </FormField>
             <FormField label={t('employees.role')} required error={errors.role?.message}>
               <Controller
@@ -107,27 +118,19 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
                 )}
               />
             </FormField>
-            <Controller
-              name="isActive"
-              control={control}
-              render={({ field }) => (
-                <div className={styles['activeRow']}>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    id="create-active"
-                  />
-                  <Label htmlFor="create-active">{t('employees.active')}</Label>
-                </div>
-              )}
-            />
           </div>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={onClose}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common.adding') : t('employees.addEmployee')}
+            <Button type="submit" disabled={isPending || saved}>
+              {saved ? (
+                <CheckIcon size={14} />
+              ) : isPending ? (
+                t('common.adding')
+              ) : (
+                t('employees.addEmployee')
+              )}
             </Button>
           </DialogFooter>
         </form>

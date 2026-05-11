@@ -1,27 +1,41 @@
-import { http, HttpResponse, delay } from 'msw';
+import { http, HttpResponse, delay, type DefaultBodyType } from 'msw';
 import { API_BASE_URL } from '@core/config';
+import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
 import type {
-  DashboardKpi,
   SalesPeriod,
   TopProduct,
   TopCustomer,
-  InventoryValue,
   LowStockAlert,
   CashFlowEntry,
   WasteAlert,
 } from '@entities/analytics';
 import mockData from '@app/mock/mock-data.json';
 
-const { analytics } = mockData;
+const baseAnalytics = mockData.analytics;
+
+function getAnalyticsFor(request: Request): typeof baseAnalytics {
+  const tenantId = resolveTenant(request);
+  return getTenantBucket(tenantId, 'analytics', () => baseAnalytics);
+}
+
+function requireAnalyticsAccess(request: Request): HttpResponse<DefaultBodyType> | null {
+  return requirePermission(request, 'view:analytics');
+}
 
 export const analyticsHandlers = [
-  http.get(`${API_BASE_URL}/analytics/dashboard`, async () => {
+  http.get(`${API_BASE_URL}/analytics/dashboard`, async ({ request }) => {
     await delay(700);
-    return HttpResponse.json<DashboardKpi>(analytics.dashboard as DashboardKpi);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const analytics = getAnalyticsFor(request);
+    return HttpResponse.json(analytics.dashboard);
   }),
 
   http.get(`${API_BASE_URL}/analytics/sales`, async ({ request }) => {
     await delay(600);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const analytics = getAnalyticsFor(request);
     const url = new URL(request.url);
     const from = url.searchParams.get('from');
     const to = url.searchParams.get('to');
@@ -42,28 +56,42 @@ export const analyticsHandlers = [
     return HttpResponse.json<SalesPeriod[]>(data);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/top-products`, async () => {
+  http.get(`${API_BASE_URL}/analytics/top-products`, async ({ request }) => {
     await delay(500);
-    return HttpResponse.json<TopProduct[]>(analytics.topProducts as TopProduct[]);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const analytics = getAnalyticsFor(request);
+    return HttpResponse.json<TopProduct[]>(analytics.topProducts);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/top-customers`, async () => {
+  http.get(`${API_BASE_URL}/analytics/top-customers`, async ({ request }) => {
     await delay(500);
-    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers as TopCustomer[]);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const analytics = getAnalyticsFor(request);
+    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/inventory-value`, async () => {
+  http.get(`${API_BASE_URL}/analytics/inventory-value`, async ({ request }) => {
     await delay(500);
-    return HttpResponse.json<InventoryValue>(analytics.inventoryValue as InventoryValue);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const analytics = getAnalyticsFor(request);
+    return HttpResponse.json(analytics.inventoryValue);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/low-stock-alerts`, async () => {
+  http.get(`${API_BASE_URL}/analytics/low-stock-alerts`, async ({ request }) => {
     await delay(500);
-    return HttpResponse.json<LowStockAlert[]>(analytics.lowStockAlerts as LowStockAlert[]);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const analytics = getAnalyticsFor(request);
+    return HttpResponse.json<LowStockAlert[]>(analytics.lowStockAlerts);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/cash-flow`, async () => {
+  http.get(`${API_BASE_URL}/analytics/cash-flow`, async ({ request }) => {
     await delay(600);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
     const cashFlow: CashFlowEntry[] = [
       { period: 'Mon', inflow: 450000, outflow: 120000, net: 330000 },
       { period: 'Tue', inflow: 380000, outflow: 95000, net: 285000 },
@@ -76,8 +104,10 @@ export const analyticsHandlers = [
     return HttpResponse.json<CashFlowEntry[]>(cashFlow);
   }),
 
-  http.get(`${API_BASE_URL}/analytics/waste-alerts`, async () => {
+  http.get(`${API_BASE_URL}/analytics/waste-alerts`, async ({ request }) => {
     await delay(500);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
     const wasteAlerts: WasteAlert[] = [
       {
         productId: 'p-001',

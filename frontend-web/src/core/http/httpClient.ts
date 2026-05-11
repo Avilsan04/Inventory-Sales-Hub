@@ -24,7 +24,20 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
   const reqInterceptorId = setupRequestInterceptor(
     axiosInstance,
     () => tokenStorage.getToken(),
-    () => sessionStorage.getItem('impersonation_token'),
+    () => {
+      try {
+        const raw = sessionStorage.getItem('ish.impersonation');
+        if (!raw) return null;
+        const session = JSON.parse(raw) as { token: string; expiresAt: number };
+        if (Date.now() > session.expiresAt) {
+          sessionStorage.removeItem('ish.impersonation');
+          return null;
+        }
+        return session.token;
+      } catch {
+        return null;
+      }
+    },
     () => tenantStorage.getTenantId()
   );
 
@@ -32,8 +45,8 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
     axiosInstance,
     async () => {
       // Browser automatically sends the HttpOnly refresh_token cookie here
-      const response = await axiosInstance.post<{ token: string }>('/auth/refresh');
-      const newToken = response.data.token;
+      const response = await axiosInstance.post<{ accessToken: string }>('/auth/refresh');
+      const newToken = response.data.accessToken;
       tokenStorage.saveToken(newToken);
       return newToken;
     },

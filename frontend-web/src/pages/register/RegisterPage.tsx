@@ -9,8 +9,8 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-import { RegisterForm } from '@features/auth/components/RegisterForm';
-import type { RegisterRole } from '@features/auth/models/auth.types';
+import { RegisterForm } from '@features/auth';
+import type { RegisterRole } from '@features/auth';
 import { BrandMark, Button, SegmentedControl } from '@shared/ui/primitives';
 import type { SegmentedOption } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardDescription } from '@shared/ui/composed';

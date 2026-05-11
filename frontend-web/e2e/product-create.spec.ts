@@ -9,5 +9,5 @@ test('admin can create a product', async ({ page }) => {
   await page.fill('input[placeholder="PRD-001"]', 'E2E-001');
   await page.fill('input[type="number"]', '9.99');
   await page.click('button[type="submit"]:has-text("Create")');
-  await expect(page.locator('text=Product created')).toBeVisible({ timeout: 5_000 });
+  await expect(page.getByText('Product created', { exact: true })).toBeVisible({ timeout: 5_000 });
 });
