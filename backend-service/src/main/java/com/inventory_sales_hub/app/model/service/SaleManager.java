@@ -155,16 +155,16 @@ public class SaleManager {
 
         if (newStatus == SaleStatus.COMPLETED) {
             for (SaleItem item : items) {
-                Inventory inventory = inventoryDao.findByProductId(item.getProduct().getId())
-                        .orElseThrow(() -> new SaleException("No inventory for product: " + item.getProduct().getName()));
-                if (inventory.getQuantity() < item.getQuantity()) {
+                int affected = inventoryDao.deductStock(item.getProduct().getId(), item.getQuantity());
+                if (affected == 0) {
+                    Inventory inv = inventoryDao.findByProductId(item.getProduct().getId())
+                            .orElseThrow(() -> new SaleException("No inventory for product: " + item.getProduct().getName()));
                     throw new SaleException("Insufficient stock for: " + item.getProduct().getName()
-                            + " (available: " + inventory.getQuantity() + ")");
+                            + " (available: " + inv.getQuantity() + ")");
                 }
-                int previous = inventory.getQuantity();
-                inventory.setQuantity(previous - item.getQuantity());
-                inventoryDao.save(inventory);
-                recordStockMovement(inventory, MovementType.OUT, item.getQuantity(), previous, "Sale #" + id);
+                Inventory inventory = inventoryDao.findByProductId(item.getProduct().getId()).orElseThrow();
+                recordStockMovement(inventory, MovementType.OUT, item.getQuantity(),
+                        inventory.getQuantity() + item.getQuantity(), "Sale #" + id);
             }
         } else if (newStatus == SaleStatus.CANCELLED && sale.getStatus() == SaleStatus.COMPLETED) {
             for (SaleItem item : items) {

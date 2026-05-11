@@ -12,5 +12,7 @@ public record ProductResponse(
         BigDecimal salePrice,
         String sku,
         CategoryResponse category,
+        @JsonProperty("supplier_id") Long supplierId,
+        @JsonProperty("supplier_name") String supplierName,
         @JsonProperty("is_active") boolean active
 ) {}

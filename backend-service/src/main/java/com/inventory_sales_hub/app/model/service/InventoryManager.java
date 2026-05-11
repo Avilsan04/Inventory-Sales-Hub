@@ -125,7 +125,9 @@ public class InventoryManager {
         CategoryResponse category = p.getCategory() != null
                 ? new CategoryResponse(p.getCategory().getId(), p.getCategory().getName(), p.getCategory().getDescription())
                 : null;
-        ProductResponse product = new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPurchasePrice(), p.getSalePrice(), p.getSku(), category, p.isActive());
+        Long supplierId = p.getSupplier() != null ? p.getSupplier().getId() : null;
+        String supplierName = p.getSupplier() != null ? p.getSupplier().getName() : null;
+        ProductResponse product = new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPurchasePrice(), p.getSalePrice(), p.getSku(), category, supplierId, supplierName, p.isActive());
         return new InventoryResponse(i.getId(), product, i.getQuantity(), i.getMinStock(), i.getQuantity() <= i.getMinStock());
     }
 

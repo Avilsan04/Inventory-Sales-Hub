@@ -8,8 +8,10 @@ import com.inventory_sales_hub.app.model.dto.ProductParams;
 import com.inventory_sales_hub.app.model.dto.ProductResponse;
 import com.inventory_sales_hub.app.model.entities.Category;
 import com.inventory_sales_hub.app.model.entities.Product;
+import com.inventory_sales_hub.app.model.entities.Supplier;
 import com.inventory_sales_hub.app.model.persistence.CategoryDao;
 import com.inventory_sales_hub.app.model.persistence.ProductDao;
+import com.inventory_sales_hub.app.model.persistence.SupplierDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ProductManager {
     @Autowired private ProductDao productDao;
     @Autowired private CategoryDao categoryDao;
+    @Autowired private SupplierDao supplierDao;
 
     public List<ProductResponse> getAll() {
         return productDao.findAllByActiveTrue().stream().map(this::toResponse).toList();
@@ -48,6 +51,7 @@ public class ProductManager {
         product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
         product.setCategory(resolveCategory(params.categoryId()));
+        product.setSupplier(resolveSupplier(params.supplierId()));
 
         return toResponse(productDao.save(product));
     }
@@ -67,6 +71,7 @@ public class ProductManager {
         product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
         product.setCategory(resolveCategory(params.categoryId()));
+        product.setSupplier(resolveSupplier(params.supplierId()));
 
         return toResponse(productDao.save(product));
     }
@@ -104,12 +109,21 @@ public class ProductManager {
                 .orElseThrow(() -> new ProductException("Category not found"));
     }
 
+    private Supplier resolveSupplier(Long supplierId) {
+        if (supplierId == null) return null;
+        return supplierDao.findById(supplierId)
+                .orElseThrow(() -> new ProductException("Supplier not found"));
+    }
+
     CategoryResponse toCategoryResponse(Category c) {
         return new CategoryResponse(c.getId(), c.getName(), c.getDescription());
     }
 
     ProductResponse toResponse(Product p) {
         CategoryResponse category = p.getCategory() != null ? toCategoryResponse(p.getCategory()) : null;
-        return new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPurchasePrice(), p.getSalePrice(), p.getSku(), category, p.isActive());
+        Long supplierId = p.getSupplier() != null ? p.getSupplier().getId() : null;
+        String supplierName = p.getSupplier() != null ? p.getSupplier().getName() : null;
+        return new ProductResponse(p.getId(), p.getName(), p.getDescription(), p.getPurchasePrice(),
+                p.getSalePrice(), p.getSku(), category, supplierId, supplierName, p.isActive());
     }
 }

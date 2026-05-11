@@ -8,5 +8,6 @@ public record ProductParams(
         BigDecimal purchasePrice,
         BigDecimal salePrice,
         String sku,
-        Long categoryId
+        Long categoryId,
+        Long supplierId
 ) {}
