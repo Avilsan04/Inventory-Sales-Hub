@@ -55,7 +55,7 @@ export const authHandlers = [
     _activeUser = userType;
     _isLoggedIn = true;
     persistSession(_activeUser);
-    return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });
+    return HttpResponse.json<LoginResponse>({ accessToken: auth.tokens[_activeUser] });
   }),
 
   http.post(`${API_BASE_URL}/auth/register`, async ({ request }) => {
@@ -71,7 +71,7 @@ export const authHandlers = [
       id: profile.id,
       username: body.username,
       email: body.email,
-      token: auth.tokens[profileKey],
+      accessToken: auth.tokens[profileKey],
     });
   }),
 
@@ -97,7 +97,7 @@ export const authHandlers = [
       return new HttpResponse(null, { status: 401 });
     }
     // Return the actual user token so it's valid in TOKEN_USER_MAP / requirePermission checks.
-    return HttpResponse.json<LoginResponse>({ token: auth.tokens[_activeUser] });
+    return HttpResponse.json<LoginResponse>({ accessToken: auth.tokens[_activeUser] });
   }),
 
   http.post(`${API_BASE_URL}/auth/forgot-password`, async () => {

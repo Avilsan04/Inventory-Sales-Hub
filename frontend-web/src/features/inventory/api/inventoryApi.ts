@@ -51,7 +51,6 @@ export const inventoryApi = {
   },
 
   deleteItem: async (id: string): Promise<void> => {
-    // Send snake_case to backend — mapper is for responses only.
-    await httpClient.patch(`/inventory/${id}`, { is_active: false });
+    await httpClient.delete(`/inventory/${id}`);
   },
 };

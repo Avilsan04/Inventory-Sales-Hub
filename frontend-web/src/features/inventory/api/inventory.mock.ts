@@ -49,17 +49,21 @@ export const inventoryHandlers = [
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
     const body = (await request.json()) as Partial<InventoryItem>;
+    const qty = body.quantity ?? 0;
+    const threshold = body.reorderThreshold ?? body.minStock ?? 0;
     const newItem: InventoryItem = {
       id: crypto.randomUUID(),
+      productId: body.productId ?? crypto.randomUUID(),
       sku: body.sku ?? 'SKU-NEW',
       name: body.name ?? 'New item',
       description: body.description,
-      quantity: body.quantity ?? 0,
+      quantity: qty,
       price: body.price ?? 0,
       currency: body.currency ?? 'EUR',
-      status: body.status ?? 'IN_STOCK',
+      status: qty === 0 ? 'OUT_OF_STOCK' : qty <= threshold ? 'LOW_STOCK' : 'IN_STOCK',
       category: body.category,
-      reorderThreshold: body.reorderThreshold,
+      reorderThreshold: threshold,
+      minStock: threshold,
       isActive: true,
       lastUpdated: new Date().toISOString(),
     };

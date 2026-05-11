@@ -13,7 +13,10 @@ export class HttpError extends Error {
 }
 
 function toHttpError(error: AxiosError): HttpError {
-  return new HttpError(error.message, error.response?.status ?? 0);
+  const data = error.response?.data;
+  const message =
+    typeof data === 'string' && data.length > 0 ? data : error.message;
+  return new HttpError(message, error.response?.status ?? 0);
 }
 
 function toRetryError(err: unknown): HttpError {

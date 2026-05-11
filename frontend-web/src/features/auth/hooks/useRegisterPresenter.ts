@@ -100,9 +100,9 @@ export function useRegisterPresenter({
         await authService.register(buildRegisterRequest(data, role));
         onSuccess();
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : 'Unknown error';
+        const message = err instanceof Error ? err.message : translate('auth.registerError');
         telemetry.captureMessage('Registration failure', { message });
-        setError(translate('auth.registerError'));
+        setError(message);
       } finally {
         setIsLoading(false);
       }

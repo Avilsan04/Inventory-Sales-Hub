@@ -54,8 +54,9 @@ export function useCreateSale(): UseMutationResult<
 
       const optimisticSale: Sale = {
         id: crypto.randomUUID(),
-        customerId: dto.customerId,
+        customerId: dto.customerId ?? undefined,
         employeeId: undefined,
+        processedBy: undefined,
         status: 'pending',
         subtotal,
         discountPercent: dto.discountPercent,
@@ -70,8 +71,8 @@ export function useCreateSale(): UseMutationResult<
           productId: item.productId,
           productName: '',
           quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          subtotal: item.quantity * item.unitPrice,
+          unitPrice: item.unitPrice ?? 0,
+          subtotal: item.quantity * (item.unitPrice ?? 0),
         })),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),

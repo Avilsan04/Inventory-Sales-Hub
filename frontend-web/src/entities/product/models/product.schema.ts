@@ -1,65 +1,100 @@
 import { z } from 'zod';
 
-export const categorySchema = z.object({
-  id: z.string().min(1),
+const rawCategorySchema = z.object({
+  id: z.number(),
   name: z.string().min(1),
-  description: z.string().optional(),
+  description: z.string().nullish(),
 });
+
+export const categorySchema = rawCategorySchema.transform(
+  (c): { id: string; name: string; description?: string } => ({
+    id: String(c.id),
+    name: c.name,
+    description: c.description ?? undefined,
+  })
+);
 
 export const uomSchema = z.enum(['unit', 'kg', 'litre', 'box', 'pack']);
 
-// Product type with self-referential variants
-export interface ProductType {
-  id: string;
-  sku: string;
-  name: string;
-  description?: string;
-  price: number;
-  currency: string;
-  categoryId?: string;
-  category?: z.infer<typeof categorySchema>;
-  parentId?: string;
-  uom: z.infer<typeof uomSchema>;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  imageUrl?: string;
-  variants?: ProductType[];
-}
+const rawProductSchema = z.object({
+  id: z.number(),
+  name: z.string().min(1),
+  description: z.string().nullish(),
+  sku: z.string(),
+  purchasePrice: z.number().nonnegative(),
+  salePrice: z.number().nonnegative(),
+  category: rawCategorySchema.nullish(),
+  supplierId: z.number().nullish(),
+  supplierName: z.string().nullish(),
+  isActive: z.boolean(),
+});
 
-export const productSchema: z.ZodType<ProductType> = z.lazy(() =>
-  z.object({
-    id: z.string().min(1),
-    sku: z.string().min(3).max(50),
-    name: z.string().min(1),
-    description: z.string().optional(),
-    price: z.number().int().nonnegative(),
-    currency: z.string().length(3).default('USD'),
-    categoryId: z.string().min(1).optional(),
-    category: categorySchema.optional(),
-    parentId: z.string().min(1).optional(),
-    uom: uomSchema.default('unit'),
-    isActive: z.boolean().default(true),
-    createdAt: z.iso.datetime(),
-    updatedAt: z.iso.datetime(),
-    imageUrl: z.url().optional(),
-    variants: z.array(productSchema).optional(),
+export const productSchema = rawProductSchema.transform(
+  (p): {
+    id: string;
+    name: string;
+    description?: string;
+    sku: string;
+    price: number;
+    purchasePrice: number;
+    salePrice: number;
+    currency: string;
+    categoryId?: string;
+    category?: { id: string; name: string; description?: string };
+    supplierId?: number;
+    supplierName?: string;
+    uom: 'unit' | 'kg' | 'litre' | 'box' | 'pack';
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+    imageUrl?: string;
+    parentId?: string;
+  } => ({
+    id: String(p.id),
+    name: p.name,
+    description: p.description ?? undefined,
+    sku: p.sku,
+    price: Number(p.salePrice),
+    purchasePrice: Number(p.purchasePrice),
+    salePrice: Number(p.salePrice),
+    currency: 'EUR',
+    categoryId: p.category ? String(p.category.id) : undefined,
+    category: p.category
+      ? {
+          id: String(p.category.id),
+          name: p.category.name,
+          description: p.category.description ?? undefined,
+        }
+      : undefined,
+    supplierId: p.supplierId ?? undefined,
+    supplierName: p.supplierName ?? undefined,
+    uom: 'unit',
+    isActive: p.isActive,
+    createdAt: new Date(0).toISOString(),
+    updatedAt: new Date(0).toISOString(),
+    imageUrl: undefined,
+    parentId: undefined,
   })
 );
+
+export type ProductType = z.infer<typeof productSchema>;
 
 export const productListSchema = z.array(productSchema);
 export const categoryListSchema = z.array(categorySchema);
 
 export const createProductSchema = z.object({
-  sku: z.string().min(3).max(50),
   name: z.string().min(1),
   description: z.string().optional(),
-  price: z.number().int().nonnegative(),
-  currency: z.string().length(3).default('USD'),
-  categoryId: z.string().min(1).optional(),
-  parentId: z.string().min(1).optional(),
-  uom: uomSchema.default('unit'),
+  sku: z.string().min(3).max(50),
+  purchasePrice: z.number().nonnegative(),
+  salePrice: z.number().nonnegative(),
+  categoryId: z.number().optional(),
+  supplierId: z.number().optional(),
 });
 
 export const updateProductSchema = createProductSchema;
-export const createCategorySchema = categorySchema.omit({ id: true });
+
+export const createCategorySchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+});

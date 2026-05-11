@@ -92,12 +92,9 @@ function buildKpiCards(kpi: DashboardKpi | undefined): KpiCardDef[] {
 }
 
 function buildDonutData(
-  saleSummary: { byStatus?: Array<{ status: string; count: number; revenue: number }> } | undefined
+  _saleSummary: unknown
 ): StatusSlice[] {
-  return (
-    saleSummary?.byStatus?.map((b) => ({ status: b.status, count: b.count, revenue: b.revenue })) ??
-    []
-  );
+  return [];
 }
 
 function buildSalesParams(dateRange: DateRangeId, customRange: DateRange): SalesAnalyticsParams {

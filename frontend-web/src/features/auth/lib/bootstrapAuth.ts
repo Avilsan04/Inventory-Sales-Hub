@@ -11,8 +11,8 @@ import { logger } from '@shared/lib/logger';
  */
 export async function bootstrapAuth(): Promise<void> {
   try {
-    const { token } = await authApi.refresh();
-    tokenStorage.saveToken(token);
+    const { accessToken } = await authApi.refresh();
+    tokenStorage.saveToken(accessToken);
 
     const profile = await authApi.getMe();
     if (profile.tenantId) {

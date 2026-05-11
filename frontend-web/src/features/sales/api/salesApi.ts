@@ -1,8 +1,8 @@
-import { z } from 'zod';
 import { httpClient } from '@core/http';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import type { HttpRequestConfig } from '@core/http';
 import { saleListSchema, saleSchema, saleSummarySchema, saleItemSchema } from '@entities/sale';
+import { z } from 'zod';
 import type {
   Sale,
   SaleItem,
@@ -46,12 +46,20 @@ export const salesApi = {
   },
 
   createSale: async (data: CreateSaleDTO, config?: HttpRequestConfig): Promise<Sale> => {
-    const res = await httpClient.post<unknown>('/sales', data, config);
+    const payload = {
+      customerId: data.customerId ? Number(data.customerId) : undefined,
+      items: data.items.map((item) => ({
+        productId: Number(item.productId),
+        quantity: item.quantity,
+      })),
+    };
+    const res = await httpClient.post<unknown>('/sales', payload, config);
     return parseOrThrow(saleSchema, res);
   },
 
   updateStatus: async (id: string, data: UpdateSaleStatusDTO): Promise<Sale> => {
-    const res = await httpClient.patch<unknown>(`/sales/${id}/status`, data);
+    const payload = { status: data.status.toUpperCase() };
+    const res = await httpClient.patch<unknown>(`/sales/${id}/status`, payload);
     return parseOrThrow(saleSchema, res);
   },
 };

@@ -16,7 +16,15 @@ const KPI_DEFAULTS: DashboardKpi = {
   ordersGrowth: 0,
   totalCustomers: 0,
   totalProducts: 0,
-  currency: 'USD',
+  currency: 'EUR',
+  revenueToday: 0,
+  revenueThisMonth: 0,
+  revenueThisYear: 0,
+  salesToday: 0,
+  salesThisMonth: 0,
+  salesThisYear: 0,
+  lowStockCount: 0,
+  totalInventoryValue: 0,
 };
 
 export interface CompanyStats {

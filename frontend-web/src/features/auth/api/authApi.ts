@@ -13,21 +13,22 @@ import type {
   RefreshTokenResponse,
 } from '../models';
 
-const loginResponseSchema = z.object({ token: z.string().min(1) });
-const refreshResponseSchema = z.object({ token: z.string().min(1) });
+const loginResponseSchema = z.object({ accessToken: z.string().min(1) });
+const refreshResponseSchema = z.object({ accessToken: z.string().min(1) });
 const userProfileSchema = z.object({
   id: z.number(),
   username: z.string(),
   email: z.string(),
-  role: z.enum(['company', 'admin', 'manager', 'staff', 'customer', 'test']),
-  createdAt: z.string(),
+  role: z.string().transform((r) => r.toLowerCase() as import('../models').UserRole),
+  createdAt: z.string().optional(),
   tenantId: z.string().optional(),
 });
 const userResponseSchema = z.object({
   id: z.number(),
   username: z.string(),
   email: z.string(),
-  token: z.string().min(1),
+  role: z.string().optional(),
+  accessToken: z.string().min(1),
 });
 
 export const authApi = {

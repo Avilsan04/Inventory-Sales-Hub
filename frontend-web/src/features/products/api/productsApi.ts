@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import { mapKeysCamel } from '@core/api/mappers';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import {
   productListSchema,
@@ -17,35 +18,35 @@ import type {
 export const productsApi = {
   getProducts: async (): Promise<Product[]> => {
     const res = await httpClient.get<unknown>('/products');
-    return parseOrThrow(productListSchema, res);
+    return parseOrThrow(productListSchema, mapKeysCamel(res));
   },
 
   getProduct: async (id: string): Promise<Product> => {
     const res = await httpClient.get<unknown>(`/products/${id}`);
-    return parseOrThrow(productSchema, res);
+    return parseOrThrow(productSchema, mapKeysCamel(res));
   },
 
   getCategories: async (): Promise<Category[]> => {
     const res = await httpClient.get<unknown>('/products/categories');
-    return parseOrThrow(categoryListSchema, res);
+    return parseOrThrow(categoryListSchema, mapKeysCamel(res));
   },
 
   createProduct: async (data: CreateProductDTO): Promise<Product> => {
     const res = await httpClient.post<unknown>('/products', data);
-    return parseOrThrow(productSchema, res);
+    return parseOrThrow(productSchema, mapKeysCamel(res));
   },
 
   updateProduct: async (id: string, data: UpdateProductDTO): Promise<Product> => {
     const res = await httpClient.put<unknown>(`/products/${id}`, data);
-    return parseOrThrow(productSchema, res);
+    return parseOrThrow(productSchema, mapKeysCamel(res));
   },
 
   deleteProduct: async (id: string): Promise<void> => {
-    await httpClient.patch(`/products/${id}`, { is_active: false });
+    await httpClient.delete(`/products/${id}`);
   },
 
   createCategory: async (data: CreateCategoryDTO): Promise<Category> => {
     const res = await httpClient.post<unknown>('/products/categories', data);
-    return parseOrThrow(categorySchema, res);
+    return parseOrThrow(categorySchema, mapKeysCamel(res));
   },
 };

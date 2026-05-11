@@ -53,7 +53,7 @@ export const salesHandlers = [
     await delay(500);
     const tenantId = resolveTenant(request);
     const summary = getTenantBucket(tenantId, 'saleSummary', () => mockData.saleSummary);
-    return HttpResponse.json<SaleSummary>(summary as SaleSummary);
+    return HttpResponse.json<SaleSummary>(summary as unknown as SaleSummary);
   }),
 
   http.get(`${API_BASE_URL}/sales`, async ({ request }) => {

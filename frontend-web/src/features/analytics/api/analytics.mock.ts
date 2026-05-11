@@ -2,11 +2,9 @@ import { http, HttpResponse, delay, type DefaultBodyType } from 'msw';
 import { API_BASE_URL } from '@core/config';
 import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
 import type {
-  DashboardKpi,
   SalesPeriod,
   TopProduct,
   TopCustomer,
-  InventoryValue,
   LowStockAlert,
   CashFlowEntry,
   WasteAlert,
@@ -30,7 +28,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<DashboardKpi>(analytics.dashboard);
+    return HttpResponse.json(analytics.dashboard);
   }),
 
   http.get(`${API_BASE_URL}/analytics/sales`, async ({ request }) => {
@@ -79,7 +77,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<InventoryValue>(analytics.inventoryValue);
+    return HttpResponse.json(analytics.inventoryValue);
   }),
 
   http.get(`${API_BASE_URL}/analytics/low-stock-alerts`, async ({ request }) => {

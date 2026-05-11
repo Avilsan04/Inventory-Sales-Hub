@@ -450,6 +450,7 @@
     "activeEmployees": "Active",
     "adminCount": "Admins",
     "name": "Name",
+    "username": "Username",
     "email": "Email",
     "role": "Role",
     "status": "Status",

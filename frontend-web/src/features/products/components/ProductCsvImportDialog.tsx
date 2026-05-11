@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { parseCsvFile, type ParsedRow } from '@shared/lib/csvParser';
-import { toCents } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
@@ -27,12 +26,6 @@ interface ParsedProduct extends CreateProductDTO {
   _error?: string;
 }
 
-const VALID_UOMS = new Set<string>(['unit', 'kg', 'litre', 'box', 'pack']);
-
-function toValidUom(v: string | undefined): CreateProductDTO['uom'] {
-  return VALID_UOMS.has(v ?? '') ? (v as CreateProductDTO['uom']) : 'unit';
-}
-
 function validateRow(row: ParsedRow, priceRaw: number): string | undefined {
   const errors: string[] = [];
   if (!row['name']) errors.push('name required');
@@ -42,15 +35,16 @@ function validateRow(row: ParsedRow, priceRaw: number): string | undefined {
 }
 
 function rowToDTO(row: ParsedRow, index: number): ParsedProduct {
-  const priceRaw = parseFloat(row['price'] ?? '0');
+  const priceRaw = parseFloat(row['price'] ?? row['purchasePrice'] ?? '0');
+  const price = isNaN(priceRaw) ? 0 : priceRaw;
+  const categoryRaw = row['categoryId'];
   return {
     name: row['name'] ?? '',
     sku: row['sku'] ?? '',
-    price: toCents(isNaN(priceRaw) ? 0 : priceRaw),
-    currency: row['currency'] || 'EUR',
+    purchasePrice: price,
+    salePrice: price,
     description: row['description'] || undefined,
-    categoryId: row['categoryId'] || undefined,
-    uom: toValidUom(row['uom']),
+    categoryId: categoryRaw ? Number(categoryRaw) : undefined,
     _rowIndex: index,
     _error: validateRow(row, priceRaw),
   };
@@ -240,7 +234,7 @@ export function ProductCsvImportDialog({
                       <TableCell>{p._rowIndex + 1}</TableCell>
                       <TableCell>{p.name}</TableCell>
                       <TableCell>{p.sku}</TableCell>
-                      <TableCell>{(p.price / 100).toFixed(2)}</TableCell>
+                      <TableCell>{p.purchasePrice.toFixed(2)}</TableCell>
                       <TableCell
                         style={{
                           color: p._error ? 'var(--color-destructive)' : 'var(--color-success)',

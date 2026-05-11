@@ -62,12 +62,15 @@ export const productHandlers = [
     const products = getTenantBucket(tenantId, 'products', () => baseProducts);
     const body = (await request.json()) as Partial<Product>;
     const now = new Date().toISOString();
+    const salePrice = body.salePrice ?? body.price ?? 0;
     const newProduct: Product = {
       id: crypto.randomUUID(),
       sku: body.sku ?? 'SKU-NEW',
       name: body.name ?? 'Nuevo producto',
       description: body.description,
-      price: body.price ?? 0,
+      price: salePrice,
+      purchasePrice: body.purchasePrice ?? salePrice,
+      salePrice,
       currency: body.currency ?? 'EUR',
       categoryId: body.categoryId,
       parentId: body.parentId,

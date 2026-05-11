@@ -19,12 +19,16 @@ export function useUpdateProduct(
       await queryClient.cancelQueries({ queryKey: productKeys.detail(id) });
       const previousList = queryClient.getQueryData<Product[]>(productKeys.lists());
       const previousDetail = queryClient.getQueryData<Product>(productKeys.detail(id));
+      const patch = {
+        ...data,
+        categoryId: data.categoryId !== undefined ? String(data.categoryId) : undefined,
+      };
       queryClient.setQueryData<Product[]>(
         productKeys.lists(),
-        (old) => old?.map((p) => (p.id === id ? { ...p, ...data } : p)) ?? []
+        (old) => old?.map((p) => (p.id === id ? { ...p, ...patch } : p)) ?? []
       );
       queryClient.setQueryData<Product>(productKeys.detail(id), (old) =>
-        old !== undefined ? { ...old, ...data } : undefined
+        old !== undefined ? { ...old, ...patch } : undefined
       );
       return { previousList, previousDetail };
     },

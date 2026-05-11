@@ -45,8 +45,8 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
     axiosInstance,
     async () => {
       // Browser automatically sends the HttpOnly refresh_token cookie here
-      const response = await axiosInstance.post<{ token: string }>('/auth/refresh');
-      const newToken = response.data.token;
+      const response = await axiosInstance.post<{ accessToken: string }>('/auth/refresh');
+      const newToken = response.data.accessToken;
       tokenStorage.saveToken(newToken);
       return newToken;
     },

@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateProduct, useCategories, useProducts } from '@features/products';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { toCents } from '@shared/lib/formatCurrency';
 import { UOM_OPTIONS } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
 import {
@@ -70,10 +69,12 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
   const onSubmit = (data: FormValues): void => {
     mutate(
       {
-        ...data,
-        price: toCents(data.price),
-        categoryId: data.categoryId ?? undefined,
-        parentId: isVariant ? (data.parentId ?? undefined) : undefined,
+        name: data.name,
+        description: data.description,
+        sku: data.sku,
+        purchasePrice: data.price,
+        salePrice: data.price,
+        categoryId: data.categoryId ? Number(data.categoryId) : undefined,
       },
       {
         onSuccess: () => {

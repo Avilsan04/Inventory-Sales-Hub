@@ -25,11 +25,11 @@ export class AuthService implements IAuthService {
     }
 
     const response = await this._authApi.login(credentials);
-    if (response.token.trim().length === 0) {
+    if (response.accessToken.trim().length === 0) {
       throw new Error('[Security Validation] Empty token received from authentication provider.');
     }
 
-    this._tokenStorage.saveToken(response.token);
+    this._tokenStorage.saveToken(response.accessToken);
     broadcastTabSync({ type: 'AUTH_LOGIN' });
 
     try {
@@ -58,11 +58,11 @@ export class AuthService implements IAuthService {
     }
 
     const response = await this._authApi.register(data);
-    if (response.token.trim().length === 0) {
+    if (response.accessToken.trim().length === 0) {
       throw new Error('[Security Validation] Empty token received from authentication provider.');
     }
 
-    this._tokenStorage.saveToken(response.token);
+    this._tokenStorage.saveToken(response.accessToken);
   }
 
   public async logout(): Promise<void> {

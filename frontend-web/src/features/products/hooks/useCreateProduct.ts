@@ -19,11 +19,23 @@ export function useCreateProduct(): UseMutationResult<
 
       const previousProducts = queryClient.getQueryData<Product[]>(productKeys.lists()) ?? [];
       const optimisticProduct: Product = {
-        ...dto,
         id: crypto.randomUUID(),
+        name: dto.name,
+        description: dto.description,
+        sku: dto.sku,
+        price: dto.salePrice,
+        purchasePrice: dto.purchasePrice,
+        salePrice: dto.salePrice,
+        currency: 'EUR',
+        categoryId: dto.categoryId ? String(dto.categoryId) : undefined,
+        supplierId: dto.supplierId,
+        supplierName: undefined,
+        uom: 'unit',
         isActive: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        imageUrl: undefined,
+        parentId: undefined,
       };
 
       queryClient.setQueryData<Product[]>(productKeys.lists(), (old) =>

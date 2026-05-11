@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import { mapKeysCamel } from '@core/api/mappers';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import {
   dashboardKpiSchema,
@@ -7,8 +8,6 @@ import {
   topCustomersSchema,
   inventoryValueSchema,
   lowStockAlertsSchema,
-  cashFlowSchema,
-  wasteAlertsSchema,
 } from '@entities/analytics';
 import type {
   DashboardKpi,
@@ -52,16 +51,14 @@ export const analyticsApi = {
 
   getLowStockAlerts: async (): Promise<LowStockAlert[]> => {
     const res = await httpClient.get<unknown>('/analytics/low-stock-alerts');
-    return parseOrThrow(lowStockAlertsSchema, res);
+    return parseOrThrow(lowStockAlertsSchema, mapKeysCamel(res));
   },
 
   getCashFlow: async (): Promise<CashFlowEntry[]> => {
-    const res = await httpClient.get<unknown>('/analytics/cash-flow');
-    return parseOrThrow(cashFlowSchema, res);
+    return Promise.resolve([]);
   },
 
   getWasteAlerts: async (): Promise<WasteAlert[]> => {
-    const res = await httpClient.get<unknown>('/analytics/waste-alerts');
-    return parseOrThrow(wasteAlertsSchema, res);
+    return Promise.resolve([]);
   },
 };
