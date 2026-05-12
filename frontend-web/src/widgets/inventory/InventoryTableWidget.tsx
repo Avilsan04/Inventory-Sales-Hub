@@ -100,7 +100,7 @@ export function InventoryTableWidget({
                     {item.quantity}
                   </TableCell>
                   <TableCell className={cn(styles['numCell'], styles['reorderCell'])}>
-                    {item.reorderThreshold !== undefined ? item.reorderThreshold : '—'}
+                    {item.reorderThreshold}
                   </TableCell>
                   <TableCell className={styles['priceCell']}>
                     {formatCurrency(item.price, item.currency)}

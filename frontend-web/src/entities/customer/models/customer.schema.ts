@@ -3,12 +3,14 @@ import { z } from 'zod';
 const rawCustomerSchema = z.object({
   id: z.number(),
   name: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().nullish(),
 });
 
 export const customerSchema = rawCustomerSchema.transform(
-  (c): {
+  (
+    c
+  ): {
     id: string;
     name: string;
     email: string;
@@ -31,7 +33,7 @@ export const customerListSchema = z.array(customerSchema);
 
 export const createCustomerSchema = z.object({
   name: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   phone: z.string().optional(),
 });
 

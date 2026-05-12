@@ -14,7 +14,9 @@ const rawDashboardSchema = z.object({
 });
 
 export const dashboardKpiSchema = rawDashboardSchema.transform(
-  (d): {
+  (
+    d
+  ): {
     totalRevenue: number;
     totalOrders: number;
     totalCustomers: number;
@@ -31,21 +33,21 @@ export const dashboardKpiSchema = rawDashboardSchema.transform(
     lowStockCount: number;
     totalInventoryValue: number;
   } => ({
-    totalRevenue: Number(d.revenueThisMonth),
+    totalRevenue: d.revenueThisMonth,
     totalOrders: d.salesThisMonth,
     totalCustomers: d.totalCustomers,
     totalProducts: d.totalActiveProducts,
     revenueGrowth: 0,
     ordersGrowth: 0,
     currency: 'EUR',
-    revenueToday: Number(d.revenueToday),
-    revenueThisMonth: Number(d.revenueThisMonth),
-    revenueThisYear: Number(d.revenueThisYear),
+    revenueToday: d.revenueToday,
+    revenueThisMonth: d.revenueThisMonth,
+    revenueThisYear: d.revenueThisYear,
     salesToday: d.salesToday,
     salesThisMonth: d.salesThisMonth,
     salesThisYear: d.salesThisYear,
     lowStockCount: d.lowStockCount,
-    totalInventoryValue: Number(d.totalInventoryValue),
+    totalInventoryValue: d.totalInventoryValue,
   })
 );
 
@@ -58,7 +60,7 @@ const rawSalesPeriodSchema = z.object({
 export const salesPeriodSchema = rawSalesPeriodSchema.transform(
   (p): { period: string; revenue: number; orders: number } => ({
     period: p.date,
-    revenue: Number(p.revenue),
+    revenue: p.revenue,
     orders: p.ordersCount,
   })
 );
@@ -72,7 +74,15 @@ const rawTopProductSchema = z.object({
 });
 
 export const topProductSchema = rawTopProductSchema.transform(
-  (p): { productId: string; productName: string; sku: string; totalSold: number; revenue: number } => ({
+  (
+    p
+  ): {
+    productId: string;
+    productName: string;
+    sku: string;
+    totalSold: number;
+    revenue: number;
+  } => ({
     productId: String(p.productId),
     productName: p.name,
     sku: '',
@@ -91,12 +101,20 @@ const rawTopCustomerSchema = z.object({
 });
 
 export const topCustomerSchema = rawTopCustomerSchema.transform(
-  (c): { customerId: string; customerName: string; email: string; totalOrders: number; totalSpent: number } => ({
+  (
+    c
+  ): {
+    customerId: string;
+    customerName: string;
+    email: string;
+    totalOrders: number;
+    totalSpent: number;
+  } => ({
     customerId: String(c.customerId),
     customerName: c.customerName,
     email: '',
     totalOrders: c.ordersCount,
-    totalSpent: Number(c.totalSpent),
+    totalSpent: c.totalSpent,
   })
 );
 
@@ -110,7 +128,9 @@ const rawInventoryValueSchema = z.object({
 });
 
 export const inventoryValueSchema = rawInventoryValueSchema.transform(
-  (v): {
+  (
+    v
+  ): {
     totalItems: number;
     totalValue: number;
     currency: string;
@@ -120,11 +140,11 @@ export const inventoryValueSchema = rawInventoryValueSchema.transform(
     totalProducts: number;
   } => ({
     totalItems: v.totalUnits,
-    totalValue: Number(v.totalSaleValue),
+    totalValue: v.totalSaleValue,
     currency: 'EUR',
     byStatus: [],
-    totalPurchaseValue: Number(v.totalPurchaseValue),
-    totalSaleValue: Number(v.totalSaleValue),
+    totalPurchaseValue: v.totalPurchaseValue,
+    totalSaleValue: v.totalSaleValue,
     totalProducts: v.totalProducts,
   })
 );
@@ -144,7 +164,9 @@ const rawInventoryResponseSchema = z.object({
 });
 
 export const lowStockAlertSchema = rawInventoryResponseSchema.transform(
-  (i): { itemId: string; sku: string; name: string; currentQuantity: number; threshold: number } => ({
+  (
+    i
+  ): { itemId: string; sku: string; name: string; currentQuantity: number; threshold: number } => ({
     itemId: String(i.id),
     sku: i.product.sku,
     name: i.product.name,

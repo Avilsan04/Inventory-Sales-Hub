@@ -65,7 +65,7 @@ export function InventoryPage(): React.ReactElement {
         price: fromCents(item.price),
         currency: item.currency,
         status: item.status,
-        reorderThreshold: item.reorderThreshold ?? '',
+        reorderThreshold: item.reorderThreshold,
       })),
       'inventory'
     );

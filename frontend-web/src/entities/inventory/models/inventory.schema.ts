@@ -22,7 +22,9 @@ const rawInventoryItemSchema = z.object({
 });
 
 export const inventoryItemSchema = rawInventoryItemSchema.transform(
-  (i): {
+  (
+    i
+  ): {
     id: string;
     productId: string;
     sku: string;
@@ -47,13 +49,9 @@ export const inventoryItemSchema = rawInventoryItemSchema.transform(
     name: i.product.name,
     description: i.product.description ?? undefined,
     quantity: i.quantity,
-    price: Number(i.product.salePrice),
+    price: i.product.salePrice,
     currency: 'EUR',
-    status: (i.quantity === 0
-      ? 'OUT_OF_STOCK'
-      : i.isLowStock
-        ? 'LOW_STOCK'
-        : 'IN_STOCK') as 'IN_STOCK' | 'LOW_STOCK' | 'OUT_OF_STOCK',
+    status: i.quantity === 0 ? 'OUT_OF_STOCK' : i.isLowStock ? 'LOW_STOCK' : 'IN_STOCK',
     category: i.product.category?.name ?? undefined,
     reorderThreshold: i.minStock,
     minStock: i.minStock,
@@ -99,7 +97,9 @@ const rawMovementSchema = z.object({
 });
 
 export const inventoryMovementSchema = rawMovementSchema.transform(
-  (m): {
+  (
+    m
+  ): {
     id: string;
     inventoryItemId: string;
     type: 'in' | 'out' | 'adjustment';

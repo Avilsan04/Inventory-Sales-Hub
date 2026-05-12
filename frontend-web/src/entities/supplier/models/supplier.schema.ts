@@ -9,7 +9,9 @@ const rawSupplierSchema = z.object({
 });
 
 export const supplierSchema = rawSupplierSchema.transform(
-  (s): {
+  (
+    s
+  ): {
     id: string;
     name: string;
     email?: string;
@@ -51,11 +53,19 @@ const rawSupplierOrderSchema = z.object({
 });
 
 export const supplierOrderSchema = rawSupplierOrderSchema.transform(
-  (o): {
+  (
+    o
+  ): {
     id: string;
     supplierId: string;
     status: 'pending' | 'confirmed' | 'delivered' | 'cancelled';
-    items: { productId: number; productName: string; quantity: number; unitPrice: number; subtotal?: number }[];
+    items: {
+      productId: number;
+      productName: string;
+      quantity: number;
+      unitPrice: number;
+      subtotal?: number;
+    }[];
     total: number;
     currency: string;
     createdAt: string;
@@ -63,9 +73,9 @@ export const supplierOrderSchema = rawSupplierOrderSchema.transform(
   } => ({
     id: String(o.id),
     supplierId: String(o.supplierId),
-    status: (o.status.toLowerCase() as 'pending' | 'confirmed' | 'delivered' | 'cancelled'),
+    status: o.status.toLowerCase() as 'pending' | 'confirmed' | 'delivered' | 'cancelled',
     items: o.items,
-    total: Number(o.totalAmount),
+    total: o.totalAmount,
     currency: 'EUR',
     createdAt: o.createdAt,
     updatedAt: o.createdAt,
@@ -76,7 +86,7 @@ export const supplierListSchema = z.array(supplierSchema);
 
 export const createSupplierSchema = z.object({
   name: z.string().min(1),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   phone: z.string().optional(),
   address: z.string().optional(),
 });

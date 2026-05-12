@@ -37,23 +37,27 @@ export const analyticsHandlers = [
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
     const url = new URL(request.url);
-    const from = url.searchParams.get('from');
-    const to = url.searchParams.get('to');
+    const from = url.searchParams.get('from') ?? url.searchParams.get('start');
+    const to = url.searchParams.get('to') ?? url.searchParams.get('end');
     const period = url.searchParams.get('period');
-    let data = analytics.salesPeriod as SalesPeriod[];
+    let data = analytics.salesPeriod as unknown as Array<{
+      date: string;
+      revenue: number;
+      ordersCount: number;
+    }>;
     if (from || to || period) {
       const now = new Date();
       let cutoff: Date | null = null;
       if (period === '7d') cutoff = new Date(now.getTime() - 7 * 86400_000);
       else if (period === '30d') cutoff = new Date(now.getTime() - 30 * 86400_000);
       if (from && to) {
-        data = data.filter((p) => p.period >= from && p.period <= to);
+        data = data.filter((p) => p.date >= from && p.date <= to);
       } else if (cutoff) {
         const cutoffStr = cutoff.toISOString().slice(0, 10);
-        data = data.filter((p) => !p.period || p.period >= cutoffStr);
+        data = data.filter((p) => p.date >= cutoffStr);
       }
     }
-    return HttpResponse.json<SalesPeriod[]>(data);
+    return HttpResponse.json<SalesPeriod[]>(data as unknown as SalesPeriod[]);
   }),
 
   http.get(`${API_BASE_URL}/analytics/top-products`, async ({ request }) => {
@@ -61,7 +65,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<TopProduct[]>(analytics.topProducts);
+    return HttpResponse.json<TopProduct[]>(analytics.topProducts as unknown as TopProduct[]);
   }),
 
   http.get(`${API_BASE_URL}/analytics/top-customers`, async ({ request }) => {
@@ -69,7 +73,7 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers);
+    return HttpResponse.json<TopCustomer[]>(analytics.topCustomers as unknown as TopCustomer[]);
   }),
 
   http.get(`${API_BASE_URL}/analytics/inventory-value`, async ({ request }) => {
@@ -85,7 +89,9 @@ export const analyticsHandlers = [
     const denied = requireAnalyticsAccess(request);
     if (denied) return denied;
     const analytics = getAnalyticsFor(request);
-    return HttpResponse.json<LowStockAlert[]>(analytics.lowStockAlerts);
+    return HttpResponse.json<LowStockAlert[]>(
+      analytics.lowStockAlerts as unknown as LowStockAlert[]
+    );
   }),
 
   http.get(`${API_BASE_URL}/analytics/cash-flow`, async ({ request }) => {

@@ -1,10 +1,10 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
 import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
-import type { Supplier, SupplierOrder } from '@entities/supplier';
+import type { SupplierOrder } from '@entities/supplier';
 import mockData from '@app/mock/mock-data.json';
 
-const baseSuppliers: Supplier[] = [...mockData.suppliers] as Supplier[];
+const baseSuppliers = [...mockData.suppliers];
 
 export const supplierHandlers = [
   http.get(`${API_BASE_URL}/suppliers`, async ({ request }) => {
@@ -24,7 +24,7 @@ export const supplierHandlers = [
     await delay(400);
     const tenantId = resolveTenant(request);
     const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
-    const item = suppliers.find((s) => s.id === params['id']);
+    const item = suppliers.find((s) => String(s.id) === params['id']);
     if (!item) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(item);
   }),
@@ -35,20 +35,19 @@ export const supplierHandlers = [
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
-    const body = (await request.json()) as Partial<Supplier>;
+    const body = (await request.json()) as Record<string, unknown>;
     const now = new Date().toISOString();
-    const newSupplier: Supplier = {
-      id: crypto.randomUUID(),
-      name: body.name ?? 'Nuevo proveedor',
-      email: body.email,
-      phone: body.phone,
-      address: body.address,
-      contactPerson: body.contactPerson,
+    const newSupplier = {
+      id: suppliers.length + 1,
+      name: (body['name'] as string | undefined) ?? 'Nuevo proveedor',
+      email: body['email'] as string | null | undefined,
+      phone: body['phone'] as string | null | undefined,
+      address: body['address'] as string | null | undefined,
       createdAt: now,
       updatedAt: now,
     };
-    suppliers.push(newSupplier);
-    return HttpResponse.json<Supplier>(newSupplier, { status: 201 });
+    suppliers.push(newSupplier as (typeof baseSuppliers)[0]);
+    return HttpResponse.json(newSupplier, { status: 201 });
   }),
 
   http.put(`${API_BASE_URL}/suppliers/:id`, async ({ params, request }) => {
@@ -57,13 +56,13 @@ export const supplierHandlers = [
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
-    const body = (await request.json()) as Partial<Supplier>;
-    const idx = suppliers.findIndex((s) => s.id === params['id']);
+    const body = (await request.json()) as Record<string, unknown>;
+    const idx = suppliers.findIndex((s) => String(s.id) === params['id']);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     const existing = suppliers[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
-    suppliers[idx] = updated;
+    suppliers[idx] = updated as (typeof baseSuppliers)[0];
     return HttpResponse.json(updated);
   }),
 
@@ -82,7 +81,7 @@ export const supplierHandlers = [
     const now = new Date().toISOString();
     return HttpResponse.json<SupplierOrder>(
       {
-        id: crypto.randomUUID(),
+        id: String(Date.now()),
         supplierId: params['id'] as string,
         status: 'pending',
         items: [],

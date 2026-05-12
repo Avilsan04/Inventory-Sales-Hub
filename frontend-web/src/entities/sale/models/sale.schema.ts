@@ -14,7 +14,9 @@ const rawSaleItemSchema = z.object({
 });
 
 export const saleItemSchema = rawSaleItemSchema.transform(
-  (item): {
+  (
+    item
+  ): {
     id: string;
     saleId: string;
     productId: string;
@@ -28,15 +30,15 @@ export const saleItemSchema = rawSaleItemSchema.transform(
     productId: String(item.productId),
     productName: item.productName,
     quantity: item.quantity,
-    unitPrice: Number(item.unitPrice),
-    subtotal: Number(item.subtotal),
+    unitPrice: item.unitPrice,
+    subtotal: item.subtotal,
   })
 );
 
 const rawCustomerInSaleSchema = z.object({
   id: z.number(),
   name: z.string(),
-  email: z.string().email().nullish(),
+  email: z.email().nullish(),
   phone: z.string().nullish(),
 });
 
@@ -55,7 +57,9 @@ const rawSaleSchema = z.object({
 });
 
 export const saleSchema = rawSaleSchema.transform(
-  (s): {
+  (
+    s
+  ): {
     id: string;
     customerId?: string;
     customerName?: string;
@@ -69,7 +73,15 @@ export const saleSchema = rawSaleSchema.transform(
     taxAmount: number;
     total: number;
     currency: string;
-    items: { id: string; saleId: string; productId: string; productName: string; quantity: number; unitPrice: number; subtotal: number }[];
+    items: {
+      id: string;
+      saleId: string;
+      productId: string;
+      productName: string;
+      quantity: number;
+      unitPrice: number;
+      subtotal: number;
+    }[];
     createdAt: string;
     updatedAt: string;
   } => ({
@@ -79,12 +91,12 @@ export const saleSchema = rawSaleSchema.transform(
     employeeId: undefined,
     processedBy: s.processedBy ?? undefined,
     status: s.status.toLowerCase() as 'pending' | 'completed' | 'cancelled',
-    subtotal: s.subtotal != null ? Number(s.subtotal) : undefined,
+    subtotal: s.subtotal != null ? s.subtotal : undefined,
     discountPercent: 0,
     discountAmount: 0,
-    taxPercent: s.taxRate != null ? Number(s.taxRate) * 100 : 0,
-    taxAmount: s.taxAmount != null ? Number(s.taxAmount) : 0,
-    total: Number(s.total),
+    taxPercent: s.taxRate != null ? s.taxRate * 100 : 0,
+    taxAmount: s.taxAmount != null ? s.taxAmount : 0,
+    total: s.total,
     currency: 'EUR',
     items: s.items.map((item) => ({
       id: String(item.id),
@@ -92,8 +104,8 @@ export const saleSchema = rawSaleSchema.transform(
       productId: String(item.productId),
       productName: item.productName,
       quantity: item.quantity,
-      unitPrice: Number(item.unitPrice),
-      subtotal: Number(item.subtotal),
+      unitPrice: item.unitPrice,
+      subtotal: item.subtotal,
     })),
     createdAt: s.createdAt,
     updatedAt: s.updatedAt,
@@ -119,7 +131,9 @@ const rawSaleSummarySchema = z.object({
 });
 
 export const saleSummarySchema = rawSaleSummarySchema.transform(
-  (s): {
+  (
+    s
+  ): {
     totalSales: number;
     totalRevenue: number;
     currency: string;
@@ -127,9 +141,9 @@ export const saleSummarySchema = rawSaleSummarySchema.transform(
     salesToday: number;
   } => ({
     totalSales: s.month.salesCount,
-    totalRevenue: Number(s.month.revenue),
+    totalRevenue: s.month.revenue,
     currency: 'EUR',
-    revenueToday: Number(s.today.revenue),
+    revenueToday: s.today.revenue,
     salesToday: s.today.salesCount,
   })
 );

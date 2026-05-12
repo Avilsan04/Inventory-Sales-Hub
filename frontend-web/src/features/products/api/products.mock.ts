@@ -1,11 +1,10 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
 import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
-import type { Category, Product } from '@entities/product';
 import mockData from '@app/mock/mock-data.json';
 
-const baseCategories: Category[] = [...mockData.productCategories] as Category[];
-const baseProducts: Product[] = [...mockData.products] as Product[];
+const baseCategories = [...mockData.productCategories];
+const baseProducts = [...mockData.products];
 
 export const productHandlers = [
   http.get(`${API_BASE_URL}/products/categories`, async ({ request }) => {
@@ -21,14 +20,14 @@ export const productHandlers = [
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const categories = getTenantBucket(tenantId, 'productCategories', () => baseCategories);
-    const body = (await request.json()) as Partial<Category>;
-    const created: Category = {
-      id: crypto.randomUUID(),
-      name: body.name ?? 'Nueva categoría',
-      description: body.description,
+    const body = (await request.json()) as Record<string, unknown>;
+    const created = {
+      id: categories.length + 1,
+      name: (body['name'] as string | undefined) ?? 'Nueva categoría',
+      description: (body['description'] as string | undefined) ?? null,
     };
-    categories.push(created);
-    return HttpResponse.json<Category>(created, { status: 201 });
+    categories.push(created as (typeof baseCategories)[0]);
+    return HttpResponse.json(created, { status: 201 });
   }),
 
   http.get(`${API_BASE_URL}/products`, async ({ request }) => {
@@ -49,7 +48,7 @@ export const productHandlers = [
     await delay(400);
     const tenantId = resolveTenant(request);
     const products = getTenantBucket(tenantId, 'products', () => baseProducts);
-    const item = products.find((p) => p.id === params['id']);
+    const item = products.find((p) => String(p.id) === params['id']);
     if (!item) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(item);
   }),
@@ -60,27 +59,22 @@ export const productHandlers = [
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const products = getTenantBucket(tenantId, 'products', () => baseProducts);
-    const body = (await request.json()) as Partial<Product>;
-    const now = new Date().toISOString();
-    const salePrice = body.salePrice ?? body.price ?? 0;
-    const newProduct: Product = {
-      id: crypto.randomUUID(),
-      sku: body.sku ?? 'SKU-NEW',
-      name: body.name ?? 'Nuevo producto',
-      description: body.description,
-      price: salePrice,
-      purchasePrice: body.purchasePrice ?? salePrice,
+    const body = (await request.json()) as Record<string, unknown>;
+    const salePrice = (body['salePrice'] as number | undefined) ?? 0;
+    const newProduct = {
+      id: products.length + 1,
+      sku: (body['sku'] as string | undefined) ?? 'SKU-NEW',
+      name: (body['name'] as string | undefined) ?? 'Nuevo producto',
+      description: (body['description'] as string | undefined) ?? null,
+      purchasePrice: (body['purchasePrice'] as number | undefined) ?? Math.round(salePrice * 0.75),
       salePrice,
-      currency: body.currency ?? 'EUR',
-      categoryId: body.categoryId,
-      parentId: body.parentId,
-      uom: body.uom ?? 'unit',
+      category: (body['category'] as Record<string, unknown> | undefined) ?? null,
+      supplierId: (body['supplierId'] as number | undefined) ?? null,
+      supplierName: null,
       isActive: true,
-      createdAt: now,
-      updatedAt: now,
     };
-    products.push(newProduct);
-    return HttpResponse.json<Product>(newProduct, { status: 201 });
+    products.push(newProduct as (typeof baseProducts)[0]);
+    return HttpResponse.json(newProduct, { status: 201 });
   }),
 
   http.put(`${API_BASE_URL}/products/:id`, async ({ params, request }) => {
@@ -89,13 +83,13 @@ export const productHandlers = [
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const products = getTenantBucket(tenantId, 'products', () => baseProducts);
-    const body = (await request.json()) as Partial<Product>;
-    const idx = products.findIndex((p) => p.id === params['id']);
+    const body = (await request.json()) as Record<string, unknown>;
+    const idx = products.findIndex((p) => String(p.id) === params['id']);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     const existing = products[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
-    const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
-    products[idx] = updated;
+    const updated = { ...existing, ...body };
+    products[idx] = updated as (typeof baseProducts)[0];
     return HttpResponse.json(updated);
   }),
 
@@ -106,12 +100,12 @@ export const productHandlers = [
     const tenantId = resolveTenant(request);
     const products = getTenantBucket(tenantId, 'products', () => baseProducts);
     const body = (await request.json()) as { is_active?: boolean };
-    const idx = products.findIndex((p) => p.id === params['id']);
+    const idx = products.findIndex((p) => String(p.id) === params['id']);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     const existing = products[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     if ('is_active' in body) {
-      products[idx] = { ...existing, isActive: body.is_active ?? true };
+      products[idx] = { ...existing, isActive: body.is_active ?? true } as (typeof baseProducts)[0];
       return new HttpResponse(null, { status: 204 });
     }
     return new HttpResponse(null, { status: 400 });

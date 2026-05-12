@@ -10,7 +10,7 @@ interface AdjustContext {
 
 function applyAdjustment(item: InventoryItem, delta: number): InventoryItem {
   const newQty = Math.max(0, item.quantity + delta);
-  const threshold = item.reorderThreshold ?? 5;
+  const threshold = item.reorderThreshold;
   const status: InventoryItem['status'] =
     newQty === 0 ? 'OUT_OF_STOCK' : newQty <= threshold ? 'LOW_STOCK' : 'IN_STOCK';
   return { ...item, quantity: newQty, status };

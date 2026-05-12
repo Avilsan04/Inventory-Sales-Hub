@@ -1,29 +1,25 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
 import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
-import type { InventoryItem, InventoryMovement } from '@entities/inventory';
+import type { InventoryMovement } from '@entities/inventory';
 import mockData from '@app/mock/mock-data.json';
 
-const baseInventory: InventoryItem[] = [...mockData.inventory] as InventoryItem[];
-const baseMovements: InventoryMovement[] = [...mockData.inventoryMovements] as InventoryMovement[];
+const baseInventory = [...mockData.inventory];
+const baseMovements = [...mockData.inventoryMovements] as unknown as InventoryMovement[];
 
 export const inventoryHandlers = [
   http.get(`${API_BASE_URL}/inventory`, async ({ request }) => {
     await delay(800);
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    return HttpResponse.json(inventory.filter((i) => (i.isActive as boolean | undefined) ?? true));
+    return HttpResponse.json(inventory.filter((i) => i.product.isActive));
   }),
 
   http.get(`${API_BASE_URL}/inventory/low-stock`, async ({ request }) => {
     await delay(600);
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    return HttpResponse.json(
-      inventory.filter(
-        (i) => ((i.isActive as boolean | undefined) ?? true) && i.status !== 'IN_STOCK'
-      )
-    );
+    return HttpResponse.json(inventory.filter((i) => i.product.isActive && i.isLowStock));
   }),
 
   http.get(`${API_BASE_URL}/inventory/movements`, async ({ request }) => {
@@ -37,7 +33,7 @@ export const inventoryHandlers = [
     await delay(400);
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    const item = inventory.find((i) => i.id === params['id']);
+    const item = inventory.find((i) => String(i.id) === params['id']);
     if (!item) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(item);
   }),
@@ -48,26 +44,27 @@ export const inventoryHandlers = [
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    const body = (await request.json()) as Partial<InventoryItem>;
-    const qty = body.quantity ?? 0;
-    const threshold = body.reorderThreshold ?? body.minStock ?? 0;
-    const newItem: InventoryItem = {
-      id: crypto.randomUUID(),
-      productId: body.productId ?? crypto.randomUUID(),
-      sku: body.sku ?? 'SKU-NEW',
-      name: body.name ?? 'New item',
-      description: body.description,
+    const body = (await request.json()) as Record<string, unknown>;
+    const qty = (body['quantity'] as number | undefined) ?? 0;
+    const minStock = (body['minStock'] as number | undefined) ?? 0;
+    const nextId = inventory.length + 1;
+    const newItem = {
+      id: nextId,
+      product: (body['product'] as Record<string, unknown> | undefined) ?? {
+        id: nextId,
+        name: (body['name'] as string | undefined) ?? 'New item',
+        description: (body['description'] as string | undefined) ?? null,
+        sku: (body['sku'] as string | undefined) ?? 'SKU-NEW',
+        purchasePrice: (body['purchasePrice'] as number | undefined) ?? 0,
+        salePrice: (body['salePrice'] as number | undefined) ?? 0,
+        category: (body['category'] as Record<string, unknown> | undefined) ?? null,
+        isActive: true,
+      },
       quantity: qty,
-      price: body.price ?? 0,
-      currency: body.currency ?? 'EUR',
-      status: qty === 0 ? 'OUT_OF_STOCK' : qty <= threshold ? 'LOW_STOCK' : 'IN_STOCK',
-      category: body.category,
-      reorderThreshold: threshold,
-      minStock: threshold,
-      isActive: true,
-      lastUpdated: new Date().toISOString(),
+      minStock,
+      isLowStock: qty === 0 || qty <= minStock,
     };
-    inventory.push(newItem);
+    inventory.push(newItem as (typeof baseInventory)[0]);
     return HttpResponse.json(newItem, { status: 201 });
   }),
 
@@ -75,13 +72,13 @@ export const inventoryHandlers = [
     await delay(500);
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    const body = (await request.json()) as Partial<InventoryItem>;
-    const idx = inventory.findIndex((i) => i.id === params['id']);
+    const body = (await request.json()) as Record<string, unknown>;
+    const idx = inventory.findIndex((i) => String(i.id) === params['id']);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     const existing = inventory[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
-    const updated = { ...existing, ...body, lastUpdated: new Date().toISOString() };
-    inventory[idx] = updated;
+    const updated = { ...existing, ...body };
+    inventory[idx] = updated as (typeof baseInventory)[0];
     return HttpResponse.json(updated);
   }),
 
@@ -92,15 +89,14 @@ export const inventoryHandlers = [
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
     const body = (await request.json()) as { quantity: number };
-    const existing = inventory.find((i) => i.id === params['id']);
+    const existing = inventory.find((i) => String(i.id) === params['id']);
     if (!existing) return new HttpResponse(null, { status: 404 });
     const newQty = existing.quantity + body.quantity;
-    const threshold = existing.reorderThreshold ?? 5;
+    const threshold = existing.minStock;
     return HttpResponse.json({
       ...existing,
       quantity: newQty,
-      status: newQty === 0 ? 'OUT_OF_STOCK' : newQty <= threshold ? 'LOW_STOCK' : 'IN_STOCK',
-      lastUpdated: new Date().toISOString(),
+      isLowStock: newQty === 0 || newQty <= threshold,
     });
   }),
 
@@ -109,12 +105,15 @@ export const inventoryHandlers = [
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
     const body = (await request.json()) as { is_active?: boolean };
-    const idx = inventory.findIndex((i) => i.id === params['id']);
+    const idx = inventory.findIndex((i) => String(i.id) === params['id']);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     const existing = inventory[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     if ('is_active' in body) {
-      inventory[idx] = { ...existing, isActive: body.is_active ?? true };
+      inventory[idx] = {
+        ...existing,
+        product: { ...existing.product, isActive: body.is_active ?? true },
+      } as (typeof baseInventory)[0];
       return new HttpResponse(null, { status: 204 });
     }
     return new HttpResponse(null, { status: 400 });

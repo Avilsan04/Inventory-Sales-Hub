@@ -30,7 +30,9 @@ const rawProductSchema = z.object({
 });
 
 export const productSchema = rawProductSchema.transform(
-  (p): {
+  (
+    p
+  ): {
     id: string;
     name: string;
     description?: string;
@@ -54,9 +56,9 @@ export const productSchema = rawProductSchema.transform(
     name: p.name,
     description: p.description ?? undefined,
     sku: p.sku,
-    price: Number(p.salePrice),
-    purchasePrice: Number(p.purchasePrice),
-    salePrice: Number(p.salePrice),
+    price: p.salePrice,
+    purchasePrice: p.purchasePrice,
+    salePrice: p.salePrice,
     currency: 'EUR',
     categoryId: p.category ? String(p.category.id) : undefined,
     category: p.category

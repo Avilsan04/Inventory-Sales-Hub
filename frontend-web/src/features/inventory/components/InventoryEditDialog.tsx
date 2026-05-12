@@ -99,8 +99,12 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
 
     Promise.all(calls)
       .then(finish)
-      .catch((err: Error) => {
-        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+      .catch((err: unknown) => {
+        toast({
+          title: 'Update failed',
+          description: err instanceof Error ? err.message : String(err),
+          variant: 'destructive',
+        });
         setIsSaving(false);
       });
   };

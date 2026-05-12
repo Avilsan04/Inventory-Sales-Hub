@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import { mapKeysCamel } from '@core/api/mappers';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import { supplierListSchema, supplierSchema, supplierOrderSchema } from '@entities/supplier';
 import type {
@@ -24,7 +25,7 @@ export const suppliersApi = {
 
   getSupplierProducts: async (id: string): Promise<Product[]> => {
     const res = await httpClient.get<unknown>(`/suppliers/${id}/products`);
-    return parseOrThrow(productListSchema, res);
+    return parseOrThrow(productListSchema, mapKeysCamel(res));
   },
 
   createSupplier: async (data: CreateSupplierDTO): Promise<Supplier> => {

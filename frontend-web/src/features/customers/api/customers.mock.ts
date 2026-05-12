@@ -4,7 +4,7 @@ import { getTenantBucket, resolveTenant } from '@app/mock/mockUtils';
 import type { Customer } from '@entities/customer';
 import mockData from '@app/mock/mock-data.json';
 
-const baseCustomers: Customer[] = [...mockData.customers] as Customer[];
+const baseCustomers = [...mockData.customers];
 
 export const customerHandlers = [
   http.get(`${API_BASE_URL}/customers`, async ({ request }) => {
@@ -24,7 +24,7 @@ export const customerHandlers = [
     await delay(400);
     const tenantId = resolveTenant(request);
     const customers = getTenantBucket(tenantId, 'customers', () => baseCustomers);
-    const item = customers.find((c) => c.id === params['id']);
+    const item = customers.find((c) => String(c.id) === params['id']);
     if (!item) return new HttpResponse(null, { status: 404 });
     return HttpResponse.json(item);
   }),
@@ -33,18 +33,18 @@ export const customerHandlers = [
     await delay(600);
     const tenantId = resolveTenant(request);
     const customers = getTenantBucket(tenantId, 'customers', () => baseCustomers);
-    const body = (await request.json()) as Partial<Customer>;
+    const body = (await request.json()) as Record<string, unknown>;
     const now = new Date().toISOString();
     const newCustomer: Customer = {
-      id: crypto.randomUUID(),
-      name: body.name ?? 'Nueva empresa',
-      email: body.email ?? 'contacto@empresa.es',
-      phone: body.phone,
-      address: body.address,
+      id: String(customers.length + 1),
+      name: (body['name'] as string | undefined) ?? 'Nueva empresa',
+      email: (body['email'] as string | undefined) ?? 'contacto@empresa.es',
+      phone: body['phone'] as string | undefined,
+      address: body['address'] as string | undefined,
       createdAt: now,
       updatedAt: now,
     };
-    customers.push(newCustomer);
+    customers.push(newCustomer as unknown as (typeof baseCustomers)[0]);
     return HttpResponse.json<Customer>(newCustomer, { status: 201 });
   }),
 
@@ -52,13 +52,13 @@ export const customerHandlers = [
     await delay(500);
     const tenantId = resolveTenant(request);
     const customers = getTenantBucket(tenantId, 'customers', () => baseCustomers);
-    const body = (await request.json()) as Partial<Customer>;
-    const idx = customers.findIndex((c) => c.id === params['id']);
+    const body = (await request.json()) as Record<string, unknown>;
+    const idx = customers.findIndex((c) => String(c.id) === params['id']);
     if (idx === -1) return new HttpResponse(null, { status: 404 });
     const existing = customers[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
-    customers[idx] = updated;
+    customers[idx] = updated as (typeof baseCustomers)[0];
     return HttpResponse.json(updated);
   }),
 

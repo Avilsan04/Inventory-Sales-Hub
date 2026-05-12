@@ -1,13 +1,9 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
 import { getTenantBucket, resolveTenant } from '@app/mock/mockUtils';
-import type { Notification } from '@entities/notification';
 import mockData from '@app/mock/mock-data.json';
 
-// Deep copy — handlers mutate isRead directly on objects
-const baseNotifications: Notification[] = mockData.notifications.map((n) => ({
-  ...n,
-})) as Notification[];
+const baseNotifications = mockData.notifications.map((n) => ({ ...n }));
 
 export const notificationHandlers = [
   http.get(`${API_BASE_URL}/notifications`, async ({ request }) => {
@@ -31,7 +27,7 @@ export const notificationHandlers = [
     await delay(300);
     const tenantId = resolveTenant(request);
     const notifications = getTenantBucket(tenantId, 'notifications', () => baseNotifications);
-    const item = notifications.find((n) => n.id === params['id']);
+    const item = notifications.find((n) => String(n.id) === params['id']);
     if (!item) return new HttpResponse(null, { status: 404 });
     item.isRead = true;
     return HttpResponse.json({ ...item, isRead: true });
