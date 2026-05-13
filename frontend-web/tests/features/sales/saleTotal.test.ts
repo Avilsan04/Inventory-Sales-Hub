@@ -1,16 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { saleSchema, saleItemSchema } from '../../../src/entities/sale/models/sale.schema';
 
-const ID_A = 'a1b2c3d4-e5f6-4789-8abc-def012345678';
-const ID_B = 'b2c3d4e5-f6a7-4890-9bcd-ef0123456789';
-const ID_C = 'c3d4e5f6-a7b8-4901-8cde-f01234567890';
-const ID_D = 'd4e5f6a7-b8c9-4012-8def-012345678901';
 
 describe('saleSchema', () => {
     const baseItem = {
-        id: ID_A,
-        saleId: ID_B,
-        productId: ID_C,
+        id: 1,
+        productId: 2,
         productName: 'Widget',
         quantity: 2,
         unitPrice: 10.00,
@@ -18,10 +13,9 @@ describe('saleSchema', () => {
     };
 
     const baseSale = {
-        id: ID_D,
+        id: 1,
         status: 'completed' as const,
         total: 20.00,
-        currency: 'EUR',
         items: [baseItem],
         createdAt: '2025-01-01T00:00:00.000Z',
         updatedAt: '2025-01-01T00:00:00.000Z',

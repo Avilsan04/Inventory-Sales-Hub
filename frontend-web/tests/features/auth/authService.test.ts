@@ -5,8 +5,8 @@ import type { ITokenStorage } from '../../../src/core/storage/ITokenStorage';
 
 function createMockApi(): IAuthApi {
     return {
-        login: vi.fn().mockResolvedValue({ token: 'test-token-123' }),
-        register: vi.fn().mockResolvedValue({ token: 'register-token-456' }),
+        login: vi.fn().mockResolvedValue({ accessToken: 'test-token-123' }),
+        register: vi.fn().mockResolvedValue({ accessToken: 'register-token-456' }),
         logout: vi.fn().mockResolvedValue(undefined),
         getMe: vi.fn(),
         refresh: vi.fn(),
@@ -70,7 +70,7 @@ describe('AuthService', () => {
         });
 
         it('throws when api returns empty token', async () => {
-            vi.mocked(api.login).mockResolvedValueOnce({ token: '' });
+            vi.mocked(api.login).mockResolvedValueOnce({ accessToken: '' });
             await expect(service.login({ email: 'test@test.com', password: 'password' }))
                 .rejects.toThrow('[Security Validation]');
         });

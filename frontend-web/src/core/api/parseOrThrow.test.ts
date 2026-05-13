@@ -20,15 +20,11 @@ describe('parseOrThrow', () => {
 
 describe('Sale Zod schema contracts', () => {
   const validSale = {
-    id: 'ORD-0001',
+    id: 1,
     status: 'pending',
     subtotal: 1000,
-    discountPercent: 0,
-    discountAmount: 0,
-    taxPercent: 21,
     taxAmount: 210,
     total: 1210,
-    currency: 'EUR',
     items: [],
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z',
@@ -55,32 +51,36 @@ describe('Sale Zod schema contracts', () => {
 
 describe('InventoryItem Zod schema contracts', () => {
   const validItem = {
-    id: 'inv-001',
-    sku: 'SKU-001',
-    name: 'Test Item',
+    id: 1,
+    product: {
+      id: 1,
+      name: 'Test Item',
+      description: 'Test description',
+      sku: 'SKU-001',
+      purchasePrice: 800,
+      salePrice: 999,
+      category: null,
+      isActive: true,
+    },
     quantity: 10,
-    price: 999,
-    currency: 'EUR',
-    status: 'IN_STOCK',
-    isActive: true,
-    lastUpdated: '2024-01-01T00:00:00Z',
+    minStock: 5,
+    isLowStock: false,
   };
 
   it('accepts a valid inventory item', () => {
     expect(() => inventoryItemSchema.parse(validItem)).not.toThrow();
   });
 
-  it('rejects item with invalid status', () => {
-    expect(() => inventoryItemSchema.parse({ ...validItem, status: 'UNKNOWN' })).toThrow();
+  it('rejects item with invalid quantity', () => {
+    expect(() => inventoryItemSchema.parse({ ...validItem, quantity: -1 })).toThrow();
   });
 });
 
 describe('Customer Zod schema contracts', () => {
   const validCustomer = {
-    id: 'cust-001',
+    id: 1,
     name: 'John Doe',
     email: 'john@example.com',
-    createdAt: '2024-01-01T00:00:00Z',
   };
 
   it('accepts a valid customer', () => {

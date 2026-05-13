@@ -81,7 +81,7 @@ export const updateInventoryItemSchema = z.object({
 });
 
 export const stockAdjustmentSchema = z.object({
-  quantity: z.number().int().nonnegative(),
+  quantity: z.number().int(),
   note: z.string().optional(),
 });
 
