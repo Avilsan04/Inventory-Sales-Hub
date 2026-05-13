@@ -4,6 +4,7 @@ import com.inventory_sales_hub.app.exceptions.UserException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.PasswordResetToken;
 import com.inventory_sales_hub.app.model.entities.RefreshToken;
+import com.inventory_sales_hub.app.model.entities.Role;
 import com.inventory_sales_hub.app.model.entities.User;
 import com.inventory_sales_hub.app.model.persistence.PasswordResetTokenDao;
 import com.inventory_sales_hub.app.model.persistence.RefreshTokenDao;
@@ -38,6 +39,10 @@ public class UserManager {
         user.setUsername(params.username());
         user.setEmail(params.email());
         user.setPassword(passwordEncoder.encode(params.password()));
+        if (params.role() != null) {
+            try { user.setRole(Role.valueOf(params.role().toUpperCase())); }
+            catch (IllegalArgumentException ignored) {}
+        }
 
         User saved = userDao.save(user);
         String accessToken = jwtManager.generateToken(saved.getUsername(), saved.getId(), saved.getRole().name());

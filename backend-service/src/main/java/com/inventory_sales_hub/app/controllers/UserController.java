@@ -4,6 +4,7 @@ import com.inventory_sales_hub.app.exceptions.UserException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.service.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/auth")
 public class UserController {
+    @Value("${app.cookie.secure:false}")
+    private boolean cookieSecure;
+
     @Autowired
     private UserManager userManager;
 
@@ -149,7 +153,7 @@ public class UserController {
     private ResponseCookie buildRefreshCookie(String token) {
         return ResponseCookie.from("refresh_token", token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(cookieSecure)
                 .sameSite("Strict")
                 .path("/api/auth")
                 .maxAge(Duration.ofDays(7))
