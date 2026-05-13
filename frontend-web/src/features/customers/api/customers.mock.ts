@@ -58,7 +58,7 @@ export const customerHandlers = [
     const existing = customers[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
-    customers[idx] = updated as (typeof baseCustomers)[0];
+    customers[idx] = updated;
     return HttpResponse.json(updated);
   }),
 

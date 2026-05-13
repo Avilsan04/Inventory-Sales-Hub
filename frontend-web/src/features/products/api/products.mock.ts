@@ -89,7 +89,7 @@ export const productHandlers = [
     const existing = products[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body };
-    products[idx] = updated as (typeof baseProducts)[0];
+    products[idx] = updated;
     return HttpResponse.json(updated);
   }),
 
@@ -105,7 +105,7 @@ export const productHandlers = [
     const existing = products[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     if ('is_active' in body) {
-      products[idx] = { ...existing, isActive: body.is_active ?? true } as (typeof baseProducts)[0];
+      products[idx] = { ...existing, isActive: body.is_active ?? true };
       return new HttpResponse(null, { status: 204 });
     }
     return new HttpResponse(null, { status: 400 });

@@ -52,12 +52,12 @@ export const inventoryHandlers = [
       id: nextId,
       product: (body['product'] as Record<string, unknown> | undefined) ?? {
         id: nextId,
-        name: (body['name'] as string | undefined) ?? 'New item',
-        description: (body['description'] as string | undefined) ?? null,
-        sku: (body['sku'] as string | undefined) ?? 'SKU-NEW',
-        purchasePrice: (body['purchasePrice'] as number | undefined) ?? 0,
-        salePrice: (body['salePrice'] as number | undefined) ?? 0,
-        category: (body['category'] as Record<string, unknown> | undefined) ?? null,
+        name: body['name'] ?? 'New item',
+        description: body['description'] ?? null,
+        sku: body['sku'] ?? 'SKU-NEW',
+        purchasePrice: body['purchasePrice'] ?? 0,
+        salePrice: body['salePrice'] ?? 0,
+        category: body['category'] ?? null,
         isActive: true,
       },
       quantity: qty,
@@ -78,7 +78,7 @@ export const inventoryHandlers = [
     const existing = inventory[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body };
-    inventory[idx] = updated as (typeof baseInventory)[0];
+    inventory[idx] = updated;
     return HttpResponse.json(updated);
   }),
 
@@ -113,7 +113,7 @@ export const inventoryHandlers = [
       inventory[idx] = {
         ...existing,
         product: { ...existing.product, isActive: body.is_active ?? true },
-      } as (typeof baseInventory)[0];
+      };
       return new HttpResponse(null, { status: 204 });
     }
     return new HttpResponse(null, { status: 400 });

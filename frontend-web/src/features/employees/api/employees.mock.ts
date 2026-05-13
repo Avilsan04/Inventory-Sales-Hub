@@ -47,7 +47,7 @@ export const employeeHandlers = [
       createdAt: now,
       updatedAt: now,
     };
-    employees.push(newEmployee as (typeof baseEmployees)[0]);
+    employees.push(newEmployee);
     return HttpResponse.json(newEmployee, { status: 201 });
   }),
 
@@ -63,7 +63,7 @@ export const employeeHandlers = [
     const existing = employees[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
-    employees[idx] = updated as (typeof baseEmployees)[0];
+    employees[idx] = updated;
     return HttpResponse.json(updated);
   }),
 
@@ -81,7 +81,7 @@ export const employeeHandlers = [
       ...existing,
       isActive: false,
       updatedAt: new Date().toISOString(),
-    } as (typeof baseEmployees)[0];
+    };
     return new HttpResponse(null, { status: 204 });
   }),
 
@@ -97,7 +97,7 @@ export const employeeHandlers = [
     const existing = employees[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, role: body.role, updatedAt: new Date().toISOString() };
-    employees[idx] = updated as (typeof baseEmployees)[0];
+    employees[idx] = updated;
     return HttpResponse.json(updated);
   }),
 ];

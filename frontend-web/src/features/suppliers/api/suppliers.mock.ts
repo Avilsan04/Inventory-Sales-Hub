@@ -62,7 +62,7 @@ export const supplierHandlers = [
     const existing = suppliers[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, ...body, updatedAt: new Date().toISOString() };
-    suppliers[idx] = updated as (typeof baseSuppliers)[0];
+    suppliers[idx] = updated;
     return HttpResponse.json(updated);
   }),
 

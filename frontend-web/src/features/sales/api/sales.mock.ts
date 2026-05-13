@@ -171,7 +171,7 @@ export const salesHandlers = [
     const existing = sales[idx];
     if (existing === undefined) return new HttpResponse(null, { status: 404 });
     const updated = { ...existing, status: body.status, updatedAt: new Date().toISOString() };
-    sales[idx] = updated as unknown as (typeof baseSales)[0];
+    sales[idx] = updated;
     if (body.status === 'completed' && existing.status !== 'completed') {
       deductInventoryForSale(updated, inventory);
     }
