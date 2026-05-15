@@ -309,13 +309,10 @@
 }
 
 .loginLink {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   color: var(--color-primary);
+  text-decoration: none;
 
   &:hover {
     text-decoration: underline;

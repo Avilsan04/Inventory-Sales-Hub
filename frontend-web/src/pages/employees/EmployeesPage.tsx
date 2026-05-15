@@ -43,7 +43,7 @@ function roleVariant(role: EmployeeRole): BadgeVariant {
 
 export function EmployeesPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data, isPending, isError } = useEmployees();
+  const { data, isPending, isError, refetch } = useEmployees();
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editEmployee, setEditEmployee] = React.useState<Employee | null>(null);
@@ -66,6 +66,15 @@ export function EmployeesPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -94,7 +103,7 @@ export function EmployeesPage(): React.ReactElement {
         </PermissionGuard>
       </header>
 
-      <section className={statsStyles['statsRow']} aria-label="Employee statistics">
+      <section className={statsStyles['statsRow']} aria-label={t('employees.statsAriaLabel')}>
         <Card>
           <CardHeader>
             <CardTitle className={statsStyles['statTitle']}>
@@ -191,11 +200,12 @@ export function EmployeesPage(): React.ReactElement {
                             <Button
                               variant="ghost"
                               size="icon-sm"
+                              aria-label={t('employees.editEmployee')}
                               onClick={() => {
                                 setEditEmployee(e);
                               }}
                             >
-                              <PencilIcon size={14} />
+                              <PencilIcon size={14} aria-hidden="true" />
                             </Button>
                           </div>
                         </TableCell>
@@ -226,7 +236,7 @@ export function EmployeesPage(): React.ReactElement {
 
       <PermissionGuard permission="view:audit">
         <div className={styles['auditSection']}>
-          <h3 className={styles['auditTitle']}>{t('common.auditLog')}</h3>
+          <h2 className={styles['auditTitle']}>{t('common.auditLog')}</h2>
           <AuditLogPanel entityType="employee" />
         </div>
       </PermissionGuard>

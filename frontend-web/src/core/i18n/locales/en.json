@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Inventory Sales Hub",
+    "platformTag": "Platform",
     "loading": "Loading...",
     "error": "Error",
     "cancel": "Cancel",
@@ -11,6 +12,8 @@
     "create": "Create",
     "search": "Search products, orders, customers...",
     "filter": "Filter",
+    "fromDate": "From date",
+    "toDate": "To date",
     "toggleTheme": "Toggle theme",
     "noData": "No data available",
     "scrollToTop": "Scroll to top",
@@ -101,6 +104,7 @@
     }
   },
   "topbar": {
+    "changeRoleView": "Switch role view",
     "subtitle": {
       "dashboard": "Real-time overview of sales and stock",
       "inventory": "Manage stock levels and reorder thresholds",
@@ -112,6 +116,7 @@
     }
   },
   "sidebar": {
+    "mainNavLabel": "Main Navigation",
     "storage": "Storage Used",
     "storageDetail": "68% of 100GB"
   },
@@ -278,6 +283,8 @@
     "stock": "Stock",
     "category": "Category",
     "allProducts": "All products",
+    "searchPlaceholder": "Search by name or SKU…",
+    "deleteProduct": "Delete product",
     "lowStockTab": "Low stock",
     "outOfStockTab": "Out of stock",
     "reorderAt": "Reorder at",
@@ -342,6 +349,10 @@
   "products": {
     "subtitle": "Browse and manage your product catalog",
     "totalProducts": "Total products",
+    "statsAriaLabel": "Product statistics",
+    "searchPlaceholder": "Search by name, SKU or category…",
+    "noResultsTitle": "No products found",
+    "noResultsDescription": "Try a different search term",
     "totalCategories": "Categories",
     "importCsv": "Import CSV",
     "newProduct": "Add new product",
@@ -496,6 +507,8 @@
     "addCustomer": "Add customer",
     "emptyTitle": "No customers registered",
     "emptyDescription": "Add your first customer to start tracking relationships",
+    "noResultsTitle": "No customers found",
+    "noResultsDescription": "Try a different search term",
     "newCustomer": "Add new customer",
     "deleteCustomer": "Delete customer?",
     "fullNamePlaceholder": "Full name",
@@ -514,6 +527,9 @@
     "title": "Employees",
     "subtitle": "Manage your team members and roles",
     "totalEmployees": "Total employees",
+    "statsAriaLabel": "Employee statistics",
+    "emptyTitle": "No employees yet",
+    "emptyDescription": "Add your first employee to manage your team",
     "activeEmployees": "Active",
     "adminCount": "Admins",
     "name": "Name",
@@ -530,7 +546,10 @@
     "roles": {
       "admin": "Admin",
       "manager": "Manager",
-      "staff": "Staff"
+      "staff": "Staff",
+      "company": "Company",
+      "customer": "Customer",
+      "test": "Test"
     },
     "toasts": {
       "created": "Employee added",
@@ -541,6 +560,12 @@
     "title": "Suppliers",
     "subtitle": "Manage your supplier network",
     "totalSuppliers": "Total suppliers",
+    "statsAriaLabel": "Supplier statistics",
+    "searchPlaceholder": "Search suppliers…",
+    "emptyTitle": "No suppliers yet",
+    "emptyDescription": "Add your first supplier to manage your network",
+    "noResultsTitle": "No suppliers found",
+    "noResultsDescription": "Try a different search term",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
@@ -585,6 +610,8 @@
     "rangeCustom": "Custom",
     "exportProducts": "Export products",
     "exportCustomers": "Export customers",
+    "dateRangeGroup": "Date range",
+    "kpiAriaLabel": "Key performance indicators",
     "col": {
       "product": "Product",
       "sku": "SKU",
@@ -631,9 +658,12 @@
     "closeShift": "Close shift",
     "openShift": "Open shift",
     "noActiveSession": "No active cash session. Open a shift to start selling.",
+    "noSessionNoPermission": "No active cash session. Contact a manager to open a shift.",
     "subtotal": "Subtotal",
     "discount": "Discount",
+    "discountAriaLabel": "Discount percentage",
     "tax": "VAT",
+    "taxAriaLabel": "Tax percentage",
     "total": "Total",
     "decreaseQty": "Decrease quantity",
     "increaseQty": "Increase quantity",
@@ -715,6 +745,9 @@
     "clearCart": "Clear cart",
     "emptyTitle": "No products found",
     "emptyDescription": "Try adjusting your search.",
+    "noProductsTitle": "No products available",
+    "noProductsDescription": "Check back later for available products.",
+    "searchPlaceholder": "Search by name or SKU…",
     "storeEyebrow": "STORE",
     "removeItem": "Remove item"
   },
@@ -820,11 +853,14 @@
     "title": "Audit log",
     "subtitle": "System activity history",
     "loadMore": "Load more",
+    "searchPlaceholder": "Search by user, action, entity…",
+    "noEntries": "No audit entries",
     "cols": {
       "timestamp": "Timestamp",
       "user": "User",
       "action": "Action",
       "entity": "Entity",
+      "id": "ID",
       "details": "Details"
     },
     "actions": {
@@ -843,7 +879,8 @@
       "language": "Language",
       "notifications": "Notifications",
       "account": "Account",
-      "company": "Company Profile"
+      "company": "Company Profile",
+      "ariaLabel": "Settings sections"
     },
     "darkMode": "Dark mode",
     "darkModeDesc": "Switch between light and dark interface",
@@ -906,6 +943,7 @@
   },
   "admin": {
     "title": "Tenant Management",
+    "statsAriaLabel": "Admin metrics",
     "subtitle": "Manage all platform tenants and their subscriptions.",
     "tenant": "Tenant",
     "plan": "Plan",
@@ -915,6 +953,8 @@
     "activate": "Activate",
     "suspend": "Suspend",
     "impersonate": "Impersonate",
+    "impersonateConfirmTitle": "Impersonate tenant?",
+    "impersonateConfirmDescription": "You will act on behalf of this tenant. All actions are performed as this tenant until you exit impersonation.",
     "impersonationActive": "You are impersonating a tenant. All actions are performed on their behalf.",
     "exitImpersonation": "Exit impersonation",
     "metrics": {

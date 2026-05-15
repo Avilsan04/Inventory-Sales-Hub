@@ -19,7 +19,11 @@ import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
 export function PosPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: inventoryPage, isPending } = useInventory({ page: 0, pageSize: 1000 });
+  const {
+    data: inventoryPage,
+    isPending,
+    isError: isInventoryError,
+  } = useInventory({ page: 0, pageSize: 1000 });
   const { data: customers } = useCustomers();
   const { mutate: createSale, isPending: isCreating } = useCreateSale();
   const { addItem, clearCart } = useCart();
@@ -104,16 +108,22 @@ export function PosPage(): React.ReactElement {
         </div>
       </header>
 
-      {!isSessionLoading && !cashSession && hasPermission(role, 'open:cash-session') && (
+      {!isSessionLoading && !cashSession && (
         <div className={styles['emptySession']}>
-          <p className={styles['emptySessionText']}>{t('pos.noActiveSession')}</p>
-          <Button
-            onClick={() => {
-              setOpenSessionDialog(true);
-            }}
-          >
-            {t('pos.openShift')}
-          </Button>
+          <p className={styles['emptySessionText']}>
+            {hasPermission(role, 'open:cash-session')
+              ? t('pos.noActiveSession')
+              : t('pos.noSessionNoPermission')}
+          </p>
+          {hasPermission(role, 'open:cash-session') && (
+            <Button
+              onClick={() => {
+                setOpenSessionDialog(true);
+              }}
+            >
+              {t('pos.openShift')}
+            </Button>
+          )}
         </div>
       )}
 
@@ -121,6 +131,7 @@ export function PosPage(): React.ReactElement {
         <PosProductBrowser
           inventory={inventoryPage?.data}
           isPending={isPending}
+          isError={isInventoryError}
           onAdd={addToCart}
         />
         <PosCart customers={customers} isCreating={isCreating} onCheckout={handleCheckout} />

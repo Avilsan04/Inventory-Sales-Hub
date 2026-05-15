@@ -57,6 +57,7 @@ export function NotificationsSection(): React.ReactElement {
               </div>
             </div>
             <Switch
+              aria-label={t(item.labelKey)}
               checked={settings[item.key]}
               onCheckedChange={(checked: boolean) => {
                 updateSettings({ [item.key]: checked });

@@ -124,7 +124,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
 
       <aside
         className={cn(styles['sidebar'], isOpen && styles['sidebarOpen'])}
-        aria-label="Main Navigation"
+        aria-label={t('sidebar.mainNavLabel')}
         aria-hidden={isMobile && !isOpen}
         // inert removes the subtree from the a11y tree and tab order when sidebar is off-screen
         inert={(isMobile && !isOpen) || undefined}
@@ -133,7 +133,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
           <BrandMark size={32} />
           <div className={styles['brandText']}>
             <span className={styles['brandName']}>{t('common.appName')}</span>
-            <span className={styles['brandSub']}>Platform</span>
+            <span className={styles['brandSub']}>{t('common.platformTag')}</span>
           </div>
         </div>
 

@@ -70,16 +70,16 @@
 }
 
 .kpiCardAccentPrimary {
-  border-left: 3px solid var(--color-primary);
+  border-left: $border-width-accent solid var(--color-primary);
 }
 .kpiCardAccentSuccess {
-  border-left: 3px solid var(--color-success);
+  border-left: $border-width-accent solid var(--color-success);
 }
 .kpiCardAccentWarning {
-  border-left: 3px solid var(--color-warning);
+  border-left: $border-width-accent solid var(--color-warning);
 }
 .kpiCardAccentSpent {
-  border-left: 3px solid var(--color-chart-4);
+  border-left: $border-width-accent solid var(--color-chart-4);
 }
 
 .kpiTopRow {
@@ -204,6 +204,11 @@
 
   &:hover td {
     background-color: var(--color-surface-low);
+  }
+
+  &:focus-visible {
+    outline: $border-width-focus solid var(--color-primary);
+    outline-offset: -2px;
   }
 }
 

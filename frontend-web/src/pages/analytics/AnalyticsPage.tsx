@@ -199,7 +199,11 @@ export function AnalyticsPage(): React.ReactElement {
       </header>
 
       <div className={styles['dateRangeRow']}>
-        <div className={styles['dateRangePills']} role="group" aria-label="Período">
+        <div
+          className={styles['dateRangePills']}
+          role="group"
+          aria-label={t('analytics.dateRangeGroup')}
+        >
           {DATE_RANGES.map(({ id, labelKey }) => (
             <Button
               key={id}
@@ -223,7 +227,7 @@ export function AnalyticsPage(): React.ReactElement {
         )}
       </div>
 
-      <section className={styles['kpiGrid']} aria-label="Key performance indicators">
+      <section className={styles['kpiGrid']} aria-label={t('analytics.kpiAriaLabel')}>
         {kpiCards.map((card) => (
           <Card key={card.key}>
             <CardHeader>

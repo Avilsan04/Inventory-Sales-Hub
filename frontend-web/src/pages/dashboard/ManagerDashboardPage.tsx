@@ -93,13 +93,13 @@ export function ManagerDashboardPage(): React.ReactElement {
       <DashboardShell.ChartsGrid>
         <SectionErrorBoundary label={t('managerDashboard.salesTrend')}>
           <div className={styles['chartCard']}>
-            <h3 className={styles['chartTitle']}>{t('managerDashboard.salesTrend')}</h3>
+            <h2 className={styles['chartTitle']}>{t('managerDashboard.salesTrend')}</h2>
             <WeeklySalesBarChart data={salesPeriod} isLoading={isLoading} />
           </div>
         </SectionErrorBoundary>
         <SectionErrorBoundary label={t('managerDashboard.salesByStatus')}>
           <div className={styles['chartCard']}>
-            <h3 className={styles['chartTitle']}>{t('managerDashboard.salesByStatus')}</h3>
+            <h2 className={styles['chartTitle']}>{t('managerDashboard.salesByStatus')}</h2>
             <SalesDonutChart data={statusSlices} isLoading={isLoading} />
           </div>
         </SectionErrorBoundary>
@@ -188,8 +188,15 @@ export function ManagerDashboardPage(): React.ReactElement {
                 <TableRow
                   key={s.id}
                   className={styles['clickableRow']}
+                  tabIndex={0}
                   onClick={() => {
                     setDetailSale(s);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setDetailSale(s);
+                    }
                   }}
                 >
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>

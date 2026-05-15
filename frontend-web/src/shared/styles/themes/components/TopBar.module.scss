@@ -333,8 +333,8 @@
   }
 
   svg {
-    width: $size-4;
-    height: $size-4;
+    width: $size-5;
+    height: $size-5;
   }
 }
 
@@ -351,7 +351,7 @@
   height: $size-4;
   padding: 0 $spacing-1;
   border-radius: var(--radius-full);
-  background-color: $color-error;
+  background-color: var(--color-error);
   border: $border-width-focus solid var(--color-background);
   pointer-events: none;
   display: flex;
@@ -359,7 +359,7 @@
   justify-content: center;
   font-size: $font-size-2xs;
   font-weight: $font-weight-bold;
-  color: $color-destructive-foreground;
+  color: var(--color-destructive-foreground);
   line-height: 1;
 }
 
@@ -545,8 +545,8 @@
 }
 
 .avatarFallback {
-  background-color: $color-primary;
-  color: $color-primary-foreground;
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
   font-size: $font-size-xs;
   font-weight: $font-weight-semibold;
 }
@@ -572,8 +572,8 @@
 }
 
 .avatarFallbackLg {
-  background-color: $color-primary;
-  color: $color-primary-foreground;
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
   font-size: $font-size-sm;
   font-weight: $font-weight-bold;
 }
@@ -708,8 +708,8 @@
 }
 
 .rolePillActive {
-  background-color: $color-primary-light;
-  border-color: $color-primary;
-  color: $color-primary-hover;
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-hover);
   font-weight: $font-weight-semibold;
 }

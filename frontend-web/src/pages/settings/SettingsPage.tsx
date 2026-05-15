@@ -88,7 +88,7 @@ export function SettingsPage(): React.ReactElement {
       </header>
 
       <div className={styles.layout}>
-        <nav className={styles.nav} aria-label="Settings sections">
+        <nav className={styles.nav} aria-label={t('settings.nav.ariaLabel')}>
           {NAV_ITEMS.filter(({ adminOnly }) => !adminOnly || isAdminOrCompany).map(
             ({ id, labelKey, icon }) => (
               <Button

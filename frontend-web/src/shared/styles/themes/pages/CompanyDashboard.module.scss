@@ -70,16 +70,16 @@
 }
 
 .kpiCardAccentPrimary {
-  border-left: 3px solid var(--color-primary);
+  border-left: $border-width-accent solid var(--color-primary);
 }
 .kpiCardAccentSuccess {
-  border-left: 3px solid var(--color-success);
+  border-left: $border-width-accent solid var(--color-success);
 }
 .kpiCardAccentNeutral {
-  border-left: 3px solid var(--color-text-muted);
+  border-left: $border-width-accent solid var(--color-text-muted);
 }
 .kpiCardAccentPurple {
-  border-left: 3px solid var(--color-chart-5);
+  border-left: $border-width-accent solid var(--color-chart-5);
 }
 
 .kpiTopRow {

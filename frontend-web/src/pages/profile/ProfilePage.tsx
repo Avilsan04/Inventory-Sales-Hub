@@ -12,12 +12,15 @@ import { cn } from '@shared/lib/cn';
 import baseStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Profile.module.scss';
 
-type RoleKey = 'admin' | 'manager' | 'staff';
+type RoleKey = 'admin' | 'manager' | 'staff' | 'company' | 'customer' | 'test';
 
 const ROLE_BADGE_MAP: Record<RoleKey, 'default' | 'secondary' | 'outline'> = {
   admin: 'default',
   manager: 'secondary',
   staff: 'outline',
+  company: 'secondary',
+  customer: 'outline',
+  test: 'outline',
 };
 
 function ProfileInfoForm(): React.ReactElement {
@@ -218,6 +221,9 @@ export function ProfilePage(): React.ReactElement {
     admin: t('employees.roles.admin'),
     manager: t('employees.roles.manager'),
     staff: t('employees.roles.staff'),
+    company: t('employees.roles.company'),
+    customer: t('employees.roles.customer'),
+    test: t('employees.roles.test'),
   };
 
   return (
@@ -248,8 +254,10 @@ export function ProfilePage(): React.ReactElement {
           <div className={styles['formTabs']} role="tablist">
             <Button
               variant="ghost"
+              id="tab-info"
               role="tab"
               aria-selected={formTab === 'info'}
+              aria-controls="tabpanel-info"
               onClick={(): void => {
                 setFormTab('info');
               }}
@@ -260,8 +268,10 @@ export function ProfilePage(): React.ReactElement {
             </Button>
             <Button
               variant="ghost"
+              id="tab-security"
               role="tab"
               aria-selected={formTab === 'security'}
+              aria-controls="tabpanel-security"
               onClick={(): void => {
                 setFormTab('security');
               }}
@@ -271,7 +281,13 @@ export function ProfilePage(): React.ReactElement {
               {t('profile.changePassword')}
             </Button>
           </div>
-          {formTab === 'info' ? <ProfileInfoForm /> : <ProfileSecurityForm />}
+          <div
+            id={formTab === 'info' ? 'tabpanel-info' : 'tabpanel-security'}
+            role="tabpanel"
+            aria-labelledby={formTab === 'info' ? 'tab-info' : 'tab-security'}
+          >
+            {formTab === 'info' ? <ProfileInfoForm /> : <ProfileSecurityForm />}
+          </div>
         </div>
       </div>
     </div>

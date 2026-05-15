@@ -168,7 +168,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                   setDiscountPercent(Number(e.target.value));
                 }}
                 className={styles['percentInput']}
-                aria-label="Discount %"
+                aria-label={t('pos.discountAriaLabel')}
               />
               <span className={styles['percentSymbol']}>%</span>
               <span>−{formatCurrency(saleTotals.discountAmount, currency)}</span>
@@ -190,7 +190,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                   setTaxPercent(Number(e.target.value));
                 }}
                 className={styles['percentInput']}
-                aria-label="Tax %"
+                aria-label={t('pos.taxAriaLabel')}
               />
               <span className={styles['percentSymbol']}>%</span>
               <span>+{formatCurrency(saleTotals.taxAmount, currency)}</span>
@@ -232,16 +232,21 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
           </div>
 
           {/* 2×2 horizontal payment method cards */}
-          <div className={styles['payGrid']}>
+          <div
+            className={styles['payGrid']}
+            role="radiogroup"
+            aria-label={t('sales.checkout.paymentTitle')}
+          >
             {PAYMENT_OPTIONS.map(({ id, labelKey, icon }) => (
               <Button
                 key={id}
                 variant="ghost"
+                role="radio"
+                aria-checked={paymentMethod === id}
                 className={cn(styles['payCard'], paymentMethod === id && styles['payCardActive'])}
                 onClick={() => {
                   setPaymentMethod(id);
                 }}
-                aria-pressed={paymentMethod === id}
               >
                 <span className={styles['payCardIcon']}>{icon}</span>
                 <span className={styles['payCardLabel']}>{t(labelKey)}</span>

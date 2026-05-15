@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Input } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/components/DateRangePicker.module.scss';
 
@@ -13,6 +14,7 @@ interface DateRangePickerProps {
 }
 
 export function DateRangePicker({ value, onChange }: DateRangePickerProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   return (
     <div className={styles.container}>
       <Input
@@ -23,7 +25,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps): Reac
           onChange({ ...value, from: e.target.value });
         }}
         className={styles.dateInput}
-        aria-label="From date"
+        aria-label={t('common.fromDate')}
       />
       <span className={styles.separator}>–</span>
       <Input
@@ -34,7 +36,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps): Reac
           onChange({ ...value, to: e.target.value });
         }}
         className={styles.dateInput}
-        aria-label="To date"
+        aria-label={t('common.toDate')}
       />
     </div>
   );

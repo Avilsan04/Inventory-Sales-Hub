@@ -103,10 +103,7 @@
 .forgotPassword {
   font-size: $font-size-sm;
   color: var(--color-primary);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+  text-decoration: none;
 
   &:hover {
     text-decoration: underline;
@@ -138,4 +135,10 @@
   &:hover {
     text-decoration: underline;
   }
+}
+
+.fieldError {
+  color: var(--color-destructive);
+  font-size: $font-size-xs;
+  margin-top: $spacing-1;
 }

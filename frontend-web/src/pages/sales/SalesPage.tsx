@@ -42,6 +42,7 @@ export function SalesPage(): React.ReactElement {
     isLoading,
     isFetching,
     isError,
+    refetch,
     paginated,
     search,
     setSearch,
@@ -83,6 +84,15 @@ export function SalesPage(): React.ReactElement {
     return (
       <div className={pageStyles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -100,7 +110,12 @@ export function SalesPage(): React.ReactElement {
               {t('common.export')}
             </Button>
           </PermissionGuard>
-          <Button variant="outline" size="sm" onClick={toggleDateFilter}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleDateFilter}
+            aria-expanded={showDateFilter}
+          >
             {t('common.filter')}
           </Button>
           <Button

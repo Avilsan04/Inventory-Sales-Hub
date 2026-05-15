@@ -143,12 +143,12 @@ export function InventoryPage(): React.ReactElement {
           <div className={styles['searchBox']}>
             <Input
               type="search"
-              placeholder={`${t('common.filter')} SKU, ${t('inventory.name').toLowerCase()}…`}
+              placeholder={t('inventory.searchPlaceholder')}
               value={search}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setSearch(e.target.value);
               }}
-              aria-label={t('common.filter')}
+              aria-label={t('inventory.searchPlaceholder')}
             />
           </div>
           <div className={styles['tabs']} role="tablist">

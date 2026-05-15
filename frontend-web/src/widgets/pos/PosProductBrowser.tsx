@@ -22,10 +22,16 @@ function stockBadgeLabel(status: InventoryItem['status'], t: (k: string) => stri
 interface Props {
   inventory: InventoryItem[] | undefined;
   isPending: boolean;
+  isError?: boolean;
   onAdd: (item: InventoryItem) => void;
 }
 
-export function PosProductBrowser({ inventory, isPending, onAdd }: Props): React.ReactElement {
+export function PosProductBrowser({
+  inventory,
+  isPending,
+  isError,
+  onAdd,
+}: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const formatCurrency = useFormatCurrency();
   const [search, setSearch] = React.useState('');
@@ -61,6 +67,14 @@ export function PosProductBrowser({ inventory, isPending, onAdd }: Props): React
     return (
       <div className={styles['placeholderContainer']}>
         <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className={styles['emptyProducts']} role="alert">
+        {t('common.errorLoadingData')}
       </div>
     );
   }

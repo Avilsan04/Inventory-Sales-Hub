@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthPresenter } from '../hooks/useAuthPresenter';
 import { useDependencies } from '@shared/hooks/useDependencies';
+import { APP_ROUTES } from '@shared/config/routes';
 import { Button, Input, Label, Spinner, BrandMark } from '@shared/ui/primitives';
 import {
   Card,
@@ -111,9 +113,9 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
                 </span>
               )}
               <div className={styles['forgotRow']}>
-                <a href="/forgot-password" className={styles['forgotPassword']}>
+                <Link to={APP_ROUTES.FORGOT_PASSWORD} className={styles['forgotPassword']}>
                   {translate('auth.forgotPassword')}
-                </a>
+                </Link>
               </div>
             </div>
           </CardContent>
@@ -128,9 +130,9 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
             </Button>
             <p className={styles['signupLink']}>
               {translate('auth.newToIsh')}{' '}
-              <a href="/register" className={styles['signupAnchor']}>
+              <Link to={APP_ROUTES.REGISTER} className={styles['signupAnchor']}>
                 {translate('auth.createAccount')}
-              </a>
+              </Link>
             </p>
           </CardFooter>
         </form>

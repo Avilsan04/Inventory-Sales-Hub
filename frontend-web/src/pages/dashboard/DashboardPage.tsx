@@ -152,7 +152,7 @@ export function DashboardPage(): React.ReactElement {
         <SectionErrorBoundary label={t('dashboard.section.weeklySalesChart')}>
           <div className={styles['chartCard']}>
             <div className={styles['chartCardHeader']}>
-              <h3 className={styles['chartTitle']}>{t('dashboard.weeklySales')}</h3>
+              <h2 className={styles['chartTitle']}>{t('dashboard.weeklySales')}</h2>
             </div>
             <WeeklySalesBarChart data={salesPeriod} isLoading={periodLoading} />
           </div>
@@ -160,7 +160,7 @@ export function DashboardPage(): React.ReactElement {
         <SectionErrorBoundary label={t('dashboard.section.salesByStatusChart')}>
           <div className={styles['chartCard']}>
             <div className={styles['chartCardHeader']}>
-              <h3 className={styles['chartTitle']}>{t('dashboard.salesByStatus')}</h3>
+              <h2 className={styles['chartTitle']}>{t('dashboard.salesByStatus')}</h2>
             </div>
             <SalesDonutChart data={statusSlices} isLoading={salesLoading} />
           </div>
@@ -170,7 +170,7 @@ export function DashboardPage(): React.ReactElement {
       <SectionErrorBoundary label={t('dashboard.section.recentTransactionsSection')}>
         <div className={styles['transactionsCard']}>
           <div className={styles['transactionsHeader']}>
-            <h3 className={styles['transactionsTitle']}>{t('dashboard.recentTransactions')}</h3>
+            <h2 className={styles['transactionsTitle']}>{t('dashboard.recentTransactions')}</h2>
             <Button
               variant="ghost"
               size="sm"

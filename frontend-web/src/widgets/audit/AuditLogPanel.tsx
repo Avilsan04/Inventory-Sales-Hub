@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuditLog } from '@features/audit';
 import { Skeleton, Badge, Input } from '@shared/ui/primitives';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
@@ -17,21 +19,13 @@ function actionVariant(action: AuditAction): BadgeVariant {
   return map[action] ?? 'neutral';
 }
 
-function formatTs(iso: string): string {
-  return new Date(iso).toLocaleString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
 interface AuditLogPanelProps {
   entityType?: AuditEntityType;
 }
 
 export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+  const { i18n } = useTranslation();
   const { data, isLoading } = useAuditLog({ entityType });
   const [search, setSearch] = React.useState('');
 
@@ -47,28 +41,37 @@ export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactEl
     );
   }, [data, search]);
 
+  const formatTs = (iso: string): string =>
+    new Date(iso).toLocaleString(i18n.language, {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
   return (
     <div>
       <div className={styles['searchWrapper']}>
         <Input
           type="search"
-          placeholder="Search by user, action, entity…"
+          placeholder={t('audit.searchPlaceholder')}
           value={search}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSearch(e.target.value);
           }}
-          aria-label="Search audit log"
+          aria-label={t('audit.searchPlaceholder')}
         />
       </div>
 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Action</TableHead>
-            <TableHead>Entity</TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>When</TableHead>
+            <TableHead>{t('audit.cols.user')}</TableHead>
+            <TableHead>{t('audit.cols.action')}</TableHead>
+            <TableHead>{t('audit.cols.entity')}</TableHead>
+            <TableHead>{t('audit.cols.id')}</TableHead>
+            <TableHead>{t('audit.cols.timestamp')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -83,7 +86,7 @@ export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactEl
           ) : filtered.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} className={styles['emptyCell']}>
-                No audit entries
+                {t('audit.noEntries')}
               </TableCell>
             </TableRow>
           ) : (
@@ -91,7 +94,9 @@ export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactEl
               <TableRow key={log.id}>
                 <TableCell>{log.userName}</TableCell>
                 <TableCell>
-                  <Badge variant={actionVariant(log.action)}>{log.action.replace('_', ' ')}</Badge>
+                  <Badge variant={actionVariant(log.action)}>
+                    {t(`audit.actions.${log.action}`)}
+                  </Badge>
                 </TableCell>
                 <TableCell className={styles['capitalize']}>{log.entityType}</TableCell>
                 <TableCell className={styles['cellMono']}>{log.entityId.slice(0, 12)}</TableCell>

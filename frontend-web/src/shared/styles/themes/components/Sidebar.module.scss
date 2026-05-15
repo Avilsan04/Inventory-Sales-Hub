@@ -70,7 +70,7 @@
 .brandName {
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
-  color: $color-sidebar-primary-foreground;
+  color: var(--color-sidebar-primary-foreground);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -80,7 +80,7 @@
 
 .brandSub {
   font-size: $font-size-xs;
-  color: $color-dark-text-muted;
+  color: var(--color-sidebar-nav-inactive);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +132,7 @@
   margin-top: $spacing-1;
   font-size: $font-size-xs;
   font-weight: $font-weight-medium;
-  color: $color-dark-text-muted;
+  color: var(--color-sidebar-nav-inactive);
   letter-spacing: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -157,10 +157,10 @@
 
   &:hover {
     background-color: var(--color-sidebar-accent);
-    color: $color-sidebar-accent-foreground;
+    color: var(--color-sidebar-accent-foreground);
 
     .navIcon {
-      color: $color-sidebar-accent-foreground;
+      color: var(--color-sidebar-accent-foreground);
     }
   }
 }
@@ -188,7 +188,7 @@
   width: $size-5;
   height: $size-5;
   flex-shrink: 0;
-  color: $color-dark-text-muted;
+  color: var(--color-sidebar-nav-inactive);
   transition: color $duration-fast ease;
   display: flex;
   align-items: center;

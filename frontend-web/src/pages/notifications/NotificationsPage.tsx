@@ -73,7 +73,7 @@ function typeIconClass(type: NotifType, s: typeof styles): string {
 export function NotificationsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { i18n } = useTranslation();
-  const { data, isLoading, isError } = useNotifications();
+  const { data, isLoading, isError, refetch } = useNotifications();
   const markAllRead = useMarkAllAsRead();
 
   if (isLoading) {
@@ -88,6 +88,15 @@ export function NotificationsPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }

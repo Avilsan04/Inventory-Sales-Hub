@@ -39,14 +39,13 @@ export function ForgotPasswordPage(): React.ReactElement {
   };
 
   return (
-    <div className={styles['page']}>
+    <main className={styles['page']}>
       <Button
         variant="ghost"
         className={styles['backBtn']}
         onClick={() => {
           navigateTo(APP_ROUTES.LOGIN);
         }}
-        aria-label={t('auth.backToLogin')}
       >
         <ArrowLeftIcon size={16} aria-hidden="true" />
         {t('auth.backToLogin')}
@@ -69,13 +68,14 @@ export function ForgotPasswordPage(): React.ReactElement {
             </CardContent>
           ) : (
             <form
+              noValidate
               onSubmit={(e) => {
                 void handleSubmit(onSubmit)(e);
               }}
             >
               <CardContent>
                 <div className={styles['formBody']}>
-                  <div>
+                  <div className={styles['field']}>
                     <Label htmlFor="email">{t('auth.email')}</Label>
                     <Input
                       id="email"
@@ -101,6 +101,6 @@ export function ForgotPasswordPage(): React.ReactElement {
           )}
         </Card>
       </div>
-    </div>
+    </main>
   );
 }

@@ -159,8 +159,15 @@ export function CustomerDashboardPage(): React.ReactElement {
                 <TableRow
                   key={s.id}
                   className={styles['clickableRow']}
+                  tabIndex={0}
                   onClick={() => {
                     setDetailSale(s);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setDetailSale(s);
+                    }
                   }}
                 >
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>

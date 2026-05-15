@@ -4,6 +4,13 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+
+  // Mobile: natural flow so both panels are reachable
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
 }
 
 .header {
@@ -70,9 +77,13 @@
   flex: 1;
   display: flex;
   overflow: hidden;
-
-  // Mobile: stack products above cart
   flex-direction: column;
+
+  // Mobile: natural height, scroll via parent .main
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    flex: none;
+    overflow: visible;
+  }
 
   @media (min-width: $breakpoint-lg) {
     flex-direction: row;
@@ -103,6 +114,12 @@
   gap: $spacing-3;
   overflow: hidden;
   padding: $spacing-4;
+
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    flex: none;
+    overflow: visible;
+    min-height: 60vh;
+  }
 }
 
 .searchBar {
@@ -163,6 +180,10 @@
   gap: $spacing-3;
   overflow-y: auto;
   padding-bottom: $spacing-2;
+
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    overflow-y: visible;
+  }
 }
 
 // ── Product card ──────────────────────────────────────────────────────────────
@@ -608,7 +629,8 @@
   white-space: nowrap;
 }
 
-// ── Mini card preview widget ───────────────────────────────────────────────────
+// ── Mini card preview widget (always-dark, intentional) ──────────────────────
+// Uses static $color-dark-* tokens — credit card preview is always rendered on a dark background.
 .miniCard {
   display: flex;
   align-items: center;

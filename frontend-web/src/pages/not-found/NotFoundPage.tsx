@@ -10,8 +10,10 @@ export function NotFoundPage(): React.ReactElement {
   const { translate } = useTranslationAdapter();
 
   return (
-    <div className={styles['container']}>
-      <p className={styles['code']}>404</p>
+    <main className={styles['container']}>
+      <p className={styles['code']} aria-hidden="true">
+        404
+      </p>
       <h1 className={styles['title']}>{translate('common.pageNotFound')}</h1>
       <p className={styles['message']}>{translate('common.pageNotFoundDesc')}</p>
       <Button
@@ -21,6 +23,6 @@ export function NotFoundPage(): React.ReactElement {
       >
         {translate('common.backToDashboard')}
       </Button>
-    </div>
+    </main>
   );
 }

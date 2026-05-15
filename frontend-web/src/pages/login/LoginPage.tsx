@@ -22,7 +22,7 @@ export function LoginPage(): React.ReactElement {
   }, [navigateTo]);
 
   return (
-    <div className={styles['page']}>
+    <main className={styles['page']}>
       <div className={cn(styles['glassBlob'], styles['blob1'])} aria-hidden="true" />
       <div className={cn(styles['glassBlob'], styles['blob2'])} aria-hidden="true" />
       <div className={cn(styles['glassBlob'], styles['blob3'])} aria-hidden="true" />
@@ -30,18 +30,13 @@ export function LoginPage(): React.ReactElement {
       <div className={cn(styles['particle'], styles['p2'])} aria-hidden="true" />
       <div className={cn(styles['particle'], styles['p3'])} aria-hidden="true" />
 
-      <Button
-        variant="ghost"
-        className={styles['backBtn']}
-        onClick={handleBackToLanding}
-        aria-label={translate('nav.home')}
-      >
+      <Button variant="ghost" className={styles['backBtn']} onClick={handleBackToLanding}>
         <ArrowLeftIcon size={16} aria-hidden="true" />
         {translate('nav.home')}
       </Button>
       <div className={styles['container']}>
         <LoginForm onSuccess={handleLoginSuccess} />
       </div>
-    </div>
+    </main>
   );
 }

@@ -124,8 +124,10 @@
 
 .errorContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: $spacing-4;
   padding: $spacing-12;
   color: var(--color-error);
   font-size: $font-size-sm;

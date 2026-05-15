@@ -36,7 +36,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 export function LandingPage(): React.ReactElement {
   const { translate } = useTranslationAdapter();
   const { navigateTo } = useRoutingAdapter();
-  const { theme, toggleTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
   const current = LANGUAGE_MAP[language];
   const handleNavigateToLogin = React.useCallback((): void => {
@@ -142,7 +142,7 @@ export function LandingPage(): React.ReactElement {
             </svg>
           </Button>
 
-          <div className={styles['navbarActions']}>
+          <nav className={styles['navbarActions']}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -150,7 +150,12 @@ export function LandingPage(): React.ReactElement {
                   className={styles['langBtn']}
                   aria-label={translate('common.switchLanguage')}
                 >
-                  <img src={current.flag} alt={current.label} className={styles['langFlag']} />
+                  <img
+                    src={current.flag}
+                    alt=""
+                    aria-hidden="true"
+                    className={styles['langFlag']}
+                  />
                   <span>{language.toUpperCase()}</span>
                   <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
                 </Button>
@@ -164,7 +169,7 @@ export function LandingPage(): React.ReactElement {
                     }}
                     className={lang.value === language ? styles['langItemActive'] : undefined}
                   >
-                    <img src={lang.flag} alt={lang.label} className={styles['langFlag']} />
+                    <img src={lang.flag} alt="" aria-hidden="true" className={styles['langFlag']} />
                     <span>{lang.label}</span>
                   </DropdownMenuItem>
                 ))}
@@ -176,12 +181,16 @@ export function LandingPage(): React.ReactElement {
               onClick={toggleTheme}
               aria-label={translate('common.toggleTheme')}
             >
-              {theme === 'dark' ? <SunIcon aria-hidden="true" /> : <MoonIcon aria-hidden="true" />}
+              {resolvedTheme === 'dark' ? (
+                <SunIcon aria-hidden="true" />
+              ) : (
+                <MoonIcon aria-hidden="true" />
+              )}
             </Button>
             <Button variant="outline" size="sm" onClick={handleNavigateToLogin}>
               {translate('auth.login')}
             </Button>
-          </div>
+          </nav>
         </div>
       </header>
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PackageIcon, TagIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { PackageIcon, TagIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   useProducts,
@@ -9,32 +9,29 @@ import {
   ProductEditDialog,
   ProductCsvImportDialog,
 } from '@features/products';
-import { PermissionGuard } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
-import { formatCurrency } from '@shared/lib';
-import { Skeleton, Button, Pagination } from '@shared/ui';
+import { PermissionGuard } from '@features/auth';
+import { Skeleton, Button, Input, Pagination } from '@shared/ui';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardAction,
   CardContent,
-  EmptyState,
   Table,
   TableHeader,
   TableBody,
   TableRow,
   TableHead,
-  TableCell,
   ConfirmDialog,
 } from '@shared/ui';
 import { SectionErrorBoundary } from '@app/providers';
 import { useTableFilters } from '@shared/hooks';
 import type { Product } from '@entities/product';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
+import { ProductTableContent } from './ProductsTable';
 
 const PRODUCT_PAGE_SIZE = 20;
-const SKELETON_ROWS = 5;
 
 function matchesProduct(p: Product, q: string): boolean {
   return (
@@ -44,46 +41,9 @@ function matchesProduct(p: Product, q: string): boolean {
   );
 }
 
-interface RowActionsProps {
-  product: Product;
-  onEdit: (p: Product) => void;
-  onDelete: (id: string) => void;
-}
-
-function ProductRowActions({ product, onEdit, onDelete }: RowActionsProps): React.ReactElement {
-  return (
-    <div className={styles['cellActions']}>
-      <PermissionGuard permission="create:product">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Editar producto"
-          onClick={(): void => {
-            onEdit(product);
-          }}
-        >
-          <PencilIcon size={14} aria-hidden="true" />
-        </Button>
-      </PermissionGuard>
-      <PermissionGuard permission="delete:product">
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          aria-label="Eliminar producto"
-          onClick={(): void => {
-            onDelete(product.id);
-          }}
-        >
-          <TrashIcon size={14} aria-hidden="true" />
-        </Button>
-      </PermissionGuard>
-    </div>
-  );
-}
-
 export function ProductsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data, isPending, isError } = useProducts();
+  const { data, isPending, isError, refetch } = useProducts();
   const { data: categories } = useCategories();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
@@ -92,11 +52,17 @@ export function ProductsPage(): React.ReactElement {
   const [editProduct, setEditProduct] = React.useState<Product | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
 
-  const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Product>(
-    data,
-    matchesProduct,
-    PRODUCT_PAGE_SIZE
-  );
+  const {
+    search,
+    setSearch,
+    debouncedSearch,
+    page,
+    setPage,
+    pageCount,
+    pageSize,
+    setPageSize,
+    paginated,
+  } = useTableFilters<Product>(data, matchesProduct, PRODUCT_PAGE_SIZE);
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
@@ -121,6 +87,15 @@ export function ProductsPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -153,7 +128,7 @@ export function ProductsPage(): React.ReactElement {
         </PermissionGuard>
       </header>
 
-      <section className={styles['statsRow']} aria-label="Product statistics">
+      <section className={styles['statsRow']} aria-label={t('products.statsAriaLabel')}>
         <Card>
           <CardHeader>
             <CardTitle className={styles['statTitle']}>{t('products.totalProducts')}</CardTitle>
@@ -194,6 +169,18 @@ export function ProductsPage(): React.ReactElement {
         <SectionErrorBoundary label="Products">
           <Card>
             <CardContent>
+              <div className={styles['controls']}>
+                <Input
+                  type="search"
+                  placeholder={t('products.searchPlaceholder')}
+                  value={search}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                    setSearch(e.target.value);
+                  }}
+                  aria-label={t('products.searchPlaceholder')}
+                  className={styles['searchInput']}
+                />
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -205,37 +192,13 @@ export function ProductsPage(): React.ReactElement {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {isPending ? (
-                    Array.from({ length: SKELETON_ROWS }).map((_, i) => (
-                      <TableRow key={i}>
-                        <TableCell colSpan={5}>
-                          <Skeleton className={styles['skeletonRow']} />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : paginated.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={5}>
-                        <EmptyState icon={<PackageIcon size={24} />} title={t('common.noData')} />
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    paginated.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell>{p.name}</TableCell>
-                        <TableCell>{p.sku}</TableCell>
-                        <TableCell>{formatCurrency(p.price, p.currency)}</TableCell>
-                        <TableCell>{p.category?.name ?? '—'}</TableCell>
-                        <TableCell>
-                          <ProductRowActions
-                            product={p}
-                            onEdit={setEditProduct}
-                            onDelete={setDeleteId}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                  <ProductTableContent
+                    isPending={isPending}
+                    paginated={paginated}
+                    debouncedSearch={debouncedSearch}
+                    onEdit={setEditProduct}
+                    onDelete={setDeleteId}
+                  />
                 </TableBody>
               </Table>
             </CardContent>

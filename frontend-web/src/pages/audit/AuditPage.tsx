@@ -34,9 +34,27 @@ function actionVariant(action: AuditAction): BadgeVariant {
 export function AuditPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { i18n } = useTranslation();
-  const { data: logs, isLoading } = useAuditLog();
+  const { data: logs, isLoading, isError, refetch } = useAuditLog();
 
   const [visibleCount, setVisibleCount] = React.useState(PAGE_SIZE);
+
+  if (isError) {
+    return (
+      <div className={pageStyles['errorContainer']} role="alert" aria-live="assertive">
+        <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
+      </div>
+    );
+  }
+
   const allLogs = logs ?? [];
   const visibleLogs = allLogs.slice(0, visibleCount);
   const hasMore = visibleCount < allLogs.length;

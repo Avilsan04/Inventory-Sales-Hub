@@ -69,16 +69,16 @@
 
 // Left-border accent: data-driven colour identity without generic gradients
 .kpiCardAccentPrimary {
-  border-left: 3px solid var(--color-primary);
+  border-left: $border-width-accent solid var(--color-primary);
 }
 .kpiCardAccentNeutral {
-  border-left: 3px solid var(--color-text-muted);
+  border-left: $border-width-accent solid var(--color-text-muted);
 }
 .kpiCardAccentSuccess {
-  border-left: 3px solid var(--color-success);
+  border-left: $border-width-accent solid var(--color-success);
 }
 .kpiCardAccentError {
-  border-left: 3px solid var(--color-error);
+  border-left: $border-width-accent solid var(--color-error);
 }
 
 .kpiTopRow {

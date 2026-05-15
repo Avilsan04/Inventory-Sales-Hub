@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Inventory Sales Hub",
+    "platformTag": "Plataforma",
     "loading": "Cargando...",
     "error": "Error",
     "cancel": "Cancelar",
@@ -11,6 +12,8 @@
     "create": "Crear",
     "search": "Buscar productos, pedidos, clientes...",
     "filter": "Filtrar",
+    "fromDate": "Fecha de inicio",
+    "toDate": "Fecha de fin",
     "toggleTheme": "Cambiar tema",
     "noData": "No hay datos disponibles",
     "scrollToTop": "Ir al inicio",
@@ -101,6 +104,7 @@
     }
   },
   "topbar": {
+    "changeRoleView": "Cambiar vista de rol",
     "subtitle": {
       "dashboard": "Vista general en tiempo real de ventas y stock",
       "inventory": "Gestiona niveles de stock y umbrales de reposición",
@@ -112,6 +116,7 @@
     }
   },
   "sidebar": {
+    "mainNavLabel": "Navegación principal",
     "storage": "Almacenamiento",
     "storageDetail": "68% de 100GB"
   },
@@ -278,6 +283,8 @@
     "stock": "Stock",
     "category": "Categoría",
     "allProducts": "Todos los productos",
+    "searchPlaceholder": "Buscar por nombre o SKU…",
+    "deleteProduct": "Eliminar producto",
     "lowStockTab": "Stock bajo",
     "outOfStockTab": "Sin stock",
     "exportCsv": "Exportar CSV",
@@ -342,6 +349,10 @@
   "products": {
     "subtitle": "Explora y gestiona tu catálogo de productos",
     "totalProducts": "Total de productos",
+    "statsAriaLabel": "Estadísticas de productos",
+    "searchPlaceholder": "Buscar por nombre, SKU o categoría…",
+    "noResultsTitle": "No se encontraron productos",
+    "noResultsDescription": "Intenta con otro término de búsqueda",
     "totalCategories": "Categorías",
     "importCsv": "Importar CSV",
     "newProduct": "Añadir nuevo producto",
@@ -496,6 +507,8 @@
     "addCustomer": "Añadir cliente",
     "emptyTitle": "Sin clientes registrados",
     "emptyDescription": "Añade tu primer cliente para gestionar las relaciones",
+    "noResultsTitle": "No se encontraron clientes",
+    "noResultsDescription": "Intenta con otro término de búsqueda",
     "newCustomer": "Añadir nuevo cliente",
     "deleteCustomer": "¿Eliminar cliente?",
     "fullNamePlaceholder": "Nombre completo",
@@ -514,6 +527,9 @@
     "title": "Empleados",
     "subtitle": "Gestiona los miembros y roles de tu equipo",
     "totalEmployees": "Total de empleados",
+    "statsAriaLabel": "Estadísticas de empleados",
+    "emptyTitle": "Aún no hay empleados",
+    "emptyDescription": "Añade tu primer empleado para gestionar tu equipo",
     "activeEmployees": "Activos",
     "adminCount": "Administradores",
     "name": "Nombre",
@@ -530,7 +546,10 @@
     "roles": {
       "admin": "Administrador",
       "manager": "Gestor",
-      "staff": "Personal"
+      "staff": "Personal",
+      "company": "Empresa",
+      "customer": "Cliente",
+      "test": "Prueba"
     },
     "toasts": {
       "created": "Empleado añadido",
@@ -541,6 +560,12 @@
     "title": "Proveedores",
     "subtitle": "Gestiona tu red de proveedores",
     "totalSuppliers": "Total de proveedores",
+    "statsAriaLabel": "Estadísticas de proveedores",
+    "searchPlaceholder": "Buscar proveedores…",
+    "emptyTitle": "Aún no hay proveedores",
+    "emptyDescription": "Añade tu primer proveedor para gestionar tu red",
+    "noResultsTitle": "No se encontraron proveedores",
+    "noResultsDescription": "Intenta con otro término de búsqueda",
     "name": "Nombre",
     "email": "Correo electrónico",
     "phone": "Teléfono",
@@ -585,6 +610,8 @@
     "rangeCustom": "Personalizado",
     "exportProducts": "Exportar productos",
     "exportCustomers": "Exportar clientes",
+    "dateRangeGroup": "Rango de fechas",
+    "kpiAriaLabel": "Indicadores clave de rendimiento",
     "col": {
       "product": "Producto",
       "sku": "SKU",
@@ -631,9 +658,12 @@
     "closeShift": "Cerrar turno",
     "openShift": "Abrir turno",
     "noActiveSession": "Sin sesión de caja activa. Abre un turno para empezar a vender.",
+    "noSessionNoPermission": "Sin sesión de caja activa. Contacta con un gestor para abrir el turno.",
     "subtotal": "Subtotal",
     "discount": "Descuento",
+    "discountAriaLabel": "Porcentaje de descuento",
     "tax": "IVA",
+    "taxAriaLabel": "Porcentaje de impuesto",
     "total": "Total",
     "decreaseQty": "Disminuir cantidad",
     "increaseQty": "Aumentar cantidad",
@@ -715,6 +745,9 @@
     "clearCart": "Vaciar carrito",
     "emptyTitle": "No se encontraron productos",
     "emptyDescription": "Intenta ajustar tu búsqueda.",
+    "noProductsTitle": "No hay productos disponibles",
+    "noProductsDescription": "Vuelve más tarde para ver los productos disponibles.",
+    "searchPlaceholder": "Buscar por nombre o SKU…",
     "storeEyebrow": "TIENDA",
     "removeItem": "Eliminar artículo"
   },
@@ -820,11 +853,14 @@
     "title": "Registro de auditoría",
     "subtitle": "Historial de actividad del sistema",
     "loadMore": "Cargar más",
+    "searchPlaceholder": "Buscar por usuario, acción, entidad…",
+    "noEntries": "Sin entradas de auditoría",
     "cols": {
       "timestamp": "Fecha y hora",
       "user": "Usuario",
       "action": "Acción",
       "entity": "Entidad",
+      "id": "ID",
       "details": "Detalles"
     },
     "actions": {
@@ -843,7 +879,8 @@
       "language": "Idioma",
       "notifications": "Notificaciones",
       "account": "Cuenta",
-      "company": "Perfil de Empresa"
+      "company": "Perfil de Empresa",
+      "ariaLabel": "Secciones de ajustes"
     },
     "darkMode": "Modo oscuro",
     "darkModeDesc": "Alterna entre la interfaz clara y oscura",
@@ -906,6 +943,7 @@
   },
   "admin": {
     "title": "Gestión de Tenants",
+    "statsAriaLabel": "Métricas de administración",
     "subtitle": "Administra todos los tenants de la plataforma y sus suscripciones.",
     "tenant": "Tenant",
     "plan": "Plan",
@@ -915,6 +953,8 @@
     "activate": "Activar",
     "suspend": "Suspender",
     "impersonate": "Impersonar",
+    "impersonateConfirmTitle": "¿Impersonar a este tenant?",
+    "impersonateConfirmDescription": "Actuarás en nombre de este tenant. Todas las acciones se realizarán como este tenant hasta que salgas.",
     "impersonationActive": "Estás impersonando a un tenant. Todas las acciones se realizan en su nombre.",
     "exitImpersonation": "Salir de impersonación",
     "metrics": {

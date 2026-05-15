@@ -141,8 +141,15 @@ export function MyOrdersPage(): React.ReactElement {
                 filtered.map((s) => (
                   <TableRow
                     key={s.id}
+                    tabIndex={0}
                     onClick={() => {
                       setDetailSale(s);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setDetailSale(s);
+                      }
                     }}
                     className={cn(tableStyles['mono'], tableStyles['clickableRow'])}
                   >

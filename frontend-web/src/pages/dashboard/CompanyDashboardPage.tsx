@@ -42,7 +42,11 @@ function GrowthBadge({ growth, vsKey }: { growth: number; vsKey: string }): Reac
         positive ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
       )}
     >
-      {positive ? <TrendingUpIcon size={12} /> : <TrendingDownIcon size={12} />}
+      {positive ? (
+        <TrendingUpIcon size={12} aria-hidden="true" />
+      ) : (
+        <TrendingDownIcon size={12} aria-hidden="true" />
+      )}
       {Math.abs(growth).toFixed(1)}% {t(vsKey)}
     </div>
   );

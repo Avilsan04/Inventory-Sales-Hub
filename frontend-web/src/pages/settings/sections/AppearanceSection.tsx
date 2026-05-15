@@ -70,7 +70,7 @@ export function AppearanceSection(): React.ReactElement {
               <Button
                 key={value}
                 variant="ghost"
-                aria-label={value}
+                aria-label={t('settings.selectThemeAria', { label: value })}
                 aria-pressed={settings.accentColor === value}
                 className={cn(styles.swatch, settings.accentColor === value && styles.swatchActive)}
                 style={{ backgroundColor: color }}

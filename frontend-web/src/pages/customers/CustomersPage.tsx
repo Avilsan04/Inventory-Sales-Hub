@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { PencilIcon, TrashIcon, UsersIcon } from 'lucide-react';
+import { UsersIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCustomers, useDeleteCustomer, useCustomerTopMap } from '@features/customers';
 import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
 import { exportToCsv } from '@shared/lib/exportCsv';
-import { initials, formatCurrency } from '@shared/lib';
 import { toast } from '@shared/hooks/useToast';
 import { useTableFilters } from '@shared/hooks';
-import { Skeleton, Button, Input, Avatar, AvatarFallback, Pagination } from '@shared/ui/primitives';
+import { Skeleton, Button, Input, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   Table,
@@ -26,12 +25,13 @@ import { CustomerEditDialog } from '@features/customers';
 import type { Customer } from '@entities/customer';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Customers.module.scss';
+import { CustomerTableRow } from './CustomersTable';
 
 const CUSTOMER_PAGE_SIZE = 20;
 
 export function CustomersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data, isPending, isError } = useCustomers();
+  const { data, isPending, isError, refetch } = useCustomers();
   const { data: topCustomers } = useTopCustomers();
   const { mutate: deleteCustomer, isPending: isDeleting } = useDeleteCustomer();
 
@@ -93,10 +93,21 @@ export function CustomersPage(): React.ReactElement {
     });
   };
 
+  const customerCount = data?.length ?? 0;
+
   if (isError) {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -163,8 +174,14 @@ export function CustomersPage(): React.ReactElement {
                   <TableCell colSpan={5}>
                     <EmptyState
                       icon={<UsersIcon size={24} />}
-                      title={t('customers.emptyTitle')}
-                      description={t('customers.emptyDescription')}
+                      title={
+                        debouncedSearch ? t('customers.noResultsTitle') : t('customers.emptyTitle')
+                      }
+                      description={
+                        debouncedSearch
+                          ? t('customers.noResultsDescription')
+                          : t('customers.emptyDescription')
+                      }
                       action={
                         debouncedSearch
                           ? undefined
@@ -179,73 +196,23 @@ export function CustomersPage(): React.ReactElement {
                   </TableCell>
                 </TableRow>
               ) : (
-                paginated.map((c) => {
-                  const meta = topMap.get(c.id);
-                  return (
-                    <TableRow key={c.id}>
-                      <TableCell>
-                        <div className={styles['customerCell']}>
-                          <Avatar>
-                            <AvatarFallback>{initials(c.name)}</AvatarFallback>
-                          </Avatar>
-                          <span className={styles['customerName']}>{c.name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className={styles['contactName']}>{c.email}</div>
-                          {c.phone && <div className={styles['contactEmail']}>{c.phone}</div>}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {meta ? (
-                          <span className={styles['metaValue']}>{meta.totalOrders}</span>
-                        ) : (
-                          <span className={styles['metaMuted']}>—</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {meta ? (
-                          <span className={styles['metaValue']}>
-                            {formatCurrency(meta.totalSpent, 'EUR')}
-                          </span>
-                        ) : (
-                          <span className={styles['metaMuted']}>—</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className={pageStyles['cellActions']}>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => {
-                              setEditCustomer(c);
-                            }}
-                          >
-                            <PencilIcon size={14} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => {
-                              setDeleteId(c.id);
-                            }}
-                          >
-                            <TrashIcon size={14} />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
+                paginated.map((c) => (
+                  <CustomerTableRow
+                    key={c.id}
+                    customer={c}
+                    topMeta={topMap.get(c.id)}
+                    onEdit={setEditCustomer}
+                    onDelete={setDeleteId}
+                  />
+                ))
               )}
             </TableBody>
           </Table>
           {pageCount > 1 && (
             <div className={pageStyles['tableFooter']}>
               <span>
-                {Math.min((page - 1) * pageSize + 1, data?.length ?? 0)}–
-                {Math.min(page * pageSize, data?.length ?? 0)} / {data?.length ?? 0}
+                {Math.min((page - 1) * pageSize + 1, customerCount)}–
+                {Math.min(page * pageSize, customerCount)} / {customerCount}
               </span>
               <Pagination
                 page={page}

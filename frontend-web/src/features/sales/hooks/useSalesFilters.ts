@@ -10,6 +10,7 @@ interface SalesFiltersState {
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
+  refetch: () => Promise<unknown>;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   debouncedSearch: string;
@@ -46,7 +47,7 @@ export function useSalesFilters(): SalesFiltersState {
     [debouncedSearch, dateFilter, page]
   );
 
-  const { data: paginatedData, isLoading, isFetching, isError } = useSales(filters);
+  const { data: paginatedData, isLoading, isFetching, isError, refetch } = useSales(filters);
 
   const paginated = paginatedData?.data ?? [];
   const totalSales = paginatedData?.total ?? 0;
@@ -62,6 +63,7 @@ export function useSalesFilters(): SalesFiltersState {
     isLoading,
     isFetching,
     isError,
+    refetch,
     search,
     setSearch,
     debouncedSearch,

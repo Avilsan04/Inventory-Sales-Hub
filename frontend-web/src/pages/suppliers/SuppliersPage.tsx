@@ -3,7 +3,7 @@ import { TruckIcon, PencilIcon, TrashIcon, PlusIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSuppliers, useDeleteSupplier } from '@features/suppliers';
 import { toast } from '@shared/hooks/useToast';
-import { Skeleton, Button, Pagination } from '@shared/ui/primitives';
+import { Skeleton, Button, Input, Pagination } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -28,16 +28,68 @@ import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 const SUPPLIER_PAGE_SIZE = 20;
 
+interface SupplierRowProps {
+  supplier: Supplier;
+  onEdit: (s: Supplier) => void;
+  onDelete: (id: string) => void;
+}
+
+function SupplierTableRow({ supplier: s, onEdit, onDelete }: SupplierRowProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
+  return (
+    <TableRow>
+      <TableCell>{s.name}</TableCell>
+      <TableCell>{s.email ?? '—'}</TableCell>
+      <TableCell>{s.phone ?? '—'}</TableCell>
+      <TableCell>{s.contactPerson ?? '—'}</TableCell>
+      <TableCell>
+        <div className={styles['cellActions']}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t('suppliers.editSupplier')}
+            onClick={(): void => {
+              onEdit(s);
+            }}
+          >
+            <PencilIcon size={14} aria-hidden="true" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t('suppliers.deleteSupplier')}
+            onClick={(): void => {
+              onDelete(s.id);
+            }}
+          >
+            <TrashIcon size={14} aria-hidden="true" />
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
 export function SuppliersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data, isPending, isError } = useSuppliers();
+  const { data, isPending, isError, refetch } = useSuppliers();
   const { mutate: deleteSupplier, isPending: isDeleting } = useDeleteSupplier();
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editSupplier, setEditSupplier] = React.useState<Supplier | null>(null);
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
 
-  const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Supplier>(
+  const {
+    search,
+    setSearch,
+    debouncedSearch,
+    page,
+    setPage,
+    pageCount,
+    pageSize,
+    setPageSize,
+    paginated,
+  } = useTableFilters<Supplier>(
     data,
     (s, q) =>
       s.name.toLowerCase().includes(q) ||
@@ -45,8 +97,6 @@ export function SuppliersPage(): React.ReactElement {
       (s.contactPerson ?? '').toLowerCase().includes(q),
     SUPPLIER_PAGE_SIZE
   );
-
-  const suppliers = paginated;
 
   const handleDelete = (): void => {
     if (deleteId === null) return;
@@ -69,9 +119,20 @@ export function SuppliersPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
+
+  const supplierCount = data?.length ?? 0;
 
   return (
     <div className={styles['page']}>
@@ -90,7 +151,7 @@ export function SuppliersPage(): React.ReactElement {
         </Button>
       </header>
 
-      <section className={styles['statsRow']} aria-label="Supplier statistics">
+      <section className={styles['statsRow']} aria-label={t('suppliers.statsAriaLabel')}>
         <Card>
           <CardHeader>
             <CardTitle className={styles['statTitle']}>{t('suppliers.totalSuppliers')}</CardTitle>
@@ -102,7 +163,7 @@ export function SuppliersPage(): React.ReactElement {
           </CardHeader>
           <CardContent>
             <div className={styles['statValue']}>
-              {isPending ? <Skeleton className={styles['skeletonValue']} /> : suppliers.length}
+              {isPending ? <Skeleton className={styles['skeletonValue']} /> : data.length}
             </div>
           </CardContent>
         </Card>
@@ -112,6 +173,18 @@ export function SuppliersPage(): React.ReactElement {
         <SectionErrorBoundary label="Suppliers">
           <Card>
             <CardContent>
+              <div className={styles['controls']}>
+                <Input
+                  type="search"
+                  placeholder={t('suppliers.searchPlaceholder')}
+                  value={search}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
+                    setSearch(e.target.value);
+                  }}
+                  aria-label={t('suppliers.searchPlaceholder')}
+                  className={styles['searchInput']}
+                />
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -131,52 +204,42 @@ export function SuppliersPage(): React.ReactElement {
                         </TableCell>
                       </TableRow>
                     ))
-                  ) : suppliers.length === 0 ? (
+                  ) : paginated.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={5}>
                         <EmptyState
                           icon={<TruckIcon size={24} />}
-                          title={t('suppliers.emptyTitle')}
-                          description={t('suppliers.emptyDescription')}
-                          action={{
-                            label: t('suppliers.addSupplier'),
-                            onClick: (): void => {
-                              setCreateOpen(true);
-                            },
-                          }}
+                          title={
+                            debouncedSearch
+                              ? t('suppliers.noResultsTitle')
+                              : t('suppliers.emptyTitle')
+                          }
+                          description={
+                            debouncedSearch
+                              ? t('suppliers.noResultsDescription')
+                              : t('suppliers.emptyDescription')
+                          }
+                          action={
+                            debouncedSearch
+                              ? undefined
+                              : {
+                                  label: t('suppliers.addSupplier'),
+                                  onClick: (): void => {
+                                    setCreateOpen(true);
+                                  },
+                                }
+                          }
                         />
                       </TableCell>
                     </TableRow>
                   ) : (
-                    suppliers.map((s) => (
-                      <TableRow key={s.id}>
-                        <TableCell>{s.name}</TableCell>
-                        <TableCell>{s.email ?? '—'}</TableCell>
-                        <TableCell>{s.phone ?? '—'}</TableCell>
-                        <TableCell>{s.contactPerson ?? '—'}</TableCell>
-                        <TableCell>
-                          <div className={styles['cellActions']}>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => {
-                                setEditSupplier(s);
-                              }}
-                            >
-                              <PencilIcon size={14} />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => {
-                                setDeleteId(s.id);
-                              }}
-                            >
-                              <TrashIcon size={14} />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
+                    paginated.map((s) => (
+                      <SupplierTableRow
+                        key={s.id}
+                        supplier={s}
+                        onEdit={setEditSupplier}
+                        onDelete={setDeleteId}
+                      />
                     ))
                   )}
                 </TableBody>
@@ -185,8 +248,8 @@ export function SuppliersPage(): React.ReactElement {
             {pageCount > 1 && (
               <div className={styles['tableFooter']}>
                 <span>
-                  {Math.min((page - 1) * SUPPLIER_PAGE_SIZE + 1, data?.length ?? 0)}–
-                  {Math.min(page * SUPPLIER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+                  {Math.min((page - 1) * SUPPLIER_PAGE_SIZE + 1, supplierCount)}–
+                  {Math.min(page * SUPPLIER_PAGE_SIZE, supplierCount)} / {supplierCount}
                 </span>
                 <Pagination
                   page={page}

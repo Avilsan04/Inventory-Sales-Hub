@@ -5,7 +5,14 @@ import { useTenants, useActivateTenant, useSuspendTenant, useImpersonation } fro
 import { useAdminMetrics } from '@features/admin';
 import { toast } from '@shared/hooks/useToast';
 import { Spinner, Button } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardAction, CardContent } from '@shared/ui/composed';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardAction,
+  CardContent,
+  ConfirmDialog,
+} from '@shared/ui/composed';
 import { TenantTable } from '@features/admin';
 import { SectionErrorBoundary } from '@app/providers';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
@@ -17,6 +24,8 @@ export function TenantsPage(): React.ReactElement {
   const { mutate: activate, isPending: isActivating } = useActivateTenant();
   const { mutate: suspend, isPending: isSuspending } = useSuspendTenant();
   const { startImpersonation } = useImpersonation();
+
+  const [impersonateId, setImpersonateId] = React.useState<string | null>(null);
 
   const isMutating = isActivating || isSuspending;
 
@@ -43,7 +52,13 @@ export function TenantsPage(): React.ReactElement {
   };
 
   const handleImpersonate = (id: string): void => {
-    void startImpersonation(id);
+    setImpersonateId(id);
+  };
+
+  const handleConfirmImpersonate = (): void => {
+    if (impersonateId === null) return;
+    void startImpersonation(impersonateId);
+    setImpersonateId(null);
   };
 
   if (isPending) {
@@ -81,7 +96,7 @@ export function TenantsPage(): React.ReactElement {
       </header>
 
       {metrics && (
-        <section className={styles['statsRow']} aria-label="Admin metrics">
+        <section className={styles['statsRow']} aria-label={t('admin.statsAriaLabel')}>
           <Card>
             <CardHeader>
               <CardTitle className={styles['statTitle']}>
@@ -154,6 +169,16 @@ export function TenantsPage(): React.ReactElement {
           </Card>
         </SectionErrorBoundary>
       </section>
+
+      <ConfirmDialog
+        open={impersonateId !== null}
+        onOpenChange={(open): void => {
+          if (!open) setImpersonateId(null);
+        }}
+        title={t('admin.impersonateConfirmTitle')}
+        description={t('admin.impersonateConfirmDescription')}
+        onConfirm={handleConfirmImpersonate}
+      />
     </div>
   );
 }

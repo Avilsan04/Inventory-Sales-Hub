@@ -107,6 +107,9 @@ $dialog-col-short: 5rem; // ~80px — currency / short inputs
 $dialog-col-qty: 3.75rem; // ~60px — quantity field
 $dialog-col-price: 5.5rem; // ~88px — unit price field
 
+// Audit table columns
+$col-audit-details: 15rem; // ~240px — details cell max-width
+
 // ── Blur scale ────────────────────────────────────────────────────
 $blur-2xs: 1px; // near-invisible particle blur
 $blur-xs: 2px; // particle blur

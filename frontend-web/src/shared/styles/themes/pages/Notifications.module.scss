@@ -70,6 +70,7 @@
 .notifItemUnread {
   background: var(--color-bg-primary);
   border-color: var(--color-primary);
+  border-left-width: $border-width-accent;
 }
 
 .notifIcon {
@@ -104,6 +105,8 @@
   font-size: $font-size-sm;
   color: var(--color-text-muted);
   margin: 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 // ── Type icon colors ─────────────────────────────────────────────────────
@@ -136,8 +139,10 @@
 
 .errorContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: $spacing-4;
   flex: 1;
   min-height: $min-section-height;
   color: var(--color-error);

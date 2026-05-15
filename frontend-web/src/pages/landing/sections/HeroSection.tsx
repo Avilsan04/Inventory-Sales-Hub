@@ -89,9 +89,9 @@ export function HeroSection({ onGetStarted, onTestMode }: HeroSectionProps): Rea
         </FadeIn>
       </div>
 
-      {/* Right column — dashboard mockup */}
+      {/* Right column — decorative dashboard mockup (not interactive content) */}
       <FadeIn delay={0.4} className={styles['heroVisual']}>
-        <div className={styles['mockupWindow']}>
+        <div className={styles['mockupWindow']} aria-hidden="true">
           <div className={styles['mockupTitlebar']}>
             <span className={styles['mockupDotRed']} aria-hidden="true" />
             <span className={styles['mockupDotYellow']} aria-hidden="true" />

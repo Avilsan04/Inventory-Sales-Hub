@@ -278,6 +278,11 @@
   &:hover td {
     background-color: var(--color-surface-low);
   }
+
+  &:focus-visible {
+    outline: $border-width-focus solid var(--color-primary);
+    outline-offset: -2px;
+  }
 }
 
 .skeletonRow {

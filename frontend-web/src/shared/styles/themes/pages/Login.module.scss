@@ -124,8 +124,8 @@
   padding: $spacing-2;
   border-radius: var(--radius-md);
   transition:
-    color 0.15s ease,
-    background-color 0.15s ease;
+    color $duration-fast ease,
+    background-color $duration-fast ease;
 
   &:hover {
     color: var(--color-text-primary);
@@ -157,6 +157,12 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
 }
 
 .successContent {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   SunIcon,
   MoonIcon,
@@ -50,7 +51,7 @@ const BRAND_FEATURES = ['auth.brandFeature1', 'auth.brandFeature2', 'auth.brandF
 export function RegisterPage(): React.ReactElement {
   const { translate } = useTranslationAdapter();
   const { navigateTo } = useRoutingAdapter();
-  const { theme, toggleTheme } = useTheme();
+  const { resolvedTheme, toggleTheme } = useTheme();
 
   const [activeTab, setActiveTab] = React.useState<RegisterRole>('customer');
 
@@ -61,10 +62,6 @@ export function RegisterPage(): React.ReactElement {
 
   const handleRegisterSuccess = React.useCallback((): void => {
     navigateTo(APP_ROUTES.DASHBOARD, true);
-  }, [navigateTo]);
-
-  const handleNavigateToLogin = React.useCallback((): void => {
-    navigateTo(APP_ROUTES.LOGIN);
   }, [navigateTo]);
 
   const { titleKey, subtitleKey, Icon: RoleIcon } = ROLE_META[activeTab];
@@ -79,7 +76,11 @@ export function RegisterPage(): React.ReactElement {
         onClick={toggleTheme}
         aria-label={translate('common.toggleTheme')}
       >
-        {theme === 'dark' ? <SunIcon aria-hidden="true" /> : <MoonIcon aria-hidden="true" />}
+        {resolvedTheme === 'dark' ? (
+          <SunIcon aria-hidden="true" />
+        ) : (
+          <MoonIcon aria-hidden="true" />
+        )}
       </Button>
 
       <main className={styles.main}>
@@ -141,10 +142,10 @@ export function RegisterPage(): React.ReactElement {
           </Card>
 
           <p className={styles.loginPrompt}>
-            {translate('auth.alreadyHaveAccount')}
-            <Button variant="ghost" className={styles.loginLink} onClick={handleNavigateToLogin}>
+            {translate('auth.alreadyHaveAccount')}{' '}
+            <Link to={APP_ROUTES.LOGIN} className={styles.loginLink}>
               {translate('auth.login')}
-            </Button>
+            </Link>
           </p>
         </div>
       </main>

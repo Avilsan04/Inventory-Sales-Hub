@@ -61,20 +61,20 @@ export function CatalogPage(): React.ReactElement {
       <div className={styles['searchFilter']}>
         <Input
           type="search"
-          placeholder={`${t('common.filter')} SKU, ${t('inventory.name').toLowerCase()}…`}
+          placeholder={t('catalog.searchPlaceholder')}
           value={search}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSearch(e.target.value);
           }}
-          aria-label={t('common.filter')}
+          aria-label={t('catalog.searchPlaceholder')}
         />
       </div>
 
       {filtered.length === 0 ? (
         <EmptyState
           icon={<PackageIcon size={24} />}
-          title={t('catalog.emptyTitle')}
-          description={t('catalog.emptyDescription')}
+          title={search ? t('catalog.emptyTitle') : t('catalog.noProductsTitle')}
+          description={search ? t('catalog.emptyDescription') : t('catalog.noProductsDescription')}
         />
       ) : (
         <div className={styles['productGrid']}>

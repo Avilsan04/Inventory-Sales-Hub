@@ -9,17 +9,14 @@ export function AnalyticsSection(): React.ReactElement {
   return (
     <section className={styles['analytics']} aria-labelledby="analytics-heading">
       <div className={styles['analyticsInner']}>
-
         {/* Left column — text + small mockup cards */}
         <Reveal direction="left" className={styles['analyticsContent']}>
           <h2 id="analytics-heading" className={styles['sectionTitle']}>
             {translate('landing.analytics.title')}
           </h2>
-          <p className={styles['sectionSubtitle']}>
-            {translate('landing.analytics.description')}
-          </p>
+          <p className={styles['sectionSubtitle']}>{translate('landing.analytics.description')}</p>
 
-          <div className={styles['analyticsMockupCards']}>
+          <div className={styles['analyticsMockupCards']} aria-hidden="true">
             {/* Revenue trend mini card */}
             <div className={styles['mockupMiniCard']}>
               <p className={styles['mockupMiniTitle']}>Ingresos</p>
@@ -63,9 +60,9 @@ export function AnalyticsSection(): React.ReactElement {
           </div>
         </Reveal>
 
-        {/* Right column — large dashboard mockup */}
+        {/* Right column — decorative dashboard mockup */}
         <Reveal direction="right" className={styles['analyticsVisual']}>
-          <div className={styles['mockupWindow']}>
+          <div className={styles['mockupWindow']} aria-hidden="true">
             <div className={styles['mockupTitlebar']}>
               <span className={styles['mockupDotRed']} aria-hidden="true" />
               <span className={styles['mockupDotYellow']} aria-hidden="true" />
@@ -131,7 +128,6 @@ export function AnalyticsSection(): React.ReactElement {
             </div>
           </div>
         </Reveal>
-
       </div>
     </section>
   );

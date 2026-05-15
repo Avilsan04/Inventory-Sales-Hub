@@ -229,8 +229,15 @@ export function StaffDashboardPage(): React.ReactElement {
                 <TableRow
                   key={s.id}
                   className={styles['clickableRow']}
+                  tabIndex={0}
                   onClick={(): void => {
                     setDetailSale(s);
+                  }}
+                  onKeyDown={(e): void => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setDetailSale(s);
+                    }
                   }}
                 >
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>

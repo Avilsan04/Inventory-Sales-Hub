@@ -59,7 +59,7 @@ export function ResetPasswordPage(): React.ReactElement {
 
   if (isSuccess) {
     return (
-      <div className={styles['page']}>
+      <main className={styles['page']}>
         <div className={styles['container']}>
           <Card>
             <CardHeader>
@@ -78,19 +78,18 @@ export function ResetPasswordPage(): React.ReactElement {
             </CardFooter>
           </Card>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className={styles['page']}>
+    <main className={styles['page']}>
       <Button
         variant="ghost"
         className={styles['backBtn']}
         onClick={() => {
           navigateTo(APP_ROUTES.LOGIN);
         }}
-        aria-label={t('auth.backToLogin')}
       >
         <ArrowLeftIcon size={16} aria-hidden="true" />
         {t('auth.backToLogin')}
@@ -121,7 +120,7 @@ export function ResetPasswordPage(): React.ReactElement {
                     {error.message}
                   </p>
                 )}
-                <div>
+                <div className={styles['field']}>
                   <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
                   <Input
                     id="newPassword"
@@ -136,7 +135,7 @@ export function ResetPasswordPage(): React.ReactElement {
                     </p>
                   )}
                 </div>
-                <div>
+                <div className={styles['field']}>
                   <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
                   <Input
                     id="confirmPassword"
@@ -161,6 +160,6 @@ export function ResetPasswordPage(): React.ReactElement {
           </form>
         </Card>
       </div>
-    </div>
+    </main>
   );
 }

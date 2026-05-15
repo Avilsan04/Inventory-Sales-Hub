@@ -90,7 +90,7 @@ export function UserMenu(): React.ReactElement {
                   setViewAs(v as ViewRole);
                 }}
               >
-                <SelectTrigger size="sm" aria-label="Cambiar vista de rol">
+                <SelectTrigger size="sm" aria-label={t('topbar.changeRoleView')}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
