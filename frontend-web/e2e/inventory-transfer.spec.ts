@@ -42,6 +42,6 @@ test.describe('Inventory — Transfer stock (per-row action)', () => {
     await expect(dialog).toBeVisible({ timeout: 3_000 });
 
     await dialog.getByRole('button', { name: /transfer/i }).click();
-    await expect(dialog.getByRole('alert').or(dialog.locator('[aria-describedby]'))).toBeVisible({ timeout: 2_000 });
+    await expect(dialog.getByRole('alert').first()).toBeVisible({ timeout: 2_000 });
   });
 });
