@@ -36,7 +36,7 @@ import {
 } from '@shared/ui';
 import { useRoutingAdapter } from '@adapters';
 import { APP_ROUTES } from '@shared/config';
-import { formatCurrency, formatOrderId } from '@shared/lib';
+import { useFormatCurrency, formatOrderId } from '@shared/lib';
 import { getSaleStatusBadgeVariant, lookupCustomerName } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/Dashboard.module.scss';
 
@@ -56,6 +56,7 @@ function GrowthLabel({ growth, label }: { growth: number; label: string }): Reac
 
 export function DashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { navigateTo } = useRoutingAdapter();
   const {
     kpi,
@@ -96,7 +97,7 @@ export function DashboardPage(): React.ReactElement {
           icon={<DollarSignIcon />}
           accent="primary"
           isLoading={kpiLoading}
-          value={kpi ? formatCurrency(kpi.totalRevenue, kpi.currency) : '—'}
+          value={kpi ? fmt(kpi.totalRevenue) : '—'}
           subtext={
             kpi ? (
               <GrowthLabel growth={kpi.revenueGrowth} label={t('dashboard.stats.vsLastMonth')} />
@@ -210,7 +211,7 @@ export function DashboardPage(): React.ReactElement {
                   <TableRow key={s.id}>
                     <TableCell className={styles['orderIdLink']}>{formatOrderId(s.id)}</TableCell>
                     <TableCell>{lookupCustomerName(s.customerId, customerMap)}</TableCell>
-                    <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
+                    <TableCell>{fmt(s.total)}</TableCell>
                     <TableCell>
                       <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                         {t(`sales.status.${s.status}`)}

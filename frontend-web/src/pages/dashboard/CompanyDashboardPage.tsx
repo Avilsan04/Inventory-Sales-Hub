@@ -23,7 +23,7 @@ import {
   TableHead,
   TableCell,
 } from '@shared/ui';
-import { formatCurrency } from '@shared/lib';
+import { useFormatCurrency } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
@@ -54,6 +54,7 @@ function GrowthBadge({ growth, vsKey }: { growth: number; vsKey: string }): Reac
 
 export function CompanyDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { navigateTo } = useRoutingAdapter();
   const {
     totalRevenue,
@@ -61,7 +62,6 @@ export function CompanyDashboardPage(): React.ReactElement {
     totalOrders,
     ordersGrowth,
     totalCustomers,
-    currency,
     topProducts,
     topCustomers,
     salesPeriod,
@@ -107,7 +107,7 @@ export function CompanyDashboardPage(): React.ReactElement {
           icon={<DollarSignIcon />}
           accent="primary"
           isLoading={isLoading}
-          value={formatCurrency(totalRevenue, currency)}
+          value={fmt(totalRevenue)}
           subtext={<GrowthBadge growth={revenueGrowth} vsKey="dashboard.vsLastMonth" />}
         />
         <KpiCard
@@ -204,7 +204,7 @@ export function CompanyDashboardPage(): React.ReactElement {
                     </TableCell>
                     <TableCell>{p.productName}</TableCell>
                     <TableCell>{p.totalSold}</TableCell>
-                    <TableCell>{formatCurrency(p.revenue, currency)}</TableCell>
+                    <TableCell>{fmt(p.revenue)}</TableCell>
                   </TableRow>
                 ))
               )}
@@ -271,7 +271,7 @@ export function CompanyDashboardPage(): React.ReactElement {
                     </TableCell>
                     <TableCell>{c.customerName}</TableCell>
                     <TableCell>{c.totalOrders}</TableCell>
-                    <TableCell>{formatCurrency(c.totalSpent, currency)}</TableCell>
+                    <TableCell>{fmt(c.totalSpent)}</TableCell>
                   </TableRow>
                 ))
               )}

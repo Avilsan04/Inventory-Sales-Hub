@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useUpdateSaleStatus } from '../hooks/useUpdateSaleStatus';
 import styles from './SaleDetailDrawer.module.scss';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import { Badge, Button } from '@shared/ui/primitives';
 import {
@@ -36,6 +36,7 @@ export function SaleDetailDrawer({
   customerName,
 }: SaleDetailDrawerProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateSaleStatus(sale?.id ?? '');
 
   const subtotal = (sale?.items ?? []).reduce((sum, item) => sum + item.subtotal, 0);
@@ -111,12 +112,8 @@ export function SaleDetailDrawer({
                       <TableRow key={item.id}>
                         <TableCell>{item.productName}</TableCell>
                         <TableCell className={styles['cellRight']}>{item.quantity}</TableCell>
-                        <TableCell className={styles['cellMono']}>
-                          {formatCurrency(item.unitPrice, sale.currency)}
-                        </TableCell>
-                        <TableCell className={styles['cellMono']}>
-                          {formatCurrency(item.subtotal, sale.currency)}
-                        </TableCell>
+                        <TableCell className={styles['cellMono']}>{fmt(item.unitPrice)}</TableCell>
+                        <TableCell className={styles['cellMono']}>{fmt(item.subtotal)}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -127,15 +124,11 @@ export function SaleDetailDrawer({
               <div className={styles['totalsSection']}>
                 <div className={styles['totalRow']}>
                   <span className={styles['mutedText']}>{t('sales.subtotal')}</span>
-                  <span className={styles['monoText']}>
-                    {formatCurrency(subtotal, sale.currency)}
-                  </span>
+                  <span className={styles['monoText']}>{fmt(subtotal)}</span>
                 </div>
                 <div className={styles['totalRowFinal']}>
                   <span>{t('sales.total')}</span>
-                  <span className={styles['monoText']}>
-                    {formatCurrency(sale.total, sale.currency)}
-                  </span>
+                  <span className={styles['monoText']}>{fmt(sale.total)}</span>
                 </div>
               </div>
 

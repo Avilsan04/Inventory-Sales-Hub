@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { formatQuantityWithUom } from '@shared/lib/uom';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
@@ -8,14 +8,11 @@ import styles from './ProductVariantsPanel.module.scss';
 
 interface ProductVariantsPanelProps {
   variants: Product[];
-  currency?: string;
 }
 
-export function ProductVariantsPanel({
-  variants,
-  currency = 'EUR',
-}: ProductVariantsPanelProps): React.ReactElement {
+export function ProductVariantsPanel({ variants }: ProductVariantsPanelProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
 
   if (variants.length === 0) {
     return <p className={styles['empty']}>{t('products.noVariants')}</p>;
@@ -38,7 +35,7 @@ export function ProductVariantsPanel({
               <TableCell className={styles['skuCell']}>{v.sku}</TableCell>
               <TableCell>{v.name}</TableCell>
               <TableCell>{formatQuantityWithUom(1, v.uom)}</TableCell>
-              <TableCell>{formatCurrency(v.price, currency)}</TableCell>
+              <TableCell>{fmt(v.price)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

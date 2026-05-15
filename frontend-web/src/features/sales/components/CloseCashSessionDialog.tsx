@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCloseCashSession } from '../hooks/useCloseCashSession';
 import { toast } from '@shared/hooks/useToast';
-import { formatCurrency, fromCents, toCents } from '@shared/lib/formatCurrency';
+import { useFormatCurrency, fromCents, toCents } from '@shared/lib/formatCurrency';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
@@ -39,6 +39,7 @@ export function CloseCashSessionDialog({
   onSuccess,
 }: CloseCashSessionDialogProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
 
   const formSchema = React.useMemo(
     () =>
@@ -102,7 +103,7 @@ export function CloseCashSessionDialog({
           <DialogDescription>
             {t('pos.sessionOpenedAtDesc', {
               date: openedAt,
-              amount: formatCurrency(session.openingBalance, 'EUR'),
+              amount: fmt(session.openingBalance),
             })}
           </DialogDescription>
         </DialogHeader>
@@ -131,9 +132,7 @@ export function CloseCashSessionDialog({
             <div className={localStyles['summaryBox']}>
               <div className={localStyles['summaryRowCompact']}>
                 <span>{t('pos.expected')}</span>
-                <span className={localStyles['monoText']}>
-                  {formatCurrency(toCents(expectedEuros), 'EUR')}
-                </span>
+                <span className={localStyles['monoText']}>{fmt(toCents(expectedEuros))}</span>
               </div>
               <div
                 className={cn(
@@ -145,7 +144,7 @@ export function CloseCashSessionDialog({
                 <span>{t('pos.difference')}</span>
                 <span className={localStyles['monoText']}>
                   {difference >= 0 ? '+' : ''}
-                  {formatCurrency(toCents(Math.abs(difference)), 'EUR')}
+                  {fmt(toCents(Math.abs(difference)))}
                 </span>
               </div>
             </div>

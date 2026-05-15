@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters';
 import { Button, Badge } from '@shared/ui';
-import { formatCurrency } from '@shared/lib';
+import { useFormatCurrency } from '@shared/lib';
 import { useCart } from '../hooks/useCart';
 import type { Product } from '@entities/product';
 import styles from './ProductCard.module.scss';
@@ -13,6 +13,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { addItem, items } = useCart();
 
   const inCart = items.find((i) => i.productId === product.id);
@@ -53,7 +54,7 @@ export function ProductCard({ product }: ProductCardProps): React.ReactElement {
       )}
 
       <div className={styles['footer']}>
-        <span className={styles['price']}>{formatCurrency(product.price, product.currency)}</span>
+        <span className={styles['price']}>{fmt(product.price)}</span>
         <Button
           size="sm"
           variant={inCart !== undefined ? 'secondary' : 'default'}

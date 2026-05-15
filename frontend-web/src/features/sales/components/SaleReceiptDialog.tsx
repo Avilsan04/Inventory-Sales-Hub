@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PrinterIcon } from 'lucide-react';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
 import {
@@ -29,6 +29,7 @@ export function SaleReceiptDialog({
   onOpenChange,
 }: SaleReceiptDialogProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const subtotal = (sale?.items ?? []).reduce((s, i) => s + i.subtotal, 0);
 
   const handlePrint = (): void => {
@@ -74,12 +75,8 @@ export function SaleReceiptDialog({
                   <tr key={item.id}>
                     <td className={styles['colName']}>{item.productName}</td>
                     <td className={styles['colQty']}>{item.quantity}</td>
-                    <td className={styles['colPrice']}>
-                      {formatCurrency(item.unitPrice, sale.currency)}
-                    </td>
-                    <td className={styles['colSubtotal']}>
-                      {formatCurrency(item.subtotal, sale.currency)}
-                    </td>
+                    <td className={styles['colPrice']}>{fmt(item.unitPrice)}</td>
+                    <td className={styles['colSubtotal']}>{fmt(item.subtotal)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -90,11 +87,11 @@ export function SaleReceiptDialog({
             <div className={styles['totals']}>
               <div className={styles['totalRow']}>
                 <span>{t('pos.subtotal')}</span>
-                <span>{formatCurrency(subtotal, sale.currency)}</span>
+                <span>{fmt(subtotal)}</span>
               </div>
               <div className={styles['totalRowFinal']}>
                 <span>{t('pos.total')}</span>
-                <span>{formatCurrency(sale.total, sale.currency)}</span>
+                <span>{fmt(sale.total)}</span>
               </div>
             </div>
 

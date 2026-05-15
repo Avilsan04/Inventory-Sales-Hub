@@ -22,7 +22,7 @@ import {
   TableHead,
   TableCell,
 } from '@shared/ui';
-import { formatCurrency, formatOrderId } from '@shared/lib';
+import { useFormatCurrency, formatOrderId } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader } from '@widgets/dashboard';
@@ -34,6 +34,7 @@ const SKELETON_ROWS = 5;
 
 export function ManagerDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { i18n } = useTranslation();
   const { navigateTo } = useRoutingAdapter();
   const {
@@ -41,7 +42,6 @@ export function ManagerDashboardPage(): React.ReactElement {
     weeklyOrders,
     pendingOrders,
     completedOrders,
-    currency,
     salesPeriod,
     statusSlices,
     lowStockItems,
@@ -63,7 +63,7 @@ export function ManagerDashboardPage(): React.ReactElement {
           icon={<DollarSignIcon />}
           accent="primary"
           isLoading={isLoading}
-          value={formatCurrency(weeklyRevenue, currency)}
+          value={fmt(weeklyRevenue)}
         />
         <KpiCard
           label={t('managerDashboard.kpi.weeklyOrders')}
@@ -207,7 +207,7 @@ export function ManagerDashboardPage(): React.ReactElement {
                       year: 'numeric',
                     }).format(new Date(s.createdAt))}
                   </TableCell>
-                  <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
+                  <TableCell>{fmt(s.total)}</TableCell>
                   <TableCell>
                     <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                       {t(`sales.status.${s.status}`)}

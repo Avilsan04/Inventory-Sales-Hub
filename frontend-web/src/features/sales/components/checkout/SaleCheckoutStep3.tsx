@@ -18,7 +18,7 @@ interface Props {
 export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): React.ReactElement {
   const { watch } = useFormContext<FormValues>();
   const { translate: t } = useTranslationAdapter();
-  const formatCurrency = useFormatCurrency();
+  const fmt = useFormatCurrency();
   const formValues = watch();
 
   const selectedCustomerName = customers.find((c) => c.id === formValues.customerId)?.name;
@@ -41,7 +41,7 @@ export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): R
                 {pName} × {it.quantity}
               </span>
               <span className={styles['summaryValue']}>
-                {formatCurrency(toCents(it.quantity * it.unitPrice), formValues.currency)}
+                {fmt(toCents(it.quantity * it.unitPrice))}
               </span>
             </div>
           );
@@ -52,9 +52,7 @@ export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): R
           <span className={styles['summaryLabel']}>
             {t('sales.discountWithPct', { pct: formValues.discountPercent })}
           </span>
-          <span className={styles['summaryValue']}>
-            −{formatCurrency(saleTotals.discountAmount, formValues.currency)}
-          </span>
+          <span className={styles['summaryValue']}>−{fmt(saleTotals.discountAmount)}</span>
         </div>
       )}
       {saleTotals.taxAmount > 0 && (
@@ -62,16 +60,12 @@ export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): R
           <span className={styles['summaryLabel']}>
             {t('sales.taxWithPct', { pct: formValues.taxPercent })}
           </span>
-          <span className={styles['summaryValue']}>
-            +{formatCurrency(saleTotals.taxAmount, formValues.currency)}
-          </span>
+          <span className={styles['summaryValue']}>+{fmt(saleTotals.taxAmount)}</span>
         </div>
       )}
       <div className={styles['summaryRow']}>
         <span className={styles['summaryLabel']}>{t('sales.checkout.runningTotal')}</span>
-        <strong className={styles['summaryValue']}>
-          {formatCurrency(saleTotals.total, formValues.currency)}
-        </strong>
+        <strong className={styles['summaryValue']}>{fmt(saleTotals.total)}</strong>
       </div>
 
       <div className={styles['summaryRow']}>

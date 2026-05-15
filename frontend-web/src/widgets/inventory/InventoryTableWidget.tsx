@@ -2,7 +2,7 @@ import * as React from 'react';
 import { EllipsisIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { cn } from '@shared/lib/cn';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import {
   Table,
   TableBody,
@@ -65,6 +65,7 @@ export function InventoryTableWidget({
   onViewHistory,
 }: InventoryTableWidgetProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const hasActions =
     onEdit !== undefined ||
     onAdjustStock !== undefined ||
@@ -107,9 +108,7 @@ export function InventoryTableWidget({
                   <TableCell className={cn(styles['numCell'], styles['reorderCell'])}>
                     {item.reorderThreshold}
                   </TableCell>
-                  <TableCell className={styles['priceCell']}>
-                    {formatCurrency(item.price, item.currency)}
-                  </TableCell>
+                  <TableCell className={styles['priceCell']}>{fmt(item.price)}</TableCell>
                   <TableCell>
                     <Badge variant={statusBadgeVariant(item.status)} showDot>
                       {t(`inventory.status_${item.status}`)}

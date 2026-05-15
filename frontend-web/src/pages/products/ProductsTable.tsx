@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PackageIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { PermissionGuard } from '@features/auth';
-import { formatCurrency } from '@shared/lib';
+import { useFormatCurrency } from '@shared/lib';
 import { Skeleton, Button } from '@shared/ui';
 import { EmptyState, TableRow, TableCell } from '@shared/ui';
 import type { Product } from '@entities/product';
@@ -64,6 +64,7 @@ export function ProductTableContent({
   onDelete,
 }: ProductTableContentProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
 
   if (isPending) {
     return (
@@ -99,7 +100,7 @@ export function ProductTableContent({
         <TableRow key={p.id}>
           <TableCell>{p.name}</TableCell>
           <TableCell>{p.sku}</TableCell>
-          <TableCell>{formatCurrency(p.price, p.currency)}</TableCell>
+          <TableCell>{fmt(p.price)}</TableCell>
           <TableCell>{p.category?.name ?? '—'}</TableCell>
           <TableCell>
             <ProductRowActions product={p} onEdit={onEdit} onDelete={onDelete} />

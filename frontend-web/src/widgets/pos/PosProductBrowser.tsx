@@ -33,7 +33,7 @@ export function PosProductBrowser({
   onAdd,
 }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const formatCurrency = useFormatCurrency();
+  const fmt = useFormatCurrency();
   const [search, setSearch] = React.useState('');
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
   const searchRef = React.useRef<HTMLInputElement | null>(null);
@@ -151,9 +151,7 @@ export function PosProductBrowser({
               <p className={styles['productName']}>{item.name}</p>
               <p className={styles['productSku']}>{item.sku}</p>
               <div className={styles['productFooter']}>
-                <p className={styles['productPrice']}>
-                  {formatCurrency(item.price, item.currency)}
-                </p>
+                <p className={styles['productPrice']}>{fmt(item.price)}</p>
                 <Badge variant={stockBadgeVariant(item.status)} showDot={false}>
                   {stockBadgeLabel(item.status, t)}
                 </Badge>

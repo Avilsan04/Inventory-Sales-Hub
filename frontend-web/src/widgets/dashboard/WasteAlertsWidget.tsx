@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { TrashIcon } from 'lucide-react';
 import { useWasteAlerts } from '@features/analytics';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { Skeleton } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
 import styles from './DashboardWidget.module.scss';
 
 export function WasteAlertsWidget(): React.ReactElement {
   const { data, isLoading } = useWasteAlerts();
+  const fmt = useFormatCurrency();
 
   const totalLoss = (data ?? []).reduce((sum, a) => sum + a.estimatedLoss, 0);
 
@@ -30,9 +31,7 @@ export function WasteAlertsWidget(): React.ReactElement {
           <>
             <p className={styles['wasteLossSummary']}>
               Estimated loss:{' '}
-              <strong className={styles['textDestructive']}>
-                {formatCurrency(totalLoss, 'EUR')}
-              </strong>
+              <strong className={styles['textDestructive']}>{fmt(totalLoss)}</strong>
             </p>
             <ul className={styles['wasteList']}>
               {(data ?? []).map((a) => (

@@ -14,33 +14,37 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+// Request interceptor registered at module init so bootstrapAuth() (which runs before React
+// mounts) can attach the Authorization header when calling /auth/me after a silent refresh.
+setupRequestInterceptor(
+  axiosInstance,
+  () => tokenStorage.getToken(),
+  () => {
+    try {
+      const raw = sessionStorage.getItem('ish.impersonation');
+      if (!raw) return null;
+      const session = JSON.parse(raw) as { token: string; expiresAt: number };
+      if (Date.now() > session.expiresAt) {
+        sessionStorage.removeItem('ish.impersonation');
+        return null;
+      }
+      return session.token;
+    } catch {
+      return null;
+    }
+  },
+  () => tenantStorage.getTenantId()
+);
+
 const mapConfig = (config?: HttpRequestConfig): AxiosRequestConfig => ({
   headers: config?.headers,
   params: config?.params,
   signal: config?.signal,
 });
 
+// Only sets up the response interceptor (401 handler + token refresh).
+// Kept in a React provider because the onUnauthorized callback needs React Router context.
 export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
-  const reqInterceptorId = setupRequestInterceptor(
-    axiosInstance,
-    () => tokenStorage.getToken(),
-    () => {
-      try {
-        const raw = sessionStorage.getItem('ish.impersonation');
-        if (!raw) return null;
-        const session = JSON.parse(raw) as { token: string; expiresAt: number };
-        if (Date.now() > session.expiresAt) {
-          sessionStorage.removeItem('ish.impersonation');
-          return null;
-        }
-        return session.token;
-      } catch {
-        return null;
-      }
-    },
-    () => tenantStorage.getTenantId()
-  );
-
   const resInterceptorId = setupResponseInterceptor(
     axiosInstance,
     async () => {
@@ -57,7 +61,6 @@ export const setupHttpEvents = (onUnauthorized: () => void): (() => void) => {
   );
 
   return (): void => {
-    axiosInstance.interceptors.request.eject(reqInterceptorId);
     axiosInstance.interceptors.response.eject(resInterceptorId);
   };
 };

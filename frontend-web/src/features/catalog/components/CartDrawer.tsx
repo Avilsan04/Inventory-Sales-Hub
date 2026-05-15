@@ -3,7 +3,7 @@ import { ShoppingCartIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters';
 import { useRoutingAdapter } from '@adapters';
 import { Button } from '@shared/ui';
-import { formatCurrency } from '@shared/lib';
+import { useFormatCurrency } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import {
   Sheet,
@@ -19,13 +19,13 @@ import styles from './CartDrawer.module.scss';
 
 export function CartDrawer(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { navigateTo } = useRoutingAdapter();
   const { items, clearCart } = useCart();
 
   const [sheetOpen, setSheetOpen] = React.useState(false);
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const currency = items[0]?.currency ?? 'EUR';
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
   const handleGoToCheckout = (): void => {
@@ -69,7 +69,7 @@ export function CartDrawer(): React.ReactElement {
           <SheetFooter className={styles['footer']}>
             <div className={styles['total']}>
               <span>{t('catalog.total')}</span>
-              <span>{formatCurrency(total, currency)}</span>
+              <span>{fmt(total)}</span>
             </div>
             <Button className={styles['fullWidth']} onClick={handleGoToCheckout}>
               {t('catalog.checkout')}

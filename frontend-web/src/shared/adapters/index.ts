@@ -6,3 +6,6 @@ export type { IRoutingAdapter } from './useRoutingAdapter';
 
 export { useLanguageAdapter } from './useLanguageAdapter';
 export type { ILanguageAdapter, Language } from './useLanguageAdapter';
+
+export { useCurrencyAdapter, CURRENCY_OPTIONS } from './useCurrencyAdapter';
+export type { ICurrencyAdapter, CurrencyCode, CurrencyOption } from './useCurrencyAdapter';

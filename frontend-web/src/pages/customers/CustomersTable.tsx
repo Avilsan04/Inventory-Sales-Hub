@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { initials, formatCurrency } from '@shared/lib';
+import { initials, useFormatCurrency } from '@shared/lib';
 import { Button, Avatar, AvatarFallback } from '@shared/ui/primitives';
 import { TableRow, TableCell } from '@shared/ui/composed';
 import type { Customer } from '@entities/customer';
@@ -22,6 +22,7 @@ export function CustomerTableRow({
   onDelete,
 }: CustomerRowProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   return (
     <TableRow>
       <TableCell>
@@ -47,7 +48,7 @@ export function CustomerTableRow({
       </TableCell>
       <TableCell>
         {meta ? (
-          <span className={styles['metaValue']}>{formatCurrency(meta.totalSpent, 'EUR')}</span>
+          <span className={styles['metaValue']}>{fmt(meta.totalSpent)}</span>
         ) : (
           <span className={styles['metaMuted']}>—</span>
         )}

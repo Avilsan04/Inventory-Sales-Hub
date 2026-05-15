@@ -19,6 +19,7 @@
     "scrollToTop": "Scroll to top",
     "close": "Close",
     "switchLanguage": "Switch language",
+    "switchCurrency": "Switch currency",
     "errorLoadingData": "Unable to retrieve data. Please try again.",
     "openMenu": "Open menu",
     "status": "Status",

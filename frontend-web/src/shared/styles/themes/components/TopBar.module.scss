@@ -267,7 +267,150 @@
   }
 }
 
+// ── Currency dropdown ─────────────────────────────────────────────────────
+.currencyContainer {
+  position: relative;
+}
+
+.currencyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  height: $size-9;
+  padding: 0 $spacing-2;
+  border-radius: var(--radius-md);
+  border: $border-width-base solid var(--color-border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-foreground);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  transition: background-color $duration-fast ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: var(--color-muted);
+  }
+}
+
+.currencySymbol {
+  color: var(--color-muted-foreground);
+  font-weight: $font-weight-normal;
+}
+
+.currencyChevron {
+  width: $size-3;
+  height: $size-3;
+  color: var(--color-muted-foreground);
+  flex-shrink: 0;
+}
+
+.currencyDropdown {
+  position: absolute;
+  top: calc(100% + #{$spacing-1});
+  right: 0;
+  min-width: 11rem;
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: $shadow-lg;
+  padding: $spacing-1;
+  overflow: hidden;
+  z-index: $z-overlay;
+}
+
+.currencyItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-popover-foreground);
+  font-size: $font-size-sm;
+  font-family: inherit;
+  text-align: left;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+    outline: none;
+  }
+}
+
+.currencyItemActive {
+  background-color: var(--color-muted);
+  font-weight: $font-weight-semibold;
+}
+
+.currencyItemSymbol {
+  width: $size-6;
+  text-align: right;
+  color: var(--color-muted-foreground);
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.currencyItemLabel {
+  flex: 1;
+}
+
+.currencyItemCheck {
+  width: $size-3-5;
+  height: $size-3-5;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
 // ── Language dropdown button ──────────────────────────────────────────────
+.langContainer {
+  position: relative;
+}
+
+.langDropdown {
+  position: absolute;
+  top: calc(100% + #{$spacing-1});
+  right: 0;
+  min-width: $dropdown-min-width;
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  border: $border-width-base solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-base);
+  padding: $spacing-1;
+  overflow: hidden;
+  z-index: $z-overlay;
+}
+
+.langItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  width: 100%;
+  padding: $spacing-1 $spacing-2;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-popover-foreground);
+  font-size: $font-size-sm;
+  font-family: inherit;
+  text-align: left;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+    outline: none;
+  }
+}
+
 .langBtn {
   display: inline-flex;
   align-items: center;

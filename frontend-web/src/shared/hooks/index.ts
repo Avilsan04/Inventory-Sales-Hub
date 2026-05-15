@@ -5,3 +5,4 @@ export { useDependencies } from './useDependencies';
 export { useDebounce } from './useDebounce';
 export { useTableFilters } from './useTableFilters';
 export { useOnlineStatus } from './useOnlineStatus';
+export { useClickOutside } from './useClickOutside';

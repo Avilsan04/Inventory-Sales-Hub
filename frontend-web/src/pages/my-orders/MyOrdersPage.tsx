@@ -14,7 +14,7 @@ import {
   TableCell,
   EmptyState,
 } from '@shared/ui/composed';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { cn } from '@shared/lib/cn';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { Sale, SaleStatus } from '@entities/sale';
@@ -52,6 +52,7 @@ const STATUS_FILTERS: Array<{ id: StatusFilter; labelKey: string }> = [
 
 export function MyOrdersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { data: myOrders, isLoading, isError, refetch } = useMyOrders();
 
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
@@ -156,9 +157,7 @@ export function MyOrdersPage(): React.ReactElement {
                     <TableCell className={tableStyles['mono']}>{orderId(s.id)}</TableCell>
                     <TableCell>{formatOrderDate(s.createdAt)}</TableCell>
                     <TableCell>{s.items.length}</TableCell>
-                    <TableCell className={tableStyles['mono']}>
-                      {formatCurrency(s.total, s.currency)}
-                    </TableCell>
+                    <TableCell className={tableStyles['mono']}>{fmt(s.total)}</TableCell>
                     <TableCell>
                       <Badge variant={STATUS_BADGE[s.status]} showDot>
                         {t(`sales.status.${s.status}`)}

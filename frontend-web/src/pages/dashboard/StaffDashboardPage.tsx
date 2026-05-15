@@ -19,7 +19,7 @@ import type { CashSession } from '@entities/cash-session';
 import { KpiCard, Skeleton, Badge, Button } from '@shared/ui';
 import { cn } from '@shared/lib/cn';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui';
-import { formatCurrency, formatOrderId, formatTimeLocale } from '@shared/lib';
+import { useFormatCurrency, formatOrderId, formatTimeLocale } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
@@ -31,7 +31,6 @@ import styles from '@shared/styles/themes/pages/StaffDashboard.module.scss';
 interface CashSessionCardProps {
   cashSession: CashSession | null | undefined;
   sessionRevenue: number;
-  currency: string;
   locale: string;
   onOpen: () => void;
   onClose: () => void;
@@ -40,12 +39,12 @@ interface CashSessionCardProps {
 function CashSessionCard({
   cashSession,
   sessionRevenue,
-  currency,
   locale,
   onOpen,
   onClose,
 }: CashSessionCardProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const sessionOpen = cashSession?.status === 'open';
   const stale = cashSession != null && sessionOpen && isStaleSession(cashSession.openedAt);
   const expectedBalance = cashSession != null ? cashSession.openingBalance + sessionRevenue : 0;
@@ -69,11 +68,11 @@ function CashSessionCard({
       <p className={styles['sessionTitle']}>{t('staffDashboard.session.title')}</p>
       {cashSession != null ? (
         <>
-          <p className={styles['sessionBalance']}>{formatCurrency(expectedBalance, currency)}</p>
+          <p className={styles['sessionBalance']}>{fmt(expectedBalance)}</p>
           <p className={styles['sessionOpenedAt']}>{t('staffDashboard.session.expectedBalance')}</p>
           <p className={styles['sessionDetail']}>
             {t('staffDashboard.session.openedWith', {
-              amount: formatCurrency(cashSession.openingBalance, currency),
+              amount: fmt(cashSession.openingBalance),
             })}
           </p>
           <p className={styles['sessionDetail']}>
@@ -110,15 +109,9 @@ export function StaffDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { i18n } = useTranslation();
   const { navigateTo } = useRoutingAdapter();
-  const {
-    cashSession,
-    sessionRevenue,
-    sessionOrderCount,
-    lowStockItems,
-    recentSales,
-    currency,
-    isLoading,
-  } = useStaffStats();
+  const { cashSession, sessionRevenue, sessionOrderCount, lowStockItems, recentSales, isLoading } =
+    useStaffStats();
+  const fmt = useFormatCurrency();
 
   const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
   const [openDialogOpen, setOpenDialogOpen] = React.useState(false);
@@ -159,7 +152,6 @@ export function StaffDashboardPage(): React.ReactElement {
         <CashSessionCard
           cashSession={cashSession}
           sessionRevenue={sessionRevenue}
-          currency={currency}
           locale={i18n.language}
           onOpen={(): void => {
             setOpenDialogOpen(true);
@@ -173,7 +165,7 @@ export function StaffDashboardPage(): React.ReactElement {
           icon={<DollarSignIcon />}
           accent="primary"
           isLoading={isLoading}
-          value={formatCurrency(sessionRevenue, currency)}
+          value={fmt(sessionRevenue)}
           subtext={`${sessionOrderCount} ${t('staffDashboard.kpi.sessionOrders')}`}
         />
         <KpiCard
@@ -249,7 +241,7 @@ export function StaffDashboardPage(): React.ReactElement {
                       minute: '2-digit',
                     }).format(new Date(s.createdAt))}
                   </TableCell>
-                  <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
+                  <TableCell>{fmt(s.total)}</TableCell>
                   <TableCell>
                     <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                       {t(`sales.status.${s.status}`)}

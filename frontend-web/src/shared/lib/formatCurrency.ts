@@ -1,4 +1,5 @@
 import { useLanguageAdapter } from '@adapters/useLanguageAdapter';
+import { useCurrencyAdapter } from '@adapters/useCurrencyAdapter';
 
 /** Convert euro display amount to integer cents for API layer */
 export function toCents(euros: number): number {
@@ -23,12 +24,12 @@ export function formatCurrency(amountInCents: number, currency: string, locale =
 const LOCALE_MAP: Record<string, string> = { en: 'en-GB', es: 'es-ES' };
 
 /**
- * Hook that returns a formatCurrency function bound to the active i18n locale.
- * Prefer this in React components over the plain formatCurrency function.
+ * Hook bound to active locale and active currency from the currency adapter.
+ * All components must use this instead of the plain formatCurrency function.
  */
-export function useFormatCurrency(): (amountInCents: number, currency: string) => string {
+export function useFormatCurrency(): (amountInCents: number) => string {
   const { language } = useLanguageAdapter();
+  const { currency } = useCurrencyAdapter();
   const locale = LOCALE_MAP[language] ?? 'en-GB';
-  return (amountInCents: number, currency: string) =>
-    formatCurrency(amountInCents, currency, locale);
+  return (amountInCents: number) => formatCurrency(amountInCents, currency, locale);
 }

@@ -19,6 +19,7 @@
     "scrollToTop": "Ir al inicio",
     "close": "Cerrar",
     "switchLanguage": "Cambiar idioma",
+    "switchCurrency": "Cambiar moneda",
     "errorLoadingData": "No se pudieron obtener los datos. Inténtalo de nuevo.",
     "openMenu": "Abrir menú",
     "status": "Estado",

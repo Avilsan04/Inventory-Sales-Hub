@@ -32,12 +32,10 @@ export function SaleCheckoutStep0({ customers, products, saleTotals }: Props): R
     control,
     formState: { errors },
     setValue,
-    watch,
   } = useFormContext<FormValues>();
   const { translate: t } = useTranslationAdapter();
-  const formatCurrency = useFormatCurrency();
+  const fmt = useFormatCurrency();
   const { fields, append, remove } = useFieldArray({ control, name: 'items' });
-  const currency = watch('currency');
 
   const renderItemErrors = (): React.ReactNode => {
     const ie = errors.items;
@@ -190,7 +188,7 @@ export function SaleCheckoutStep0({ customers, products, saleTotals }: Props): R
 
       <div className={styles['runningTotal']}>
         <span>{t('sales.checkout.runningTotal')}</span>
-        <strong>{formatCurrency(saleTotals.total, currency)}</strong>
+        <strong>{fmt(saleTotals.total)}</strong>
       </div>
     </div>
   );

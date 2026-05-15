@@ -53,7 +53,7 @@ interface Props {
 
 export function PosCart({ customers, isCreating, onCheckout }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const formatCurrency = useFormatCurrency();
+  const fmt = useFormatCurrency();
   const {
     items: cart,
     customerId,
@@ -115,7 +115,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
               <div className={styles['cartItemInfo']}>
                 <p className={styles['cartItemName']}>{item.productName}</p>
                 <p className={styles['cartItemPrice']}>
-                  {formatCurrency(item.unitPrice, item.currency)} {t('pos.perUnit')}
+                  {fmt(item.unitPrice)} {t('pos.perUnit')}
                 </p>
               </div>
               <div className={styles['qtyControls']}>
@@ -150,7 +150,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
         <div className={styles['totals']}>
           <div className={styles['totalRow']}>
             <span>{t('pos.subtotal')}</span>
-            <span>{formatCurrency(saleTotals.subtotal, currency)}</span>
+            <span>{fmt(saleTotals.subtotal)}</span>
           </div>
           <div className={styles['totalRow']}>
             <label htmlFor="pos-discount" className={styles['totalRowInner']}>
@@ -171,7 +171,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                 aria-label={t('pos.discountAriaLabel')}
               />
               <span className={styles['percentSymbol']}>%</span>
-              <span>−{formatCurrency(saleTotals.discountAmount, currency)}</span>
+              <span>−{fmt(saleTotals.discountAmount)}</span>
             </span>
           </div>
           <div className={styles['totalRow']}>
@@ -193,12 +193,12 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                 aria-label={t('pos.taxAriaLabel')}
               />
               <span className={styles['percentSymbol']}>%</span>
-              <span>+{formatCurrency(saleTotals.taxAmount, currency)}</span>
+              <span>+{fmt(saleTotals.taxAmount)}</span>
             </span>
           </div>
           <div className={styles['totalRowFinal']}>
             <span>{t('pos.total')}</span>
-            <span>{formatCurrency(saleTotals.total, currency)}</span>
+            <span>{fmt(saleTotals.total)}</span>
           </div>
         </div>
 

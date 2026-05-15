@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { PackageIcon } from 'lucide-react';
 import { useInventoryValue } from '@features/analytics';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { Skeleton } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
 import styles from './DashboardWidget.module.scss';
 
 export function InventoryValueWidget(): React.ReactElement {
   const { data, isLoading } = useInventoryValue();
+  const fmt = useFormatCurrency();
 
   return (
     <Card>
@@ -20,9 +21,7 @@ export function InventoryValueWidget(): React.ReactElement {
           <Skeleton className={styles['skeletonSm']} />
         ) : (
           <>
-            <p className={styles['kpiValue']}>
-              {data ? formatCurrency(data.totalValue, data.currency) : '—'}
-            </p>
+            <p className={styles['kpiValue']}>{data ? fmt(data.totalValue) : '—'}</p>
             <p className={styles['kpiSubtitle']}>{data?.totalItems ?? 0} SKUs tracked</p>
           </>
         )}

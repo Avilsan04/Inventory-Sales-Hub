@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { TrophyIcon } from 'lucide-react';
 import { useTopProducts } from '@features/analytics';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { Skeleton } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
 import styles from './DashboardWidget.module.scss';
 
 export function TopProfitableWidget(): React.ReactElement {
   const { data, isLoading } = useTopProducts();
+  const fmt = useFormatCurrency();
   const top5 = data?.slice(0, 5) ?? [];
 
   return (
@@ -33,7 +34,7 @@ export function TopProfitableWidget(): React.ReactElement {
                   <span className={styles['rankNum']}>{i + 1}.</span>
                   <span>{p.productName}</span>
                 </span>
-                <span className={styles['rankValue']}>{formatCurrency(p.revenue, 'EUR')}</span>
+                <span className={styles['rankValue']}>{fmt(p.revenue)}</span>
               </li>
             ))}
           </ol>

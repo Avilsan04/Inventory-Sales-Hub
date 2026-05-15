@@ -15,7 +15,7 @@ import { useCatalog, useCart, ProductCard } from '@features/catalog';
 import { SaleDetailDrawer } from '@features/sales';
 import { KpiCard, Skeleton, Badge, EmptyState, Button } from '@shared/ui';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui';
-import { formatCurrency, formatOrderId, formatDateLocale } from '@shared/lib';
+import { useFormatCurrency, formatOrderId, formatDateLocale } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
@@ -29,19 +29,13 @@ const SKELETON_ROWS = 4;
 
 export function CustomerDashboardPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const fmt = useFormatCurrency();
   const { i18n } = useTranslation();
   const { navigateTo } = useRoutingAdapter();
   const { data: products } = useCatalog();
   const { items: cartItems } = useCart();
-  const {
-    totalOrders,
-    completedOrders,
-    pendingOrders,
-    totalSpent,
-    currency,
-    recentOrders,
-    isLoading,
-  } = useCustomerStats();
+  const { totalOrders, completedOrders, pendingOrders, totalSpent, recentOrders, isLoading } =
+    useCustomerStats();
 
   const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
 
@@ -107,7 +101,7 @@ export function CustomerDashboardPage(): React.ReactElement {
           icon={<CreditCardIcon />}
           accent="spent"
           isLoading={isLoading}
-          value={formatCurrency(totalSpent, currency)}
+          value={fmt(totalSpent)}
         />
       </DashboardShell.KpiGrid>
 
@@ -173,7 +167,7 @@ export function CustomerDashboardPage(): React.ReactElement {
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>
                   <TableCell>{formatDateLocale(s.createdAt, i18n.language)}</TableCell>
                   <TableCell>{s.items.length}</TableCell>
-                  <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
+                  <TableCell>{fmt(s.total)}</TableCell>
                   <TableCell>
                     <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                       {t(`sales.status.${s.status}`)}

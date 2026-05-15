@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EyeIcon, ShoppingCartIcon } from 'lucide-react';
-import { formatCurrency, formatOrderId, formatDate } from '@shared/lib';
+import { useFormatCurrency, formatOrderId, formatDate } from '@shared/lib';
 import { Skeleton, Badge, Button } from '@shared/ui';
 import { EmptyState, TableRow, TableCell } from '@shared/ui';
 import { getSaleStatusBadgeVariant, lookupCustomerName } from '@entities/sale';
@@ -16,6 +16,7 @@ interface SalesRowProps {
 }
 
 function SaleRow({ sale, customerMap, t, onDetail }: SalesRowProps): React.ReactElement {
+  const fmt = useFormatCurrency();
   return (
     <TableRow>
       <TableCell className={styles['mono']}>{formatOrderId(sale.id)}</TableCell>
@@ -27,7 +28,7 @@ function SaleRow({ sale, customerMap, t, onDetail }: SalesRowProps): React.React
         </Badge>
       </TableCell>
       <TableCell>{sale.items.length}</TableCell>
-      <TableCell className={styles['mono']}>{formatCurrency(sale.total, sale.currency)}</TableCell>
+      <TableCell className={styles['mono']}>{fmt(sale.total)}</TableCell>
       <TableCell>
         <div className={pageStyles['cellActions']}>
           <Button
