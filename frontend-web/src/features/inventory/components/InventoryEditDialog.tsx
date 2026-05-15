@@ -87,7 +87,7 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
     const finish = (): void => {
       void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
       void queryClient.invalidateQueries({ queryKey: inventoryKeys.detail(item.id) });
-      toast({ title: 'Item updated' });
+      toast({ title: t('inventory.toasts.updated') });
       setIsSaving(false);
       onClose();
     };
@@ -101,7 +101,7 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
       .then(finish)
       .catch((err: unknown) => {
         toast({
-          title: 'Update failed',
+          title: t('common.toasts.updateFailed'),
           description: err instanceof Error ? err.message : String(err),
           variant: 'destructive',
         });

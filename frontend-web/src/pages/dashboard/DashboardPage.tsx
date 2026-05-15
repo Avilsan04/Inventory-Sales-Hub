@@ -37,20 +37,8 @@ import {
 import { useRoutingAdapter } from '@adapters';
 import { APP_ROUTES } from '@shared/config';
 import { formatCurrency, formatOrderId } from '@shared/lib';
-import type { BadgeVariant } from '@shared/ui';
+import { getSaleStatusBadgeVariant, lookupCustomerName } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/Dashboard.module.scss';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-const SALE_STATUS_BADGE: Partial<Record<SaleStatus, BadgeVariant>> = {
-  completed: 'success',
-  pending: 'neutral',
-  cancelled: 'destructive',
-};
-
-function saleStatusBadge(status: string): BadgeVariant {
-  return SALE_STATUS_BADGE[status as SaleStatus] ?? 'neutral';
-}
 
 function GrowthLabel({ growth, label }: { growth: number; label: string }): React.ReactElement {
   const positive = growth >= 0;
@@ -183,15 +171,15 @@ export function DashboardPage(): React.ReactElement {
         <div className={styles['transactionsCard']}>
           <div className={styles['transactionsHeader']}>
             <h3 className={styles['transactionsTitle']}>{t('dashboard.recentTransactions')}</h3>
-            <button
-              type="button"
-              className={styles['viewAllBtn']}
-              onClick={(): void => {
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
                 navigateTo(APP_ROUTES.SALES);
               }}
             >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-            </button>
+            </Button>
           </div>
           <Table>
             <TableHeader>
@@ -221,14 +209,10 @@ export function DashboardPage(): React.ReactElement {
                 recentSales.map((s) => (
                   <TableRow key={s.id}>
                     <TableCell className={styles['orderIdLink']}>{formatOrderId(s.id)}</TableCell>
-                    <TableCell>
-                      {s.customerId
-                        ? (customerMap.get(s.customerId) ?? `#${s.customerId.slice(0, 8)}`)
-                        : '—'}
-                    </TableCell>
+                    <TableCell>{lookupCustomerName(s.customerId, customerMap)}</TableCell>
                     <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
                     <TableCell>
-                      <Badge variant={saleStatusBadge(s.status)} showDot>
+                      <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                         {t(`sales.status.${s.status}`)}
                       </Badge>
                     </TableCell>

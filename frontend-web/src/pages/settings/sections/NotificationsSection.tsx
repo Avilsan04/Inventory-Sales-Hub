@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSettings } from '@shared/hooks/useSettings';
 import { Switch } from '@shared/ui/primitives';
+import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/pages/Settings.module.scss';
 
 const NOTIF_OPTIONS: Array<{
@@ -11,31 +12,31 @@ const NOTIF_OPTIONS: Array<{
   >;
   labelKey: string;
   descKey: string;
-  color: string;
+  dotClass: string;
 }> = [
   {
     key: 'notificationsInfo',
     labelKey: 'settings.infoNotifications',
     descKey: 'settings.infoNotificationsDesc',
-    color: '#3b82f6',
+    dotClass: styles.notifDotInfo ?? '',
   },
   {
     key: 'notificationsWarning',
     labelKey: 'settings.warningNotifications',
     descKey: 'settings.warningNotificationsDesc',
-    color: '#f59e0b',
+    dotClass: styles.notifDotWarning ?? '',
   },
   {
     key: 'notificationsError',
     labelKey: 'settings.errorNotifications',
     descKey: 'settings.errorNotificationsDesc',
-    color: '#ef4444',
+    dotClass: styles.notifDotError ?? '',
   },
   {
     key: 'notificationsSuccess',
     labelKey: 'settings.successNotifications',
     descKey: 'settings.successNotificationsDesc',
-    color: '#22c55e',
+    dotClass: styles.notifDotSuccess ?? '',
   },
 ];
 
@@ -49,7 +50,7 @@ export function NotificationsSection(): React.ReactElement {
         {NOTIF_OPTIONS.map((item) => (
           <div key={item.key} className={styles.toggleRow}>
             <div className={styles.toggleLeft}>
-              <span className={styles.notifDot} style={{ backgroundColor: item.color }} />
+              <span className={cn(styles.notifDot, item.dotClass)} />
               <div className={styles.toggleLabels}>
                 <span className={styles.toggleTitle}>{t(item.labelKey)}</span>
                 <span className={styles.toggleDesc}>{t(item.descKey)}</span>

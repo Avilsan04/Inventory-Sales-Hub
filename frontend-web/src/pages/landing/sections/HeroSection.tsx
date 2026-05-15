@@ -104,23 +104,31 @@ export function HeroSection({ onGetStarted, onTestMode }: HeroSectionProps): Rea
           <div className={styles['mockupBody']}>
             <div className={styles['mockupStatsRow']}>
               <div className={styles['mockupStatCard']}>
-                <span className={styles['mockupStatCardLabel']}>Ingresos</span>
+                <span className={styles['mockupStatCardLabel']}>
+                  {translate('landing.hero.mockup.revenue')}
+                </span>
                 <span className={styles['mockupStatCardValue']}>€24,830</span>
                 <span className={styles['mockupStatCardBadge']}>↑ 18%</span>
               </div>
               <div className={styles['mockupStatCard']}>
-                <span className={styles['mockupStatCardLabel']}>Pedidos</span>
+                <span className={styles['mockupStatCardLabel']}>
+                  {translate('landing.hero.mockup.orders')}
+                </span>
                 <span className={styles['mockupStatCardValue']}>1,284</span>
                 <span className={styles['mockupStatCardBadge']}>↑ 9%</span>
               </div>
               <div className={styles['mockupStatCard']}>
-                <span className={styles['mockupStatCardLabel']}>Clientes</span>
+                <span className={styles['mockupStatCardLabel']}>
+                  {translate('landing.hero.mockup.customers')}
+                </span>
                 <span className={styles['mockupStatCardValue']}>+347</span>
                 <span className={styles['mockupStatCardBadge']}>↑ 23%</span>
               </div>
             </div>
             <div className={styles['mockupChart']}>
-              <span className={styles['mockupChartLabel']}>Ingresos — Últimas 8 semanas</span>
+              <span className={styles['mockupChartLabel']}>
+                {translate('landing.hero.mockup.revenueChart')}
+              </span>
               <svg viewBox="0 0 200 50" preserveAspectRatio="none" aria-hidden="true">
                 <path
                   d="M0,42 C15,40 30,36 50,32 C65,29 75,30 90,24 C108,17 125,13 148,8 C165,5 182,3 200,2"

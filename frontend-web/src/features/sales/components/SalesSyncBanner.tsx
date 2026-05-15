@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { AlertTriangleIcon, RefreshCwIcon } from 'lucide-react';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
+import { Button } from '@shared/ui';
 import { useOnlineStatus } from '@shared/hooks/useOnlineStatus';
 import { useSyncQueueStatus } from '../hooks/useSyncQueueStatus';
+import { retryFailedEntries } from '../services/salesSyncWorker';
 import styles from './SalesSyncBanner.module.scss';
 
-function formatCount(value: number, label: string): string {
-  return value === 1 ? `1 ${label}` : `${value} ${label}s`;
-}
-
 export function SalesSyncBanner(): React.ReactElement | null {
+  const { translate: t } = useTranslationAdapter();
   const isOnline = useOnlineStatus();
   const { pending, processing, failed } = useSyncQueueStatus();
   const queued = pending + processing;
@@ -19,7 +19,7 @@ export function SalesSyncBanner(): React.ReactElement | null {
     return (
       <div className={styles.banner} role="status" aria-live="polite">
         <RefreshCwIcon size={14} aria-hidden="true" />
-        <span>Offline — {formatCount(queued, 'sale')} queued for sync.</span>
+        <span>{t('sales.sync.offline', { count: queued })}</span>
       </div>
     );
   }
@@ -28,7 +28,17 @@ export function SalesSyncBanner(): React.ReactElement | null {
     return (
       <div className={styles.bannerError} role="status" aria-live="polite">
         <AlertTriangleIcon size={14} aria-hidden="true" />
-        <span>{formatCount(failed, 'sale')} failed to sync. Review and retry.</span>
+        <span>{t('sales.sync.failedToSync', { count: failed })}</span>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={styles.retryBtn}
+          onClick={(): void => {
+            void retryFailedEntries();
+          }}
+        >
+          {t('sales.sync.retry')}
+        </Button>
       </div>
     );
   }
@@ -36,7 +46,7 @@ export function SalesSyncBanner(): React.ReactElement | null {
   return (
     <div className={styles.bannerInfo} role="status" aria-live="polite">
       <RefreshCwIcon size={14} aria-hidden="true" />
-      <span>Syncing {formatCount(queued, 'sale')}…</span>
+      <span>{t('sales.sync.syncing', { count: queued })}</span>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   inventoryValueSchema,
   lowStockAlertsSchema,
 } from '@entities/analytics';
+import { saleListSchema } from '@entities/sale';
 import type {
   DashboardKpi,
   SalesPeriod,
@@ -20,6 +21,7 @@ import type {
   WasteAlert,
   SalesAnalyticsParams,
 } from '@entities/analytics';
+import type { Sale } from '@entities/sale';
 
 export const analyticsApi = {
   getDashboard: async (): Promise<DashboardKpi> => {
@@ -51,6 +53,11 @@ export const analyticsApi = {
   getInventoryValue: async (): Promise<InventoryValue> => {
     const res = await httpClient.get<unknown>('/analytics/inventory-value');
     return parseOrThrow(inventoryValueSchema, res);
+  },
+
+  getRecentSales: async (limit = 5): Promise<Sale[]> => {
+    const res = await httpClient.get<unknown>('/analytics/recent-sales', { params: { limit } });
+    return parseOrThrow(saleListSchema, res);
   },
 
   getLowStockAlerts: async (): Promise<LowStockAlert[]> => {

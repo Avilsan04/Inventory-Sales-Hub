@@ -58,11 +58,15 @@ export function SaleStatusDialog({ sale, open, onOpenChange }: Props): React.Rea
     if (sale === null) return;
     mutate(data, {
       onSuccess: () => {
-        toast({ title: 'Status updated' });
+        toast({ title: t('sales.toasts.statusUpdated') });
         onClose();
       },
       onError: (err) => {
-        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.updateFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };

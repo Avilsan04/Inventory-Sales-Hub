@@ -87,8 +87,8 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
                   className={styles['passwordInput']}
                   {...register('password')}
                 />
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className={styles['eyeBtn']}
                   onClick={() => {
                     setShowPassword((v) => !v);
@@ -103,7 +103,7 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
                   ) : (
                     <EyeIcon size={16} aria-hidden="true" />
                   )}
-                </button>
+                </Button>
               </div>
               {errors.password && (
                 <span className={styles['fieldError']} role="alert">

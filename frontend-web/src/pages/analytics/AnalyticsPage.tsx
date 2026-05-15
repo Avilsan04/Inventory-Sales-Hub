@@ -91,9 +91,7 @@ function buildKpiCards(kpi: DashboardKpi | undefined): KpiCardDef[] {
   ];
 }
 
-function buildDonutData(
-  _saleSummary: unknown
-): StatusSlice[] {
+function buildDonutData(_saleSummary: unknown): StatusSlice[] {
   return [];
 }
 
@@ -119,7 +117,7 @@ export function AnalyticsPage(): React.ReactElement {
     [dateRange, customRange]
   );
 
-  const { data: kpi, isLoading: kpiLoading, isError: kpiError } = useDashboardKpi();
+  const { data: kpi, isLoading: kpiLoading, isError: kpiError, refetch } = useDashboardKpi();
   const { data: topProds, isLoading: prodsLoading, isError: prodsError } = useTopProducts();
   const { data: topCusts, isLoading: custsLoading, isError: custsError } = useTopCustomers();
   const { data: alerts, isLoading: alertsLoading, isError: alertsError } = useLowStockAlerts();
@@ -142,6 +140,15 @@ export function AnalyticsPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -194,9 +201,10 @@ export function AnalyticsPage(): React.ReactElement {
       <div className={styles['dateRangeRow']}>
         <div className={styles['dateRangePills']} role="group" aria-label="Período">
           {DATE_RANGES.map(({ id, labelKey }) => (
-            <button
+            <Button
               key={id}
-              type="button"
+              variant="ghost"
+              size="sm"
               onClick={(): void => {
                 setDateRange(id);
               }}
@@ -207,7 +215,7 @@ export function AnalyticsPage(): React.ReactElement {
               aria-pressed={dateRange === id}
             >
               {t(labelKey)}
-            </button>
+            </Button>
           ))}
         </div>
         {dateRange === 'custom' && (
@@ -247,17 +255,11 @@ export function AnalyticsPage(): React.ReactElement {
           <CardAction>
             <div className={styles['chartLegend']}>
               <span className={styles['chartLegendItem']}>
-                <span
-                  className={styles['chartLegendDot']}
-                  style={{ background: 'var(--color-chart-1)' }}
-                />
+                <span className={cn(styles['chartLegendDot'], styles['chartLegendDot1'])} />
                 {t('analytics.revenue')}
               </span>
               <span className={styles['chartLegendItem']}>
-                <span
-                  className={styles['chartLegendDot']}
-                  style={{ background: 'var(--color-chart-2)' }}
-                />
+                <span className={cn(styles['chartLegendDot'], styles['chartLegendDot2'])} />
                 {t('analytics.orders')}
               </span>
             </div>

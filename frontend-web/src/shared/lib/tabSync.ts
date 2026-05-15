@@ -1,8 +1,7 @@
 type TabSyncMessage =
   | { type: 'AUTH_LOGOUT' }
   | { type: 'AUTH_LOGIN' }
-  | { type: 'TENANT_CHANGED'; tenantId: string }
-  | { type: 'CART_UPDATED' };
+  | { type: 'TENANT_CHANGED'; tenantId: string };
 
 const CHANNEL_NAME = 'ish-tab-sync';
 const isBrowser = typeof BroadcastChannel !== 'undefined';

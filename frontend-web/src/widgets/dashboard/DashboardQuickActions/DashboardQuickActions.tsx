@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@shared/ui/primitives';
 import styles from './DashboardQuickActions.module.scss';
 
 export interface QuickAction {
@@ -28,14 +29,14 @@ export function DashboardQuickActions({
       </div>
       <div className={styles['grid']}>
         {actions.map((action, i) => (
-          <button key={i} type="button" className={styles['card']} onClick={action.onClick}>
+          <Button key={i} variant="ghost" className={styles['card']} onClick={action.onClick}>
             <div className={styles['icon']}>{action.icon}</div>
             <p className={styles['label']}>
               {t(action.labelKey)}
               {action.badge}
             </p>
             <p className={styles['desc']}>{t(action.descKey)}</p>
-          </button>
+          </Button>
         ))}
       </div>
     </div>

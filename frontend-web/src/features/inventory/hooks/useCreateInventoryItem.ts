@@ -12,7 +12,10 @@ export function useCreateInventoryItem(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: inventoryApi.createItem,
+    mutationFn: (dto: CreateInventoryItemDTO) =>
+      inventoryApi.createItem(dto, {
+        headers: { 'Idempotency-Key': crypto.randomUUID() },
+      }),
 
     onMutate: async (dto) => {
       await queryClient.cancelQueries({ queryKey: inventoryKeys.lists() });
@@ -53,7 +56,7 @@ export function useCreateInventoryItem(): UseMutationResult<
     },
 
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: inventoryKeys.all() });
     },
   });
 }

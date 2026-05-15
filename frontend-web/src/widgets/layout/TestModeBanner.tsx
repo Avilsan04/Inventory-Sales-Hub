@@ -6,6 +6,7 @@ import { useViewMode } from '@features/auth';
 import { ResetDemoDataButton } from '@features/auth';
 import type { ViewRole } from '@features/auth';
 import { APP_ROUTES } from '@shared/config/routes';
+import { Button } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/TestModeBanner.module.scss';
 
@@ -72,9 +73,9 @@ export function TestModeBanner(): React.ReactElement {
 
       <div className={styles['toggle']}>
         {ROLE_CONFIGS.map(({ role, labelKey, icon }) => (
-          <button
+          <Button
             key={role}
-            type="button"
+            variant="ghost"
             className={cn(styles['toggleBtn'], viewAs === role && styles['toggleBtnActive'])}
             onClick={() => {
               handleSwitch(role);
@@ -82,7 +83,7 @@ export function TestModeBanner(): React.ReactElement {
             disabled={viewAs === role}
           >
             {icon} {t(labelKey)}
-          </button>
+          </Button>
         ))}
       </div>
       <ResetDemoDataButton />

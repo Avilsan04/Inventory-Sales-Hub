@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import { useCompanyStats } from '@features/analytics';
 import { SectionErrorBoundary } from '@app/providers';
-import { KpiCard, Skeleton } from '@shared/ui';
+import { KpiCard, Skeleton, Button } from '@shared/ui';
+import { cn } from '@shared/lib/cn';
 import {
   RevenueAreaChart,
   Table,
@@ -36,7 +37,10 @@ function GrowthBadge({ growth, vsKey }: { growth: number; vsKey: string }): Reac
   const positive = growth >= 0;
   return (
     <div
-      className={`${styles['kpiGrowth']} ${positive ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']}`}
+      className={cn(
+        styles['kpiGrowth'],
+        positive ? styles['kpiGrowthPositive'] : styles['kpiGrowthNegative']
+      )}
     >
       {positive ? <TrendingUpIcon size={12} /> : <TrendingDownIcon size={12} />}
       {Math.abs(growth).toFixed(1)}% {t(vsKey)}
@@ -140,15 +144,16 @@ export function CompanyDashboardPage(): React.ReactElement {
         <div className={styles['sectionCard']}>
           <div className={styles['sectionHeader']}>
             <h2 className={styles['sectionTitle']}>{t('companyDashboard.topProducts')}</h2>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               className={styles['viewAllBtn']}
               onClick={() => {
                 navigateTo(APP_ROUTES.ANALYTICS);
               }}
             >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-            </button>
+            </Button>
           </div>
           <Table>
             <TableHeader>
@@ -179,7 +184,16 @@ export function CompanyDashboardPage(): React.ReactElement {
                   <TableRow key={p.productId}>
                     <TableCell>
                       <span
-                        className={`${styles['rankBadge']} ${i === 0 ? styles['rankOne'] : i === 1 ? styles['rankTwo'] : i === 2 ? styles['rankThree'] : ''}`}
+                        className={cn(
+                          styles['rankBadge'],
+                          i === 0
+                            ? styles['rankOne']
+                            : i === 1
+                              ? styles['rankTwo']
+                              : i === 2
+                                ? styles['rankThree']
+                                : undefined
+                        )}
                       >
                         {i + 1}
                       </span>
@@ -197,15 +211,16 @@ export function CompanyDashboardPage(): React.ReactElement {
         <div className={styles['sectionCard']}>
           <div className={styles['sectionHeader']}>
             <h2 className={styles['sectionTitle']}>{t('companyDashboard.topCustomers')}</h2>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               className={styles['viewAllBtn']}
               onClick={() => {
                 navigateTo(APP_ROUTES.CUSTOMERS);
               }}
             >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-            </button>
+            </Button>
           </div>
           <Table>
             <TableHeader>
@@ -236,7 +251,16 @@ export function CompanyDashboardPage(): React.ReactElement {
                   <TableRow key={c.customerId}>
                     <TableCell>
                       <span
-                        className={`${styles['rankBadge']} ${i === 0 ? styles['rankOne'] : i === 1 ? styles['rankTwo'] : i === 2 ? styles['rankThree'] : ''}`}
+                        className={cn(
+                          styles['rankBadge'],
+                          i === 0
+                            ? styles['rankOne']
+                            : i === 1
+                              ? styles['rankTwo']
+                              : i === 2
+                                ? styles['rankThree']
+                                : undefined
+                        )}
                       >
                         {i + 1}
                       </span>

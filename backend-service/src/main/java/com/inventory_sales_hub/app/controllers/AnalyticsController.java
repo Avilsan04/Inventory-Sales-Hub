@@ -1,6 +1,7 @@
 package com.inventory_sales_hub.app.controllers;
 
 import com.inventory_sales_hub.app.model.service.AnalyticsManager;
+import com.inventory_sales_hub.app.model.service.SaleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -15,6 +16,18 @@ public class AnalyticsController {
 
     @Autowired
     private AnalyticsManager analyticsManager;
+
+    @Autowired
+    private SaleManager saleManager;
+
+    @GetMapping(path = "/recent-sales", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getRecentSales(@RequestParam(defaultValue = "5") int limit) {
+        try {
+            return ResponseEntity.ok(saleManager.getRecent(limit));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 
     @GetMapping(path = "/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDashboard() {

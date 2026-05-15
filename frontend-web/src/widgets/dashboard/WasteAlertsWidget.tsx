@@ -4,6 +4,7 @@ import { useWasteAlerts } from '@features/analytics';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { Skeleton } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
+import styles from './DashboardWidget.module.scss';
 
 export function WasteAlertsWidget(): React.ReactElement {
   const { data, isLoading } = useWasteAlerts();
@@ -12,56 +13,32 @@ export function WasteAlertsWidget(): React.ReactElement {
 
   return (
     <Card>
-      <CardHeader
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}
-      >
+      <CardHeader className={styles['cardHeader']}>
         <TrashIcon size={16} aria-hidden="true" />
         <CardTitle>Waste Alerts</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div className={styles['skeletonStack']}>
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} style={{ height: '1.25rem' }} />
+              <Skeleton key={i} className={styles['skeletonRow']} />
             ))}
           </div>
         ) : (data ?? []).length === 0 ? (
-          <p style={{ color: 'var(--color-muted-foreground)', fontSize: '0.875rem' }}>
-            No waste reported
-          </p>
+          <p className={styles['emptyText']}>No waste reported</p>
         ) : (
           <>
-            <p
-              style={{
-                fontSize: '0.75rem',
-                color: 'var(--color-muted-foreground)',
-                marginBottom: '0.75rem',
-              }}
-            >
+            <p className={styles['wasteLossSummary']}>
               Estimated loss:{' '}
-              <strong style={{ color: 'var(--color-destructive)' }}>
+              <strong className={styles['textDestructive']}>
                 {formatCurrency(totalLoss, 'EUR')}
               </strong>
             </p>
-            <ul
-              style={{
-                listStyle: 'none',
-                margin: 0,
-                padding: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.5rem',
-              }}
-            >
+            <ul className={styles['wasteList']}>
               {(data ?? []).map((a) => (
-                <li
-                  key={a.productId}
-                  style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}
-                >
+                <li key={a.productId} className={styles['wasteItem']}>
                   <span>{a.productName}</span>
-                  <span style={{ color: 'var(--color-destructive)', fontWeight: 600 }}>
-                    {a.expiredUnits} units
-                  </span>
+                  <span className={styles['wasteUnits']}>{a.expiredUnits} units</span>
                 </li>
               ))}
             </ul>

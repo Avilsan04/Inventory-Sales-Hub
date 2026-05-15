@@ -102,11 +102,15 @@ export function ProductsPage(): React.ReactElement {
     if (deleteId === null) return;
     deleteProduct(deleteId, {
       onSuccess: (): void => {
-        toast({ title: 'Product deleted' });
+        toast({ title: t('products.toasts.deleted') });
         setDeleteId(null);
       },
       onError: (err): void => {
-        toast({ title: 'Delete failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.deleteFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };

@@ -7,8 +7,8 @@ export function useDeleteInventoryItem(): UseMutationResult<void, Error, string>
 
   return useMutation({
     mutationFn: inventoryApi.deleteItem,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: inventoryKeys.all() });
     },
   });
 }

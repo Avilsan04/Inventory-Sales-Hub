@@ -1,0 +1,14 @@
+.dialogNarrow {
+  max-width: 400px;
+}
+
+.inputOffset {
+  margin-top: $spacing-1-5;
+}
+
+.fieldError {
+  color: var(--color-destructive);
+  font-size: $font-size-xs;
+  margin-top: $spacing-1;
+  margin-bottom: 0;
+}

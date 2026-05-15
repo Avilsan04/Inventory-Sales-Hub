@@ -75,14 +75,18 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
     if (employee === null) return;
     mutate(data, {
       onSuccess: () => {
-        toast({ title: 'Employee updated' });
+        toast({ title: t('employees.toasts.updated') });
         setSaved(true);
         setTimeout(() => {
           onClose();
         }, 400);
       },
       onError: (err) => {
-        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.updateFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };

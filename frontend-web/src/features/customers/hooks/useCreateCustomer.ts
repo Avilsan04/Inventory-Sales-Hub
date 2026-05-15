@@ -12,7 +12,10 @@ export function useCreateCustomer(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: customersApi.createCustomer,
+    mutationFn: (dto: CreateCustomerDTO) =>
+      customersApi.createCustomer(dto, {
+        headers: { 'Idempotency-Key': crypto.randomUUID() },
+      }),
 
     onMutate: async (dto) => {
       await queryClient.cancelQueries({ queryKey: customerKeys.lists() });
@@ -39,7 +42,7 @@ export function useCreateCustomer(): UseMutationResult<
     },
 
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: customerKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: customerKeys.all() });
     },
   });
 }

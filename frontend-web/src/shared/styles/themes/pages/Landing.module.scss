@@ -73,6 +73,16 @@
   gap: $spacing-2;
 }
 
+.navbarBrandSvg {
+  width: 236px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.langDropdown {
+  min-width: 130px;
+}
+
 .langBtn {
   display: inline-flex;
   align-items: center;

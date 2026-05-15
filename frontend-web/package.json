@@ -13,7 +13,7 @@
     "preview": "vite preview",
     "type-check": "tsc -b --noEmit",
     "test": "vitest run",
-    "lint": "eslint . --max-warnings 650",
+    "lint": "eslint . --max-warnings 0",
     "lint:strict": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss,json}\"",

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { formatCurrency, toCents } from '@shared/lib/formatCurrency';
+import { useFormatCurrency, toCents } from '@shared/lib/formatCurrency';
 import type { Customer } from '@entities/customer';
 import type { Product } from '@entities/product';
 import type { SaleTotals } from '../../lib/saleCalculations';
@@ -18,6 +18,7 @@ interface Props {
 export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): React.ReactElement {
   const { watch } = useFormContext<FormValues>();
   const { translate: t } = useTranslationAdapter();
+  const formatCurrency = useFormatCurrency();
   const formValues = watch();
 
   const selectedCustomerName = customers.find((c) => c.id === formValues.customerId)?.name;
@@ -40,7 +41,7 @@ export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): R
                 {pName} × {it.quantity}
               </span>
               <span className={styles['summaryValue']}>
-                {formatCurrency(toCents(it.quantity * it.unitPrice), formValues.currency, 'es-ES')}
+                {formatCurrency(toCents(it.quantity * it.unitPrice), formValues.currency)}
               </span>
             </div>
           );
@@ -52,7 +53,7 @@ export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): R
             {t('sales.discountWithPct', { pct: formValues.discountPercent })}
           </span>
           <span className={styles['summaryValue']}>
-            −{formatCurrency(saleTotals.discountAmount, formValues.currency, 'es-ES')}
+            −{formatCurrency(saleTotals.discountAmount, formValues.currency)}
           </span>
         </div>
       )}
@@ -62,14 +63,14 @@ export function SaleCheckoutStep3({ customers, products, saleTotals }: Props): R
             {t('sales.taxWithPct', { pct: formValues.taxPercent })}
           </span>
           <span className={styles['summaryValue']}>
-            +{formatCurrency(saleTotals.taxAmount, formValues.currency, 'es-ES')}
+            +{formatCurrency(saleTotals.taxAmount, formValues.currency)}
           </span>
         </div>
       )}
       <div className={styles['summaryRow']}>
         <span className={styles['summaryLabel']}>{t('sales.checkout.runningTotal')}</span>
         <strong className={styles['summaryValue']}>
-          {formatCurrency(saleTotals.total, formValues.currency, 'es-ES')}
+          {formatCurrency(saleTotals.total, formValues.currency)}
         </strong>
       </div>
 

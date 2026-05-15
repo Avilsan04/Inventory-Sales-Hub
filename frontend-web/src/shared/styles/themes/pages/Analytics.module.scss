@@ -183,6 +183,14 @@
   border-radius: 50%;
 }
 
+.chartLegendDot1 {
+  background: var(--color-chart-1);
+}
+
+.chartLegendDot2 {
+  background: var(--color-chart-2);
+}
+
 // ── State containers ─────────────────────────────────────────────────────
 .placeholderContainer {
   display: flex;

@@ -70,14 +70,18 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
     if (supplier === null) return;
     mutate(data, {
       onSuccess: () => {
-        toast({ title: 'Supplier updated' });
+        toast({ title: t('suppliers.toasts.updated') });
         setSaved(true);
         setTimeout(() => {
           onClose();
         }, 400);
       },
       onError: (err) => {
-        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.updateFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };

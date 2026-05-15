@@ -1,8 +1,10 @@
 export { useInventory, inventoryKeys } from './hooks/useInventory';
+export type { InventoryListParams } from './api/inventoryApi';
 export { useInventoryItem } from './hooks/useInventoryItem';
 export { useLowStock } from './hooks/useLowStock';
 export { useInventoryMovements } from './hooks/useInventoryMovements';
-export { useInventoryFilters, PAGE_SIZE } from './hooks/useInventoryFilters';
+export { useInventoryFilters } from './hooks/useInventoryFilters';
+export type { StockTab } from './hooks/useInventoryFilters';
 export { useWarehouses } from './hooks/useWarehouses';
 export { useTransferStock } from './hooks/useTransferStock';
 export { useCreateInventoryItem } from './hooks/useCreateInventoryItem';

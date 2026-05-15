@@ -4,6 +4,7 @@ import { Skeleton, Badge, Input } from '@shared/ui/primitives';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
 import type { AuditEntityType, AuditAction } from '@entities/audit';
 import type { BadgeVariant } from '@shared/ui/primitives';
+import styles from './AuditLogPanel.module.scss';
 
 function actionVariant(action: AuditAction): BadgeVariant {
   const map: Partial<Record<AuditAction, BadgeVariant>> = {
@@ -48,7 +49,7 @@ export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactEl
 
   return (
     <div>
-      <div style={{ marginBottom: '0.75rem' }}>
+      <div className={styles['searchWrapper']}>
         <Input
           type="search"
           placeholder="Search by user, action, entity…"
@@ -75,20 +76,13 @@ export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactEl
             Array.from({ length: 4 }).map((_, i) => (
               <TableRow key={i}>
                 <TableCell colSpan={5}>
-                  <Skeleton style={{ height: '1.25rem' }} />
+                  <Skeleton className={styles['skeletonRow']} />
                 </TableCell>
               </TableRow>
             ))
           ) : filtered.length === 0 ? (
             <TableRow>
-              <TableCell
-                colSpan={5}
-                style={{
-                  textAlign: 'center',
-                  color: 'var(--color-muted-foreground)',
-                  padding: '1.5rem',
-                }}
-              >
+              <TableCell colSpan={5} className={styles['emptyCell']}>
                 No audit entries
               </TableCell>
             </TableRow>
@@ -99,13 +93,9 @@ export function AuditLogPanel({ entityType }: AuditLogPanelProps): React.ReactEl
                 <TableCell>
                   <Badge variant={actionVariant(log.action)}>{log.action.replace('_', ' ')}</Badge>
                 </TableCell>
-                <TableCell style={{ textTransform: 'capitalize' }}>{log.entityType}</TableCell>
-                <TableCell style={{ fontFamily: 'monospace', fontSize: '0.75rem' }}>
-                  {log.entityId.slice(0, 12)}
-                </TableCell>
-                <TableCell style={{ fontSize: '0.75rem', color: 'var(--color-muted-foreground)' }}>
-                  {formatTs(log.timestamp)}
-                </TableCell>
+                <TableCell className={styles['capitalize']}>{log.entityType}</TableCell>
+                <TableCell className={styles['cellMono']}>{log.entityId.slice(0, 12)}</TableCell>
+                <TableCell className={styles['cellMuted']}>{formatTs(log.timestamp)}</TableCell>
               </TableRow>
             ))
           )}

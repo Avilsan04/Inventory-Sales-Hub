@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon, PencilIcon } from 'lucide-react';
+import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon, PencilIcon, PlusIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useEmployees } from '@features/employees';
 import { PermissionGuard } from '@features/auth';
@@ -89,7 +89,7 @@ export function EmployeesPage(): React.ReactElement {
               setCreateOpen(true);
             }}
           >
-            {t('employees.addEmployee')}
+            <PlusIcon size={14} aria-hidden="true" /> {t('employees.addEmployee')}
           </Button>
         </PermissionGuard>
       </header>

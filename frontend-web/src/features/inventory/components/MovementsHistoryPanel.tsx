@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useInventoryMovements } from '../hooks/useInventoryMovements';
+import styles from './MovementsHistoryPanel.module.scss';
 import { Skeleton, Badge } from '@shared/ui/primitives';
 import {
   Sheet,
@@ -16,6 +17,7 @@ import {
   TableCell,
 } from '@shared/ui/composed';
 import type { InventoryItem } from '@entities/inventory';
+import { formatDatetime } from '@shared/lib/formatters';
 
 type MovementType = 'in' | 'out' | 'adjustment';
 
@@ -28,16 +30,6 @@ function typeBadgeVariant(type: MovementType): 'success' | 'destructive' | 'warn
     case 'adjustment':
       return 'warning';
   }
-}
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
 }
 
 interface MovementsHistoryPanelProps {
@@ -61,7 +53,7 @@ export function MovementsHistoryPanel({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent style={{ width: '520px', maxWidth: '95vw', overflowY: 'auto' }}>
+      <SheetContent className={styles['sheetPanel']}>
         <SheetHeader>
           <SheetTitle>
             {item?.name ?? ''} — {t('inventory.movementsHistory')}
@@ -69,31 +61,25 @@ export function MovementsHistoryPanel({
           <SheetDescription>{t('inventory.movementsHistoryDescription')}</SheetDescription>
         </SheetHeader>
 
-        <div style={{ marginTop: '1.5rem' }}>
+        <div className={styles['body']}>
           {isPending ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div className={styles['skeletonList']}>
               {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} style={{ height: '2.5rem', width: '100%' }} />
+                <Skeleton key={i} className={styles['skeletonRow']} />
               ))}
             </div>
           ) : movements.length === 0 ? (
-            <p
-              style={{
-                color: 'var(--color-muted-foreground)',
-                textAlign: 'center',
-                padding: '2rem 0',
-              }}
-            >
-              {t('inventory.noMovements')}
-            </p>
+            <p className={styles['emptyMsg']}>{t('inventory.noMovements')}</p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('inventory.movementType')}</TableHead>
-                  <TableHead style={{ textAlign: 'right' }}>{t('inventory.quantity')}</TableHead>
-                  <TableHead style={{ textAlign: 'right' }}>{t('inventory.previousQty')}</TableHead>
-                  <TableHead style={{ textAlign: 'right' }}>{t('inventory.newQty')}</TableHead>
+                  <TableHead className={styles['cellNumeric']}>{t('inventory.quantity')}</TableHead>
+                  <TableHead className={styles['cellNumeric']}>
+                    {t('inventory.previousQty')}
+                  </TableHead>
+                  <TableHead className={styles['cellNumeric']}>{t('inventory.newQty')}</TableHead>
                   <TableHead>{t('inventory.date')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -103,16 +89,14 @@ export function MovementsHistoryPanel({
                     <TableCell>
                       <Badge variant={typeBadgeVariant(m.type)}>{m.type}</Badge>
                     </TableCell>
-                    <TableCell style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                    <TableCell className={styles['cellNumeric']}>
                       {m.quantity > 0 ? `+${m.quantity}` : m.quantity}
                     </TableCell>
-                    <TableCell style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                      {m.previousQuantity}
+                    <TableCell className={styles['cellNumeric']}>{m.previousQuantity}</TableCell>
+                    <TableCell className={styles['cellNumeric']}>{m.newQuantity}</TableCell>
+                    <TableCell className={styles['cellDate']}>
+                      {formatDatetime(m.createdAt)}
                     </TableCell>
-                    <TableCell style={{ textAlign: 'right', fontFamily: 'monospace' }}>
-                      {m.newQuantity}
-                    </TableCell>
-                    <TableCell style={{ fontSize: '0.75rem' }}>{formatDate(m.createdAt)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

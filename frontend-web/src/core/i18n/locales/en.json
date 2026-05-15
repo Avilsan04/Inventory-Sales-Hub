@@ -49,7 +49,29 @@
     "dateRange": "Date range",
     "updating": "Updating…",
     "processing": "Processing…",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "retry": "Retry",
+    "skipToContent": "Skip to main content",
+    "toasts": {
+      "deleteFailed": "Delete failed",
+      "updateFailed": "Update failed",
+      "createFailed": "Failed to add",
+      "saveFailed": "Failed to save changes"
+    },
+    "errorSaving": "Failed to save changes",
+    "previous": "Previous",
+    "next": "Next",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "perPage": "per page",
+    "pageOf": "Page {{page}} of {{total}}",
+    "actionsFor": "Actions for {{name}}",
+    "errorBoundary": {
+      "sectionFailed": "{{label}} failed to load.",
+      "systemFailure": "System Failure",
+      "systemFailureDesc": "The application encountered an irrecoverable error.",
+      "reloadApp": "Reload Application"
+    }
   },
   "nav": {
     "home": "Home",
@@ -178,7 +200,12 @@
     "validationInvalidEmail": "Invalid email",
     "validationRequired": "Required",
     "validationMinPassword": "Min 8 characters",
-    "validationPasswordMatch": "Passwords do not match"
+    "validationPasswordMatch": "Passwords do not match",
+    "toasts": {
+      "updated": "Profile updated",
+      "passwordChanged": "Password changed",
+      "changeFailed": "Change failed"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
@@ -295,7 +322,22 @@
     "validQtyPositive": "Must be greater than 0",
     "validFromWarehouse": "Select source warehouse",
     "validToWarehouse": "Select target warehouse",
-    "validSameWarehouse": "Source and target cannot be the same"
+    "validSameWarehouse": "Source and target cannot be the same",
+    "actions": {
+      "adjustStock": "Adjust stock",
+      "viewHistory": "View history"
+    },
+    "toasts": {
+      "deleted": "Item deleted",
+      "deleteFailed": "Delete failed",
+      "created": "Item added to inventory",
+      "createFailed": "Failed to add item",
+      "updated": "Item updated",
+      "stockAdjusted": "Stock adjusted",
+      "adjustFailed": "Adjustment failed",
+      "stockTransferred": "Stock transferred",
+      "transferFailed": "Transfer failed"
+    }
   },
   "products": {
     "subtitle": "Browse and manage your product catalog",
@@ -326,7 +368,13 @@
     "importComplete": "Import complete",
     "importResultSummary": "{{success}} imported · {{failed}} failed",
     "importing": "Importing…",
-    "importCount": "Import {{count}} products"
+    "importCount": "Import {{count}} products",
+    "toasts": {
+      "deleted": "Product deleted",
+      "created": "Product created",
+      "updated": "Product updated",
+      "createFailed": "Failed to create"
+    }
   },
   "sales": {
     "title": "Sales",
@@ -417,7 +465,21 @@
     "discountLabel": "Discount (%)",
     "taxLabel": "VAT (%)",
     "discountWithPct": "Discount ({{pct}}%)",
-    "taxWithPct": "VAT ({{pct}}%)"
+    "taxWithPct": "VAT ({{pct}}%)",
+    "toasts": {
+      "statusUpdated": "Status updated",
+      "cashSessionOpened": "Cash session opened",
+      "cashSessionClosed": "Cash session closed",
+      "closeFailed": "Failed to close session",
+      "openFailed": "Failed to open session",
+      "createFailed": "Failed to create order"
+    },
+    "sync": {
+      "offline": "Offline — {{count}} sale(s) queued for sync.",
+      "syncing": "Syncing {{count}} sale(s)…",
+      "failedToSync": "{{count}} sale(s) failed to sync.",
+      "retry": "Retry"
+    }
   },
   "customers": {
     "title": "Customers",
@@ -441,7 +503,12 @@
     "phonePlaceholder": "+1 555 000 0000",
     "addressPlaceholder": "123 Main St",
     "eyebrow": "PEOPLE",
-    "editCustomer": "Update customer details"
+    "editCustomer": "Update customer details",
+    "toasts": {
+      "deleted": "Customer deleted",
+      "created": "Customer added",
+      "updated": "Customer updated"
+    }
   },
   "employees": {
     "title": "Employees",
@@ -456,7 +523,7 @@
     "status": "Status",
     "active": "Active",
     "inactive": "Inactive",
-    "addEmployee": "+ Add Employee",
+    "addEmployee": "Add Employee",
     "newEmployee": "Add new employee",
     "editEmployee": "Update employee details",
     "emailPlaceholder": "employee@company.com",
@@ -464,6 +531,10 @@
       "admin": "Admin",
       "manager": "Manager",
       "staff": "Staff"
+    },
+    "toasts": {
+      "created": "Employee added",
+      "updated": "Employee updated"
     }
   },
   "suppliers": {
@@ -474,7 +545,7 @@
     "email": "Email",
     "phone": "Phone",
     "contactPerson": "Contact person",
-    "addSupplier": "+ Add Supplier",
+    "addSupplier": "Add Supplier",
     "deleteSupplier": "Delete supplier?",
     "newSupplier": "Add new supplier",
     "editSupplier": "Update supplier details",
@@ -484,7 +555,12 @@
     "phonePlaceholder": "+1 555 000 0000",
     "addressPlaceholder": "123 Industrial Ave",
     "contactPersonPlaceholder": "Jane Smith",
-    "address": "Address"
+    "address": "Address",
+    "toasts": {
+      "deleted": "Supplier deleted",
+      "created": "Supplier added",
+      "updated": "Supplier updated"
+    }
   },
   "analytics": {
     "title": "Analytics",
@@ -537,13 +613,17 @@
       "warning": "Warning",
       "error": "Error",
       "success": "Success"
+    },
+    "timeAgo": {
+      "now": "now"
     }
   },
   "validation": {
     "required": "This field is required",
     "invalidEmail": "Invalid email address",
     "minLength": "Minimum {{min}} characters required",
-    "maxLength": "Maximum {{max}} characters allowed"
+    "maxLength": "Maximum {{max}} characters allowed",
+    "minZero": "Must be 0 or more"
   },
   "pos": {
     "title": "Point of Sale",
@@ -569,7 +649,8 @@
     "closeSession": "Close session",
     "opening": "Opening…",
     "openSession": "Open session",
-    "openingBalanceHint": "Enter the opening cash balance for this shift."
+    "openingBalanceHint": "Enter the opening cash balance for this shift.",
+    "perUnit": "/ unit"
   },
   "landing": {
     "hero": {
@@ -581,7 +662,13 @@
       "secondaryCta": "Test mode",
       "stat1": { "value": "+12,000", "label": "products managed" },
       "stat2": { "value": "+3,200", "label": "sales today" },
-      "stat3": { "value": "99.9%", "label": "uptime" }
+      "stat3": { "value": "99.9%", "label": "uptime" },
+      "mockup": {
+        "revenue": "Revenue",
+        "orders": "Orders",
+        "customers": "Customers",
+        "revenueChart": "Revenue — Last 8 weeks"
+      }
     },
     "features": {
       "title": "Everything you need to optimize your inventory and sales",
@@ -835,6 +922,10 @@
       "activeTenants": "Active",
       "suspendedTenants": "Suspended",
       "mrr": "MRR"
+    },
+    "toasts": {
+      "activated": "Tenant activated",
+      "suspended": "Tenant suspended"
     }
   }
 }

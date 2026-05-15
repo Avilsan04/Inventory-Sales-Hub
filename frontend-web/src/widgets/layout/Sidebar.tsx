@@ -96,6 +96,21 @@ export interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const effectiveRole = useEffectiveRole();
+  const [isMobile, setIsMobile] = React.useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 1024
+  );
+
+  React.useEffect((): (() => void) => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const handler = (e: MediaQueryListEvent): void => {
+      setIsMobile(e.matches);
+    };
+    mq.addEventListener('change', handler);
+    setIsMobile(mq.matches);
+    return (): void => {
+      mq.removeEventListener('change', handler);
+    };
+  }, []);
 
   const navGroups = NAV_GROUPS_BY_ROLE[effectiveRole ?? 'staff'];
 
@@ -110,6 +125,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps): React.ReactElement {
       <aside
         className={cn(styles['sidebar'], isOpen && styles['sidebarOpen'])}
         aria-label="Main Navigation"
+        aria-hidden={isMobile && !isOpen}
+        // inert removes the subtree from the a11y tree and tab order when sidebar is off-screen
+        inert={(isMobile && !isOpen) || undefined}
       >
         <div className={styles['brand']}>
           <BrandMark size={32} />

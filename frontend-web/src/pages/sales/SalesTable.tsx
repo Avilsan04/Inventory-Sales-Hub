@@ -1,36 +1,12 @@
 import * as React from 'react';
-import { PencilIcon, ShoppingCartIcon } from 'lucide-react';
-import { formatCurrency } from '@shared/lib';
-import { formatOrderId } from '@shared/lib';
+import { EyeIcon, ShoppingCartIcon } from 'lucide-react';
+import { formatCurrency, formatOrderId, formatDate } from '@shared/lib';
 import { Skeleton, Badge, Button } from '@shared/ui';
 import { EmptyState, TableRow, TableCell } from '@shared/ui';
-import type { BadgeVariant } from '@shared/ui';
+import { getSaleStatusBadgeVariant, lookupCustomerName } from '@entities/sale';
 import type { Sale } from '@entities/sale';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Sales.module.scss';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-export const STATUS_VARIANT_MAP: Partial<Record<SaleStatus, BadgeVariant>> = {
-  pending: 'warning',
-  completed: 'info',
-  cancelled: 'neutral',
-};
-
-export const STATUS_LABEL_KEYS: Partial<Record<SaleStatus, string>> = {
-  completed: 'sales.status.shipped',
-  pending: 'sales.status.processing',
-  cancelled: 'sales.status.cancelled',
-};
-
-export function formatDate(iso: string): string {
-  return iso.slice(0, 10);
-}
-
-export function lookupCustomer(id: string | undefined, map: Map<string, string>): string {
-  if (id === undefined) return '—';
-  return map.get(id) ?? `#${id.slice(0, 8)}`;
-}
 
 interface SalesRowProps {
   sale: Sale;
@@ -43,11 +19,11 @@ function SaleRow({ sale, customerMap, t, onDetail }: SalesRowProps): React.React
   return (
     <TableRow>
       <TableCell className={styles['mono']}>{formatOrderId(sale.id)}</TableCell>
-      <TableCell>{lookupCustomer(sale.customerId, customerMap)}</TableCell>
+      <TableCell>{lookupCustomerName(sale.customerId, customerMap)}</TableCell>
       <TableCell className={styles['mono']}>{formatDate(sale.createdAt)}</TableCell>
       <TableCell>
-        <Badge variant={STATUS_VARIANT_MAP[sale.status] ?? 'neutral'} showDot>
-          {t(STATUS_LABEL_KEYS[sale.status] ?? 'sales.status.pending')}
+        <Badge variant={getSaleStatusBadgeVariant(sale.status)} showDot>
+          {t(`sales.status.${sale.status}`)}
         </Badge>
       </TableCell>
       <TableCell>{sale.items.length}</TableCell>
@@ -62,7 +38,7 @@ function SaleRow({ sale, customerMap, t, onDetail }: SalesRowProps): React.React
               onDetail(sale);
             }}
           >
-            <PencilIcon size={14} aria-hidden="true" />
+            <EyeIcon size={14} aria-hidden="true" />
           </Button>
         </div>
       </TableCell>

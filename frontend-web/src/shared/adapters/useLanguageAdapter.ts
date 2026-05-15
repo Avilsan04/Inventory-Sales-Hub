@@ -11,14 +11,15 @@ export interface ILanguageAdapter {
 const STORAGE_KEY = 'language';
 
 export function useLanguageAdapter(): ILanguageAdapter {
-  const [language, setLanguage] = React.useState<Language>(
-    i18n.language === 'es' ? 'es' : 'en'
-  );
+  const [language, setLanguage] = React.useState<Language>(i18n.language === 'es' ? 'es' : 'en');
 
   const toggleLanguage = React.useCallback((): void => {
     const next: Language = language === 'en' ? 'es' : 'en';
     void i18n.changeLanguage(next);
-    if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, next);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(STORAGE_KEY, next);
+      document.documentElement.lang = next;
+    }
     setLanguage(next);
   }, [language]);
 

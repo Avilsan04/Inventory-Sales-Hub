@@ -84,6 +84,21 @@ export const analyticsHandlers = [
     return HttpResponse.json(analytics.inventoryValue);
   }),
 
+  http.get(`${API_BASE_URL}/analytics/recent-sales`, async ({ request }) => {
+    await delay(300);
+    const denied = requireAnalyticsAccess(request);
+    if (denied) return denied;
+    const url = new URL(request.url);
+    const limit = Number(url.searchParams.get('limit') ?? '5');
+    const tenantId = resolveTenant(request);
+    const salesBucket: unknown[] = getTenantBucket(
+      tenantId,
+      'sales',
+      () => mockData.sales as unknown[]
+    );
+    return HttpResponse.json(salesBucket.slice(0, limit));
+  }),
+
   http.get(`${API_BASE_URL}/analytics/low-stock-alerts`, async ({ request }) => {
     await delay(500);
     const denied = requireAnalyticsAccess(request);

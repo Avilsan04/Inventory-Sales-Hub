@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { useDebounce } from '@shared/hooks';
-import type { InventoryItem } from '@entities/inventory';
+import type { InventoryListParams } from '../api/inventoryApi';
+import { INVENTORY_PAGE_SIZE } from '../config';
 
-type StockTab = 'all' | 'low' | 'out';
+export type StockTab = 'all' | 'low' | 'out';
 
-const PAGE_SIZE = 10;
-
-interface TabDef {
-  id: StockTab;
-  labelKey: string;
-  count: number;
-}
+const TAB_STATUS: Record<StockTab, string | undefined> = {
+  all: undefined,
+  low: 'LOW_STOCK',
+  out: 'OUT_OF_STOCK',
+};
 
 interface InventoryFiltersState {
   search: string;
@@ -22,13 +21,11 @@ interface InventoryFiltersState {
   warehouseFilter: string | null;
   setWarehouseFilter: React.Dispatch<React.SetStateAction<string | null>>;
   debouncedSearch: string;
-  tabs: TabDef[];
-  filtered: InventoryItem[];
-  paginated: InventoryItem[];
-  pageCount: number;
+  pageSize: number;
+  params: InventoryListParams;
 }
 
-export function useInventoryFilters(data: InventoryItem[] | undefined): InventoryFiltersState {
+export function useInventoryFilters(): InventoryFiltersState {
   const [search, setSearch] = React.useState('');
   const debouncedSearch = useDebounce(search);
   const [tab, setTab] = React.useState<StockTab>('all');
@@ -37,41 +34,18 @@ export function useInventoryFilters(data: InventoryItem[] | undefined): Inventor
 
   React.useEffect(() => {
     setPage(1);
-  }, [tab, debouncedSearch]);
+  }, [tab, debouncedSearch, warehouseFilter]);
 
-  const tabs = React.useMemo((): TabDef[] => {
-    const all = data ?? [];
-    return [
-      { id: 'all', labelKey: 'inventory.allProducts', count: all.length },
-      {
-        id: 'low',
-        labelKey: 'inventory.lowStockTab',
-        count: all.filter((i) => i.status === 'LOW_STOCK').length,
-      },
-      {
-        id: 'out',
-        labelKey: 'inventory.outOfStockTab',
-        count: all.filter((i) => i.status === 'OUT_OF_STOCK').length,
-      },
-    ];
-  }, [data]);
-
-  const filtered = React.useMemo((): InventoryItem[] => {
-    return (data ?? []).filter((item) => {
-      if (tab === 'low' && item.status !== 'LOW_STOCK') return false;
-      if (tab === 'out' && item.status !== 'OUT_OF_STOCK') return false;
-      if (warehouseFilter && item.warehouseId !== warehouseFilter) return false;
-      if (debouncedSearch) {
-        const q = debouncedSearch.toLowerCase();
-        if (!item.name.toLowerCase().includes(q) && !item.sku.toLowerCase().includes(q))
-          return false;
-      }
-      return true;
-    });
-  }, [data, tab, debouncedSearch, warehouseFilter]);
-
-  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const params = React.useMemo(
+    (): InventoryListParams => ({
+      page: page - 1,
+      pageSize: INVENTORY_PAGE_SIZE,
+      ...(debouncedSearch && { search: debouncedSearch }),
+      ...(TAB_STATUS[tab] !== undefined && { status: TAB_STATUS[tab] }),
+      ...(warehouseFilter && { warehouseId: warehouseFilter }),
+    }),
+    [page, debouncedSearch, tab, warehouseFilter]
+  );
 
   return {
     search,
@@ -83,11 +57,7 @@ export function useInventoryFilters(data: InventoryItem[] | undefined): Inventor
     warehouseFilter,
     setWarehouseFilter,
     debouncedSearch,
-    tabs,
-    filtered,
-    paginated,
-    pageCount,
+    pageSize: INVENTORY_PAGE_SIZE,
+    params,
   };
 }
-
-export { PAGE_SIZE };

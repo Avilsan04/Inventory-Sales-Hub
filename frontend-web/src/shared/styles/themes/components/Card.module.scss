@@ -10,6 +10,11 @@
   box-shadow: var(--shadow-soft-card);
 }
 
+.bare {
+  padding: 0;
+  gap: 0;
+}
+
 .cardHeader {
   display: grid;
   grid-template-rows: auto auto;

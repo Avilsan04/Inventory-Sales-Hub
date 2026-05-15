@@ -11,6 +11,7 @@ import type {
   WasteAlert,
   SalesAnalyticsParams,
 } from '@entities/analytics';
+import type { Sale } from '@entities/sale';
 
 import { withTenant } from '@core/api/queryKeys';
 
@@ -25,6 +26,8 @@ export const analyticsKeys = {
   lowStockAlerts: (): readonly unknown[] => withTenant(['analytics', 'low-stock-alerts'] as const),
   cashFlow: (): readonly unknown[] => withTenant(['analytics', 'cash-flow'] as const),
   wasteAlerts: (): readonly unknown[] => withTenant(['analytics', 'waste-alerts'] as const),
+  recentSales: (limit: number): readonly unknown[] =>
+    withTenant(['analytics', 'recent-sales', limit] as const),
 };
 
 export function useDashboardKpi(): UseQueryResult<DashboardKpi> {
@@ -71,6 +74,14 @@ export function useLowStockAlerts(): UseQueryResult<LowStockAlert[]> {
   return useQuery({
     queryKey: analyticsKeys.lowStockAlerts(),
     queryFn: analyticsApi.getLowStockAlerts,
+    staleTime: 30_000,
+  });
+}
+
+export function useRecentSales(limit = 5): UseQueryResult<Sale[]> {
+  return useQuery({
+    queryKey: analyticsKeys.recentSales(limit),
+    queryFn: () => analyticsApi.getRecentSales(limit),
     staleTime: 30_000,
   });
 }

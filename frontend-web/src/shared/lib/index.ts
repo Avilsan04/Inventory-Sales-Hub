@@ -1,7 +1,15 @@
 export { cn } from './cn';
-export { formatCurrency, toCents, fromCents } from './formatCurrency';
-export { formatOrderId } from './formatters';
+export { formatCurrency, toCents, fromCents, useFormatCurrency } from './formatCurrency';
+export {
+  formatOrderId,
+  formatDate,
+  formatDatetime,
+  formatDateLocale,
+  formatTimeLocale,
+  formatDatetimeLocale,
+  initials,
+} from './formatters';
 export { hasPermission } from './permissions';
 export type { Permission } from './permissions';
-export { syncDb } from './db/syncDb';
+export { syncDb, MAX_SYNC_QUEUE_SIZE } from './db/syncDb';
 export type { SyncQueueEntry, SyncOperationType, SyncEntryStatus } from './db/syncDb';

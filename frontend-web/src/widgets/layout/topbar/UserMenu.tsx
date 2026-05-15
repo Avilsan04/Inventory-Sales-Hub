@@ -13,8 +13,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@shared/ui/composed';
-import { Avatar, AvatarFallback } from '@shared/ui/primitives';
+import { Avatar, AvatarFallback, Button } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthMe, useLogout, useEffectiveRole } from '@features/auth';
 import { useViewMode, type ViewRole } from '@features/auth';
 import type { UserRole } from '@features/auth';
@@ -43,6 +44,7 @@ const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 export function UserMenu(): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   const { data: user } = useAuthMe();
   const role = useEffectiveRole();
   const logout = useLogout();
@@ -54,11 +56,11 @@ export function UserMenu(): React.ReactElement {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className={styles['userMenuTrigger']} aria-label="Menú de usuario">
+        <Button variant="ghost" className={styles['userMenuTrigger']} aria-label={t('nav.profile')}>
           <Avatar className={styles['avatar']}>
             <AvatarFallback className={styles['avatarFallback']}>{initials}</AvatarFallback>
           </Avatar>
-        </button>
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className={styles['userMenuContent']}>

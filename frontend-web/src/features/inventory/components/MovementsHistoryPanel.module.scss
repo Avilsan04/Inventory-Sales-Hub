@@ -1,0 +1,36 @@
+.sheetPanel {
+  width: 520px;
+  max-width: 95vw;
+  overflow-y: auto;
+}
+
+.body {
+  margin-top: $spacing-6;
+}
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.skeletonRow {
+  height: 2.5rem;
+  width: 100%;
+}
+
+.emptyMsg {
+  color: var(--color-muted-foreground);
+  text-align: center;
+  padding: $spacing-8 0;
+  margin: 0;
+}
+
+.cellNumeric {
+  text-align: right;
+  font-family: var(--font-family-mono);
+}
+
+.cellDate {
+  font-size: $font-size-xs;
+}

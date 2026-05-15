@@ -5,12 +5,17 @@ import com.inventory_sales_hub.app.model.dto.CreateSaleParams;
 import com.inventory_sales_hub.app.model.dto.PatchSaleStatusParams;
 import com.inventory_sales_hub.app.model.service.SaleManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 
 @RestController
 @RequestMapping("api/sales")
@@ -19,9 +24,28 @@ public class SaleController {
     private SaleManager saleManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
         try {
-            return ResponseEntity.ok(saleManager.getAll());
+            Instant from = dateFrom != null ? dateFrom.atStartOfDay(ZoneOffset.UTC).toInstant() : null;
+            Instant to   = dateTo   != null ? dateTo.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant() : null;
+            return ResponseEntity.ok(saleManager.getAllPaginated(page, size, search, from, to));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/my-orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getMyOrders(@AuthenticationPrincipal Jwt jwt) {
+        try {
+            Number userId = jwt.getClaim("id");
+            return ResponseEntity.ok(saleManager.getMyOrders(userId.longValue()));
+        } catch (SaleException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

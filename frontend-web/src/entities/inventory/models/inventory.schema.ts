@@ -121,3 +121,12 @@ export const inventoryMovementSchema = rawMovementSchema.transform(
 );
 
 export const inventoryMovementListSchema = z.array(inventoryMovementSchema);
+
+export const paginatedInventorySchema = z.object({
+  data: inventoryListSchema,
+  total: z.number().int().nonnegative(),
+  page: z.number().int().nonnegative(),
+  pageSize: z.number().int().positive(),
+});
+
+export type PaginatedInventoryResponse = z.infer<typeof paginatedInventorySchema>;

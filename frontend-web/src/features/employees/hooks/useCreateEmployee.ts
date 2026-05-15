@@ -6,7 +6,12 @@ import type { Employee, CreateEmployeeDTO } from '@entities/employee';
 export function useCreateEmployee(): UseMutationResult<Employee, Error, CreateEmployeeDTO> {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: employeesApi.createEmployee,
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: employeeKeys.lists() }); },
+    mutationFn: (dto: CreateEmployeeDTO) =>
+      employeesApi.createEmployee(dto, {
+        headers: { 'Idempotency-Key': crypto.randomUUID() },
+      }),
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.all() });
+    },
   });
 }

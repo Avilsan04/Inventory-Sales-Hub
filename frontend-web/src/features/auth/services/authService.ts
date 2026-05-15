@@ -68,6 +68,7 @@ export class AuthService implements IAuthService {
   public async logout(): Promise<void> {
     this._tokenStorage.removeToken();
     tenantStorage.removeTenantId();
+    clearAllCache();
     broadcastTabSync({ type: 'AUTH_LOGOUT' });
 
     try {

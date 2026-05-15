@@ -13,7 +13,7 @@ import {
 import { Button, Input } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { formatCurrency, fromCents } from '@shared/lib/formatCurrency';
+import { useFormatCurrency, fromCents } from '@shared/lib/formatCurrency';
 import type { Customer } from '@entities/customer';
 import type { Product } from '@entities/product';
 import type { SaleTotals } from '../../lib/saleCalculations';
@@ -35,6 +35,7 @@ export function SaleCheckoutStep0({ customers, products, saleTotals }: Props): R
     watch,
   } = useFormContext<FormValues>();
   const { translate: t } = useTranslationAdapter();
+  const formatCurrency = useFormatCurrency();
   const { fields, append, remove } = useFieldArray({ control, name: 'items' });
   const currency = watch('currency');
 
@@ -189,7 +190,7 @@ export function SaleCheckoutStep0({ customers, products, saleTotals }: Props): R
 
       <div className={styles['runningTotal']}>
         <span>{t('sales.checkout.runningTotal')}</span>
-        <strong>{formatCurrency(saleTotals.total, currency, 'es-ES')}</strong>
+        <strong>{formatCurrency(saleTotals.total, currency)}</strong>
       </div>
     </div>
   );

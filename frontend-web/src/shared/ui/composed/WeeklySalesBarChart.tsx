@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { useChartColors } from '@shared/hooks/useChartColors';
+import { useLanguageAdapter } from '@adapters/useLanguageAdapter';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Skeleton } from '@shared/ui/primitives';
+import styles from '@shared/styles/themes/components/ChartTooltip.module.scss';
 
 interface ChartDataPoint {
   period: string;
@@ -23,11 +26,13 @@ export function WeeklySalesBarChart({
   isLoading,
 }: WeeklySalesBarChartProps): React.ReactElement {
   const colors = useChartColors();
+  const { language } = useLanguageAdapter();
+  const { translate: t } = useTranslationAdapter();
 
   const chartData = React.useMemo(() => {
     if (!data?.length) return [];
     const points = data.slice(-7).map((d) => ({
-      day: new Date(d.period).toLocaleDateString('es-ES', { weekday: 'short' }).replace('.', ''),
+      day: new Date(d.period).toLocaleDateString(language, { weekday: 'short' }).replace('.', ''),
       revenue: d.revenue,
     }));
     const max = Math.max(...points.map((p) => p.revenue), 0);
@@ -35,10 +40,10 @@ export function WeeklySalesBarChart({
       ...p,
       fill: p.revenue === max ? colors.color1 : `${colors.color1}66`,
     }));
-  }, [data, colors]);
+  }, [data, colors, language]);
 
   if (isLoading) {
-    return <Skeleton style={{ height: 256, borderRadius: '0.5rem' }} />;
+    return <Skeleton className={styles['chartSkeleton']} />;
   }
 
   return (
@@ -65,7 +70,7 @@ export function WeeklySalesBarChart({
             fontSize: 12,
             boxShadow: 'var(--shadow-base)',
           }}
-          formatter={(value) => [formatRevenue(Number(value)), 'Ingresos']}
+          formatter={(value) => [formatRevenue(Number(value)), t('analytics.revenue')]}
         />
         <Bar dataKey="revenue" radius={[4, 4, 0, 0]} maxBarSize={48} />
       </BarChart>

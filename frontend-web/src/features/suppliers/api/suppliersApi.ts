@@ -1,7 +1,9 @@
 import { httpClient } from '@core/http';
+import type { HttpRequestConfig } from '@core/http';
 import { mapKeysCamel } from '@core/api/mappers';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import { supplierListSchema, supplierSchema, supplierOrderSchema } from '@entities/supplier';
+import { z } from 'zod';
 import type {
   Supplier,
   SupplierOrder,
@@ -12,10 +14,17 @@ import type {
 import { productListSchema } from '@entities/product';
 import type { Product } from '@entities/product';
 
+const paginatedSupplierSchema = z.object({
+  data: supplierListSchema,
+  total: z.number(),
+  page: z.number(),
+  pageSize: z.number(),
+});
+
 export const suppliersApi = {
   getSuppliers: async (): Promise<Supplier[]> => {
     const res = await httpClient.get<unknown>('/suppliers');
-    return parseOrThrow(supplierListSchema, res);
+    return parseOrThrow(paginatedSupplierSchema, res).data;
   },
 
   getSupplier: async (id: string): Promise<Supplier> => {
@@ -28,8 +37,11 @@ export const suppliersApi = {
     return parseOrThrow(productListSchema, mapKeysCamel(res));
   },
 
-  createSupplier: async (data: CreateSupplierDTO): Promise<Supplier> => {
-    const res = await httpClient.post<unknown>('/suppliers', data);
+  createSupplier: async (
+    data: CreateSupplierDTO,
+    config?: HttpRequestConfig
+  ): Promise<Supplier> => {
+    const res = await httpClient.post<unknown>('/suppliers', data, config);
     return parseOrThrow(supplierSchema, res);
   },
 
@@ -42,8 +54,12 @@ export const suppliersApi = {
     await httpClient.delete(`/suppliers/${id}`);
   },
 
-  createOrder: async (supplierId: string, data: CreateSupplierOrderDTO): Promise<SupplierOrder> => {
-    const res = await httpClient.post<unknown>(`/suppliers/${supplierId}/orders`, data);
+  createOrder: async (
+    supplierId: string,
+    data: CreateSupplierOrderDTO,
+    config?: HttpRequestConfig
+  ): Promise<SupplierOrder> => {
+    const res = await httpClient.post<unknown>(`/suppliers/${supplierId}/orders`, data, config);
     return parseOrThrow(supplierOrderSchema, res);
   },
 };

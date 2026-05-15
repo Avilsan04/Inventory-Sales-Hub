@@ -5,6 +5,9 @@ import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.*;
 import com.inventory_sales_hub.app.model.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,15 @@ public class SupplierManager {
 
     public List<SupplierResponse> getAll() {
         return supplierDao.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public PaginatedResponse<SupplierResponse> getAllPaginated(int page, int size, String search) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("name"));
+        Page<Supplier> p = (search != null && !search.isBlank())
+                ? supplierDao.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable)
+                : supplierDao.findAll(pageable);
+        List<SupplierResponse> data = p.getContent().stream().map(this::toResponse).toList();
+        return new PaginatedResponse<>(data, p.getTotalElements(), page, size);
     }
 
     public SupplierResponse getById(Long id) {

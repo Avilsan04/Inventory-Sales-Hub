@@ -40,8 +40,8 @@ export function ForgotPasswordPage(): React.ReactElement {
 
   return (
     <div className={styles['page']}>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         className={styles['backBtn']}
         onClick={() => {
           navigateTo(APP_ROUTES.LOGIN);
@@ -50,17 +50,9 @@ export function ForgotPasswordPage(): React.ReactElement {
       >
         <ArrowLeftIcon size={16} aria-hidden="true" />
         {t('auth.backToLogin')}
-      </button>
+      </Button>
       <div className={styles['container']}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '1.5rem',
-          }}
-        >
+        <div className={styles['brandWrapper']}>
           <BrandMark size={40} />
         </div>
         <Card>
@@ -70,17 +62,8 @@ export function ForgotPasswordPage(): React.ReactElement {
           </CardHeader>
           {isSuccess ? (
             <CardContent>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '1rem',
-                  padding: '1rem 0',
-                  textAlign: 'center',
-                }}
-              >
-                <CheckCircle2Icon size={48} style={{ color: 'var(--color-success)' }} />
+              <div className={styles['successContent']}>
+                <CheckCircle2Icon size={48} className={styles['successIcon']} />
                 <p>{t('auth.forgotPasswordSuccess')}</p>
               </div>
             </CardContent>
@@ -90,32 +73,27 @@ export function ForgotPasswordPage(): React.ReactElement {
                 void handleSubmit(onSubmit)(e);
               }}
             >
-              <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div>
-                  <Label htmlFor="email">{t('auth.email')}</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    {...register('email')}
-                    aria-invalid={errors.email !== undefined}
-                  />
-                  {errors.email && (
-                    <p
-                      role="alert"
-                      style={{
-                        color: 'var(--color-destructive)',
-                        fontSize: '0.75rem',
-                        marginTop: '0.25rem',
-                      }}
-                    >
-                      {errors.email.message}
-                    </p>
-                  )}
+              <CardContent>
+                <div className={styles['formBody']}>
+                  <div>
+                    <Label htmlFor="email">{t('auth.email')}</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      autoComplete="email"
+                      {...register('email')}
+                      aria-invalid={errors.email !== undefined}
+                    />
+                    {errors.email && (
+                      <p role="alert" className={styles['fieldError']}>
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" disabled={isPending} style={{ width: '100%' }}>
+                <Button type="submit" disabled={isPending} className={styles['submitBtn']}>
                   {isPending ? <Spinner size="sm" /> : t('auth.sendResetLink')}
                 </Button>
               </CardFooter>

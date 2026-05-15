@@ -142,9 +142,9 @@ export function RegisterPage(): React.ReactElement {
 
           <p className={styles.loginPrompt}>
             {translate('auth.alreadyHaveAccount')}
-            <button type="button" className={styles.loginLink} onClick={handleNavigateToLogin}>
+            <Button variant="ghost" className={styles.loginLink} onClick={handleNavigateToLogin}>
               {translate('auth.login')}
-            </button>
+            </Button>
           </p>
         </div>
       </main>

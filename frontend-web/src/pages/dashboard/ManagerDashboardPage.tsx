@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useManagerStats } from '@features/analytics';
 import { SaleDetailDrawer } from '@features/sales';
 import { SectionErrorBoundary } from '@app/providers';
-import { KpiCard, Skeleton, Badge } from '@shared/ui';
+import { KpiCard, Skeleton, Badge, Button } from '@shared/ui';
 import {
   WeeklySalesBarChart,
   SalesDonutChart,
@@ -26,20 +26,9 @@ import { formatCurrency, formatOrderId } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader } from '@widgets/dashboard';
-import type { BadgeVariant } from '@shared/ui';
 import type { Sale } from '@entities/sale';
+import { getSaleStatusBadgeVariant } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/ManagerDashboard.module.scss';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-function statusVariant(status: string): BadgeVariant {
-  const map: Partial<Record<SaleStatus, BadgeVariant>> = {
-    completed: 'success',
-    pending: 'warning',
-    cancelled: 'neutral',
-  };
-  return map[status as SaleStatus] ?? 'neutral';
-}
 
 const SKELETON_ROWS = 5;
 
@@ -122,15 +111,16 @@ export function ManagerDashboardPage(): React.ReactElement {
             <AlertCircleIcon size={16} aria-hidden="true" className={styles['alertIcon']} />
             {t('managerDashboard.stockAlerts')}
           </h2>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={styles['viewAllBtn']}
             onClick={() => {
               navigateTo(APP_ROUTES.INVENTORY);
             }}
           >
             {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-          </button>
+          </Button>
         </div>
         {isLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
@@ -158,15 +148,16 @@ export function ManagerDashboardPage(): React.ReactElement {
       <div className={styles['sectionCard']}>
         <div className={styles['sectionHeader']}>
           <h2 className={styles['sectionTitle']}>{t('managerDashboard.recentSales')}</h2>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={styles['viewAllBtn']}
             onClick={() => {
               navigateTo(APP_ROUTES.SALES);
             }}
           >
             {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-          </button>
+          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -211,7 +202,7 @@ export function ManagerDashboardPage(): React.ReactElement {
                   </TableCell>
                   <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
                   <TableCell>
-                    <Badge variant={statusVariant(s.status)} showDot>
+                    <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                       {t(`sales.status.${s.status}`)}
                     </Badge>
                   </TableCell>

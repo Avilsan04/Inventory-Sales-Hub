@@ -4,8 +4,9 @@ import {
   useLowStockAlerts,
   useTopCustomers,
   useSalesAnalytics,
+  useRecentSales,
 } from './useAnalytics';
-import { useSales } from '@features/sales';
+import { useSalesFlat } from '@features/sales';
 import { computeStatusSlices } from '@shared/lib/saleCalculations';
 import type { StatusSliceData } from '@shared/lib/saleCalculations';
 import type { DashboardKpi, LowStockAlert, SalesPeriod } from '@entities/analytics';
@@ -26,7 +27,8 @@ export interface DashboardStats {
 export function useDashboardStats(): DashboardStats {
   const { data: kpi, isLoading: kpiLoading } = useDashboardKpi();
   const { data: alerts } = useLowStockAlerts();
-  const { data: sales, isLoading: salesLoading } = useSales();
+  const { data: recentSales = [], isLoading: salesLoading } = useRecentSales(5);
+  const { data: sales } = useSalesFlat();
   const { data: topCustomers } = useTopCustomers();
   const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics({ period: '7d' });
 
@@ -37,8 +39,6 @@ export function useDashboardStats(): DashboardStats {
   }, [topCustomers]);
 
   const statusSlices = React.useMemo(() => computeStatusSlices(sales ?? []), [sales]);
-
-  const recentSales: Sale[] = sales?.slice(0, 5) ?? [];
 
   return {
     kpi,

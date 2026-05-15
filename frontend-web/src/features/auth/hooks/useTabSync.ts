@@ -15,18 +15,14 @@ export function useTabSync(): void {
     return subscribeTabSync((message) => {
       switch (message.type) {
         case 'AUTH_LOGOUT':
-          clearAuthCache();
+          // Clear all cached data on logout — prevents data leakage between sessions.
+          clearAllCache();
           void navigate(APP_ROUTES.LOGIN, { replace: true });
           break;
         case 'TENANT_CHANGED':
           clearAllCache();
           break;
-        case 'CART_UPDATED':
-          // Cart uses Zustand with localStorage — trigger a re-read by reloading store
-          window.dispatchEvent(new StorageEvent('storage', { key: 'ish-cart' }));
-          break;
         case 'AUTH_LOGIN':
-          // Another tab logged in — invalidate so this tab picks up the session
           clearAuthCache();
           break;
         default:

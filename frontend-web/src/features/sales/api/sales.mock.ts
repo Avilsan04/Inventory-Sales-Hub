@@ -58,7 +58,26 @@ type CreateSaleBody = {
   currency?: string;
 };
 
+function getCustomerIdFromToken(request: Request): number | null {
+  const auth = request.headers.get('Authorization');
+  if (!auth?.startsWith('Bearer ')) return null;
+  const token = auth.slice(7);
+  const match = /mock-token-customer-(\d+)/.exec(token);
+  const captured = match !== null ? match[1] : undefined;
+  return captured !== undefined ? parseInt(captured, 10) : null;
+}
+
 export const salesHandlers = [
+  http.get(`${API_BASE_URL}/sales/my-orders`, async ({ request }) => {
+    await delay(500);
+    const customerId = getCustomerIdFromToken(request);
+    if (customerId === null) return new HttpResponse(null, { status: 401 });
+    const tenantId = resolveTenant(request);
+    const sales = getTenantBucket(tenantId, 'sales', () => baseSales);
+    const myOrders = sales.filter((s) => s.customer.id === customerId);
+    return HttpResponse.json(myOrders);
+  }),
+
   http.get(`${API_BASE_URL}/sales/summary`, async ({ request }) => {
     await delay(500);
     const tenantId = resolveTenant(request);
@@ -74,6 +93,8 @@ export const salesHandlers = [
     const search = url.searchParams.get('search')?.toLowerCase();
     const dateFrom = url.searchParams.get('dateFrom');
     const dateTo = url.searchParams.get('dateTo');
+    const page = Number(url.searchParams.get('page') ?? 0);
+    const size = Number(url.searchParams.get('size') ?? 20);
 
     let results = sales;
     if (search) {
@@ -87,7 +108,9 @@ export const salesHandlers = [
     if (dateFrom) results = results.filter((s) => s.createdAt.slice(0, 10) >= dateFrom);
     if (dateTo) results = results.filter((s) => s.createdAt.slice(0, 10) <= dateTo);
 
-    return HttpResponse.json(results);
+    const total = results.length;
+    const data = results.slice(page * size, (page + 1) * size);
+    return HttpResponse.json({ data, total, page, pageSize: size });
   }),
 
   http.get(`${API_BASE_URL}/sales/:id/items`, async ({ params, request }) => {

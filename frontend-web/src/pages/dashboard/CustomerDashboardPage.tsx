@@ -13,35 +13,16 @@ import { useTranslation } from 'react-i18next';
 import { useCustomerStats } from '@features/analytics';
 import { useCatalog, useCart, ProductCard } from '@features/catalog';
 import { SaleDetailDrawer } from '@features/sales';
-import { KpiCard, Skeleton, Badge, EmptyState } from '@shared/ui';
+import { KpiCard, Skeleton, Badge, EmptyState, Button } from '@shared/ui';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui';
-import { formatCurrency, formatOrderId } from '@shared/lib';
+import { formatCurrency, formatOrderId, formatDateLocale } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
 import type { QuickAction } from '@widgets/dashboard';
-import type { BadgeVariant } from '@shared/ui';
 import type { Sale } from '@entities/sale';
+import { getSaleStatusBadgeVariant } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/CustomerDashboard.module.scss';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-function statusVariant(status: string): BadgeVariant {
-  const map: Partial<Record<SaleStatus, BadgeVariant>> = {
-    completed: 'success',
-    pending: 'warning',
-    cancelled: 'neutral',
-  };
-  return map[status as SaleStatus] ?? 'neutral';
-}
-
-function formatDate(iso: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(new Date(iso));
-}
 
 const FEATURED_COUNT = 4;
 const SKELETON_ROWS = 4;
@@ -133,15 +114,16 @@ export function CustomerDashboardPage(): React.ReactElement {
       <div className={styles['sectionCard']}>
         <div className={styles['sectionHeader']}>
           <h2 className={styles['sectionTitle']}>{t('customerDashboard.recentOrders')}</h2>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={styles['viewAllBtn']}
             onClick={() => {
               navigateTo(APP_ROUTES.MY_ORDERS);
             }}
           >
             {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-          </button>
+          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -182,11 +164,11 @@ export function CustomerDashboardPage(): React.ReactElement {
                   }}
                 >
                   <TableCell className={styles['orderIdCell']}>{formatOrderId(s.id)}</TableCell>
-                  <TableCell>{formatDate(s.createdAt, i18n.language)}</TableCell>
+                  <TableCell>{formatDateLocale(s.createdAt, i18n.language)}</TableCell>
                   <TableCell>{s.items.length}</TableCell>
                   <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
                   <TableCell>
-                    <Badge variant={statusVariant(s.status)} showDot>
+                    <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                       {t(`sales.status.${s.status}`)}
                     </Badge>
                   </TableCell>
@@ -201,15 +183,16 @@ export function CustomerDashboardPage(): React.ReactElement {
         <div className={styles['sectionCard']}>
           <div className={styles['sectionHeader']}>
             <h2 className={styles['sectionTitle']}>{t('customerDashboard.featuredProducts')}</h2>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               className={styles['viewAllBtn']}
               onClick={() => {
                 navigateTo(APP_ROUTES.CATALOG);
               }}
             >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-            </button>
+            </Button>
           </div>
           <div className={styles['productsGrid']}>
             {featuredProducts.map((p) => (

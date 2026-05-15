@@ -7,7 +7,9 @@ const isBrowser = typeof window !== 'undefined';
 export const tenantStorage = {
   getTenantId: (): string | null => {
     if (!isBrowser) return null;
-    return window.localStorage.getItem(TENANT_KEY);
+    const value = window.localStorage.getItem(TENANT_KEY);
+    // Guard against corrupted empty-string values to prevent silent 401 loops.
+    return value !== null && value.trim().length > 0 ? value : null;
   },
 
   setTenantId: (id: string): void => {

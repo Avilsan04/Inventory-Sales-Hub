@@ -12,7 +12,10 @@ export function useCreateProduct(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: productsApi.createProduct,
+    mutationFn: (dto: CreateProductDTO) =>
+      productsApi.createProduct(dto, {
+        headers: { 'Idempotency-Key': crypto.randomUUID() },
+      }),
 
     onMutate: async (dto) => {
       await queryClient.cancelQueries({ queryKey: productKeys.lists() });
@@ -52,7 +55,7 @@ export function useCreateProduct(): UseMutationResult<
     },
 
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: productKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: productKeys.all() });
     },
   });
 }

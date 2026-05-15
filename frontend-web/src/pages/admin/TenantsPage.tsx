@@ -4,7 +4,7 @@ import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useTenants, useActivateTenant, useSuspendTenant, useImpersonation } from '@features/admin';
 import { useAdminMetrics } from '@features/admin';
 import { toast } from '@shared/hooks/useToast';
-import { Spinner } from '@shared/ui/primitives';
+import { Spinner, Button } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardAction, CardContent } from '@shared/ui/composed';
 import { TenantTable } from '@features/admin';
 import { SectionErrorBoundary } from '@app/providers';
@@ -12,7 +12,7 @@ import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 export function TenantsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: tenants, isPending, isError } = useTenants();
+  const { data: tenants, isPending, isError, refetch } = useTenants();
   const { data: metrics } = useAdminMetrics();
   const { mutate: activate, isPending: isActivating } = useActivateTenant();
   const { mutate: suspend, isPending: isSuspending } = useSuspendTenant();
@@ -23,10 +23,10 @@ export function TenantsPage(): React.ReactElement {
   const handleActivate = (id: string): void => {
     activate(id, {
       onSuccess: () => {
-        toast({ title: t('admin.activate') + ' OK' });
+        toast({ title: t('admin.toasts.activated') });
       },
       onError: (err) => {
-        toast({ title: 'Error', description: err.message, variant: 'destructive' });
+        toast({ title: t('common.error'), description: err.message, variant: 'destructive' });
       },
     });
   };
@@ -34,10 +34,10 @@ export function TenantsPage(): React.ReactElement {
   const handleSuspend = (id: string): void => {
     suspend(id, {
       onSuccess: () => {
-        toast({ title: t('admin.suspend') + ' OK' });
+        toast({ title: t('admin.toasts.suspended') });
       },
       onError: (err) => {
-        toast({ title: 'Error', description: err.message, variant: 'destructive' });
+        toast({ title: t('common.error'), description: err.message, variant: 'destructive' });
       },
     });
   };
@@ -58,6 +58,15 @@ export function TenantsPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }

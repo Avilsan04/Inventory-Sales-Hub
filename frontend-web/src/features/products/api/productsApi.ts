@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import type { HttpRequestConfig } from '@core/http';
 import { mapKeysCamel } from '@core/api/mappers';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import {
@@ -31,8 +32,8 @@ export const productsApi = {
     return parseOrThrow(categoryListSchema, mapKeysCamel(res));
   },
 
-  createProduct: async (data: CreateProductDTO): Promise<Product> => {
-    const res = await httpClient.post<unknown>('/products', data);
+  createProduct: async (data: CreateProductDTO, config?: HttpRequestConfig): Promise<Product> => {
+    const res = await httpClient.post<unknown>('/products', data, config);
     return parseOrThrow(productSchema, mapKeysCamel(res));
   },
 

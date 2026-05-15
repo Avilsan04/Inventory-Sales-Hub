@@ -154,33 +154,3 @@ $color-test-fg: #f97316;
 // ── Role chips (static, not theme-aware) ─────────────────────────
 $color-role-company-bg: #ede9fe;
 $color-role-company-fg: #6d28d9;
-
-// ── Auth pages (login/register branding) ─────────────────────────
-$color-auth-mesh-base: #eef2ff;
-$color-auth-bg-from: #eef2fb;
-$color-auth-bg-to: #f4f7ff;
-$color-auth-brand-text: rgba(218 226 253 / 0.95);
-$color-auth-brand-muted: rgba(197 198 205 / 0.8);
-$color-auth-brand-feature: rgba(197 198 205 / 0.85);
-$color-auth-check: #b9c7e0;
-$color-auth-glass-border: rgba(218 226 253 / 0.07);
-$color-auth-glass-border-md: rgba(218 226 253 / 0.15);
-$color-auth-glass-border-panel: rgba(218 226 253 / 0.06);
-$color-auth-glass-border-inner: rgba(218 226 253 / 0.05);
-$color-auth-icon-ring-bg: rgba(34 42 61 / 0.9);
-$color-auth-role-card-bg: rgba(11 19 38 / 0.55);
-$color-auth-role-icon-bg: rgba(57 72 90 / 0.8);
-// Auth glassmorphism decorative blobs
-$color-auth-glass-bg-from: rgba(255, 255, 255, 0.4);
-$color-auth-glass-bg-to: rgba(255, 255, 255, 0.1);
-$color-auth-glass-white-border: rgba(255, 255, 255, 0.5);
-// Auth form glass card
-$color-auth-form-bg-light: rgba(255, 255, 255, 0.85);
-$color-auth-form-border-light: rgba(255, 255, 255, 0.8);
-$color-auth-form-border-left-light: rgba(255, 255, 255, 0.6);
-$color-auth-form-bg-dark: rgba(15, 23, 42, 0.85);
-$color-auth-form-border-dark: rgba(255, 255, 255, 0.1);
-$color-auth-form-border-dark-left: rgba(255, 255, 255, 0.08);
-$color-auth-icon-ring-border: rgba(218 226 253 / 0.12);
-$color-auth-gradient-from: #0d1629;
-$color-auth-gradient-to: #131c35;

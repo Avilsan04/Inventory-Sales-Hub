@@ -49,7 +49,29 @@
     "dateRange": "Rango de fechas",
     "updating": "Actualizando…",
     "processing": "Procesando…",
-    "comingSoon": "Próximamente"
+    "comingSoon": "Próximamente",
+    "retry": "Reintentar",
+    "skipToContent": "Saltar al contenido principal",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "previousPage": "Página anterior",
+    "nextPage": "Página siguiente",
+    "perPage": "por página",
+    "pageOf": "Página {{page}} de {{total}}",
+    "actionsFor": "Acciones para {{name}}",
+    "toasts": {
+      "deleteFailed": "Error al eliminar",
+      "updateFailed": "Error al actualizar",
+      "createFailed": "Error al añadir",
+      "saveFailed": "Error al guardar los cambios"
+    },
+    "errorSaving": "Error al guardar los cambios",
+    "errorBoundary": {
+      "sectionFailed": "{{label}} no se pudo cargar.",
+      "systemFailure": "Error del sistema",
+      "systemFailureDesc": "La aplicación encontró un error irrecuperable.",
+      "reloadApp": "Recargar aplicación"
+    }
   },
   "nav": {
     "home": "Inicio",
@@ -178,7 +200,12 @@
     "validationInvalidEmail": "Correo inválido",
     "validationRequired": "Obligatorio",
     "validationMinPassword": "Mínimo 8 caracteres",
-    "validationPasswordMatch": "Las contraseñas no coinciden"
+    "validationPasswordMatch": "Las contraseñas no coinciden",
+    "toasts": {
+      "updated": "Perfil actualizado",
+      "passwordChanged": "Contraseña cambiada",
+      "changeFailed": "Error al cambiar"
+    }
   },
   "dashboard": {
     "title": "Panel de control",
@@ -295,7 +322,22 @@
     "validQtyPositive": "Debe ser mayor que 0",
     "validFromWarehouse": "Selecciona el almacén origen",
     "validToWarehouse": "Selecciona el almacén destino",
-    "validSameWarehouse": "El origen y el destino no pueden ser iguales"
+    "validSameWarehouse": "El origen y el destino no pueden ser iguales",
+    "actions": {
+      "adjustStock": "Ajustar stock",
+      "viewHistory": "Ver historial"
+    },
+    "toasts": {
+      "deleted": "Elemento eliminado",
+      "deleteFailed": "Error al eliminar",
+      "created": "Elemento añadido al inventario",
+      "createFailed": "Error al añadir elemento",
+      "updated": "Elemento actualizado",
+      "stockAdjusted": "Stock ajustado",
+      "adjustFailed": "Error al ajustar",
+      "stockTransferred": "Stock transferido",
+      "transferFailed": "Error al transferir"
+    }
   },
   "products": {
     "subtitle": "Explora y gestiona tu catálogo de productos",
@@ -326,7 +368,13 @@
     "importComplete": "Importación completada",
     "importResultSummary": "{{success}} importados · {{failed}} fallidos",
     "importing": "Importando…",
-    "importCount": "Importar {{count}} productos"
+    "importCount": "Importar {{count}} productos",
+    "toasts": {
+      "deleted": "Producto eliminado",
+      "created": "Producto creado",
+      "updated": "Producto actualizado",
+      "createFailed": "Error al crear"
+    }
   },
   "sales": {
     "checkout": {
@@ -417,7 +465,21 @@
     "discountLabel": "Descuento (%)",
     "taxLabel": "IVA (%)",
     "discountWithPct": "Descuento ({{pct}}%)",
-    "taxWithPct": "IVA ({{pct}}%)"
+    "taxWithPct": "IVA ({{pct}}%)",
+    "toasts": {
+      "statusUpdated": "Estado actualizado",
+      "cashSessionOpened": "Sesión de caja abierta",
+      "cashSessionClosed": "Sesión de caja cerrada",
+      "closeFailed": "Error al cerrar la sesión",
+      "openFailed": "Error al abrir la sesión",
+      "createFailed": "Error al crear el pedido"
+    },
+    "sync": {
+      "offline": "Sin conexión — {{count}} venta(s) en cola.",
+      "syncing": "Sincronizando {{count}} venta(s)…",
+      "failedToSync": "{{count}} venta(s) no se pudo sincronizar.",
+      "retry": "Reintentar"
+    }
   },
   "customers": {
     "title": "Clientes",
@@ -441,7 +503,12 @@
     "phonePlaceholder": "+34 600 000 000",
     "addressPlaceholder": "Calle Mayor, 1",
     "eyebrow": "PERSONAS",
-    "editCustomer": "Actualizar datos del cliente"
+    "editCustomer": "Actualizar datos del cliente",
+    "toasts": {
+      "deleted": "Cliente eliminado",
+      "created": "Cliente añadido",
+      "updated": "Cliente actualizado"
+    }
   },
   "employees": {
     "title": "Empleados",
@@ -456,7 +523,7 @@
     "status": "Estado",
     "active": "Activo",
     "inactive": "Inactivo",
-    "addEmployee": "+ Añadir empleado",
+    "addEmployee": "Añadir empleado",
     "newEmployee": "Añadir nuevo empleado",
     "editEmployee": "Actualizar datos del empleado",
     "emailPlaceholder": "empleado@empresa.com",
@@ -464,6 +531,10 @@
       "admin": "Administrador",
       "manager": "Gestor",
       "staff": "Personal"
+    },
+    "toasts": {
+      "created": "Empleado añadido",
+      "updated": "Empleado actualizado"
     }
   },
   "suppliers": {
@@ -474,7 +545,7 @@
     "email": "Correo electrónico",
     "phone": "Teléfono",
     "contactPerson": "Persona de contacto",
-    "addSupplier": "+ Añadir proveedor",
+    "addSupplier": "Añadir proveedor",
     "deleteSupplier": "¿Eliminar proveedor?",
     "newSupplier": "Añadir nuevo proveedor",
     "editSupplier": "Actualizar datos del proveedor",
@@ -484,7 +555,12 @@
     "phonePlaceholder": "+34 600 000 000",
     "addressPlaceholder": "Polígono Industrial, 1",
     "contactPersonPlaceholder": "María García",
-    "address": "Dirección"
+    "address": "Dirección",
+    "toasts": {
+      "deleted": "Proveedor eliminado",
+      "created": "Proveedor añadido",
+      "updated": "Proveedor actualizado"
+    }
   },
   "analytics": {
     "title": "Analíticas",
@@ -537,13 +613,17 @@
       "warning": "Aviso",
       "error": "Error",
       "success": "Éxito"
+    },
+    "timeAgo": {
+      "now": "ahora"
     }
   },
   "validation": {
     "required": "Este campo es obligatorio",
     "invalidEmail": "Correo electrónico inválido",
     "minLength": "Mínimo {{min}} caracteres requeridos",
-    "maxLength": "Máximo {{max}} caracteres permitidos"
+    "maxLength": "Máximo {{max}} caracteres permitidos",
+    "minZero": "Debe ser 0 o más"
   },
   "pos": {
     "title": "Punto de venta",
@@ -569,7 +649,8 @@
     "closeSession": "Cerrar sesión",
     "opening": "Abriendo…",
     "openSession": "Abrir sesión",
-    "openingBalanceHint": "Introduce el saldo inicial en efectivo para este turno."
+    "openingBalanceHint": "Introduce el saldo inicial en efectivo para este turno.",
+    "perUnit": "/ ud."
   },
   "landing": {
     "hero": {
@@ -581,7 +662,13 @@
       "secondaryCta": "Modo prueba",
       "stat1": { "value": "+12.000", "label": "productos gestionados" },
       "stat2": { "value": "+3.200", "label": "ventas hoy" },
-      "stat3": { "value": "99.9%", "label": "uptime" }
+      "stat3": { "value": "99.9%", "label": "uptime" },
+      "mockup": {
+        "revenue": "Ingresos",
+        "orders": "Pedidos",
+        "customers": "Clientes",
+        "revenueChart": "Ingresos — Últimas 8 semanas"
+      }
     },
     "features": {
       "title": "Todo lo que necesitas para optimizar tu inventario y ventas",
@@ -835,6 +922,10 @@
       "activeTenants": "Activos",
       "suspendedTenants": "Suspendidos",
       "mrr": "MRR"
+    },
+    "toasts": {
+      "activated": "Tenant activado",
+      "suspended": "Tenant suspendido"
     }
   }
 }

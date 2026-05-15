@@ -4,6 +4,7 @@ import { formatQuantityWithUom } from '@shared/lib/uom';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
 import type { Product } from '@entities/product';
+import styles from './ProductVariantsPanel.module.scss';
 
 interface ProductVariantsPanelProps {
   variants: Product[];
@@ -17,21 +18,11 @@ export function ProductVariantsPanel({
   const { translate: t } = useTranslationAdapter();
 
   if (variants.length === 0) {
-    return (
-      <p
-        style={{
-          padding: '0.5rem 1rem',
-          color: 'var(--color-muted-foreground)',
-          fontSize: '0.875rem',
-        }}
-      >
-        {t('products.noVariants')}
-      </p>
-    );
+    return <p className={styles['empty']}>{t('products.noVariants')}</p>;
   }
 
   return (
-    <div style={{ padding: '0.5rem 1rem 1rem' }}>
+    <div className={styles['wrapper']}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -44,7 +35,7 @@ export function ProductVariantsPanel({
         <TableBody>
           {variants.map((v) => (
             <TableRow key={v.id}>
-              <TableCell style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>{v.sku}</TableCell>
+              <TableCell className={styles['skuCell']}>{v.sku}</TableCell>
               <TableCell>{v.name}</TableCell>
               <TableCell>{formatQuantityWithUom(1, v.uom)}</TableCell>
               <TableCell>{formatCurrency(v.price, currency)}</TableCell>

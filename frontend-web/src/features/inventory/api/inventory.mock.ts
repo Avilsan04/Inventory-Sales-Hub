@@ -11,8 +11,32 @@ export const inventoryHandlers = [
   http.get(`${API_BASE_URL}/inventory`, async ({ request }) => {
     await delay(800);
     const tenantId = resolveTenant(request);
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') ?? '0', 10);
+    const pageSize = parseInt(url.searchParams.get('pageSize') ?? '20', 10);
+    const search = (url.searchParams.get('search') ?? '').toLowerCase();
+    const status = url.searchParams.get('status') ?? '';
+
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
-    return HttpResponse.json(inventory.filter((i) => i.product.isActive));
+    let filtered = inventory.filter((i) => i.product.isActive);
+
+    if (status === 'LOW_STOCK') {
+      filtered = filtered.filter((i) => i.quantity > 0 && i.isLowStock);
+    } else if (status === 'OUT_OF_STOCK') {
+      filtered = filtered.filter((i) => i.quantity === 0);
+    }
+    if (search) {
+      filtered = filtered.filter(
+        (i) =>
+          i.product.name.toLowerCase().includes(search) ||
+          i.product.sku.toLowerCase().includes(search)
+      );
+    }
+
+    const total = filtered.length;
+    const start = page * pageSize;
+    const data = filtered.slice(start, start + pageSize);
+    return HttpResponse.json({ data, total, page, pageSize });
   }),
 
   http.get(`${API_BASE_URL}/inventory/low-stock`, async ({ request }) => {

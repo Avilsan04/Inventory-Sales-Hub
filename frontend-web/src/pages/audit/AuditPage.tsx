@@ -15,7 +15,9 @@ import {
 } from '@shared/ui/composed';
 import type { BadgeVariant } from '@shared/ui/primitives';
 import type { AuditAction } from '@entities/audit';
+import { formatDatetimeLocale } from '@shared/lib/formatters';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
+import styles from '@shared/styles/themes/pages/Audit.module.scss';
 
 const PAGE_SIZE = 50;
 
@@ -27,16 +29,6 @@ function actionVariant(action: AuditAction): BadgeVariant {
     status_change: 'warning',
   };
   return map[action] ?? 'neutral';
-}
-
-function formatTimestamp(iso: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(iso));
 }
 
 export function AuditPage(): React.ReactElement {
@@ -58,15 +50,7 @@ export function AuditPage(): React.ReactElement {
         </div>
       </header>
 
-      <div
-        style={{
-          border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-xl)',
-          backgroundColor: 'var(--color-card)',
-          overflow: 'hidden',
-          boxShadow: 'var(--shadow-base)',
-        }}
-      >
+      <div className={styles['tableCard']}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -95,15 +79,8 @@ export function AuditPage(): React.ReactElement {
             ) : (
               visibleLogs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell
-                    style={{
-                      fontFamily: 'var(--font-family-mono)',
-                      fontSize: 'var(--font-size-xs)',
-                      whiteSpace: 'nowrap',
-                      color: 'var(--color-text-muted)',
-                    }}
-                  >
-                    {formatTimestamp(log.timestamp, i18n.language)}
+                  <TableCell className={styles['cellMono']}>
+                    {formatDatetimeLocale(log.timestamp, i18n.language)}
                   </TableCell>
                   <TableCell>{log.userName}</TableCell>
                   <TableCell>
@@ -112,41 +89,14 @@ export function AuditPage(): React.ReactElement {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <span style={{ textTransform: 'capitalize' }}>{log.entityType}</span>{' '}
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-family-mono)',
-                        fontSize: 'var(--font-size-xs)',
-                        color: 'var(--color-text-muted)',
-                      }}
-                    >
-                      #{log.entityId.slice(0, 8)}
-                    </span>
+                    <span className={styles['entityType']}>{log.entityType}</span>{' '}
+                    <span className={styles['entityId']}>#{log.entityId.slice(0, 8)}</span>
                   </TableCell>
-                  <TableCell style={{ maxWidth: '240px' }}>
+                  <TableCell className={styles['detailsCell']}>
                     {log.reason != null ? (
-                      <span
-                        style={{
-                          color: 'var(--color-text-secondary)',
-                          fontSize: 'var(--font-size-xs)',
-                        }}
-                      >
-                        {log.reason}
-                      </span>
+                      <span className={styles['detailReason']}>{log.reason}</span>
                     ) : log.after != null ? (
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-family-mono)',
-                          fontSize: 'var(--font-size-xs)',
-                          color: 'var(--color-text-muted)',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          display: 'block',
-                        }}
-                      >
-                        {JSON.stringify(log.after)}
-                      </span>
+                      <span className={styles['detailDiff']}>{JSON.stringify(log.after)}</span>
                     ) : (
                       '—'
                     )}
@@ -158,14 +108,7 @@ export function AuditPage(): React.ReactElement {
         </Table>
 
         {hasMore && (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              padding: 'var(--spacing-4)',
-              borderTop: '1px solid var(--color-border)',
-            }}
-          >
+          <div className={styles['loadMoreRow']}>
             <Button
               variant="outline"
               size="sm"

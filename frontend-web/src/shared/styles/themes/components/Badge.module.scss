@@ -24,35 +24,35 @@
 
 // ── Variants ───────────────────────────────────────────────
 .variantDefault {
-  background-color: $color-primary;
-  color: $color-primary-foreground;
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
   .dot {
-    background-color: $color-primary-foreground;
+    background-color: var(--color-primary-foreground);
   }
 }
 
 .variantSecondary {
-  background-color: $color-bg-tertiary;
-  color: $color-text-secondary;
+  background-color: var(--color-muted);
+  color: var(--color-text-secondary);
   .dot {
-    background-color: $color-text-muted;
+    background-color: var(--color-text-muted);
   }
 }
 
 .variantDestructive {
-  background-color: $color-destructive;
-  color: $color-destructive-foreground;
+  background-color: var(--color-destructive);
+  color: var(--color-destructive-foreground);
   .dot {
-    background-color: $color-destructive-foreground;
+    background-color: var(--color-destructive-foreground);
   }
 }
 
 .variantOutline {
-  border: $border-width-base solid $color-border;
-  color: $color-text-secondary;
+  border: $border-width-base solid var(--color-border);
+  color: var(--color-text-secondary);
   background-color: transparent;
   .dot {
-    background-color: $color-text-muted;
+    background-color: var(--color-text-muted);
   }
 }
 
@@ -73,17 +73,17 @@
 }
 
 .variantInfo {
-  background-color: $color-primary-light;
-  color: $color-primary-hover;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-hover);
   .dot {
-    background-color: $color-primary;
+    background-color: var(--color-primary);
   }
 }
 
 .variantNeutral {
-  background-color: $color-bg-tertiary;
-  color: $color-text-secondary;
+  background-color: var(--color-muted);
+  color: var(--color-muted-foreground);
   .dot {
-    background-color: $color-text-muted;
+    background-color: var(--color-text-muted);
   }
 }

@@ -126,11 +126,15 @@ export function StockTransferDialog({
       { itemId: item.id, ...values },
       {
         onSuccess: (): void => {
-          toast({ title: 'Stock transferred' });
+          toast({ title: t('inventory.toasts.stockTransferred') });
           onOpenChange(false);
         },
         onError: (err): void => {
-          toast({ title: 'Transfer failed', description: err.message, variant: 'destructive' });
+          toast({
+            title: t('inventory.toasts.transferFailed'),
+            description: err.message,
+            variant: 'destructive',
+          });
         },
       }
     );

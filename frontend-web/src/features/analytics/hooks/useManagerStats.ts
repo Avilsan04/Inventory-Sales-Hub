@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSalesAnalytics, useLowStockAlerts } from './useAnalytics';
-import { useSales } from '@features/sales';
+import { useSalesFlat as useSales } from '@features/sales';
 import { useEmployees } from '@features/employees';
 import { computeStatusSlices } from '@shared/lib/saleCalculations';
 import type { StatusSliceData } from '@shared/lib/saleCalculations';

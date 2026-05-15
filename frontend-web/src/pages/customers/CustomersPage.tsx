@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { PencilIcon, TrashIcon, UsersIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useCustomers, useDeleteCustomer } from '@features/customers';
+import { useCustomers, useDeleteCustomer, useCustomerTopMap } from '@features/customers';
 import { PermissionGuard } from '@features/auth';
 import { useTopCustomers } from '@features/analytics';
 import { exportToCsv } from '@shared/lib/exportCsv';
+import { initials, formatCurrency } from '@shared/lib';
 import { toast } from '@shared/hooks/useToast';
 import { useTableFilters } from '@shared/hooks';
 import { Skeleton, Button, Input, Avatar, AvatarFallback, Pagination } from '@shared/ui/primitives';
@@ -27,23 +28,6 @@ import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Customers.module.scss';
 
 const CUSTOMER_PAGE_SIZE = 20;
-
-function initials(name: string): string {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-}
-
-function formatEur(amount: number): string {
-  return new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 2,
-  }).format(amount);
-}
 
 export function CustomersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
@@ -74,18 +58,12 @@ export function CustomersPage(): React.ReactElement {
     CUSTOMER_PAGE_SIZE
   );
 
-  const topMap = React.useMemo(() => {
-    const map = new Map<string, { totalOrders: number; totalSpent: number }>();
-    topCustomers?.forEach((c) =>
-      map.set(c.email, { totalOrders: c.totalOrders, totalSpent: c.totalSpent })
-    );
-    return map;
-  }, [topCustomers]);
+  const topMap = useCustomerTopMap(topCustomers);
 
   const handleExport = (): void => {
     exportToCsv(
       (data ?? []).map((c) => {
-        const meta = topMap.get(c.email);
+        const meta = topMap.get(c.id);
         return {
           name: c.name,
           email: c.email,
@@ -102,11 +80,15 @@ export function CustomersPage(): React.ReactElement {
     if (deleteId === null) return;
     deleteCustomer(deleteId, {
       onSuccess: () => {
-        toast({ title: 'Customer deleted' });
+        toast({ title: t('customers.toasts.deleted') });
         setDeleteId(null);
       },
       onError: (err) => {
-        toast({ title: 'Delete failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.deleteFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };
@@ -198,7 +180,7 @@ export function CustomersPage(): React.ReactElement {
                 </TableRow>
               ) : (
                 paginated.map((c) => {
-                  const meta = topMap.get(c.email);
+                  const meta = topMap.get(c.id);
                   return (
                     <TableRow key={c.id}>
                       <TableCell>
@@ -224,7 +206,9 @@ export function CustomersPage(): React.ReactElement {
                       </TableCell>
                       <TableCell>
                         {meta ? (
-                          <span className={styles['metaValue']}>{formatEur(meta.totalSpent)}</span>
+                          <span className={styles['metaValue']}>
+                            {formatCurrency(meta.totalSpent, 'EUR')}
+                          </span>
                         ) : (
                           <span className={styles['metaMuted']}>—</span>
                         )}
@@ -260,8 +244,8 @@ export function CustomersPage(): React.ReactElement {
           {pageCount > 1 && (
             <div className={pageStyles['tableFooter']}>
               <span>
-                {Math.min((page - 1) * CUSTOMER_PAGE_SIZE + 1, data?.length ?? 0)}–
-                {Math.min(page * CUSTOMER_PAGE_SIZE, data?.length ?? 0)} / {data?.length ?? 0}
+                {Math.min((page - 1) * pageSize + 1, data?.length ?? 0)}–
+                {Math.min(page * pageSize, data?.length ?? 0)} / {data?.length ?? 0}
               </span>
               <Pagination
                 page={page}

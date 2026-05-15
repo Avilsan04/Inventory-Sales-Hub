@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SearchIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent } from '@shared/ui/composed';
+import { Button } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { useEffectiveRole } from '@features/auth';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
@@ -89,8 +90,8 @@ export function CommandPalette(): React.ReactElement {
 
   return (
     <>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         className={styles['searchTrigger']}
         onClick={() => {
           setOpen(true);
@@ -100,7 +101,7 @@ export function CommandPalette(): React.ReactElement {
         <SearchIcon className={styles['searchTriggerIcon']} aria-hidden="true" />
         <span className={styles['searchTriggerLabel']}>{t('common.search')}</span>
         <kbd className={styles['kbdHint']}>{isMac ? '⌘K' : 'Ctrl K'}</kbd>
-      </button>
+      </Button>
 
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent showCloseButton={false} className={styles['cmdPaletteContent']}>
@@ -126,9 +127,9 @@ export function CommandPalette(): React.ReactElement {
               filtered.map((item, idx) => {
                 const { Icon } = item;
                 return (
-                  <button
+                  <Button
                     key={item.route}
-                    type="button"
+                    variant="ghost"
                     role="option"
                     aria-selected={idx === activeIdx}
                     className={cn(
@@ -144,7 +145,7 @@ export function CommandPalette(): React.ReactElement {
                   >
                     <Icon className={styles['cmdPaletteItemIcon']} aria-hidden="true" />
                     <span>{t(item.labelKey)}</span>
-                  </button>
+                  </Button>
                 );
               })
             )}

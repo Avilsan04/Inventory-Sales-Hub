@@ -78,11 +78,15 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
       },
       {
         onSuccess: () => {
-          toast({ title: 'Product created' });
+          toast({ title: t('products.toasts.created') });
           onClose();
         },
         onError: (err) => {
-          toast({ title: 'Failed to create', description: err.message, variant: 'destructive' });
+          toast({
+            title: t('products.toasts.createFailed'),
+            description: err.message,
+            variant: 'destructive',
+          });
         },
       }
     );

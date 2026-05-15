@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { PlusIcon } from 'lucide-react';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { fromCents } from '@shared/lib';
-import { formatOrderId } from '@shared/lib';
+import { formatOrderId, formatDate } from '@shared/lib';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   useSalesFilters,
@@ -24,7 +25,7 @@ import {
 import { SectionErrorBoundary } from '@app/providers';
 import { SaleCreateWidget } from '@widgets';
 import type { Sale } from '@entities/sale';
-import { SalesTableBody, formatDate } from './SalesTable';
+import { SalesTableBody } from './SalesTable';
 import pageStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Sales.module.scss';
 
@@ -52,6 +53,7 @@ export function SalesPage(): React.ReactElement {
     page,
     setPage,
     pageCount,
+    totalSales,
   } = useSalesFilters();
 
   const customerMap = React.useMemo(() => {
@@ -76,8 +78,6 @@ export function SalesPage(): React.ReactElement {
       'sales'
     );
   };
-
-  const totalSales = sales?.length ?? 0;
 
   if (isError) {
     return (
@@ -109,7 +109,7 @@ export function SalesPage(): React.ReactElement {
               setCreateOpen(true);
             }}
           >
-            {`+ ${t('sales.newSale')}`}
+            <PlusIcon size={14} aria-hidden="true" /> {t('sales.newSale')}
           </Button>
         </div>
       </header>

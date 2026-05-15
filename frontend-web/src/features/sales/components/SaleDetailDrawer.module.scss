@@ -1,0 +1,82 @@
+.sheetPanel {
+  width: 560px;
+  max-width: 95vw;
+  overflow-y: auto;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.body {
+  margin-top: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4;
+}
+
+.fieldLabel {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  margin-bottom: $spacing-1;
+  margin-top: 0;
+}
+
+.fieldValue {
+  font-weight: $font-weight-medium;
+  margin: 0;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  margin-bottom: $spacing-3;
+  margin-top: 0;
+}
+
+.cellRight {
+  text-align: right;
+}
+
+.cellMono {
+  text-align: right;
+  font-family: var(--font-family-mono);
+}
+
+.totalsSection {
+  border-top: $border-width-base solid var(--color-border);
+  padding-top: $spacing-4;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-2;
+}
+
+.totalRowFinal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-lg;
+}
+
+.mutedText {
+  color: var(--color-muted-foreground);
+}
+
+.monoText {
+  font-family: var(--font-family-mono);
+}
+
+.cancelBtn {
+  align-self: flex-start;
+}

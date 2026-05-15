@@ -54,14 +54,18 @@ export function CustomerCreateDialog({ open, onOpenChange }: Props): React.React
   const onSubmit = (data: FormValues): void => {
     mutate(data, {
       onSuccess: () => {
-        toast({ title: 'Customer added' });
+        toast({ title: t('customers.toasts.created') });
         setSaved(true);
         setTimeout(() => {
           onClose();
         }, 400);
       },
       onError: (err) => {
-        toast({ title: 'Failed to add', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.createFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };

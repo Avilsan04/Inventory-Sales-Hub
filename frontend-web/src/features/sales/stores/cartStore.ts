@@ -1,3 +1,4 @@
+// Return types are fully inferred from create<CartState>() — explicit annotations would be redundant noise.
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';

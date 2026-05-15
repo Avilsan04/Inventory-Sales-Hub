@@ -18,9 +18,13 @@ public class InventoryController {
     private InventoryManager inventoryManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int pageSize,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status) {
         try {
-            return ResponseEntity.ok(inventoryManager.getAll());
+            return ResponseEntity.ok(inventoryManager.getAll(page, pageSize, search, status));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

@@ -1,4 +1,5 @@
 import { httpClient } from '@core/http';
+import type { HttpRequestConfig } from '@core/http';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import { employeeListSchema, employeeSchema } from '@entities/employee';
 import type {
@@ -19,8 +20,11 @@ export const employeesApi = {
     return parseOrThrow(employeeSchema, res);
   },
 
-  createEmployee: async (data: CreateEmployeeDTO): Promise<Employee> => {
-    const res = await httpClient.post<unknown>('/employees', data);
+  createEmployee: async (
+    data: CreateEmployeeDTO,
+    config?: HttpRequestConfig
+  ): Promise<Employee> => {
+    const res = await httpClient.post<unknown>('/employees', data, config);
     return parseOrThrow(employeeSchema, res);
   },
 

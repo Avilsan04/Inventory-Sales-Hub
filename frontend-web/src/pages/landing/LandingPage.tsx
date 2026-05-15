@@ -56,8 +56,8 @@ export function LandingPage(): React.ReactElement {
     <div className={styles['page']}>
       <header className={styles['navbar']}>
         <div className={styles['navbarContent']}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             className={styles['navbarBrand']}
             onClick={handleScrollToTop}
             aria-label={translate('common.scrollToTop')}
@@ -65,7 +65,7 @@ export function LandingPage(): React.ReactElement {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 300 56"
-              style={{ width: '236px', height: '44px', flexShrink: 0 }}
+              className={styles['navbarBrandSvg']}
               aria-hidden="true"
               focusable="false"
             >
@@ -140,22 +140,22 @@ export function LandingPage(): React.ReactElement {
                 STOCK · ORDERS · SALES
               </text>
             </svg>
-          </button>
+          </Button>
 
           <div className={styles['navbarActions']}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className={styles['langBtn']}
                   aria-label={translate('common.switchLanguage')}
                 >
                   <img src={current.flag} alt={current.label} className={styles['langFlag']} />
                   <span>{language.toUpperCase()}</span>
                   <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
-                </button>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" style={{ minWidth: '130px' }}>
+              <DropdownMenuContent align="end" className={styles['langDropdown']}>
                 {LANGUAGE_OPTIONS.map((lang) => (
                   <DropdownMenuItem
                     key={lang.value}

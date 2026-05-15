@@ -114,7 +114,7 @@ export function SaleReceiptDialog({
             {t('common.close')}
           </Button>
           <Button onClick={handlePrint}>
-            <PrinterIcon size={14} style={{ marginRight: '0.375rem' }} />
+            <PrinterIcon size={14} className={styles['printerIcon']} />
             {t('sales.print')}
           </Button>
         </DialogFooter>

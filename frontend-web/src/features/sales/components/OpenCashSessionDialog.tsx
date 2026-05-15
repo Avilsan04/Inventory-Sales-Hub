@@ -6,7 +6,8 @@ import { useOpenCashSession } from '../hooks/useOpenCashSession';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
-import styles from '@shared/styles/themes/components/DialogForm.module.scss';
+import dialogStyles from '@shared/styles/themes/components/DialogForm.module.scss';
+import styles from './OpenCashSessionDialog.module.scss';
 import {
   Dialog,
   DialogContent,
@@ -17,12 +18,7 @@ import {
 } from '@shared/ui/composed';
 import { toCents } from '@shared/lib/formatCurrency';
 
-const formSchema = z.object({
-  openingBalance: z.number().min(0, 'Must be 0 or more'),
-  notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = { openingBalance: number; notes?: string };
 
 interface OpenCashSessionDialogProps {
   open: boolean;
@@ -37,6 +33,15 @@ export function OpenCashSessionDialog({
 }: OpenCashSessionDialogProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate: openSession, isPending } = useOpenCashSession();
+
+  const formSchema = React.useMemo(
+    () =>
+      z.object({
+        openingBalance: z.number().min(0, t('validation.minZero')),
+        notes: z.string().optional(),
+      }),
+    [t]
+  );
 
   const {
     register,
@@ -53,14 +58,14 @@ export function OpenCashSessionDialog({
       { openingBalance: toCents(values.openingBalance), notes: values.notes },
       {
         onSuccess: () => {
-          toast({ title: 'Cash session opened' });
+          toast({ title: t('sales.toasts.cashSessionOpened') });
           reset();
           onOpenChange(false);
           onSuccess?.();
         },
         onError: (err) => {
           toast({
-            title: 'Failed to open session',
+            title: t('sales.toasts.openFailed'),
             description: err.message,
             variant: 'destructive',
           });
@@ -71,7 +76,7 @@ export function OpenCashSessionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent style={{ maxWidth: '400px' }}>
+      <DialogContent className={styles['dialogNarrow']}>
         <DialogHeader>
           <DialogTitle>{t('pos.openCashSession')}</DialogTitle>
           <DialogDescription>{t('pos.openingBalanceHint')}</DialogDescription>
@@ -82,7 +87,7 @@ export function OpenCashSessionDialog({
             void handleSubmit(onSubmit)(e);
           }}
         >
-          <div className={styles['body']}>
+          <div className={dialogStyles['body']}>
             <div>
               <Label htmlFor="openingBalance">{t('pos.openingBalance')}</Label>
               <Input
@@ -90,24 +95,16 @@ export function OpenCashSessionDialog({
                 type="number"
                 step="0.01"
                 min="0"
-                style={{ marginTop: '0.375rem' }}
+                className={styles['inputOffset']}
                 {...register('openingBalance', { valueAsNumber: true })}
               />
               {errors.openingBalance && (
-                <p
-                  style={{
-                    color: 'var(--color-destructive)',
-                    fontSize: '0.75rem',
-                    marginTop: '0.25rem',
-                  }}
-                >
-                  {errors.openingBalance.message}
-                </p>
+                <p className={styles['fieldError']}>{errors.openingBalance.message}</p>
               )}
             </div>
             <div>
               <Label htmlFor="openNotes">{t('pos.notesOptional')}</Label>
-              <Input id="openNotes" style={{ marginTop: '0.375rem' }} {...register('notes')} />
+              <Input id="openNotes" className={styles['inputOffset']} {...register('notes')} />
             </div>
           </div>
 

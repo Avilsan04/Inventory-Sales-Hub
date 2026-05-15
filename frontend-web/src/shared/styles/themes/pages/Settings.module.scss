@@ -302,6 +302,19 @@
   flex-shrink: 0;
 }
 
+.notifDotInfo {
+  background-color: var(--color-info, #3b82f6);
+}
+.notifDotWarning {
+  background-color: var(--color-warning, #f59e0b);
+}
+.notifDotError {
+  background-color: var(--color-destructive);
+}
+.notifDotSuccess {
+  background-color: var(--color-success);
+}
+
 .toggleLabels {
   display: flex;
   flex-direction: column;

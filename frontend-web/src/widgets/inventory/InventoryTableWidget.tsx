@@ -15,15 +15,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@shared/ui/composed';
-import { Badge, Skeleton } from '@shared/ui/primitives';
+import { Badge, Skeleton, Button } from '@shared/ui/primitives';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/widgets/InventoryTable.module.scss';
 
 interface InventoryTableWidgetProps {
   data: InventoryItem[];
   isPending?: boolean;
+  className?: string;
   onEdit?: (item: InventoryItem) => void;
   onAdjustStock?: (item: InventoryItem) => void;
+  onTransfer?: (item: InventoryItem) => void;
   onDelete?: (id: string) => void;
   onViewHistory?: (item: InventoryItem) => void;
 }
@@ -55,8 +57,10 @@ function stockExtraClass(status: InventoryItem['status']): string | undefined {
 export function InventoryTableWidget({
   data,
   isPending = false,
+  className,
   onEdit,
   onAdjustStock,
+  onTransfer,
   onDelete,
   onViewHistory,
 }: InventoryTableWidgetProps): React.ReactElement {
@@ -64,11 +68,12 @@ export function InventoryTableWidget({
   const hasActions =
     onEdit !== undefined ||
     onAdjustStock !== undefined ||
+    onTransfer !== undefined ||
     onDelete !== undefined ||
     onViewHistory !== undefined;
 
   return (
-    <div className={styles['tableWrapper']}>
+    <div className={cn(styles['tableWrapper'], className)}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -114,9 +119,13 @@ export function InventoryTableWidget({
                     <TableCell className={styles['dotsCell']}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button type="button" className={styles['dotsBtn']} aria-label="Actions">
+                          <Button
+                            variant="ghost"
+                            className={styles['dotsBtn']}
+                            aria-label={t('common.actionsFor', { name: item.name })}
+                          >
                             <EllipsisIcon size={16} aria-hidden="true" />
-                          </button>
+                          </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           {onEdit !== undefined && (
@@ -125,7 +134,7 @@ export function InventoryTableWidget({
                                 onEdit(item);
                               }}
                             >
-                              Edit
+                              {t('common.edit')}
                             </DropdownMenuItem>
                           )}
                           {onAdjustStock !== undefined && (
@@ -134,7 +143,7 @@ export function InventoryTableWidget({
                                 onAdjustStock(item);
                               }}
                             >
-                              Adjust stock
+                              {t('inventory.actions.adjustStock')}
                             </DropdownMenuItem>
                           )}
                           {onViewHistory !== undefined && (
@@ -143,7 +152,16 @@ export function InventoryTableWidget({
                                 onViewHistory(item);
                               }}
                             >
-                              View history
+                              {t('inventory.actions.viewHistory')}
+                            </DropdownMenuItem>
+                          )}
+                          {onTransfer !== undefined && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                onTransfer(item);
+                              }}
+                            >
+                              {t('inventory.transferStock')}
                             </DropdownMenuItem>
                           )}
                           {onDelete !== undefined && (
@@ -151,9 +169,9 @@ export function InventoryTableWidget({
                               onClick={() => {
                                 onDelete(item.id);
                               }}
-                              style={{ color: 'var(--color-destructive)' }}
+                              className={styles['deleteItem']}
                             >
-                              Delete
+                              {t('common.delete')}
                             </DropdownMenuItem>
                           )}
                         </DropdownMenuContent>

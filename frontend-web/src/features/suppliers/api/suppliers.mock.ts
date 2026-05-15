@@ -10,8 +10,23 @@ export const supplierHandlers = [
   http.get(`${API_BASE_URL}/suppliers`, async ({ request }) => {
     await delay(600);
     const tenantId = resolveTenant(request);
-    const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers);
-    return HttpResponse.json(suppliers);
+    const suppliers = getTenantBucket(tenantId, 'suppliers', () => baseSuppliers) as unknown[];
+    const url = new URL(request.url);
+    const search = url.searchParams.get('search')?.toLowerCase();
+    const page = Number(url.searchParams.get('page') ?? 0);
+    const size = Number(url.searchParams.get('size') ?? 200);
+    let results = suppliers as Array<{ name: string; email?: string }>;
+    if (search)
+      results = results.filter(
+        (s) =>
+          s.name.toLowerCase().includes(search) || (s.email ?? '').toLowerCase().includes(search)
+      );
+    return HttpResponse.json({
+      data: results.slice(page * size, (page + 1) * size),
+      total: results.length,
+      page,
+      pageSize: size,
+    });
   }),
 
   http.get(`${API_BASE_URL}/suppliers/:id/products`, async ({ request }) => {

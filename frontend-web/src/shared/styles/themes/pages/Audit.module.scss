@@ -1,0 +1,52 @@
+// ── Audit Log Page ──────────────────────────────────────────────────────
+
+.tableCard {
+  border: $border-width-base solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-base);
+}
+
+.cellMono {
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.entityType {
+  text-transform: capitalize;
+}
+
+.entityId {
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.detailsCell {
+  max-width: 240px;
+}
+
+.detailReason {
+  color: var(--color-text-secondary);
+  font-size: $font-size-xs;
+}
+
+.detailDiff {
+  font-family: var(--font-family-mono);
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  padding: $spacing-4;
+  border-top: $border-width-base solid var(--color-border);
+}

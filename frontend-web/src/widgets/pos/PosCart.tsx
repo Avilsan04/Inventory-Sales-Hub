@@ -10,12 +10,13 @@ import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCart } from '@features/sales';
 import type { CartItem } from '@features/sales';
 import { calculateSaleTotals } from '@features/sales';
-import { formatCurrency } from '@shared/lib/formatCurrency';
+import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { cn } from '@shared/lib/cn';
 import type { Customer } from '@entities/customer';
 import type { PaymentMethod } from '@features/sales';
 import { MOCK_BANK_IBAN } from '@features/sales';
-import { Label } from '@shared/ui/primitives';
+import { Label, Button } from '@shared/ui/primitives';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@shared/ui/composed';
 import { CreditCardForm } from './CreditCardForm';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
@@ -52,6 +53,7 @@ interface Props {
 
 export function PosCart({ customers, isCreating, onCheckout }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const formatCurrency = useFormatCurrency();
   const {
     items: cart,
     customerId,
@@ -113,12 +115,12 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
               <div className={styles['cartItemInfo']}>
                 <p className={styles['cartItemName']}>{item.productName}</p>
                 <p className={styles['cartItemPrice']}>
-                  {formatCurrency(item.unitPrice, item.currency, 'es-ES')} / ud.
+                  {formatCurrency(item.unitPrice, item.currency)} {t('pos.perUnit')}
                 </p>
               </div>
               <div className={styles['qtyControls']}>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className={styles['qtyBtn']}
                   onClick={() => {
                     changeQty(item.productId, -1);
@@ -126,10 +128,10 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                   aria-label={t('pos.decreaseQty')}
                 >
                   −
-                </button>
+                </Button>
                 <span className={styles['qtyValue']}>{item.quantity}</span>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   className={styles['qtyBtn']}
                   onClick={() => {
                     changeQty(item.productId, 1);
@@ -137,7 +139,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                   aria-label={t('pos.increaseQty')}
                 >
                   +
-                </button>
+                </Button>
               </div>
             </div>
           ))}
@@ -148,7 +150,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
         <div className={styles['totals']}>
           <div className={styles['totalRow']}>
             <span>{t('pos.subtotal')}</span>
-            <span>{formatCurrency(saleTotals.subtotal, currency, 'es-ES')}</span>
+            <span>{formatCurrency(saleTotals.subtotal, currency)}</span>
           </div>
           <div className={styles['totalRow']}>
             <label htmlFor="pos-discount" className={styles['totalRowInner']}>
@@ -169,7 +171,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                 aria-label="Discount %"
               />
               <span className={styles['percentSymbol']}>%</span>
-              <span>−{formatCurrency(saleTotals.discountAmount, currency, 'es-ES')}</span>
+              <span>−{formatCurrency(saleTotals.discountAmount, currency)}</span>
             </span>
           </div>
           <div className={styles['totalRow']}>
@@ -191,30 +193,36 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
                 aria-label="Tax %"
               />
               <span className={styles['percentSymbol']}>%</span>
-              <span>+{formatCurrency(saleTotals.taxAmount, currency, 'es-ES')}</span>
+              <span>+{formatCurrency(saleTotals.taxAmount, currency)}</span>
             </span>
           </div>
           <div className={styles['totalRowFinal']}>
             <span>{t('pos.total')}</span>
-            <span>{formatCurrency(saleTotals.total, currency, 'es-ES')}</span>
+            <span>{formatCurrency(saleTotals.total, currency)}</span>
           </div>
         </div>
 
-        <select
-          className={styles['customerSelect']}
+        <Select
           value={customerId ?? ''}
-          onChange={(e) => {
-            setCustomer(e.target.value !== '' ? e.target.value : null);
+          onValueChange={(val): void => {
+            setCustomer(val !== '' ? val : null);
           }}
-          aria-label={t('sales.checkout.customerOptional')}
         >
-          <option value="">{t('sales.checkout.customerOptional')}</option>
-          {customers?.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger
+            className={styles['customerSelect']}
+            aria-label={t('sales.checkout.customerOptional')}
+          >
+            <SelectValue placeholder={t('sales.checkout.customerOptional')} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">{t('sales.checkout.customerOptional')}</SelectItem>
+            {customers?.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                {c.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         <div>
           {/* Section header with divider — Stitch pattern */}
@@ -226,9 +234,9 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
           {/* 2×2 horizontal payment method cards */}
           <div className={styles['payGrid']}>
             {PAYMENT_OPTIONS.map(({ id, labelKey, icon }) => (
-              <button
+              <Button
                 key={id}
-                type="button"
+                variant="ghost"
                 className={cn(styles['payCard'], paymentMethod === id && styles['payCardActive'])}
                 onClick={() => {
                   setPaymentMethod(id);
@@ -237,7 +245,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
               >
                 <span className={styles['payCardIcon']}>{icon}</span>
                 <span className={styles['payCardLabel']}>{t(labelKey)}</span>
-              </button>
+              </Button>
             ))}
             <div
               className={cn(styles['payCard'], styles['payCardDisabled'])}
@@ -283,14 +291,13 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
           )}
         </div>
 
-        <button
-          type="button"
+        <Button
           className={styles['ctaBtn']}
           onClick={handleCheckout}
           disabled={cart.length === 0 || isCreating}
         >
           {isCreating ? t('sales.checkout.creating') : t('sales.checkout.placeOrder')}
-        </button>
+        </Button>
       </div>
     </aside>
   );

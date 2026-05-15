@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/r
 import { salesApi } from '../api/salesApi';
 import { saleKeys } from './useSales';
 import { calculateSaleTotals } from '../lib/saleCalculations';
-import { syncDb } from '@shared/lib';
+import { syncDb, MAX_SYNC_QUEUE_SIZE } from '@shared/lib';
 import type { Sale, CreateSaleDTO } from '@entities/sale';
 
 export function useCreateSale(): UseMutationResult<
@@ -18,6 +18,14 @@ export function useCreateSale(): UseMutationResult<
       // UUID generated here is the Idempotency-Key — ensures the backend never processes
       // the same sale twice even if a network timeout causes a retry.
       const transactionId = crypto.randomUUID();
+
+      const queueSize = await syncDb.syncQueue
+        .where('status')
+        .anyOf(['pending', 'processing', 'failed'])
+        .count();
+      if (queueSize >= MAX_SYNC_QUEUE_SIZE) {
+        throw new Error('Offline queue is full. Please retry when online.');
+      }
 
       await syncDb.syncQueue.add({
         id: transactionId,
@@ -92,8 +100,7 @@ export function useCreateSale(): UseMutationResult<
     },
 
     onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: saleKeys.lists() });
-      void queryClient.invalidateQueries({ queryKey: saleKeys.summary() });
+      void queryClient.invalidateQueries({ queryKey: saleKeys.all() });
     },
   });
 }

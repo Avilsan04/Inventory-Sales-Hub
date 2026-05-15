@@ -10,9 +10,12 @@ export type {
 export {
   inventoryItemSchema,
   inventoryListSchema,
+  paginatedInventorySchema,
   createInventoryItemSchema,
   updateInventoryItemSchema,
   stockAdjustmentSchema,
   inventoryMovementSchema,
   inventoryMovementListSchema,
 } from './models/inventory.schema';
+
+export type { PaginatedInventoryResponse } from './models/inventory.schema';

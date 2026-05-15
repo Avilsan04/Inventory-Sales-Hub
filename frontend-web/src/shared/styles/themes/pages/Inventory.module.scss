@@ -67,11 +67,9 @@
   }
 }
 
-// Table card without default card padding/gap
+// Table card without default card padding/gap — noPadding prop on Card handles padding/gap removal
 .tableCard {
   overflow: hidden;
-  padding: 0 !important;
-  gap: 0 !important;
 }
 
 .controls {
@@ -92,6 +90,11 @@
   display: flex;
   gap: $spacing-1;
   flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .tab {
@@ -108,8 +111,8 @@
   color: var(--color-text-secondary);
   background: transparent;
   transition:
-    background-color 120ms,
-    color 120ms;
+    background-color $duration-fast ease,
+    color $duration-fast ease;
 
   &:hover {
     background: var(--color-bg-tertiary);

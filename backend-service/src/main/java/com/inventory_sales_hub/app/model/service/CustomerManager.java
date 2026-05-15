@@ -3,9 +3,13 @@ package com.inventory_sales_hub.app.model.service;
 import com.inventory_sales_hub.app.exceptions.CustomerException;
 import com.inventory_sales_hub.app.model.dto.CustomerParams;
 import com.inventory_sales_hub.app.model.dto.CustomerResponse;
+import com.inventory_sales_hub.app.model.dto.PaginatedResponse;
 import com.inventory_sales_hub.app.model.entities.Customer;
 import com.inventory_sales_hub.app.model.persistence.CustomerDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +22,15 @@ public class CustomerManager {
 
     public List<CustomerResponse> getAll() {
         return customerDao.findAll().stream().map(this::toResponse).toList();
+    }
+
+    public PaginatedResponse<CustomerResponse> getAllPaginated(int page, int size, String search) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by("name"));
+        Page<Customer> p = (search != null && !search.isBlank())
+                ? customerDao.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable)
+                : customerDao.findAll(pageable);
+        List<CustomerResponse> data = p.getContent().stream().map(this::toResponse).toList();
+        return new PaginatedResponse<>(data, p.getTotalElements(), page, size);
     }
 
     public CustomerResponse getById(Long id) {

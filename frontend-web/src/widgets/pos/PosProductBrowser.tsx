@@ -2,9 +2,8 @@ import * as React from 'react';
 import { PlusIcon, PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { usePosKeyboard } from '@features/sales';
-import { Input, Badge, Spinner } from '@shared/ui';
-import { cn } from '@shared/lib';
-import { formatCurrency } from '@shared/lib';
+import { Input, Badge, Spinner, Button } from '@shared/ui';
+import { cn, useFormatCurrency } from '@shared/lib';
 import type { InventoryItem } from '@entities/inventory';
 import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
@@ -28,16 +27,16 @@ interface Props {
 
 export function PosProductBrowser({ inventory, isPending, onAdd }: Props): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const formatCurrency = useFormatCurrency();
   const [search, setSearch] = React.useState('');
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
   const searchRef = React.useRef<HTMLInputElement | null>(null);
 
-  usePosKeyboard({
-    searchRef,
-    onClearSearch: () => {
-      setSearch('');
-    },
-  });
+  const handleClearSearch = React.useCallback((): void => {
+    setSearch('');
+  }, []);
+
+  usePosKeyboard({ searchRef, onClearSearch: handleClearSearch });
 
   const categories = React.useMemo((): string[] => {
     if (!inventory) return [];
@@ -83,26 +82,28 @@ export function PosProductBrowser({ inventory, isPending, onAdd }: Props): React
 
       {categories.length > 0 && (
         <div className={styles['categoryPills']} role="group" aria-label={t('inventory.category')}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={cn(styles['pill'], activeCategory === null && styles['pillActive'])}
-            onClick={() => {
+            onClick={(): void => {
               setActiveCategory(null);
             }}
           >
             {t('inventory.allProducts')}
-          </button>
+          </Button>
           {categories.map((cat) => (
-            <button
+            <Button
               key={cat}
-              type="button"
+              variant="ghost"
+              size="sm"
               className={cn(styles['pill'], activeCategory === cat && styles['pillActive'])}
-              onClick={() => {
+              onClick={(): void => {
                 setActiveCategory(cat);
               }}
             >
               {cat}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -137,14 +138,14 @@ export function PosProductBrowser({ inventory, isPending, onAdd }: Props): React
               <p className={styles['productSku']}>{item.sku}</p>
               <div className={styles['productFooter']}>
                 <p className={styles['productPrice']}>
-                  {formatCurrency(item.price, item.currency, 'es-ES')}
+                  {formatCurrency(item.price, item.currency)}
                 </p>
                 <Badge variant={stockBadgeVariant(item.status)} showDot={false}>
                   {stockBadgeLabel(item.status, t)}
                 </Badge>
               </div>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 className={styles['addBtn']}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -153,7 +154,7 @@ export function PosProductBrowser({ inventory, isPending, onAdd }: Props): React
                 aria-label={`${t('inventory.addProduct')}: ${item.name}`}
               >
                 <PlusIcon aria-hidden="true" />
-              </button>
+              </Button>
             </div>
           ))}
         </div>

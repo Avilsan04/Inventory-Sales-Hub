@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useUpdateSaleStatus } from '../hooks/useUpdateSaleStatus';
+import styles from './SaleDetailDrawer.module.scss';
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
 import { Badge, Button } from '@shared/ui/primitives';
@@ -18,32 +19,8 @@ import {
   TableCell,
 } from '@shared/ui/composed';
 import type { Sale } from '@entities/sale';
-import type { BadgeVariant } from '@shared/ui/primitives';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-function statusVariant(status: SaleStatus): BadgeVariant {
-  const map: Record<SaleStatus, BadgeVariant> = {
-    pending: 'warning',
-    completed: 'info',
-    cancelled: 'neutral',
-  };
-  return map[status];
-}
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function orderId(id: string): string {
-  return id.startsWith('ORD-') ? `#${id}` : `#${id.slice(0, 8)}`;
-}
+import { getSaleStatusBadgeVariant } from '@entities/sale';
+import { formatDatetime, formatOrderId } from '@shared/lib';
 
 interface SaleDetailDrawerProps {
   sale: Sale | null;
@@ -85,84 +62,59 @@ export function SaleDetailDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent style={{ width: '560px', maxWidth: '95vw', overflowY: 'auto' }}>
+      <SheetContent className={styles['sheetPanel']}>
         {sale !== null && (
           <>
             <SheetHeader>
-              <SheetTitle style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                {orderId(sale.id)}
-                <Badge variant={statusVariant(sale.status)} showDot>
+              <SheetTitle className={styles['titleRow']}>
+                {formatOrderId(sale.id)}
+                <Badge variant={getSaleStatusBadgeVariant(sale.status)} showDot>
                   {sale.status}
                 </Badge>
               </SheetTitle>
               <SheetDescription>
-                {t('sales.createdAt')}: {formatDate(sale.createdAt)}
+                {t('sales.createdAt')}: {formatDatetime(sale.createdAt)}
               </SheetDescription>
             </SheetHeader>
 
-            <div
-              style={{
-                marginTop: '1.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.5rem',
-              }}
-            >
+            <div className={styles['body']}>
               {/* Customer / employee info */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className={styles['infoGrid']}>
                 <div>
-                  <p
-                    style={{
-                      fontSize: '0.75rem',
-                      color: 'var(--color-muted-foreground)',
-                      marginBottom: '0.25rem',
-                    }}
-                  >
-                    {t('sales.customer')}
-                  </p>
-                  <p style={{ fontWeight: 500 }}>
+                  <p className={styles['fieldLabel']}>{t('sales.customer')}</p>
+                  <p className={styles['fieldValue']}>
                     {customerName ?? (sale.customerId ? `#${sale.customerId.slice(0, 8)}` : '—')}
                   </p>
                 </div>
                 {sale.employeeId && (
                   <div>
-                    <p
-                      style={{
-                        fontSize: '0.75rem',
-                        color: 'var(--color-muted-foreground)',
-                        marginBottom: '0.25rem',
-                      }}
-                    >
-                      {t('sales.employee')}
-                    </p>
-                    <p style={{ fontWeight: 500 }}>{`#${sale.employeeId.slice(0, 8)}`}</p>
+                    <p className={styles['fieldLabel']}>{t('sales.employee')}</p>
+                    <p className={styles['fieldValue']}>{`#${sale.employeeId.slice(0, 8)}`}</p>
                   </div>
                 )}
               </div>
 
               {/* Items table */}
               <div>
-                <h3 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-                  {t('sales.items')}
-                </h3>
+                <h3 className={styles['sectionTitle']}>{t('sales.items')}</h3>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t('inventory.productName')}</TableHead>
-                      <TableHead style={{ textAlign: 'right' }}>{t('sales.qty')}</TableHead>
-                      <TableHead style={{ textAlign: 'right' }}>{t('inventory.price')}</TableHead>
-                      <TableHead style={{ textAlign: 'right' }}>{t('sales.subtotal')}</TableHead>
+                      <TableHead className={styles['cellRight']}>{t('sales.qty')}</TableHead>
+                      <TableHead className={styles['cellMono']}>{t('inventory.price')}</TableHead>
+                      <TableHead className={styles['cellMono']}>{t('sales.subtotal')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {sale.items.map((item) => (
                       <TableRow key={item.id}>
                         <TableCell>{item.productName}</TableCell>
-                        <TableCell style={{ textAlign: 'right' }}>{item.quantity}</TableCell>
-                        <TableCell style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                        <TableCell className={styles['cellRight']}>{item.quantity}</TableCell>
+                        <TableCell className={styles['cellMono']}>
                           {formatCurrency(item.unitPrice, sale.currency)}
                         </TableCell>
-                        <TableCell style={{ textAlign: 'right', fontFamily: 'monospace' }}>
+                        <TableCell className={styles['cellMono']}>
                           {formatCurrency(item.subtotal, sale.currency)}
                         </TableCell>
                       </TableRow>
@@ -172,31 +124,16 @@ export function SaleDetailDrawer({
               </div>
 
               {/* Totals */}
-              <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  <span style={{ color: 'var(--color-muted-foreground)' }}>
-                    {t('sales.subtotal')}
-                  </span>
-                  <span style={{ fontFamily: 'monospace' }}>
+              <div className={styles['totalsSection']}>
+                <div className={styles['totalRow']}>
+                  <span className={styles['mutedText']}>{t('sales.subtotal')}</span>
+                  <span className={styles['monoText']}>
                     {formatCurrency(subtotal, sale.currency)}
                   </span>
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontWeight: 700,
-                    fontSize: '1.125rem',
-                  }}
-                >
+                <div className={styles['totalRowFinal']}>
                   <span>{t('sales.total')}</span>
-                  <span style={{ fontFamily: 'monospace' }}>
+                  <span className={styles['monoText']}>
                     {formatCurrency(sale.total, sale.currency)}
                   </span>
                 </div>
@@ -208,7 +145,7 @@ export function SaleDetailDrawer({
                   variant="destructive"
                   onClick={handleCancel}
                   disabled={isUpdating}
-                  style={{ alignSelf: 'flex-start' }}
+                  className={styles['cancelBtn']}
                 >
                   {t('sales.cancelSale')}
                 </Button>

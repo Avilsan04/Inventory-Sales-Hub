@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { ShoppingCartIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useSales } from '@features/sales';
-import { useAuthMe } from '@features/auth';
+import { useMyOrders } from '@features/sales';
 import { SaleDetailDrawer } from '@features/sales';
 import { Skeleton, Badge, Button } from '@shared/ui/primitives';
 import {
@@ -18,24 +17,28 @@ import {
 import { formatCurrency } from '@shared/lib/formatCurrency';
 import { cn } from '@shared/lib/cn';
 import type { BadgeVariant } from '@shared/ui/primitives';
-import type { Sale } from '@entities/sale';
+import type { Sale, SaleStatus } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 import tableStyles from '@shared/styles/themes/pages/Sales.module.scss';
 
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
 type StatusFilter = 'all' | SaleStatus;
 
-function statusVariant(status: SaleStatus): BadgeVariant {
-  const map: Record<SaleStatus, BadgeVariant> = {
-    pending: 'warning',
-    completed: 'info',
-    cancelled: 'neutral',
-  };
-  return map[status];
-}
+const STATUS_BADGE: Record<SaleStatus, BadgeVariant> = {
+  pending: 'warning',
+  completed: 'success',
+  cancelled: 'neutral',
+};
 
 function orderId(id: string): string {
   return id.startsWith('ORD-') ? `#${id}` : `#${id.slice(0, 8)}`;
+}
+
+function formatOrderDate(iso: string): string {
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(iso));
 }
 
 const SKELETON_ROWS = 4;
@@ -49,23 +52,30 @@ const STATUS_FILTERS: Array<{ id: StatusFilter; labelKey: string }> = [
 
 export function MyOrdersPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: me } = useAuthMe();
-  const { data: allSales, isLoading, isError } = useSales();
+  const { data: myOrders, isLoading, isError, refetch } = useMyOrders();
 
   const [statusFilter, setStatusFilter] = React.useState<StatusFilter>('all');
   const [detailSale, setDetailSale] = React.useState<Sale | null>(null);
 
-  const myOrders = React.useMemo(() => {
-    if (!allSales || !me) return [];
-    const owned = allSales.filter((s) => s.customerId === String(me.id));
-    if (statusFilter === 'all') return owned;
-    return owned.filter((s) => s.status === statusFilter);
-  }, [allSales, me, statusFilter]);
+  const filtered = React.useMemo(() => {
+    if (!myOrders) return [];
+    if (statusFilter === 'all') return myOrders;
+    return myOrders.filter((s) => s.status === statusFilter);
+  }, [myOrders, statusFilter]);
 
   if (isError) {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -117,7 +127,7 @@ export function MyOrdersPage(): React.ReactElement {
                     </TableCell>
                   </TableRow>
                 ))
-              ) : myOrders.length === 0 ? (
+              ) : filtered.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5}>
                     <EmptyState
@@ -128,7 +138,7 @@ export function MyOrdersPage(): React.ReactElement {
                   </TableCell>
                 </TableRow>
               ) : (
-                myOrders.map((s) => (
+                filtered.map((s) => (
                   <TableRow
                     key={s.id}
                     onClick={() => {
@@ -137,13 +147,13 @@ export function MyOrdersPage(): React.ReactElement {
                     className={cn(tableStyles['mono'], tableStyles['clickableRow'])}
                   >
                     <TableCell className={tableStyles['mono']}>{orderId(s.id)}</TableCell>
-                    <TableCell>{s.createdAt.slice(0, 10)}</TableCell>
+                    <TableCell>{formatOrderDate(s.createdAt)}</TableCell>
                     <TableCell>{s.items.length}</TableCell>
                     <TableCell className={tableStyles['mono']}>
                       {formatCurrency(s.total, s.currency)}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={statusVariant(s.status)} showDot>
+                      <Badge variant={STATUS_BADGE[s.status]} showDot>
                         {t(`sales.status.${s.status}`)}
                       </Badge>
                     </TableCell>

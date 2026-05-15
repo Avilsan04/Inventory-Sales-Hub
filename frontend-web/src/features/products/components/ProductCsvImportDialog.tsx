@@ -18,6 +18,8 @@ import {
 } from '@shared/ui/composed';
 import { useBatchCreateProducts } from '../hooks/useBatchCreateProducts';
 import type { CreateProductDTO } from '@entities/product';
+import { cn } from '@shared/lib/cn';
+import styles from './ProductCsvImportDialog.module.scss';
 
 type Step = 'upload' | 'preview' | 'result';
 
@@ -118,13 +120,13 @@ export function ProductCsvImportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent style={{ maxWidth: '700px' }}>
+      <DialogContent className={styles['dialogWide']}>
         <DialogHeader>
           <DialogTitle>{t('products.importFromCsv')}</DialogTitle>
         </DialogHeader>
 
         {step === 'upload' && (
-          <div style={{ padding: '1.5rem' }}>
+          <div className={styles['uploadPad']}>
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
@@ -135,19 +137,7 @@ export function ProductCsvImportDialog({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click();
               }}
-              style={{
-                border: `2px dashed ${isDragOver ? 'var(--color-primary)' : 'var(--color-border)'}`,
-                borderRadius: 'var(--radius-lg)',
-                padding: '2.5rem 2rem',
-                textAlign: 'center',
-                cursor: 'pointer',
-                background: isDragOver ? 'var(--color-muted)' : 'transparent',
-                transition: 'border-color 0.15s ease, background 0.15s ease',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '0.75rem',
-              }}
+              className={cn(styles['dropZone'], isDragOver && styles['dropZoneActive'])}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -159,33 +149,16 @@ export function ProductCsvImportDialog({
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                style={{
-                  color: isDragOver ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
-                }}
+                className={isDragOver ? styles['dropZoneIconActive'] : styles['dropZoneIcon']}
                 aria-hidden="true"
               >
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
               </svg>
-              <p style={{ fontWeight: 600, color: 'var(--color-foreground)', margin: 0 }}>
-                {t('products.dropCsvHere')}
-              </p>
-              <p
-                style={{ fontSize: '0.8125rem', color: 'var(--color-muted-foreground)', margin: 0 }}
-              >
-                {t('products.csvColumnsHint')}
-              </p>
-              <span
-                style={{
-                  fontSize: '0.75rem',
-                  color: 'var(--color-primary)',
-                  textDecoration: 'underline',
-                  fontWeight: 500,
-                }}
-              >
-                {t('products.orClickToSelect')}
-              </span>
+              <p className={styles['dropZoneTitle']}>{t('products.dropCsvHere')}</p>
+              <p className={styles['dropZoneHint']}>{t('products.csvColumnsHint')}</p>
+              <span className={styles['dropZoneLink']}>{t('products.orClickToSelect')}</span>
             </div>
             <input
               ref={fileInputRef}
@@ -194,23 +167,17 @@ export function ProductCsvImportDialog({
               onChange={(e) => {
                 void handleFile(e);
               }}
-              style={{ display: 'none' }}
+              className={styles['fileInputHidden']}
             />
           </div>
         )}
 
         {step === 'preview' && (
           <>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: 'var(--color-muted-foreground)',
-                padding: '0.5rem 0',
-              }}
-            >
+            <p className={styles['previewSummary']}>
               {t('products.csvPreviewSummary', { valid: validCount, invalid: invalidCount })}
             </p>
-            <div style={{ maxHeight: '350px', overflowY: 'auto' }}>
+            <div className={styles['previewScroll']}>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -225,20 +192,14 @@ export function ProductCsvImportDialog({
                   {parsed.map((p) => (
                     <TableRow
                       key={p._rowIndex}
-                      style={
-                        p._error
-                          ? { background: 'var(--color-destructive-muted, #fee2e2)' }
-                          : undefined
-                      }
+                      className={p._error ? styles['rowError'] : undefined}
                     >
                       <TableCell>{p._rowIndex + 1}</TableCell>
                       <TableCell>{p.name}</TableCell>
                       <TableCell>{p.sku}</TableCell>
                       <TableCell>{p.purchasePrice.toFixed(2)}</TableCell>
                       <TableCell
-                        style={{
-                          color: p._error ? 'var(--color-destructive)' : 'var(--color-success)',
-                        }}
+                        className={p._error ? styles['cellStatusError'] : styles['cellStatus']}
                       >
                         {p._error ?? '✓'}
                       </TableCell>
@@ -251,9 +212,9 @@ export function ProductCsvImportDialog({
         )}
 
         {step === 'result' && result && (
-          <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <p style={{ fontSize: '1.25rem', fontWeight: 600 }}>{t('products.importComplete')}</p>
-            <p style={{ color: 'var(--color-muted-foreground)', marginTop: '0.5rem' }}>
+          <div className={styles['resultPad']}>
+            <p className={styles['resultTitle']}>{t('products.importComplete')}</p>
+            <p className={styles['resultSubtitle']}>
               {t('products.importResultSummary', {
                 success: result.success,
                 failed: result.failed,

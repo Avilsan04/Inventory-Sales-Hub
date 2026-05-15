@@ -1,10 +1,12 @@
-export { useSales, saleKeys } from './hooks/useSales';
+export { useSales, useSalesFlat, saleKeys } from './hooks/useSales';
 export type { SaleFilters } from './hooks/useSales';
+export { useMyOrders } from './hooks/useMyOrders';
 export { useSale } from './hooks/useSale';
 export { useSaleSummary } from './hooks/useSaleSummary';
 export { useCreateSale } from './hooks/useCreateSale';
 export { useUpdateSaleStatus } from './hooks/useUpdateSaleStatus';
-export { useSalesFilters, SALES_PAGE_SIZE } from './hooks/useSalesFilters';
+export { useSalesFilters } from './hooks/useSalesFilters';
+export { SALES_PAGE_SIZE } from './config';
 export { useCart } from './hooks/useCart';
 export type { CartItem } from './hooks/useCart';
 export { useCashSession } from './hooks/useCashSession';
@@ -23,7 +25,7 @@ export { calculateSaleTotals } from './lib/saleCalculations';
 export type { SaleTotals } from './lib/saleCalculations';
 export { useCartStore } from './stores/cartStore';
 export type { CartState } from './stores/cartStore';
-export { startSalesSyncWorker } from './services/salesSyncWorker';
+export { startSalesSyncWorker, retryFailedEntries } from './services/salesSyncWorker';
 export type {
   PaymentMethod,
   PaymentDetails,

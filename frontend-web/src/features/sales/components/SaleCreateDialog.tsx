@@ -113,7 +113,7 @@ export function SaleCreateDialog({
         },
         onError: (err) => {
           toast({
-            title: 'Failed to create order',
+            title: t('sales.toasts.createFailed'),
             description: err.message,
             variant: 'destructive',
           });

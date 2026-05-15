@@ -1,43 +1,48 @@
 import * as React from 'react';
 import { PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useInventory, useDeleteInventoryItem } from '@features/inventory';
-import { useInventoryFilters, PAGE_SIZE } from '@features/inventory';
+import { useInventory, useInventoryFilters } from '@features/inventory';
+import type { StockTab } from '@features/inventory';
 import { PermissionGuard, useEffectiveRole } from '@features/auth';
-import { hasPermission } from '@shared/lib/permissions';
-import { toast } from '@shared/hooks/useToast';
-import { exportToCsv } from '@shared/lib/exportCsv';
-import { fromCents } from '@shared/lib/formatCurrency';
-import { Button, Pagination, Input } from '@shared/ui/primitives';
-import { Card, ConfirmDialog, EmptyState } from '@shared/ui/composed';
-import { SectionErrorBoundary } from '@app/providers';
-import { InventoryTableWidget } from '@widgets/inventory';
-import { AuditLogPanel } from '@widgets/audit';
-import { InventoryCreateDialog } from '@features/inventory';
-import { InventoryEditDialog } from '@features/inventory';
-import { StockAdjustDialog } from '@features/inventory';
-import { MovementsHistoryPanel } from '@features/inventory';
-import { StockTransferDialog } from '@features/inventory';
 import { useWarehouses } from '@features/inventory';
 import { cn } from '@shared/lib/cn';
 import { telemetry } from '@shared/lib/observability';
-import type { InventoryItem } from '@entities/inventory';
+import { Button, Pagination, Input } from '@shared/ui/primitives';
+import { Card, EmptyState } from '@shared/ui/composed';
+import { SectionErrorBoundary } from '@app/providers';
+import { InventoryTableWidget } from '@widgets/inventory';
+import { AuditLogPanel } from '@widgets/audit';
+import { useInventoryPageActions } from './useInventoryPageActions';
+import { WarehouseFilter } from './WarehouseFilter';
+import { InventoryDialogs } from './InventoryDialogs';
 import styles from '@shared/styles/themes/pages/Inventory.module.scss';
 
 export function InventoryPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data, isPending, isError, error } = useInventory();
-  const { mutate: deleteItem, isPending: isDeleting } = useDeleteInventoryItem();
   const role = useEffectiveRole();
-
-  const [createOpen, setCreateOpen] = React.useState(false);
-  const [editItem, setEditItem] = React.useState<InventoryItem | null>(null);
-  const [adjustItem, setAdjustItem] = React.useState<InventoryItem | null>(null);
-  const [transferItem, setTransferItem] = React.useState<InventoryItem | null>(null);
-  const [deleteId, setDeleteId] = React.useState<string | null>(null);
-  const [historyItem, setHistoryItem] = React.useState<InventoryItem | null>(null);
-
   const { data: warehouses } = useWarehouses();
+
+  const {
+    createOpen,
+    setCreateOpen,
+    editItem,
+    setEditItem,
+    adjustItem,
+    setAdjustItem,
+    transferItem,
+    setTransferItem,
+    deleteId,
+    setDeleteId,
+    historyItem,
+    setHistoryItem,
+    isDeleting,
+    handleExport,
+    handleDelete,
+    onEdit,
+    onAdjustStock,
+    onDelete,
+    onTransfer,
+  } = useInventoryPageActions(role);
 
   const {
     search,
@@ -49,50 +54,59 @@ export function InventoryPage(): React.ReactElement {
     warehouseFilter,
     setWarehouseFilter,
     debouncedSearch,
-    tabs,
-    filtered,
-    paginated,
-    pageCount,
-  } = useInventoryFilters(data);
+    pageSize,
+    params,
+  } = useInventoryFilters();
 
-  const handleExport = (): void => {
-    exportToCsv(
-      (data ?? []).map((item) => ({
-        sku: item.sku,
-        name: item.name,
-        category: item.category ?? '',
-        quantity: item.quantity,
-        price: fromCents(item.price),
-        currency: item.currency,
-        status: item.status,
-        reorderThreshold: item.reorderThreshold,
-      })),
-      'inventory'
-    );
-  };
+  const { data: inventory, isPending, isError, error, refetch } = useInventory(params);
 
-  const handleDelete = (): void => {
-    if (deleteId === null) return;
-    deleteItem(deleteId, {
-      onSuccess: () => {
-        toast({ title: 'Item deleted' });
-        setDeleteId(null);
+  const inventoryItems = inventory?.data ?? [];
+  const serverTotal = inventory?.total ?? 0;
+  const pageCount = Math.max(1, Math.ceil(serverTotal / pageSize));
+
+  const tabs = React.useMemo(
+    () => [
+      {
+        id: 'all' as StockTab,
+        labelKey: 'inventory.allProducts',
+        count: tab === 'all' ? serverTotal : 0,
       },
-      onError: (err) => {
-        toast({ title: 'Delete failed', description: err.message, variant: 'destructive' });
+      {
+        id: 'low' as StockTab,
+        labelKey: 'inventory.lowStockTab',
+        count: tab === 'low' ? serverTotal : 0,
       },
-    });
-  };
+      {
+        id: 'out' as StockTab,
+        labelKey: 'inventory.outOfStockTab',
+        count: tab === 'out' ? serverTotal : 0,
+      },
+    ],
+    [tab, serverTotal]
+  );
 
-  if (isError) {
+  React.useEffect(() => {
+    if (!isError) return;
     if (error instanceof Error) {
       telemetry.captureException(error, { source: 'InventoryPage' });
     } else {
       telemetry.captureMessage('Inventory fetch error', { source: 'InventoryPage', error });
     }
+  }, [isError, error]);
+
+  if (isError) {
     return (
       <div className={styles['errorContainer']} role="alert" aria-live="assertive">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -105,40 +119,22 @@ export function InventoryPage(): React.ReactElement {
           <p className={styles['subtitle']}>{t('inventory.subtitle')}</p>
         </div>
         <div className={styles['headerActions']}>
-          {warehouses && warehouses.length > 0 && (
-            <select
-              value={warehouseFilter ?? ''}
-              onChange={(e) => {
-                setWarehouseFilter(e.target.value !== '' ? e.target.value : null);
-              }}
-              className={styles['nativeSelect']}
-              aria-label={t('inventory.filterByWarehouse')}
-            >
-              <option value="">{t('inventory.allWarehouses')}</option>
-              {warehouses
-                .filter((w) => w.isActive)
-                .map((w) => (
-                  <option key={w.id} value={w.id}>
-                    {w.name}
-                  </option>
-                ))}
-            </select>
-          )}
+          <WarehouseFilter
+            warehouses={warehouses}
+            value={warehouseFilter}
+            onValueChange={setWarehouseFilter}
+            placeholder={t('inventory.filterByWarehouse')}
+            allLabel={t('inventory.allWarehouses')}
+          />
           <PermissionGuard permission="export:csv">
-            <Button variant="outline" size="sm" onClick={handleExport}>
-              {t('inventory.exportCsv')}
-            </Button>
-          </PermissionGuard>
-          <PermissionGuard permission="transfer:stock">
             <Button
               variant="outline"
               size="sm"
               onClick={() => {
-                setTransferItem(paginated[0] ?? null);
+                handleExport(inventoryItems);
               }}
-              disabled={paginated.length === 0}
             >
-              {t('inventory.transferStock')}
+              {t('inventory.exportCsv')}
             </Button>
           </PermissionGuard>
           <PermissionGuard permission="create:inventory">
@@ -147,12 +143,14 @@ export function InventoryPage(): React.ReactElement {
               onClick={() => {
                 setCreateOpen(true);
               }}
-            >{`+ ${t('inventory.addProduct')}`}</Button>
+            >
+              {`+ ${t('inventory.addProduct')}`}
+            </Button>
           </PermissionGuard>
         </div>
       </header>
 
-      <Card className={styles['tableCard']}>
+      <Card noPadding className={styles['tableCard']}>
         <div className={styles['controls']}>
           <div className={styles['searchBox']}>
             <Input
@@ -167,86 +165,72 @@ export function InventoryPage(): React.ReactElement {
           </div>
           <div className={styles['tabs']} role="tablist">
             {tabs.map((tb) => (
-              <button
+              <Button
                 key={tb.id}
+                id={`inventory-tab-${tb.id}`}
                 role="tab"
                 aria-selected={tab === tb.id}
+                aria-controls="inventory-tabpanel"
                 onClick={() => {
                   setTab(tb.id);
                 }}
+                variant="ghost"
                 className={cn(styles['tab'], tab === tb.id && styles['tabActive'])}
               >
                 {t(tb.labelKey)}
                 <span className={styles['tabCount']}>{tb.count}</span>
-              </button>
+              </Button>
             ))}
           </div>
-          <Button variant="outline" size="sm">
-            {t('common.filter')}
-          </Button>
         </div>
 
-        <SectionErrorBoundary label="Inventory">
-          {!isPending && filtered.length === 0 ? (
-            <EmptyState
-              icon={<PackageIcon size={24} />}
-              title={t('inventory.emptyTitle')}
-              description={t('inventory.emptyDescription')}
-              action={
-                debouncedSearch
-                  ? undefined
-                  : {
-                      label: `+ ${t('inventory.addProduct')}`,
-                      onClick: (): void => {
-                        setCreateOpen(true);
-                      },
-                    }
-              }
-            />
-          ) : (
-            <InventoryTableWidget
-              data={paginated}
-              isPending={isPending}
-              onEdit={
-                hasPermission(role, 'create:inventory')
-                  ? (item): void => {
-                      setEditItem(item);
-                    }
-                  : undefined
-              }
-              onAdjustStock={
-                hasPermission(role, 'adjust:stock')
-                  ? (item): void => {
-                      setAdjustItem(item);
-                    }
-                  : undefined
-              }
-              onDelete={
-                hasPermission(role, 'delete:product')
-                  ? (id): void => {
-                      setDeleteId(id);
-                    }
-                  : undefined
-              }
-              onViewHistory={(item) => {
-                setHistoryItem(item);
-              }}
-            />
-          )}
-        </SectionErrorBoundary>
+        <div id="inventory-tabpanel" role="tabpanel" aria-labelledby={`inventory-tab-${tab}`}>
+          <SectionErrorBoundary label="Inventory">
+            {!isPending && inventoryItems.length === 0 ? (
+              <EmptyState
+                icon={<PackageIcon size={24} />}
+                title={t('inventory.emptyTitle')}
+                description={t('inventory.emptyDescription')}
+                action={
+                  debouncedSearch
+                    ? undefined
+                    : {
+                        label: `+ ${t('inventory.addProduct')}`,
+                        onClick: (): void => {
+                          setCreateOpen(true);
+                        },
+                      }
+                }
+              />
+            ) : (
+              <InventoryTableWidget
+                data={inventoryItems}
+                isPending={isPending}
+                onEdit={onEdit}
+                onAdjustStock={onAdjustStock}
+                onDelete={onDelete}
+                onViewHistory={(item) => {
+                  setHistoryItem(item);
+                }}
+                onTransfer={onTransfer}
+              />
+            )}
+          </SectionErrorBoundary>
+        </div>
 
         <div className={styles['tableFooter']}>
           <span>
-            {Math.min((page - 1) * PAGE_SIZE + 1, filtered.length)}–
-            {Math.min(page * PAGE_SIZE, filtered.length)} / {filtered.length}{' '}
-            {t('inventory.products').toLowerCase()}
+            {serverTotal > 0
+              ? `${Math.min((page - 1) * pageSize + 1, serverTotal)}–${Math.min(page * pageSize, serverTotal)}`
+              : '0–0'}{' '}
+            / {serverTotal} {t('inventory.products').toLowerCase()}
           </span>
           <Pagination page={page} pageCount={pageCount} onPageChange={setPage} />
         </div>
       </Card>
 
       <PermissionGuard permission="view:audit">
-        <Card className={`${styles['tableCard']} ${styles['auditCard']}`}>
+        <Card noPadding className={cn(styles['tableCard'], styles['auditCard'])}>
           <div className={styles['auditCardHeader']}>
             <h3 className={styles['auditTitle']}>{t('common.auditLog')}</h3>
           </div>
@@ -256,44 +240,21 @@ export function InventoryPage(): React.ReactElement {
         </Card>
       </PermissionGuard>
 
-      <MovementsHistoryPanel
-        item={historyItem}
-        open={historyItem !== null}
-        onOpenChange={(open) => {
-          if (!open) setHistoryItem(null);
-        }}
-      />
-      <InventoryCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
-      <InventoryEditDialog
-        item={editItem}
-        open={editItem !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditItem(null);
-        }}
-      />
-      <StockAdjustDialog
-        item={adjustItem}
-        open={adjustItem !== null}
-        onOpenChange={(open) => {
-          if (!open) setAdjustItem(null);
-        }}
-      />
-      <StockTransferDialog
-        item={transferItem}
-        open={transferItem !== null}
-        onOpenChange={(open) => {
-          if (!open) setTransferItem(null);
-        }}
-      />
-      <ConfirmDialog
-        open={deleteId !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleteId(null);
-        }}
-        title={t('inventory.deleteItem')}
-        description={t('common.cannotUndo')}
-        onConfirm={handleDelete}
-        isPending={isDeleting}
+      <InventoryDialogs
+        createOpen={createOpen}
+        setCreateOpen={setCreateOpen}
+        editItem={editItem}
+        setEditItem={setEditItem}
+        adjustItem={adjustItem}
+        setAdjustItem={setAdjustItem}
+        transferItem={transferItem}
+        setTransferItem={setTransferItem}
+        historyItem={historyItem}
+        setHistoryItem={setHistoryItem}
+        deleteId={deleteId}
+        setDeleteId={setDeleteId}
+        isDeleting={isDeleting}
+        handleDelete={handleDelete}
       />
     </div>
   );

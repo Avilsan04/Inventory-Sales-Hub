@@ -1,12 +1,15 @@
 import { httpClient } from '@core/http/httpClient';
+import type { HttpRequestConfig } from '@core/http';
 import { mapKeysCamel } from '@core/api/mappers';
 import { parseOrThrow } from '@core/api/parseOrThrow';
 import {
+  paginatedInventorySchema,
   inventoryListSchema,
   inventoryItemSchema,
   inventoryMovementListSchema,
 } from '@entities/inventory';
 import type {
+  PaginatedInventoryResponse,
   InventoryItem,
   CreateInventoryItemDTO,
   UpdateInventoryItemDTO,
@@ -14,10 +17,23 @@ import type {
   InventoryMovement,
 } from '@entities/inventory';
 
+export interface InventoryListParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  warehouseId?: string;
+  status?: string;
+}
+
 export const inventoryApi = {
-  getInventoryList: async (): Promise<InventoryItem[]> => {
-    const response = await httpClient.get<unknown[]>('/inventory');
-    return parseOrThrow(inventoryListSchema, mapKeysCamel(response));
+  getInventoryList: async (params?: InventoryListParams): Promise<PaginatedInventoryResponse> => {
+    const response = await httpClient.get<unknown>('/inventory', {
+      params: params as Record<string, unknown> | undefined,
+    });
+    return parseOrThrow(
+      paginatedInventorySchema,
+      mapKeysCamel(response as Record<string, unknown>)
+    );
   },
 
   getItem: async (id: string): Promise<InventoryItem> => {
@@ -35,8 +51,11 @@ export const inventoryApi = {
     return parseOrThrow(inventoryMovementListSchema, mapKeysCamel(response));
   },
 
-  createItem: async (data: CreateInventoryItemDTO): Promise<InventoryItem> => {
-    const response = await httpClient.post<unknown>('/inventory', data);
+  createItem: async (
+    data: CreateInventoryItemDTO,
+    config?: HttpRequestConfig
+  ): Promise<InventoryItem> => {
+    const response = await httpClient.post<unknown>('/inventory', data, config);
     return parseOrThrow(inventoryItemSchema, mapKeysCamel(response));
   },
 

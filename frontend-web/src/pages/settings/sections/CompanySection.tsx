@@ -2,14 +2,40 @@ import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { toast } from '@shared/hooks/useToast';
 import { Button, Input, Label } from '@shared/ui/primitives';
+import { useSettings, useUpdateSettings } from '@features/settings';
 import styles from '@shared/styles/themes/pages/Settings.module.scss';
 
 export function CompanySection(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const [companyName, setCompanyName] = React.useState('Inventory Sales Hub');
+  const { data: settings } = useSettings();
+  const { mutate: updateSettings, isPending } = useUpdateSettings();
+
+  const [companyName, setCompanyName] = React.useState('');
   const [logoUrl, setLogoUrl] = React.useState('');
-  const [currency, setCurrency] = React.useState('EUR');
-  const [timezone, setTimezone] = React.useState('Europe/Madrid');
+  const [currency, setCurrency] = React.useState('');
+  const [timezone, setTimezone] = React.useState('');
+
+  React.useEffect(() => {
+    if (!settings) return;
+    setCompanyName(settings.companyName);
+    setLogoUrl(settings.logoUrl ?? '');
+    setCurrency(settings.currency);
+    setTimezone(settings.timezone);
+  }, [settings]);
+
+  const handleSave = (): void => {
+    updateSettings(
+      { companyName, logoUrl: logoUrl || null, currency, timezone },
+      {
+        onSuccess: () => {
+          toast({ title: t('common.saveChanges') });
+        },
+        onError: () => {
+          toast({ title: t('common.errorSaving'), variant: 'destructive' });
+        },
+      }
+    );
+  };
 
   return (
     <div className={styles.mainCard}>
@@ -62,12 +88,7 @@ export function CompanySection(): React.ReactElement {
         </div>
       </div>
       <div className={styles.cardFooter}>
-        <Button
-          size="sm"
-          onClick={() => {
-            toast({ title: t('common.saveChanges') });
-          }}
-        >
+        <Button size="sm" disabled={isPending} onClick={handleSave}>
           {t('common.saveChanges')}
         </Button>
       </div>

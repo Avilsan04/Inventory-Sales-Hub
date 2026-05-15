@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SunIcon, GlobeIcon, BellIcon, UserIcon, BuildingIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useEffectiveRole } from '@features/auth';
+import { Button } from '@shared/ui';
 import { cn } from '@shared/lib/cn';
 import baseStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Settings.module.scss';
@@ -90,9 +91,10 @@ export function SettingsPage(): React.ReactElement {
         <nav className={styles.nav} aria-label="Settings sections">
           {NAV_ITEMS.filter(({ adminOnly }) => !adminOnly || isAdminOrCompany).map(
             ({ id, labelKey, icon }) => (
-              <button
+              <Button
                 key={id}
-                type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setActive(id);
                 }}
@@ -101,7 +103,7 @@ export function SettingsPage(): React.ReactElement {
               >
                 <span className={styles.navIcon}>{icon}</span>
                 <span>{t(labelKey)}</span>
-              </button>
+              </Button>
             )
           )}
         </nav>

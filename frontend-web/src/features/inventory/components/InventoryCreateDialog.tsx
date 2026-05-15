@@ -73,11 +73,15 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
       },
       {
         onSuccess: () => {
-          toast({ title: 'Item added to inventory' });
+          toast({ title: t('inventory.toasts.created') });
           onClose();
         },
         onError: (err) => {
-          toast({ title: 'Failed to add item', description: err.message, variant: 'destructive' });
+          toast({
+            title: t('inventory.toasts.createFailed'),
+            description: err.message,
+            variant: 'destructive',
+          });
         },
       }
     );

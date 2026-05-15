@@ -2,7 +2,7 @@ import { useQuery, type QueryKey, type UseQueryResult } from '@tanstack/react-qu
 import { salesApi } from '../api/salesApi';
 import type { SaleFilters } from '../api/salesApi';
 import { withTenant } from '@core/api/queryKeys';
-import type { Sale } from '@entities/sale';
+import type { Sale, PaginatedSaleResponse } from '@entities/sale';
 
 export type { SaleFilters };
 
@@ -12,12 +12,22 @@ export const saleKeys = {
   detail: (id: string): QueryKey => withTenant(['sales', 'detail', id] as const),
   items: (id: string): QueryKey => withTenant(['sales', 'items', id] as const),
   summary: (): QueryKey => withTenant(['sales', 'summary'] as const),
+  myOrders: (): QueryKey => withTenant(['sales', 'my-orders'] as const),
 };
 
-export function useSales(filters?: SaleFilters): UseQueryResult<Sale[]> {
+export function useSales(filters?: SaleFilters): UseQueryResult<PaginatedSaleResponse> {
   return useQuery({
     queryKey: saleKeys.lists(filters),
     queryFn: () => salesApi.getSales(filters),
-    staleTime: 30_000,
+  });
+}
+
+/** Flat list variant for consumers that need Sale[] (e.g. status charts, statusSlices). */
+export function useSalesFlat(
+  filters?: Omit<SaleFilters, 'page' | 'pageSize'>
+): UseQueryResult<Sale[]> {
+  return useQuery({
+    queryKey: withTenant(['sales', 'flat', filters ?? {}] as const),
+    queryFn: () => salesApi.getSalesFlat(filters),
   });
 }

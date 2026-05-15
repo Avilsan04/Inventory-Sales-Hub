@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from './Button';
 import { PAGE_SIZE_OPTIONS } from '@shared/hooks/useTableFilters';
 import styles from '@shared/styles/themes/components/Pagination.module.scss';
@@ -19,6 +20,7 @@ export function Pagination({
   pageSize,
   onPageSizeChange,
 }: PaginationProps): React.ReactElement {
+  const { translate: t } = useTranslationAdapter();
   return (
     <div className={styles.root}>
       {pageSize !== undefined && onPageSizeChange !== undefined && (
@@ -29,11 +31,11 @@ export function Pagination({
               onPageSizeChange(Number(e.target.value));
             }}
             className={styles.select}
-            aria-label="Rows per page"
+            aria-label={t('common.perPage')}
           >
             {PAGE_SIZE_OPTIONS.map((size) => (
               <option key={size} value={size}>
-                {size} / page
+                {size} {t('common.perPage')}
               </option>
             ))}
           </select>
@@ -46,12 +48,17 @@ export function Pagination({
         onClick={() => {
           onPageChange(page - 1);
         }}
-        aria-label="Previous page"
+        aria-label={t('common.previousPage')}
       >
         <ChevronLeftIcon className={styles.icon} />
-        Previous
+        {t('common.previous')}
       </Button>
-      <span className={styles.pageInfo}>
+      <span
+        className={styles.pageInfo}
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label={t('common.pageOf', { page, total: Math.max(pageCount, 1) })}
+      >
         {page} / {Math.max(pageCount, 1)}
       </span>
       <Button
@@ -61,9 +68,9 @@ export function Pagination({
         onClick={() => {
           onPageChange(page + 1);
         }}
-        aria-label="Next page"
+        aria-label={t('common.nextPage')}
       >
-        Next
+        {t('common.next')}
         <ChevronRightIcon className={styles.icon} />
       </Button>
     </div>

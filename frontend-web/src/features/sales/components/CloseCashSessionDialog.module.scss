@@ -1,0 +1,44 @@
+.dialogNarrow {
+  max-width: 420px;
+}
+
+.inputOffset {
+  margin-top: $spacing-1-5;
+}
+
+.fieldError {
+  color: var(--color-destructive);
+  font-size: $font-size-xs;
+  margin-top: $spacing-1;
+  margin-bottom: 0;
+}
+
+.summaryBox {
+  background: var(--color-muted);
+  border-radius: $border-radius-base;
+  padding: $spacing-3;
+  font-size: $font-size-sm;
+}
+
+.summaryRowCompact {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: $spacing-1;
+}
+
+.differenceRow {
+  display: flex;
+  justify-content: space-between;
+  font-weight: $font-weight-semibold;
+}
+
+.monoText {
+  font-family: $font-family-mono;
+}
+
+.textSuccess {
+  color: var(--color-success);
+}
+.textDestructive {
+  color: var(--color-destructive);
+}

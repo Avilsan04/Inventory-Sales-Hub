@@ -7,9 +7,8 @@ export function useUpdateRole(id: string): UseMutationResult<Employee, Error, Up
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => employeesApi.updateRole(id, data),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: employeeKeys.lists() });
-      void queryClient.invalidateQueries({ queryKey: employeeKeys.detail(id) });
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: employeeKeys.all() });
     },
   });
 }

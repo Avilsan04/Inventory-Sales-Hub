@@ -2,12 +2,14 @@ import * as React from 'react';
 import { MoonIcon, SunIcon, ChevronDownIcon, MenuIcon } from 'lucide-react';
 import { useTheme } from '@shared/hooks/useTheme';
 import { useLanguageAdapter, type Language } from '@shared/adapters/useLanguageAdapter';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@shared/ui/composed';
+import { Button } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/components/TopBar.module.scss';
 import { PageTitle } from './topbar/PageTitle';
 import { CommandPalette } from './topbar/CommandPalette';
@@ -28,19 +30,20 @@ interface TopBarProps {
 export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
   const { resolvedTheme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
+  const { translate: t } = useTranslationAdapter();
 
   return (
     <header className={styles['topbar']}>
       <div className={styles['topbarLeft']}>
         {onToggleSidebar !== undefined && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             className={styles['menuBtn']}
             onClick={onToggleSidebar}
-            aria-label="Open menu"
+            aria-label={t('common.openMenu')}
           >
             <MenuIcon aria-hidden="true" />
-          </button>
+          </Button>
         )}
         <PageTitle />
       </div>
@@ -57,10 +60,14 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button type="button" className={styles['langBtn']} aria-label="Select language">
+            <Button
+              variant="ghost"
+              className={styles['langBtn']}
+              aria-label={t('common.switchLanguage')}
+            >
               <span>{language.toUpperCase()}</span>
               <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
-            </button>
+            </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className={styles['langMenu']}>
             {LANGUAGE_OPTIONS.map((lang) => (
@@ -77,18 +84,18 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           className={styles['iconBtn']}
           onClick={toggleTheme}
-          aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-label={t('common.toggleTheme')}
         >
           {resolvedTheme === 'dark' ? (
             <SunIcon aria-hidden="true" />
           ) : (
             <MoonIcon aria-hidden="true" />
           )}
-        </button>
+        </Button>
         <NotificationPanel />
         <UserMenu />
       </div>

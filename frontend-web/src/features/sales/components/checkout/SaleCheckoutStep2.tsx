@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CreditCardIcon, BuildingIcon, BanknoteIcon } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 import { FormField } from '@shared/ui/composed';
-import { Input, Label } from '@shared/ui/primitives';
+import { Input, Label, Button } from '@shared/ui/primitives';
 import { cn } from '@shared/lib/cn';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { MOCK_BANK_IBAN } from '../../models/checkout.types';
@@ -32,9 +32,9 @@ export function SaleCheckoutStep2(): React.ReactElement {
       <p className={styles['sectionTitle']}>{t('sales.checkout.paymentTitle')}</p>
       <div className={styles['paymentCards']}>
         {PAYMENT_OPTIONS.map(({ method, labelKey }) => (
-          <button
+          <Button
             key={method}
-            type="button"
+            variant="ghost"
             className={cn(
               styles['paymentCard'],
               watchedMethod === method && styles['paymentCardActive']
@@ -42,10 +42,11 @@ export function SaleCheckoutStep2(): React.ReactElement {
             onClick={() => {
               setValue('paymentMethod', method);
             }}
+            aria-pressed={watchedMethod === method}
           >
             <span className={styles['paymentCardIcon']}>{PAYMENT_ICONS[method]}</span>
             <span>{t(labelKey)}</span>
-          </button>
+          </Button>
         ))}
       </div>
 

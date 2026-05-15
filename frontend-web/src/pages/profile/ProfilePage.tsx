@@ -8,6 +8,7 @@ import { useAuthMe, useUpdateProfile, useChangePassword } from '@features/auth';
 import { toast } from '@shared/hooks/useToast';
 import { Spinner, Button, Input, Badge } from '@shared/ui';
 import { Card, CardHeader, CardTitle, CardContent, FormField } from '@shared/ui';
+import { cn } from '@shared/lib/cn';
 import baseStyles from '@shared/styles/themes/pages/PageBase.module.scss';
 import styles from '@shared/styles/themes/pages/Profile.module.scss';
 
@@ -48,10 +49,14 @@ function ProfileInfoForm(): React.ReactElement {
   const onSubmit = (data: Values): void => {
     updateProfile(data, {
       onSuccess: (): void => {
-        toast({ title: 'Profile updated' });
+        toast({ title: t('profile.toasts.updated') });
       },
       onError: (err): void => {
-        toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.updateFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };
@@ -123,11 +128,15 @@ function ProfileSecurityForm(): React.ReactElement {
       { currentPassword: data.currentPassword, newPassword: data.newPassword },
       {
         onSuccess: (): void => {
-          toast({ title: 'Password changed' });
+          toast({ title: t('profile.toasts.passwordChanged') });
           form.reset();
         },
         onError: (err): void => {
-          toast({ title: 'Change failed', description: err.message, variant: 'destructive' });
+          toast({
+            title: t('profile.toasts.changeFailed'),
+            description: err.message,
+            variant: 'destructive',
+          });
         },
       }
     );
@@ -177,7 +186,7 @@ function ProfileSecurityForm(): React.ReactElement {
 
 export function ProfilePage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: user, isLoading, isError } = useAuthMe();
+  const { data: user, isLoading, isError, refetch } = useAuthMe();
   const [formTab, setFormTab] = React.useState<'info' | 'security'>('info');
 
   if (isLoading) {
@@ -192,6 +201,15 @@ export function ProfilePage(): React.ReactElement {
     return (
       <div className={baseStyles['errorContainer']} role="alert">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }
@@ -228,30 +246,30 @@ export function ProfilePage(): React.ReactElement {
         </div>
         <div className={styles['formsCol']}>
           <div className={styles['formTabs']} role="tablist">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
               role="tab"
               aria-selected={formTab === 'info'}
               onClick={(): void => {
                 setFormTab('info');
               }}
-              className={`${styles['formTab']}${formTab === 'info' ? ` ${styles['formTabActive']}` : ''}`}
+              className={cn(styles['formTab'], formTab === 'info' && styles['formTabActive'])}
             >
               <UserIcon size={14} aria-hidden="true" />
               {t('profile.editProfile')}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="ghost"
               role="tab"
               aria-selected={formTab === 'security'}
               onClick={(): void => {
                 setFormTab('security');
               }}
-              className={`${styles['formTab']}${formTab === 'security' ? ` ${styles['formTabActive']}` : ''}`}
+              className={cn(styles['formTab'], formTab === 'security' && styles['formTabActive'])}
             >
               <ShieldIcon size={14} aria-hidden="true" />
               {t('profile.changePassword')}
-            </button>
+            </Button>
           </div>
           {formTab === 'info' ? <ProfileInfoForm /> : <ProfileSecurityForm />}
         </div>

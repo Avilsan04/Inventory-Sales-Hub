@@ -5,7 +5,9 @@ import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.*;
 import com.inventory_sales_hub.app.model.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +33,48 @@ public class SaleManager {
     @Autowired private InventoryDao inventoryDao;
     @Autowired private StockMovementDao stockMovementDao;
 
+    public List<SaleResponse> getMyOrders(Long userId) {
+        User user = userDao.findById(userId).orElseThrow(() -> new SaleException("User not found"));
+        List<Sale> sales = saleDao.findAllByCustomerEmail(user.getEmail());
+        if (sales.isEmpty()) return List.of();
+        List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
+        Map<Long, List<SaleItem>> bySaleId = allItems.stream()
+                .collect(Collectors.groupingBy(si -> si.getSale().getId()));
+        return sales.stream()
+                .map(s -> toResponse(s, bySaleId.getOrDefault(s.getId(), List.of())))
+                .toList();
+    }
+
     public List<SaleResponse> getAll() {
         List<Sale> sales = saleDao.findAllWithDetails();
+        if (sales.isEmpty()) return List.of();
+        List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
+        Map<Long, List<SaleItem>> bySaleId = allItems.stream()
+                .collect(Collectors.groupingBy(si -> si.getSale().getId()));
+        return sales.stream()
+                .map(s -> toResponse(s, bySaleId.getOrDefault(s.getId(), List.of())))
+                .toList();
+    }
+
+    public PaginatedResponse<SaleResponse> getAllPaginated(int page, int size, String search, Instant dateFrom, Instant dateTo) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        String searchParam = (search != null && !search.isBlank()) ? search : null;
+        Page<Sale> salePage = saleDao.findPaginated(searchParam, dateFrom, dateTo, pageable);
+
+        List<Sale> sales = salePage.getContent();
+        if (sales.isEmpty()) return new PaginatedResponse<>(List.of(), salePage.getTotalElements(), page, size);
+
+        List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
+        Map<Long, List<SaleItem>> bySaleId = allItems.stream()
+                .collect(Collectors.groupingBy(si -> si.getSale().getId()));
+        List<SaleResponse> data = sales.stream()
+                .map(s -> toResponse(s, bySaleId.getOrDefault(s.getId(), List.of())))
+                .toList();
+        return new PaginatedResponse<>(data, salePage.getTotalElements(), page, size);
+    }
+
+    public List<SaleResponse> getRecent(int limit) {
+        List<Sale> sales = saleDao.findRecent(PageRequest.of(0, limit));
         if (sales.isEmpty()) return List.of();
         List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
         Map<Long, List<SaleItem>> bySaleId = allItems.stream()

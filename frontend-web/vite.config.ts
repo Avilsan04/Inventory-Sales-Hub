@@ -16,13 +16,28 @@ const VENDOR_MAP: Array<[string, string]> = [
   ['/framer-motion/', 'vendor-motion'],
 ];
 
+// Mock handlers co-located in features import mock utils — group together to avoid circular deps
+const APP_CHUNK_MAP: Array<[string, string]> = [
+  ['.mock.ts', 'app-mock'],
+  ['/src/app/mock/', 'app-mock'],
+  ['/src/shared/ui/', 'shared-ui'],
+  ['/src/features/auth/', 'features-auth'],
+  ['/src/features/notifications/', 'features-notifications'],
+  ['/src/features/', 'features'],
+  ['/src/entities/', 'entities'],
+  ['/src/widgets/layout/', 'widgets-layout'],
+  ['/src/widgets/pos/', 'widgets-pos'],
+  ['/src/widgets/dashboard/', 'widgets-dashboard'],
+  ['/src/widgets/', 'widgets-shared'],
+];
+
 function resolveChunk(id: string): string | undefined {
   if (id.includes('node_modules')) {
     return VENDOR_MAP.find(([pattern]) => id.includes(pattern))?.[1];
   }
-  if (id.includes('/src/widgets/')) return 'app-widgets';
-  if (id.includes('/src/app/mock/')) return 'app-mock';
-  return undefined;
+  // Animated components (FadeIn, Reveal) only used by lazy LandingPage — keep out of shared-ui
+  if (id.includes('/src/shared/ui/animated/')) return undefined;
+  return APP_CHUNK_MAP.find(([pattern]) => id.includes(pattern))?.[1];
 }
 
 export default defineConfig({
@@ -52,7 +67,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@shared/styles/tokens/colors" as *;\n@use "@shared/styles/tokens/typography" as *;\n@use "@shared/styles/tokens/spacing" as *;\n@use "@shared/styles/tokens/layout" as *;\n@use "@shared/styles/tokens/z-index" as *;\n`,
+        additionalData: `@use "@shared/styles/tokens/colors" as *;\n@use "@shared/styles/tokens/auth-colors" as *;\n@use "@shared/styles/tokens/typography" as *;\n@use "@shared/styles/tokens/spacing" as *;\n@use "@shared/styles/tokens/layout" as *;\n@use "@shared/styles/tokens/z-index" as *;\n`,
       },
     },
   },

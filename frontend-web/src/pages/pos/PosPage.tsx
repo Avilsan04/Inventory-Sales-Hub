@@ -19,7 +19,7 @@ import styles from '@shared/styles/themes/pages/Pos.module.scss';
 
 export function PosPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: inventory, isPending } = useInventory();
+  const { data: inventoryPage, isPending } = useInventory({ page: 0, pageSize: 1000 });
   const { data: customers } = useCustomers();
   const { mutate: createSale, isPending: isCreating } = useCreateSale();
   const { addItem, clearCart } = useCart();
@@ -118,7 +118,11 @@ export function PosPage(): React.ReactElement {
       )}
 
       <div className={styles['splitPanel']}>
-        <PosProductBrowser inventory={inventory} isPending={isPending} onAdd={addToCart} />
+        <PosProductBrowser
+          inventory={inventoryPage?.data}
+          isPending={isPending}
+          onAdd={addToCart}
+        />
         <PosCart customers={customers} isCreating={isCreating} onCheckout={handleCheckout} />
       </div>
 

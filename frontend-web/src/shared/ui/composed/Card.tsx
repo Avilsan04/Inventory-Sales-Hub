@@ -4,59 +4,34 @@ import styles from '@shared/styles/themes/components/Card.module.scss';
 
 function Card({
   className,
+  noPadding,
   ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
-  return <div className={cn(styles.card, className)} {...props} />;
+}: React.ComponentProps<'div'> & { noPadding?: boolean }): React.ReactElement {
+  return <div className={cn(styles.card, noPadding && styles.bare, className)} {...props} />;
 }
 
-function CardHeader({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function CardHeader({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.cardHeader, className)} {...props} />;
 }
 
-function CardTitle({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function CardTitle({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.cardTitle, className)} {...props} />;
 }
 
-function CardDescription({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function CardDescription({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.cardDescription, className)} {...props} />;
 }
 
-function CardAction({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function CardAction({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.cardAction, className)} {...props} />;
 }
 
-function CardContent({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function CardContent({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.cardContent, className)} {...props} />;
 }
 
-function CardFooter({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactElement {
+function CardFooter({ className, ...props }: React.ComponentProps<'div'>): React.ReactElement {
   return <div className={cn(styles.cardFooter, className)} {...props} />;
 }
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
-  CardContent,
-};
+export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent };

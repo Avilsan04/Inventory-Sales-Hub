@@ -18,9 +18,12 @@ public class SupplierController {
     private SupplierManager supplierManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "200") int size,
+            @RequestParam(required = false) String search) {
         try {
-            return ResponseEntity.ok(supplierManager.getAll());
+            return ResponseEntity.ok(supplierManager.getAllPaginated(page, size, search));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

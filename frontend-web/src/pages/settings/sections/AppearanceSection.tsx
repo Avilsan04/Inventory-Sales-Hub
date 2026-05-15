@@ -67,9 +67,9 @@ export function AppearanceSection(): React.ReactElement {
           </div>
           <div className={styles.swatches}>
             {ACCENT_SWATCHES.map(({ value, color }) => (
-              <button
+              <Button
                 key={value}
-                type="button"
+                variant="ghost"
                 aria-label={value}
                 aria-pressed={settings.accentColor === value}
                 className={cn(styles.swatch, settings.accentColor === value && styles.swatchActive)}

@@ -57,11 +57,15 @@ export function StockAdjustDialog({ item, open, onOpenChange }: Props): React.Re
     if (item === null) return;
     mutate(data, {
       onSuccess: () => {
-        toast({ title: 'Stock adjusted' });
+        toast({ title: t('inventory.toasts.stockAdjusted') });
         onClose();
       },
       onError: (err) => {
-        toast({ title: 'Adjustment failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('inventory.toasts.adjustFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };

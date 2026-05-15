@@ -18,18 +18,6 @@ import {
 } from '@shared/ui/composed';
 import styles from '@shared/styles/themes/pages/Login.module.scss';
 
-const resetSchema = z
-  .object({
-    newPassword: z.string().min(8),
-    confirmPassword: z.string().min(8),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type ResetForm = z.infer<typeof resetSchema>;
-
 function useTokenFromUrl(): string {
   const search = typeof window !== 'undefined' ? window.location.search : '';
   return new URLSearchParams(search).get('token') ?? '';
@@ -40,6 +28,22 @@ export function ResetPasswordPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending, isSuccess, error } = useResetPassword();
   const token = useTokenFromUrl();
+
+  const resetSchema = React.useMemo(
+    () =>
+      z
+        .object({
+          newPassword: z.string().min(8, t('profile.validationMinPassword')),
+          confirmPassword: z.string().min(8, t('profile.validationRequired')),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+          message: t('profile.validationPasswordMatch'),
+          path: ['confirmPassword'],
+        }),
+    [t]
+  );
+
+  type ResetForm = z.infer<typeof resetSchema>;
 
   const {
     register,
@@ -64,7 +68,7 @@ export function ResetPasswordPage(): React.ReactElement {
             </CardHeader>
             <CardFooter>
               <Button
-                style={{ width: '100%' }}
+                className={styles['submitBtn']}
                 onClick={() => {
                   navigateTo(APP_ROUTES.LOGIN, true);
                 }}
@@ -80,8 +84,8 @@ export function ResetPasswordPage(): React.ReactElement {
 
   return (
     <div className={styles['page']}>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         className={styles['backBtn']}
         onClick={() => {
           navigateTo(APP_ROUTES.LOGIN);
@@ -90,17 +94,9 @@ export function ResetPasswordPage(): React.ReactElement {
       >
         <ArrowLeftIcon size={16} aria-hidden="true" />
         {t('auth.backToLogin')}
-      </button>
+      </Button>
       <div className={styles['container']}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '1.5rem',
-          }}
-        >
+        <div className={styles['brandWrapper']}>
           <BrandMark size={40} />
         </div>
         <Card>
@@ -113,64 +109,52 @@ export function ResetPasswordPage(): React.ReactElement {
               void handleSubmit(onSubmit)(e);
             }}
           >
-            <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {!token && (
-                <p role="alert" style={{ color: 'var(--color-destructive)', fontSize: '0.875rem' }}>
-                  {t('auth.invalidResetToken')}
-                </p>
-              )}
-              {error && (
-                <p role="alert" style={{ color: 'var(--color-destructive)', fontSize: '0.875rem' }}>
-                  {error.message}
-                </p>
-              )}
-              <div>
-                <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  {...register('newPassword')}
-                  aria-invalid={errors.newPassword !== undefined}
-                />
-                {errors.newPassword && (
-                  <p
-                    role="alert"
-                    style={{
-                      color: 'var(--color-destructive)',
-                      fontSize: '0.75rem',
-                      marginTop: '0.25rem',
-                    }}
-                  >
-                    {errors.newPassword.message}
+            <CardContent>
+              <div className={styles['formBody']}>
+                {!token && (
+                  <p role="alert" className={styles['formError']}>
+                    {t('auth.invalidResetToken')}
                   </p>
                 )}
-              </div>
-              <div>
-                <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  {...register('confirmPassword')}
-                  aria-invalid={errors.confirmPassword !== undefined}
-                />
-                {errors.confirmPassword && (
-                  <p
-                    role="alert"
-                    style={{
-                      color: 'var(--color-destructive)',
-                      fontSize: '0.75rem',
-                      marginTop: '0.25rem',
-                    }}
-                  >
-                    {errors.confirmPassword.message}
+                {error && (
+                  <p role="alert" className={styles['formError']}>
+                    {error.message}
                   </p>
                 )}
+                <div>
+                  <Label htmlFor="newPassword">{t('auth.newPassword')}</Label>
+                  <Input
+                    id="newPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    {...register('newPassword')}
+                    aria-invalid={errors.newPassword !== undefined}
+                  />
+                  {errors.newPassword && (
+                    <p role="alert" className={styles['fieldError']}>
+                      {errors.newPassword.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    {...register('confirmPassword')}
+                    aria-invalid={errors.confirmPassword !== undefined}
+                  />
+                  {errors.confirmPassword && (
+                    <p role="alert" className={styles['fieldError']}>
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" disabled={isPending || !token} style={{ width: '100%' }}>
+              <Button type="submit" disabled={isPending || !token} className={styles['submitBtn']}>
                 {isPending ? <Spinner size="sm" /> : t('auth.resetPasswordBtn')}
               </Button>
             </CardFooter>

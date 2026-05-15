@@ -7,7 +7,9 @@ import { toast } from '@shared/hooks/useToast';
 import { formatCurrency, fromCents, toCents } from '@shared/lib/formatCurrency';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button, Input, Label } from '@shared/ui/primitives';
+import { cn } from '@shared/lib/cn';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
+import localStyles from './CloseCashSessionDialog.module.scss';
 import {
   Dialog,
   DialogContent,
@@ -69,14 +71,14 @@ export function CloseCashSessionDialog({
       { closingBalance: toCents(values.closingBalance), notes: values.notes },
       {
         onSuccess: () => {
-          toast({ title: 'Cash session closed' });
+          toast({ title: t('sales.toasts.cashSessionClosed') });
           reset();
           onOpenChange(false);
           onSuccess?.();
         },
         onError: (err) => {
           toast({
-            title: 'Failed to close session',
+            title: t('sales.toasts.closeFailed'),
             description: err.message,
             variant: 'destructive',
           });
@@ -94,7 +96,7 @@ export function CloseCashSessionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent style={{ maxWidth: '420px' }}>
+      <DialogContent className={localStyles['dialogNarrow']}>
         <DialogHeader>
           <DialogTitle>{t('pos.closeCashSession')}</DialogTitle>
           <DialogDescription>
@@ -118,57 +120,30 @@ export function CloseCashSessionDialog({
                 type="number"
                 step="0.01"
                 min="0"
-                style={{ marginTop: '0.375rem' }}
+                className={localStyles['inputOffset']}
                 {...register('closingBalance', { valueAsNumber: true })}
               />
               {errors.closingBalance && (
-                <p
-                  style={{
-                    color: 'var(--color-destructive)',
-                    fontSize: '0.75rem',
-                    marginTop: '0.25rem',
-                  }}
-                >
-                  {errors.closingBalance.message}
-                </p>
+                <p className={localStyles['fieldError']}>{errors.closingBalance.message}</p>
               )}
             </div>
 
-            <div
-              style={{
-                background: 'var(--color-muted)',
-                borderRadius: '0.375rem',
-                padding: '0.75rem',
-                fontSize: '0.875rem',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '0.25rem',
-                }}
-              >
+            <div className={localStyles['summaryBox']}>
+              <div className={localStyles['summaryRowCompact']}>
                 <span>{t('pos.expected')}</span>
-                <span style={{ fontFamily: 'monospace' }}>
+                <span className={localStyles['monoText']}>
                   {formatCurrency(toCents(expectedEuros), 'EUR')}
                 </span>
               </div>
               <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  fontWeight: 600,
-                  color:
-                    difference < 0
-                      ? 'var(--color-destructive)'
-                      : difference > 0
-                        ? 'var(--color-success)'
-                        : undefined,
-                }}
+                className={cn(
+                  localStyles['differenceRow'],
+                  difference < 0 && localStyles['textDestructive'],
+                  difference > 0 && localStyles['textSuccess']
+                )}
               >
                 <span>{t('pos.difference')}</span>
-                <span style={{ fontFamily: 'monospace' }}>
+                <span className={localStyles['monoText']}>
                   {difference >= 0 ? '+' : ''}
                   {formatCurrency(toCents(Math.abs(difference)), 'EUR')}
                 </span>
@@ -177,7 +152,11 @@ export function CloseCashSessionDialog({
 
             <div>
               <Label htmlFor="closeNotes">{t('pos.notesOptional')}</Label>
-              <Input id="closeNotes" style={{ marginTop: '0.375rem' }} {...register('notes')} />
+              <Input
+                id="closeNotes"
+                className={localStyles['inputOffset']}
+                {...register('notes')}
+              />
             </div>
           </div>
 

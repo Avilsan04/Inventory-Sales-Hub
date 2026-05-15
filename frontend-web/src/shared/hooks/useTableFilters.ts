@@ -19,7 +19,8 @@ interface TableFiltersState<T> {
 
 /**
  * Generic search + pagination for client-side tables.
- * Pass a `predicate` that returns true when the item matches the debounced search string.
+ * @param predicate - Must be stable (wrap in `useCallback`). It is a `useMemo` dep;
+ *   an inline arrow causes the filter to re-run on every render.
  */
 export function useTableFilters<T>(
   data: T[] | undefined,

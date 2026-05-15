@@ -1,0 +1,97 @@
+.dialogWide {
+  max-width: 700px;
+}
+
+.uploadPad {
+  padding: $spacing-6;
+}
+
+.dropZone {
+  border: $border-width-base dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem $spacing-8;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  transition:
+    border-color $duration-fast ease,
+    background $duration-fast ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.dropZoneActive {
+  border-color: var(--color-primary);
+  background: var(--color-muted);
+}
+
+.dropZoneIcon {
+  color: var(--color-muted-foreground);
+}
+
+.dropZoneIconActive {
+  color: var(--color-primary);
+}
+
+.dropZoneTitle {
+  font-weight: $font-weight-semibold;
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+.dropZoneHint {
+  font-size: $font-size-sm;
+  color: var(--color-muted-foreground);
+  margin: 0;
+}
+
+.dropZoneLink {
+  font-size: $font-size-xs;
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: $font-weight-medium;
+}
+
+.fileInputHidden {
+  display: none;
+}
+
+.previewSummary {
+  font-size: $font-size-sm;
+  color: var(--color-muted-foreground);
+  padding: $spacing-2 0;
+}
+
+.previewScroll {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.rowError {
+  background: var(--color-destructive-muted, #fee2e2);
+}
+
+.cellStatus {
+  color: var(--color-success);
+}
+
+.cellStatusError {
+  color: var(--color-destructive);
+}
+
+.resultPad {
+  padding: $spacing-8;
+  text-align: center;
+}
+
+.resultTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.resultSubtitle {
+  color: var(--color-muted-foreground);
+  margin-top: $spacing-2;
+}

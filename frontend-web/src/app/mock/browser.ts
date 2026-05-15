@@ -14,6 +14,7 @@ import { cashSessionHandlers } from '@features/sales/api/cashSession.mock';
 import { auditHandlers } from '@features/audit/api/audit.mock';
 import { warehouseHandlers } from '@features/inventory/api/warehouses.mock';
 import { emailQueueHandlers } from '@features/notifications/api/emailQueue.mock';
+import { settingsHandlers } from '@features/settings/api/settings.mock';
 
 export const worker = setupWorker(
   ...authHandlers,
@@ -29,5 +30,6 @@ export const worker = setupWorker(
   ...adminHandlers,
   ...auditHandlers,
   ...warehouseHandlers,
-  ...emailQueueHandlers
+  ...emailQueueHandlers,
+  ...settingsHandlers
 );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useCashSession } from '@features/sales';
-import { useSales } from '@features/sales';
+import { useSalesFlat as useSales } from '@features/sales';
 import { useLowStock } from '@features/inventory';
 import type { CashSession } from '@entities/cash-session';
 import type { InventoryItem } from '@entities/inventory';

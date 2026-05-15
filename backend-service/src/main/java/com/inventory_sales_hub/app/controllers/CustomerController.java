@@ -16,9 +16,12 @@ public class CustomerController {
     private CustomerManager customerManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "200") int size,
+            @RequestParam(required = false) String search) {
         try {
-            return ResponseEntity.ok(customerManager.getAll());
+            return ResponseEntity.ok(customerManager.getAllPaginated(page, size, search));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

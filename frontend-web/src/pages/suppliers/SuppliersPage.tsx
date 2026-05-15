@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TruckIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { TruckIcon, PencilIcon, TrashIcon, PlusIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useSuppliers, useDeleteSupplier } from '@features/suppliers';
 import { toast } from '@shared/hooks/useToast';
@@ -52,11 +52,15 @@ export function SuppliersPage(): React.ReactElement {
     if (deleteId === null) return;
     deleteSupplier(deleteId, {
       onSuccess: () => {
-        toast({ title: 'Supplier deleted' });
+        toast({ title: t('suppliers.toasts.deleted') });
         setDeleteId(null);
       },
       onError: (err) => {
-        toast({ title: 'Delete failed', description: err.message, variant: 'destructive' });
+        toast({
+          title: t('common.toasts.deleteFailed'),
+          description: err.message,
+          variant: 'destructive',
+        });
       },
     });
   };
@@ -82,7 +86,7 @@ export function SuppliersPage(): React.ReactElement {
             setCreateOpen(true);
           }}
         >
-          {t('suppliers.addSupplier')}
+          <PlusIcon size={14} aria-hidden="true" /> {t('suppliers.addSupplier')}
         </Button>
       </header>
 

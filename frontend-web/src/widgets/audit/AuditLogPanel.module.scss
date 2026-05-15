@@ -1,0 +1,27 @@
+.searchWrapper {
+  margin-bottom: $spacing-3;
+}
+
+.skeletonRow {
+  height: 1.25rem;
+}
+
+.emptyCell {
+  text-align: center;
+  color: var(--color-muted-foreground);
+  padding: $spacing-6;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.cellMono {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+}
+
+.cellMuted {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+}

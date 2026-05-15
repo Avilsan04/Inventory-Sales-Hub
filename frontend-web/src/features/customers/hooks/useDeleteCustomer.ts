@@ -6,6 +6,8 @@ export function useDeleteCustomer(): UseMutationResult<void, Error, string> {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: customersApi.deleteCustomer,
-    onSuccess: () => { void queryClient.invalidateQueries({ queryKey: customerKeys.lists() }); },
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: customerKeys.all() });
+    },
   });
 }

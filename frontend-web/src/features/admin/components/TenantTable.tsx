@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
+import { useLanguageAdapter } from '@adapters/useLanguageAdapter';
+import styles from './TenantTable.module.scss';
 import { Button, Badge } from '@shared/ui/primitives';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui/composed';
 import type { BadgeVariant } from '@shared/ui/primitives';
@@ -39,6 +41,7 @@ export function TenantTable({
   isPending = false,
 }: TenantTableProps): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
+  const { language } = useLanguageAdapter();
 
   return (
     <Table>
@@ -57,10 +60,8 @@ export function TenantTable({
           <TableRow key={tenant.id}>
             <TableCell>
               <div>
-                <div style={{ fontWeight: 500 }}>{tenant.name}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-                  {tenant.ownerEmail}
-                </div>
+                <div className={styles['tenantName']}>{tenant.name}</div>
+                <div className={styles['tenantEmail']}>{tenant.ownerEmail}</div>
               </div>
             </TableCell>
             <TableCell>
@@ -72,9 +73,9 @@ export function TenantTable({
               </Badge>
             </TableCell>
             <TableCell>{tenant.userCount}</TableCell>
-            <TableCell>{new Date(tenant.createdAt).toLocaleDateString('es-ES')}</TableCell>
+            <TableCell>{new Date(tenant.createdAt).toLocaleDateString(language)}</TableCell>
             <TableCell>
-              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              <div className={styles['actionRow']}>
                 <Button
                   variant="ghost"
                   size="sm"

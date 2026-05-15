@@ -3,8 +3,7 @@ import { useDebounce } from '@shared/hooks';
 import { useSales } from './useSales';
 import type { Sale } from '@entities/sale';
 import type { DateRange } from '@shared/ui/composed';
-
-const PAGE_SIZE = 20;
+import { SALES_PAGE_SIZE } from '../config';
 
 interface SalesFiltersState {
   data: Sale[] | undefined;
@@ -21,6 +20,7 @@ interface SalesFiltersState {
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   pageCount: number;
+  totalSales: number;
   paginated: Sale[];
 }
 
@@ -40,14 +40,17 @@ export function useSalesFilters(): SalesFiltersState {
       search: debouncedSearch || undefined,
       dateFrom: dateFilter?.from || undefined,
       dateTo: dateFilter?.to || undefined,
+      page: page - 1, // backend is 0-indexed
+      pageSize: SALES_PAGE_SIZE,
     }),
-    [debouncedSearch, dateFilter]
+    [debouncedSearch, dateFilter, page]
   );
 
-  const { data, isLoading, isFetching, isError } = useSales(filters);
+  const { data: paginatedData, isLoading, isFetching, isError } = useSales(filters);
 
-  const pageCount = Math.ceil((data?.length ?? 0) / PAGE_SIZE);
-  const paginated = (data ?? []).slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginated = paginatedData?.data ?? [];
+  const totalSales = paginatedData?.total ?? 0;
+  const pageCount = Math.max(1, Math.ceil(totalSales / SALES_PAGE_SIZE));
 
   const toggleDateFilter = (): void => {
     setShowDateFilter((v) => !v);
@@ -55,7 +58,7 @@ export function useSalesFilters(): SalesFiltersState {
   };
 
   return {
-    data,
+    data: paginated,
     isLoading,
     isFetching,
     isError,
@@ -69,8 +72,7 @@ export function useSalesFilters(): SalesFiltersState {
     page,
     setPage,
     pageCount,
+    totalSales,
     paginated,
   };
 }
-
-export { PAGE_SIZE as SALES_PAGE_SIZE };

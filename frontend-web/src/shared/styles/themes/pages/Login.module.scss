@@ -142,3 +142,47 @@
   position: relative;
   z-index: $z-base;
 }
+
+// ── Auth Form Utility Classes ───────────────────────────────────────────
+
+.brandWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-2;
+  margin-bottom: $spacing-6;
+}
+
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.successContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-4;
+  padding: $spacing-4 0;
+  text-align: center;
+}
+
+.successIcon {
+  color: var(--color-success);
+}
+
+.fieldError {
+  color: var(--color-destructive);
+  font-size: $font-size-xs;
+  margin-top: $spacing-1;
+}
+
+.submitBtn {
+  width: 100%;
+}
+
+.formError {
+  color: var(--color-destructive);
+  font-size: $font-size-sm;
+}

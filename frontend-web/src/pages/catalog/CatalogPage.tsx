@@ -4,14 +4,14 @@ import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCatalog } from '@features/catalog';
 import { CartDrawer } from '@features/catalog';
 import { useDebounce } from '@shared/hooks';
-import { Spinner, Input } from '@shared/ui/primitives';
+import { Spinner, Input, Button } from '@shared/ui/primitives';
 import { EmptyState } from '@shared/ui/composed';
 import { ProductCard } from '@features/catalog';
 import styles from '@shared/styles/themes/pages/PageBase.module.scss';
 
 export function CatalogPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
-  const { data: products, isPending, isError } = useCatalog();
+  const { data: products, isPending, isError, refetch } = useCatalog();
   const [search, setSearch] = React.useState('');
   const debouncedSearch = useDebounce(search);
 
@@ -35,6 +35,15 @@ export function CatalogPage(): React.ReactElement {
     return (
       <div className={styles['errorContainer']} role="alert">
         <p>{t('common.errorLoadingData')}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(): void => {
+            void refetch();
+          }}
+        >
+          {t('common.retry')}
+        </Button>
       </div>
     );
   }

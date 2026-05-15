@@ -17,33 +17,16 @@ import {
 } from '@features/sales';
 import type { CashSession } from '@entities/cash-session';
 import { KpiCard, Skeleton, Badge, Button } from '@shared/ui';
+import { cn } from '@shared/lib/cn';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@shared/ui';
-import { formatCurrency, formatOrderId } from '@shared/lib';
+import { formatCurrency, formatOrderId, formatTimeLocale } from '@shared/lib';
 import { APP_ROUTES } from '@shared/config';
 import { useRoutingAdapter, useTranslationAdapter } from '@adapters';
 import { DashboardShell, DashboardHeader, DashboardQuickActions } from '@widgets/dashboard';
 import type { QuickAction } from '@widgets/dashboard';
-import type { BadgeVariant } from '@shared/ui';
 import type { Sale } from '@entities/sale';
+import { getSaleStatusBadgeVariant } from '@entities/sale';
 import styles from '@shared/styles/themes/pages/StaffDashboard.module.scss';
-
-type SaleStatus = 'pending' | 'completed' | 'cancelled';
-
-const STATUS_VARIANT_MAP: Partial<Record<SaleStatus, BadgeVariant>> = {
-  completed: 'success',
-  pending: 'warning',
-  cancelled: 'neutral',
-};
-
-function statusVariant(status: string): BadgeVariant {
-  return STATUS_VARIANT_MAP[status as SaleStatus] ?? 'neutral';
-}
-
-function formatTime(iso: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(
-    new Date(iso)
-  );
-}
 
 interface CashSessionCardProps {
   cashSession: CashSession | null | undefined;
@@ -69,11 +52,17 @@ function CashSessionCard({
 
   return (
     <div
-      className={`${styles['sessionCard']} ${sessionOpen ? styles['sessionCardOpen'] : styles['sessionCardClosed']}`}
+      className={cn(
+        styles['sessionCard'],
+        sessionOpen ? styles['sessionCardOpen'] : styles['sessionCardClosed']
+      )}
     >
       <div className={styles['sessionStatus']}>
         <span
-          className={`${styles['sessionStatusDot']} ${sessionOpen ? styles['sessionStatusDotOpen'] : styles['sessionStatusDotClosed']}`}
+          className={cn(
+            styles['sessionStatusDot'],
+            sessionOpen ? styles['sessionStatusDotOpen'] : styles['sessionStatusDotClosed']
+          )}
         />
         {sessionOpen ? t('staffDashboard.session.open') : t('staffDashboard.session.closed')}
       </div>
@@ -89,7 +78,7 @@ function CashSessionCard({
           </p>
           <p className={styles['sessionDetail']}>
             {t('staffDashboard.session.openedAt', {
-              time: formatTime(cashSession.openedAt, locale),
+              time: formatTimeLocale(cashSession.openedAt, locale),
             })}
           </p>
           {stale && (
@@ -200,15 +189,16 @@ export function StaffDashboardPage(): React.ReactElement {
       <div className={styles['sectionCard']}>
         <div className={styles['sectionHeader']}>
           <h2 className={styles['sectionTitle']}>{t('staffDashboard.recentSales')}</h2>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={styles['viewAllBtn']}
             onClick={(): void => {
               navigateTo(APP_ROUTES.SALES);
             }}
           >
             {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-          </button>
+          </Button>
         </div>
         <Table>
           <TableHeader>
@@ -254,7 +244,7 @@ export function StaffDashboardPage(): React.ReactElement {
                   </TableCell>
                   <TableCell>{formatCurrency(s.total, s.currency)}</TableCell>
                   <TableCell>
-                    <Badge variant={statusVariant(s.status)} showDot>
+                    <Badge variant={getSaleStatusBadgeVariant(s.status)} showDot>
                       {t(`sales.status.${s.status}`)}
                     </Badge>
                   </TableCell>
@@ -269,15 +259,16 @@ export function StaffDashboardPage(): React.ReactElement {
         <div className={styles['sectionCard']}>
           <div className={styles['sectionHeader']}>
             <h2 className={styles['sectionTitle']}>{t('staffDashboard.stockAlerts')}</h2>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               className={styles['viewAllBtn']}
               onClick={(): void => {
                 navigateTo(APP_ROUTES.INVENTORY);
               }}
             >
               {t('common.viewAll')} <ArrowRightIcon aria-hidden="true" />
-            </button>
+            </Button>
           </div>
           {lowStockItems.map((item) => (
             <div key={item.id} className={styles['stockRow']}>

@@ -1,0 +1,137 @@
+// Shared styles for all dashboard KPI/metric widgets
+
+.cardHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.skeletonStack {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.skeletonLg {
+  height: $spacing-8;
+  width: 10rem;
+}
+
+.skeletonMd {
+  height: $spacing-4;
+  width: 14rem;
+}
+
+.skeletonSm {
+  height: $spacing-4;
+  width: 8rem;
+}
+
+.skeletonRow {
+  height: 1.25rem;
+}
+
+.kpiValue {
+  font-size: 1.75rem;
+  font-weight: $font-weight-bold;
+  font-family: $font-family-mono;
+}
+
+.kpiValueSuccess {
+  color: var(--color-success);
+}
+
+.kpiValueDestructive {
+  color: var(--color-destructive);
+}
+
+.kpiMeta {
+  display: flex;
+  gap: $spacing-4;
+  margin-top: $spacing-2;
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+}
+
+.kpiSubtitle {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  margin-top: $spacing-1;
+}
+
+.textSuccess {
+  color: var(--color-success);
+}
+
+.textDestructive {
+  color: var(--color-destructive);
+}
+
+.emptyText {
+  color: var(--color-muted-foreground);
+  font-size: $font-size-sm;
+}
+
+// ── Top Products list ──────────────────────────────────────────────
+
+.rankList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.rankItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $font-size-sm;
+}
+
+.rankItemLeft {
+  display: flex;
+  gap: $spacing-2;
+  align-items: center;
+}
+
+.rankNum {
+  color: var(--color-muted-foreground);
+  width: $spacing-4;
+  flex-shrink: 0;
+}
+
+.rankValue {
+  font-family: $font-family-mono;
+  font-weight: $font-weight-semibold;
+}
+
+// ── Waste Alerts list ──────────────────────────────────────────────
+
+.wasteLossSummary {
+  font-size: $font-size-xs;
+  color: var(--color-muted-foreground);
+  margin-bottom: $spacing-3;
+}
+
+.wasteList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.wasteItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-sm;
+}
+
+.wasteUnits {
+  color: var(--color-destructive);
+  font-weight: $font-weight-semibold;
+}

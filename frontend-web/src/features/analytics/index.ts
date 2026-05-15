@@ -8,6 +8,7 @@ export {
   useLowStockAlerts,
   useCashFlow,
   useWasteAlerts,
+  useRecentSales,
 } from './hooks/useAnalytics';
 export { useDashboardStats } from './hooks/useDashboardStats';
 export { useCompanyStats } from './hooks/useCompanyStats';

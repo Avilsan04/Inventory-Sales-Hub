@@ -20,7 +20,10 @@
   outline: none;
   flex-shrink: 0;
   text-decoration: none;
-  will-change: transform;
+
+  &:hover:not(:disabled) {
+    will-change: transform;
+  }
 
   &:active:not(:disabled) {
     transform: scale(0.97);

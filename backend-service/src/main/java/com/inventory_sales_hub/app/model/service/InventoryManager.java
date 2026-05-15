@@ -17,8 +17,33 @@ public class InventoryManager {
     @Autowired private ProductDao productDao;
     @Autowired private CategoryDao categoryDao;
 
-    public List<InventoryResponse> getAll() {
-        return inventoryDao.findAllWithProduct().stream().map(this::toResponse).toList();
+    public PaginatedResponse<InventoryResponse> getAll(int page, int pageSize, String search, String status) {
+        List<InventoryResponse> filtered = inventoryDao.findAllWithProduct().stream()
+                .filter(i -> matchesStatus(i, status))
+                .filter(i -> matchesSearch(i, search))
+                .map(this::toResponse)
+                .toList();
+        long total = filtered.size();
+        int start = page * pageSize;
+        int end = (int) Math.min(start + pageSize, total);
+        List<InventoryResponse> pageData = start < total ? filtered.subList(start, end) : List.of();
+        return new PaginatedResponse<>(pageData, total, page, pageSize);
+    }
+
+    private boolean matchesStatus(Inventory i, String status) {
+        if (status == null || status.isBlank()) return true;
+        return switch (status.toUpperCase()) {
+            case "LOW_STOCK" -> i.getQuantity() > 0 && i.getQuantity() <= i.getMinStock();
+            case "OUT_OF_STOCK" -> i.getQuantity() == 0;
+            default -> true;
+        };
+    }
+
+    private boolean matchesSearch(Inventory i, String search) {
+        if (search == null || search.isBlank()) return true;
+        String q = search.toLowerCase();
+        return i.getProduct().getName().toLowerCase().contains(q)
+                || i.getProduct().getSku().toLowerCase().contains(q);
     }
 
     public InventoryResponse getById(Long id) {

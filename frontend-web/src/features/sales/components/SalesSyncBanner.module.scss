@@ -28,3 +28,14 @@
   color: var(--color-destructive-foreground);
   border-bottom: 1px solid rgba($color-destructive, 0.3);
 }
+
+.retryBtn {
+  color: inherit;
+  text-decoration: underline;
+  margin-left: $spacing-2;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: inherit;
+  }
+}

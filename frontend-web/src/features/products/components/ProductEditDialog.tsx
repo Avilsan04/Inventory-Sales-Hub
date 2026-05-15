@@ -89,11 +89,15 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
       },
       {
         onSuccess: () => {
-          toast({ title: 'Product updated' });
+          toast({ title: t('products.toasts.updated') });
           onClose();
         },
         onError: (err) => {
-          toast({ title: 'Update failed', description: err.message, variant: 'destructive' });
+          toast({
+            title: t('common.toasts.updateFailed'),
+            description: err.message,
+            variant: 'destructive',
+          });
         },
       }
     );

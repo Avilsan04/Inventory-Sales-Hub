@@ -14,6 +14,8 @@ export interface SyncQueueEntry {
   lastAttemptAt?: number;
 }
 
+export const MAX_SYNC_QUEUE_SIZE = 100;
+
 class SyncDatabase extends Dexie {
   syncQueue!: Table<SyncQueueEntry>;
 

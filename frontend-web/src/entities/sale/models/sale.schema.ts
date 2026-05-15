@@ -46,7 +46,7 @@ const rawSaleSchema = z.object({
   id: z.number(),
   customer: rawCustomerInSaleSchema.nullish(),
   processedBy: z.string().nullish(),
-  status: z.string(),
+  status: saleStatusSchema,
   subtotal: z.number().nonnegative().nullish(),
   taxRate: z.number().nonnegative().nullish(),
   taxAmount: z.number().nonnegative().nullish(),
@@ -90,14 +90,14 @@ export const saleSchema = rawSaleSchema.transform(
     customerName: s.customer?.name ?? undefined,
     employeeId: undefined,
     processedBy: s.processedBy ?? undefined,
-    status: s.status.toLowerCase() as 'pending' | 'completed' | 'cancelled',
+    status: s.status,
     subtotal: s.subtotal != null ? s.subtotal : undefined,
     discountPercent: 0,
     discountAmount: 0,
     taxPercent: s.taxRate != null ? s.taxRate * 100 : 0,
     taxAmount: s.taxAmount != null ? s.taxAmount : 0,
     total: s.total,
-    currency: 'EUR',
+    currency: 'EUR', // single-currency MVP; extend when backend returns currency field
     items: s.items.map((item) => ({
       id: String(item.id),
       saleId: String(s.id),
@@ -113,6 +113,13 @@ export const saleSchema = rawSaleSchema.transform(
 );
 
 export const saleListSchema = z.array(saleSchema);
+
+export const paginatedSaleSchema = z.object({
+  data: saleListSchema,
+  total: z.number().int().nonnegative(),
+  page: z.number().int().nonnegative(),
+  pageSize: z.number().int().positive(),
+});
 
 const rawSaleSummarySchema = z.object({
   today: z.object({

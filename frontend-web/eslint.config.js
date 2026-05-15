@@ -44,7 +44,7 @@ export default tseslint.config(
       // Set to 'warn' during migration. Reduce --max-warnings threshold as violations are fixed.
       // Target: 'error' + --max-warnings 0 once all violations are resolved (estimated end of FASE 3).
       // SCSS module imports are excluded — they have no TS public API by design.
-      'no-restricted-imports': ['warn', {
+      'no-restricted-imports': ['error', {
         patterns: [
           {
             group: ['@features/*/*', '@features/*/**', '!@features/**/*.scss', '!@features/**/*.module.scss'],
