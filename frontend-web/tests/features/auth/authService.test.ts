@@ -88,4 +88,48 @@ describe('AuthService', () => {
             expect(storage.removeToken).toHaveBeenCalled();
         });
     });
+
+    describe('register', () => {
+        const validPayload = {
+            username: 'testuser',
+            email: 'test@test.com',
+            password: 'password123',
+            role: 'customer' as const,
+        };
+
+        it('saves token on successful registration', async () => {
+            vi.mocked(api.getMe).mockResolvedValueOnce({
+                id: 1, username: 'testuser', email: 'test@test.com', role: 'customer',
+            } as never);
+            await service.register(validPayload);
+            expect(storage.saveToken).toHaveBeenCalledWith('register-token-456');
+        });
+
+        it('throws on username shorter than minimum length', async () => {
+            await expect(service.register({ ...validPayload, username: 'ab' }))
+                .rejects.toThrow('[Security Validation]');
+        });
+
+        it('throws on empty email', async () => {
+            await expect(service.register({ ...validPayload, email: '' }))
+                .rejects.toThrow('[Security Validation]');
+        });
+
+        it('throws on password shorter than minimum length', async () => {
+            await expect(service.register({ ...validPayload, password: 'short' }))
+                .rejects.toThrow('[Security Validation]');
+        });
+
+        it('throws when api returns empty token', async () => {
+            vi.mocked(api.register).mockResolvedValueOnce({ accessToken: '' } as never);
+            await expect(service.register(validPayload))
+                .rejects.toThrow('[Security Validation]');
+        });
+
+        it('resolves successfully when getMe throws (non-blocking)', async () => {
+            vi.mocked(api.getMe).mockRejectedValueOnce(new Error('Network error'));
+            await expect(service.register(validPayload)).resolves.toBeUndefined();
+            expect(storage.saveToken).toHaveBeenCalledWith('register-token-456');
+        });
+    });
 });
