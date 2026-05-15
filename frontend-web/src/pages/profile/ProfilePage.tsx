@@ -243,9 +243,7 @@ export function ProfilePage(): React.ReactElement {
             <CardContent>
               <div className={styles['identityMeta']}>
                 <span>{user.email}</span>
-                <Badge variant={ROLE_BADGE_MAP[user.role as RoleKey]}>
-                  {roleLabels[user.role as RoleKey]}
-                </Badge>
+                <Badge variant={ROLE_BADGE_MAP[user.role]}>{roleLabels[user.role]}</Badge>
               </div>
             </CardContent>
           </Card>
