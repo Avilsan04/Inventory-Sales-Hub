@@ -64,23 +64,11 @@ export function InventoryPage(): React.ReactElement {
   const serverTotal = inventory?.total ?? 0;
   const pageCount = Math.max(1, Math.ceil(serverTotal / pageSize));
 
-  const tabs = React.useMemo(
+  const tabs: Array<{ id: StockTab; labelKey: string; count: number }> = React.useMemo(
     () => [
-      {
-        id: 'all' as StockTab,
-        labelKey: 'inventory.allProducts',
-        count: tab === 'all' ? serverTotal : 0,
-      },
-      {
-        id: 'low' as StockTab,
-        labelKey: 'inventory.lowStockTab',
-        count: tab === 'low' ? serverTotal : 0,
-      },
-      {
-        id: 'out' as StockTab,
-        labelKey: 'inventory.outOfStockTab',
-        count: tab === 'out' ? serverTotal : 0,
-      },
+      { id: 'all', labelKey: 'inventory.allProducts', count: tab === 'all' ? serverTotal : 0 },
+      { id: 'low', labelKey: 'inventory.lowStockTab', count: tab === 'low' ? serverTotal : 0 },
+      { id: 'out', labelKey: 'inventory.outOfStockTab', count: tab === 'out' ? serverTotal : 0 },
     ],
     [tab, serverTotal]
   );
