@@ -697,7 +697,8 @@
         "revenue": "Ingresos",
         "orders": "Pedidos",
         "customers": "Clientes",
-        "revenueChart": "Ingresos — Últimas 8 semanas"
+        "revenueChart": "Ingresos — Últimas 8 semanas",
+        "recentSales": "Ventas recientes"
       }
     },
     "features": {
@@ -722,7 +723,18 @@
     },
     "analytics": {
       "title": "Análisis avanzado de ventas",
-      "description": "Obtén información en tiempo real para tomar decisiones basadas en datos y aumentar tus ventas."
+      "description": "Obtén información en tiempo real para tomar decisiones basadas en datos y aumentar tus ventas.",
+      "mockup": {
+        "revenue": "Ingresos",
+        "metrics": "Métricas",
+        "billing": "Facturación",
+        "satisfaction": "Satisfacción",
+        "avgDelivery": "Entrega media",
+        "totalStock": "Stock total",
+        "netMargin": "Margen neto",
+        "perfChart": "Rendimiento — Año actual",
+        "topProducts": "Top productos"
+      }
     },
     "trusted": {
       "title": "Miles de negocios confían en nuestro Hub"

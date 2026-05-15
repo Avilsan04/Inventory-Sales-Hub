@@ -19,7 +19,9 @@ export function AnalyticsSection(): React.ReactElement {
           <div className={styles['analyticsMockupCards']} aria-hidden="true">
             {/* Revenue trend mini card */}
             <div className={styles['mockupMiniCard']}>
-              <p className={styles['mockupMiniTitle']}>Ingresos</p>
+              <p className={styles['mockupMiniTitle']}>
+                {translate('landing.analytics.mockup.revenue')}
+              </p>
               <div className={styles['mockupMiniChart']}>
                 <svg viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true">
                   <path
@@ -41,19 +43,27 @@ export function AnalyticsSection(): React.ReactElement {
 
             {/* KPI mini card */}
             <div className={styles['mockupMiniCard']}>
-              <p className={styles['mockupMiniTitle']}>Métricas</p>
+              <p className={styles['mockupMiniTitle']}>
+                {translate('landing.analytics.mockup.metrics')}
+              </p>
               <div className={styles['mockupMiniStatsRow']}>
                 <div className={styles['mockupMiniStat']}>
                   <span className={styles['mockupMiniStatValue']}>€2.4M</span>
-                  <span className={styles['mockupMiniStatLabel']}>Facturación</span>
+                  <span className={styles['mockupMiniStatLabel']}>
+                    {translate('landing.analytics.mockup.billing')}
+                  </span>
                 </div>
                 <div className={styles['mockupMiniStat']}>
                   <span className={styles['mockupMiniStatValue']}>98.3%</span>
-                  <span className={styles['mockupMiniStatLabel']}>Satisfacción</span>
+                  <span className={styles['mockupMiniStatLabel']}>
+                    {translate('landing.analytics.mockup.satisfaction')}
+                  </span>
                 </div>
                 <div className={styles['mockupMiniStat']}>
                   <span className={styles['mockupMiniStatValue']}>4.2d</span>
-                  <span className={styles['mockupMiniStatLabel']}>Entrega media</span>
+                  <span className={styles['mockupMiniStatLabel']}>
+                    {translate('landing.analytics.mockup.avgDelivery')}
+                  </span>
                 </div>
               </div>
             </div>
@@ -75,23 +85,31 @@ export function AnalyticsSection(): React.ReactElement {
             <div className={styles['mockupBody']}>
               <div className={styles['mockupStatsRow']}>
                 <div className={styles['mockupStatCard']}>
-                  <span className={styles['mockupStatCardLabel']}>Facturación</span>
+                  <span className={styles['mockupStatCardLabel']}>
+                    {translate('landing.analytics.mockup.billing')}
+                  </span>
                   <span className={styles['mockupStatCardValue']}>€31.2K</span>
                   <span className={styles['mockupStatCardBadge']}>↑ 14%</span>
                 </div>
                 <div className={styles['mockupStatCard']}>
-                  <span className={styles['mockupStatCardLabel']}>Stock total</span>
+                  <span className={styles['mockupStatCardLabel']}>
+                    {translate('landing.analytics.mockup.totalStock')}
+                  </span>
                   <span className={styles['mockupStatCardValue']}>8,432</span>
                   <span className={styles['mockupStatCardBadge']}>↑ 6%</span>
                 </div>
                 <div className={styles['mockupStatCard']}>
-                  <span className={styles['mockupStatCardLabel']}>Margen neto</span>
+                  <span className={styles['mockupStatCardLabel']}>
+                    {translate('landing.analytics.mockup.netMargin')}
+                  </span>
                   <span className={styles['mockupStatCardValue']}>34.2%</span>
                   <span className={styles['mockupStatCardBadge']}>↑ 3%</span>
                 </div>
               </div>
               <div className={styles['mockupChart']}>
-                <span className={styles['mockupChartLabel']}>Rendimiento — Año actual</span>
+                <span className={styles['mockupChartLabel']}>
+                  {translate('landing.analytics.mockup.perfChart')}
+                </span>
                 <svg viewBox="0 0 200 50" preserveAspectRatio="none" aria-hidden="true">
                   <path
                     d="M0,35 C20,32 35,38 55,30 C75,22 90,26 110,18 C128,11 150,6 175,3 L200,2"
@@ -108,7 +126,9 @@ export function AnalyticsSection(): React.ReactElement {
                 </svg>
               </div>
               <div className={styles['mockupTableSection']}>
-                <span className={styles['mockupTableTitle']}>Top productos</span>
+                <span className={styles['mockupTableTitle']}>
+                  {translate('landing.analytics.mockup.topProducts')}
+                </span>
                 <div className={styles['mockupTableRow']}>
                   <span className={styles['mockupTableDot']} aria-hidden="true" />
                   <span className={styles['mockupTableName']}>Laptop Pro 15&quot;</span>

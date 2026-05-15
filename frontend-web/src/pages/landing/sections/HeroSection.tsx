@@ -145,7 +145,9 @@ export function HeroSection({ onGetStarted, onTestMode }: HeroSectionProps): Rea
               </svg>
             </div>
             <div className={styles['mockupTableSection']}>
-              <span className={styles['mockupTableTitle']}>Ventas recientes</span>
+              <span className={styles['mockupTableTitle']}>
+                {translate('landing.hero.mockup.recentSales')}
+              </span>
               <div className={styles['mockupTableRow']}>
                 <span className={styles['mockupTableDot']} aria-hidden="true" />
                 <span className={styles['mockupTableName']}>TechSupply S.L.</span>

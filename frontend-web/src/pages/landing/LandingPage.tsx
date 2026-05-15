@@ -6,12 +6,6 @@ import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
 import { useLanguageAdapter, type Language } from '@shared/adapters/useLanguageAdapter';
 import { Button } from '@shared/ui/primitives';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@shared/ui/composed';
 import { APP_ROUTES } from '@shared/config/routes';
 import { activateDemoMode } from '@features/auth';
 
@@ -39,6 +33,22 @@ export function LandingPage(): React.ReactElement {
   const { resolvedTheme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguageAdapter();
   const current = LANGUAGE_MAP[language];
+  const [langOpen, setLangOpen] = React.useState(false);
+  const langRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!langOpen) return;
+    const handleOutside = (e: MouseEvent): void => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutside);
+    return (): void => {
+      document.removeEventListener('mousedown', handleOutside);
+    };
+  }, [langOpen]);
+
   const handleNavigateToLogin = React.useCallback((): void => {
     navigateTo(APP_ROUTES.LOGIN);
   }, [navigateTo]);
@@ -143,38 +153,50 @@ export function LandingPage(): React.ReactElement {
           </Button>
 
           <nav className={styles['navbarActions']}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={styles['langBtn']}
-                  aria-label={translate('common.switchLanguage')}
-                >
-                  <img
-                    src={current.flag}
-                    alt=""
-                    aria-hidden="true"
-                    className={styles['langFlag']}
-                  />
-                  <span>{language.toUpperCase()}</span>
-                  <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className={styles['langDropdown']}>
-                {LANGUAGE_OPTIONS.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.value}
-                    onClick={() => {
-                      if (lang.value !== language) toggleLanguage();
-                    }}
-                    className={lang.value === language ? styles['langItemActive'] : undefined}
-                  >
-                    <img src={lang.flag} alt="" aria-hidden="true" className={styles['langFlag']} />
-                    <span>{lang.label}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div ref={langRef} className={styles['langContainer']}>
+              <Button
+                variant="ghost"
+                className={styles['langBtn']}
+                onClick={(): void => {
+                  setLangOpen((o) => !o);
+                }}
+                aria-label={translate('common.switchLanguage')}
+                aria-haspopup="listbox"
+                aria-expanded={langOpen}
+              >
+                <img src={current.flag} alt="" aria-hidden="true" className={styles['langFlag']} />
+                <span>{language.toUpperCase()}</span>
+                <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
+              </Button>
+              {langOpen && (
+                <div className={styles['langDropdown']} role="listbox">
+                  {LANGUAGE_OPTIONS.map((lang) => (
+                    <button
+                      key={lang.value}
+                      role="option"
+                      aria-selected={lang.value === language}
+                      className={
+                        lang.value === language
+                          ? `${styles['langItem']} ${styles['langItemActive']}`
+                          : styles['langItem']
+                      }
+                      onClick={() => {
+                        if (lang.value !== language) toggleLanguage();
+                        setLangOpen(false);
+                      }}
+                    >
+                      <img
+                        src={lang.flag}
+                        alt=""
+                        aria-hidden="true"
+                        className={styles['langFlag']}
+                      />
+                      <span>{lang.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <Button
               variant="ghost"
               size="icon-sm"

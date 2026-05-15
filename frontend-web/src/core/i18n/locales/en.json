@@ -697,7 +697,8 @@
         "revenue": "Revenue",
         "orders": "Orders",
         "customers": "Customers",
-        "revenueChart": "Revenue — Last 8 weeks"
+        "revenueChart": "Revenue — Last 8 weeks",
+        "recentSales": "Recent sales"
       }
     },
     "features": {
@@ -722,7 +723,18 @@
     },
     "analytics": {
       "title": "Advanced sales analytics",
-      "description": "Get real-time insights to make data-driven decisions and grow your sales."
+      "description": "Get real-time insights to make data-driven decisions and grow your sales.",
+      "mockup": {
+        "revenue": "Revenue",
+        "metrics": "Metrics",
+        "billing": "Revenue",
+        "satisfaction": "Satisfaction",
+        "avgDelivery": "Avg. delivery",
+        "totalStock": "Total stock",
+        "netMargin": "Net margin",
+        "perfChart": "Performance — Current year",
+        "topProducts": "Top products"
+      }
     },
     "trusted": {
       "title": "Thousands of businesses trust our Hub"
