@@ -33,15 +33,6 @@
   }
 }
 
-// ── Theme toggle ──────────────────────────────────────────────────
-
-.themeToggle {
-  position: fixed;
-  top: $spacing-4;
-  right: $spacing-4;
-  z-index: $z-float;
-}
-
 // ── Main content container ────────────────────────────────────────
 
 .main {
@@ -81,7 +72,8 @@
     position: sticky;
     top: 0;
     overflow: hidden;
-    padding: $spacing-12 $spacing-32;
+    // top padding clears the absolute-positioned AuthPageHeader
+    padding: $spacing-20 $spacing-32 $spacing-12;
     background: linear-gradient(160deg, $color-auth-gradient-from 0%, $color-auth-gradient-to 100%);
     border-right: $border-width-base solid $color-auth-glass-border-panel;
 
@@ -111,21 +103,6 @@
       pointer-events: none;
     }
   }
-}
-
-.brandLogo {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  position: relative;
-  z-index: $z-base;
-}
-
-.brandName {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  color: $color-auth-brand-text;
-  letter-spacing: $letter-spacing-tight;
 }
 
 .brandTagline {
@@ -239,7 +216,8 @@
     height: 100dvh;
     overflow-y: auto;
     justify-content: flex-start;
-    padding: $spacing-12 $spacing-8;
+    // top padding clears the absolute-positioned AuthPageHeader
+    padding: $spacing-20 $spacing-8 $spacing-12;
     background: var(--color-bg-secondary);
   }
 
@@ -276,25 +254,6 @@
 
 .segmentedWrapper {
   padding: 0 $spacing-6 $spacing-2;
-}
-
-// ── Mobile-only logo ──────────────────────────────────────────────
-
-.mobileLogo {
-  display: flex;
-  align-items: center;
-  gap: $spacing-2;
-  margin-top: $spacing-4;
-
-  @media (min-width: $breakpoint-lg) {
-    display: none;
-  }
-}
-
-.mobileLogoText {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  color: var(--color-text-primary);
 }
 
 // ── Login prompt ──────────────────────────────────────────────────

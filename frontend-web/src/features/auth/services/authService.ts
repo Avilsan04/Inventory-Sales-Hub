@@ -62,7 +62,18 @@ export class AuthService implements IAuthService {
       throw new Error('[Security Validation] Empty token received from authentication provider.');
     }
 
+    clearAllCache();
     this._tokenStorage.saveToken(response.accessToken);
+    broadcastTabSync({ type: 'AUTH_LOGIN' });
+
+    try {
+      const profile = await this._authApi.getMe();
+      if (profile.tenantId) {
+        tenantStorage.setTenantId(profile.tenantId);
+      }
+    } catch {
+      logger.warn('[AuthService] Could not resolve tenantId after register.');
+    }
   }
 
   public async logout(): Promise<void> {

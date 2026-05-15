@@ -68,7 +68,7 @@ function buildRegisterRequest(data: RegisterFormValues, role: RegisterRole): Reg
     };
   }
   const d = data as RegisterCustomerValues;
-  return { username: d.username, email: d.email, password: d.password, role };
+  return { username: d.username, email: d.email, password: d.password, role: 'customer' };
 }
 
 export function useRegisterPresenter({

@@ -1,21 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  SunIcon,
-  MoonIcon,
-  CheckIcon,
-  UserIcon,
-  ShieldCheckIcon,
-  Building2Icon,
-} from 'lucide-react';
+import { CheckIcon, UserIcon, ShieldCheckIcon, Building2Icon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import { RegisterForm } from '@features/auth';
 import type { RegisterRole } from '@features/auth';
-import { BrandMark, Button, SegmentedControl } from '@shared/ui/primitives';
+import { SegmentedControl } from '@shared/ui/primitives';
 import type { SegmentedOption } from '@shared/ui/primitives';
-import { Card, CardHeader, CardTitle, CardDescription } from '@shared/ui/composed';
-import { useTheme } from '@shared/hooks/useTheme';
+import { Card, CardHeader, CardTitle, CardDescription, AuthPageHeader } from '@shared/ui/composed';
 import { useTranslationAdapter } from '@shared/adapters/useTranslationAdapter';
 import { useRoutingAdapter } from '@shared/adapters/useRoutingAdapter';
 import { APP_ROUTES } from '@shared/config/routes';
@@ -51,7 +43,6 @@ const BRAND_FEATURES = ['auth.brandFeature1', 'auth.brandFeature2', 'auth.brandF
 export function RegisterPage(): React.ReactElement {
   const { translate } = useTranslationAdapter();
   const { navigateTo } = useRoutingAdapter();
-  const { resolvedTheme, toggleTheme } = useTheme();
 
   const [activeTab, setActiveTab] = React.useState<RegisterRole>('customer');
 
@@ -64,33 +55,19 @@ export function RegisterPage(): React.ReactElement {
     navigateTo(APP_ROUTES.DASHBOARD, true);
   }, [navigateTo]);
 
+  const handleBackToLanding = React.useCallback((): void => {
+    navigateTo(APP_ROUTES.LANDING);
+  }, [navigateTo]);
+
   const { titleKey, subtitleKey, Icon: RoleIcon } = ROLE_META[activeTab];
 
   return (
     <div className={styles.page}>
-      {/* ── Theme toggle — page level ──────────────────────────────── */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className={styles.themeToggle}
-        onClick={toggleTheme}
-        aria-label={translate('common.toggleTheme')}
-      >
-        {resolvedTheme === 'dark' ? (
-          <SunIcon aria-hidden="true" />
-        ) : (
-          <MoonIcon aria-hidden="true" />
-        )}
-      </Button>
+      <AuthPageHeader onLogoClick={handleBackToLanding} forceDarkLogo />
 
       <main className={styles.main}>
         {/* ── Brand panel (left, hidden on mobile) ───────────────── */}
         <aside className={styles.brandPanel} aria-hidden="true">
-          <div className={styles.brandLogo}>
-            <BrandMark size={40} />
-            <span className={styles.brandName}>{translate('common.appName')}</span>
-          </div>
-
           <p className={styles.brandTagline}>{translate('auth.brandTagline')}</p>
 
           <ul className={styles.brandFeatures}>
@@ -117,13 +94,6 @@ export function RegisterPage(): React.ReactElement {
 
         {/* ── Form panel (right) ─────────────────────────────────── */}
         <div className={styles.formPanel}>
-          {/* Mobile-only logo */}
-          <div className={styles.mobileLogo}>
-            <BrandMark size={32} />
-            <span className={styles.mobileLogoText}>{translate('common.appName')}</span>
-          </div>
-
-          {/* Glass card: header + segmented + form */}
           <Card className={styles.formCard}>
             <CardHeader className={styles.formCardHeader}>
               <CardTitle>{translate(titleKey)}</CardTitle>
