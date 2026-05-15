@@ -507,12 +507,21 @@
 }
 
 .notifPanel {
+  position: absolute;
+  top: calc(100% + #{$spacing-1});
+  right: 0;
   width: $panel-notifications-width;
   padding: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   max-height: $container-dialog;
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: $shadow-lg;
+  z-index: $z-overlay;
 }
 
 .notifPanelHeader {
@@ -698,6 +707,75 @@
   width: $panel-user-width;
   padding: 0;
   overflow: hidden;
+}
+
+// ── Custom UserMenu dropdown ──────────────────────────────────────────────
+.userMenuContainer {
+  position: relative;
+}
+
+.userMenuDropdown {
+  position: absolute;
+  top: calc(100% + #{$spacing-1});
+  right: 0;
+  width: $panel-user-width;
+  background-color: var(--color-popover);
+  color: var(--color-popover-foreground);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: $shadow-lg;
+  overflow: hidden;
+  z-index: $z-overlay;
+}
+
+.userMenuSeparator {
+  height: $border-width-base;
+  background-color: var(--color-border);
+  margin: 0;
+}
+
+.userMenuItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-popover-foreground);
+  font-size: $font-size-sm;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color $duration-fast ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+    outline: none;
+  }
+
+  svg {
+    width: $size-4;
+    height: $size-4;
+    flex-shrink: 0;
+    color: var(--color-muted-foreground);
+  }
+}
+
+.userMenuItemDestructive {
+  color: var(--color-destructive);
+
+  &:hover,
+  &:focus-visible {
+    background-color: color-mix(in srgb, var(--color-destructive) 10%, transparent);
+    color: var(--color-destructive);
+  }
+
+  svg {
+    color: var(--color-destructive);
+  }
 }
 
 .userMenuHeader {

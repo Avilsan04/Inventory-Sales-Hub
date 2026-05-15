@@ -1,18 +1,7 @@
 import * as React from 'react';
 import { UserIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@shared/ui/composed';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@shared/ui/composed';
 import { Avatar, AvatarFallback, Button } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -51,75 +40,132 @@ export function UserMenu(): React.ReactElement {
   const navigate = useNavigate();
   const { viewAs, setViewAs } = useViewMode();
 
+  const [open, setOpen] = React.useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
   const initials = user?.username ? user.username.slice(0, 2).toUpperCase() : '??';
 
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent): void => {
+      const target = e.target as Node;
+      if (menuRef.current?.contains(target)) return;
+      // Exclude Radix portals (e.g., Select dropdown inside the menu)
+      if (
+        target instanceof Element &&
+        target.closest('[data-radix-popper-content-wrapper]') !== null
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return (): void => {
+      document.removeEventListener('mousedown', handler);
+    };
+  }, [open]);
+
+  const close = (): void => {
+    setOpen(false);
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={styles['userMenuTrigger']} aria-label={t('nav.profile')}>
-          <Avatar className={styles['avatar']}>
-            <AvatarFallback className={styles['avatarFallback']}>{initials}</AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
+    <div ref={menuRef} className={styles['userMenuContainer']}>
+      <Button
+        variant="ghost"
+        className={styles['userMenuTrigger']}
+        aria-label={t('nav.profile')}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => {
+          setOpen((o) => !o);
+        }}
+      >
+        <Avatar className={styles['avatar']}>
+          <AvatarFallback className={styles['avatarFallback']}>{initials}</AvatarFallback>
+        </Avatar>
+      </Button>
 
-      <DropdownMenuContent align="end" className={styles['userMenuContent']}>
-        <div className={styles['userMenuHeader']}>
-          <Avatar className={styles['avatarLg']}>
-            <AvatarFallback className={styles['avatarFallbackLg']}>{initials}</AvatarFallback>
-          </Avatar>
-          <div className={styles['userInfo']}>
-            <span className={styles['userName']}>{user?.username ?? '—'}</span>
-            <span className={styles['userEmail']}>{user?.email ?? '—'}</span>
-            {role && (
-              <span className={cn(styles['roleChip'], ROLE_CHIP_CLASS[role])}>
-                {ROLE_LABELS[role]}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {!!user?.role && VISTA_ALLOWED_ROLES.includes(user.role) && (
-          <>
-            <DropdownMenuSeparator />
-            <div className={styles['devSwitcher']}>
-              <span className={styles['devLabel']}>Vista</span>
-              <Select
-                value={viewAs}
-                onValueChange={(v: string) => {
-                  setViewAs(v as ViewRole);
-                }}
-              >
-                <SelectTrigger size="sm" aria-label={t('topbar.changeRoleView')}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {VISTA_ROLES.map((r) => (
-                    <SelectItem key={r} value={r}>
-                      {r}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      {open && (
+        <div className={styles['userMenuDropdown']} role="menu">
+          <div className={styles['userMenuHeader']}>
+            <Avatar className={styles['avatarLg']}>
+              <AvatarFallback className={styles['avatarFallbackLg']}>{initials}</AvatarFallback>
+            </Avatar>
+            <div className={styles['userInfo']}>
+              <span className={styles['userName']}>{user?.username ?? '—'}</span>
+              <span className={styles['userEmail']}>{user?.email ?? '—'}</span>
+              {role && (
+                <span className={cn(styles['roleChip'], ROLE_CHIP_CLASS[role])}>
+                  {ROLE_LABELS[role]}
+                </span>
+              )}
             </div>
-          </>
-        )}
+          </div>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => void navigate(APP_ROUTES.PROFILE)}>
-          <UserIcon aria-hidden="true" />
-          Perfil
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => void navigate(APP_ROUTES.SETTINGS)}>
-          <SettingsIcon aria-hidden="true" />
-          Ajustes
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={logout} variant="destructive">
-          <LogOutIcon aria-hidden="true" />
-          Cerrar sesión
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          {!!user?.role && VISTA_ALLOWED_ROLES.includes(user.role) && (
+            <>
+              <div className={styles['userMenuSeparator']} />
+              <div className={styles['devSwitcher']}>
+                <span className={styles['devLabel']}>Vista</span>
+                <Select
+                  value={viewAs}
+                  onValueChange={(v: string) => {
+                    setViewAs(v as ViewRole);
+                  }}
+                >
+                  <SelectTrigger size="sm" aria-label={t('topbar.changeRoleView')}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {VISTA_ROLES.map((r) => (
+                      <SelectItem key={r} value={r}>
+                        {r}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+
+          <div className={styles['userMenuSeparator']} />
+          <button
+            role="menuitem"
+            className={styles['userMenuItem']}
+            onClick={() => {
+              void navigate(APP_ROUTES.PROFILE);
+              close();
+            }}
+          >
+            <UserIcon aria-hidden="true" />
+            Perfil
+          </button>
+          <button
+            role="menuitem"
+            className={styles['userMenuItem']}
+            onClick={() => {
+              void navigate(APP_ROUTES.SETTINGS);
+              close();
+            }}
+          >
+            <SettingsIcon aria-hidden="true" />
+            Ajustes
+          </button>
+          <div className={styles['userMenuSeparator']} />
+          <button
+            role="menuitem"
+            className={cn(styles['userMenuItem'], styles['userMenuItemDestructive'])}
+            onClick={() => {
+              logout();
+              close();
+            }}
+          >
+            <LogOutIcon aria-hidden="true" />
+            Cerrar sesión
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

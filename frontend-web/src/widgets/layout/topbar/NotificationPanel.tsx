@@ -8,7 +8,6 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Popover, PopoverTrigger, PopoverContent } from '@shared/ui/composed';
 import { Button } from '@shared/ui/primitives';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
@@ -47,22 +46,51 @@ export function NotificationPanel(): React.ReactElement {
   const { mutate: markAll } = useMarkAllAsRead();
   const navigate = useNavigate();
 
+  const [open, setOpen] = React.useState(false);
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
   const unreadCount = notifications?.filter((n) => !n.isRead).length ?? 0;
   const recent = notifications?.slice(0, 10) ?? [];
 
+  React.useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent): void => {
+      if (panelRef.current?.contains(e.target as Node)) return;
+      setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return (): void => {
+      document.removeEventListener('mousedown', handler);
+    };
+  }, [open]);
+
   return (
-    <div className={styles['notifWrapper']}>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            className={styles['iconBtn']}
-            aria-label={t('notifications.title')}
-          >
-            <BellIcon aria-hidden="true" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="end" sideOffset={8} className={styles['notifPanel']}>
+    <div ref={panelRef} className={styles['notifWrapper']}>
+      <Button
+        variant="ghost"
+        className={styles['iconBtn']}
+        aria-label={t('notifications.title')}
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => {
+          setOpen((o) => !o);
+        }}
+      >
+        <BellIcon aria-hidden="true" />
+      </Button>
+
+      {unreadCount > 0 && (
+        <span
+          className={styles['notifDot']}
+          aria-label={`${String(unreadCount)} sin leer`}
+          aria-hidden="true"
+        >
+          {unreadCount > 9 ? '9+' : String(unreadCount)}
+        </span>
+      )}
+
+      {open && (
+        <div className={styles['notifPanel']}>
           <div className={styles['notifPanelHeader']}>
             <span className={styles['notifPanelTitle']}>{t('notifications.title')}</span>
             {unreadCount > 0 && (
@@ -110,21 +138,13 @@ export function NotificationPanel(): React.ReactElement {
               className={styles['viewAllBtn']}
               onClick={() => {
                 void navigate(APP_ROUTES.NOTIFICATIONS);
+                setOpen(false);
               }}
             >
               {t('common.viewAll')} →
             </Button>
           </div>
-        </PopoverContent>
-      </Popover>
-      {unreadCount > 0 && (
-        <span
-          className={styles['notifDot']}
-          aria-label={`${String(unreadCount)} sin leer`}
-          aria-hidden="true"
-        >
-          {unreadCount > 9 ? '9+' : String(unreadCount)}
-        </span>
+        </div>
       )}
     </div>
   );

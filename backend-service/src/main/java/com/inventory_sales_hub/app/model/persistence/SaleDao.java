@@ -5,6 +5,7 @@ import com.inventory_sales_hub.app.model.entities.SaleStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -13,30 +14,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-public interface SaleDao extends JpaRepository<Sale, Long> {
+public interface SaleDao extends JpaRepository<Sale, Long>, JpaSpecificationExecutor<Sale> {
 
     @Query("SELECT s FROM Sale s LEFT JOIN FETCH s.customer LEFT JOIN FETCH s.processedBy ORDER BY s.createdAt DESC")
     List<Sale> findAllWithDetails();
-
-    @Query(
-        value = "SELECT s FROM Sale s LEFT JOIN s.customer c WHERE " +
-                "(:search IS NULL OR LOWER(CAST(s.id AS string)) LIKE LOWER(CONCAT('%', :search, '%')) " +
-                "OR LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
-                "AND (:dateFrom IS NULL OR s.createdAt >= :dateFrom) " +
-                "AND (:dateTo IS NULL OR s.createdAt <= :dateTo) " +
-                "ORDER BY s.createdAt DESC",
-        countQuery = "SELECT COUNT(s) FROM Sale s LEFT JOIN s.customer c WHERE " +
-                "(:search IS NULL OR LOWER(CAST(s.id AS string)) LIKE LOWER(CONCAT('%', :search, '%')) " +
-                "OR LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%'))) " +
-                "AND (:dateFrom IS NULL OR s.createdAt >= :dateFrom) " +
-                "AND (:dateTo IS NULL OR s.createdAt <= :dateTo)"
-    )
-    Page<Sale> findPaginated(
-            @Param("search") String search,
-            @Param("dateFrom") Instant dateFrom,
-            @Param("dateTo") Instant dateTo,
-            Pageable pageable
-    );
 
     @Query("SELECT s FROM Sale s LEFT JOIN FETCH s.customer LEFT JOIN FETCH s.processedBy WHERE s.id = :id")
     Optional<Sale> findByIdWithDetails(@Param("id") Long id);

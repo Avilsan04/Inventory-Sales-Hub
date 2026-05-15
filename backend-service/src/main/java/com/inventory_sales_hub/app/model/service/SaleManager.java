@@ -4,10 +4,12 @@ import com.inventory_sales_hub.app.exceptions.SaleException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.*;
 import com.inventory_sales_hub.app.model.persistence.*;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ public class SaleManager {
     @Autowired private CustomerDao customerDao;
     @Autowired private UserDao userDao;
     @Autowired private InventoryDao inventoryDao;
+    @Autowired private AuditService auditService;
     @Autowired private StockMovementDao stockMovementDao;
 
     public List<SaleResponse> getMyOrders(Long userId) {
@@ -58,8 +61,26 @@ public class SaleManager {
 
     public PaginatedResponse<SaleResponse> getAllPaginated(int page, int size, String search, Instant dateFrom, Instant dateTo) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        String searchParam = (search != null && !search.isBlank()) ? search : null;
-        Page<Sale> salePage = saleDao.findPaginated(searchParam, dateFrom, dateTo, pageable);
+        String searchTerm = (search != null && !search.isBlank()) ? search.toLowerCase() : null;
+
+        Specification<Sale> spec = (root, query, cb) -> cb.conjunction();
+        if (searchTerm != null) {
+            spec = spec.and((root, query, cb) -> {
+                root.join("customer", JoinType.LEFT);
+                return cb.or(
+                    cb.like(cb.lower(root.get("id").as(String.class)), "%" + searchTerm + "%"),
+                    cb.like(cb.lower(root.join("customer", JoinType.LEFT).get("name")), "%" + searchTerm + "%")
+                );
+            });
+        }
+        if (dateFrom != null) {
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("createdAt"), dateFrom));
+        }
+        if (dateTo != null) {
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), dateTo));
+        }
+
+        Page<Sale> salePage = saleDao.findAll(spec, pageable);
 
         List<Sale> sales = salePage.getContent();
         if (sales.isEmpty()) return new PaginatedResponse<>(List.of(), salePage.getTotalElements(), page, size);
@@ -170,7 +191,11 @@ public class SaleManager {
             saleItemDao.save(item);
         }
 
-        return toResponse(savedSale, saleItemDao.findBySaleIdWithProduct(savedSale.getId()));
+        List<SaleItem> savedItems = saleItemDao.findBySaleIdWithProduct(savedSale.getId());
+        auditService.record(userId, user.getUsername(), AuditAction.CREATE, AuditEntityType.SALE,
+                String.valueOf(savedSale.getId()), null,
+                Map.of("total", savedSale.getTotal(), "status", savedSale.getStatus().name()), null);
+        return toResponse(savedSale, savedItems);
     }
 
     @Transactional
@@ -219,9 +244,14 @@ public class SaleManager {
             }
         }
 
+        SaleStatus oldStatus = sale.getStatus();
         sale.setStatus(newStatus);
         sale.setUpdatedAt(Instant.now());
         saleDao.save(sale);
+
+        auditService.record(sale.getProcessedBy().getId(), sale.getProcessedBy().getUsername(),
+                AuditAction.STATUS_CHANGE, AuditEntityType.SALE, String.valueOf(id),
+                Map.of("status", oldStatus.name()), Map.of("status", newStatus.name()), null);
 
         return toResponse(sale, items);
     }
