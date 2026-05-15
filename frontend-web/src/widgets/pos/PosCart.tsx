@@ -203,9 +203,9 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
         </div>
 
         <Select
-          value={customerId ?? ''}
+          value={customerId ?? '__none__'}
           onValueChange={(val): void => {
-            setCustomer(val !== '' ? val : null);
+            setCustomer(val === '__none__' ? null : val);
           }}
         >
           <SelectTrigger
@@ -215,7 +215,7 @@ export function PosCart({ customers, isCreating, onCheckout }: Props): React.Rea
             <SelectValue placeholder={t('sales.checkout.customerOptional')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">{t('sales.checkout.customerOptional')}</SelectItem>
+            <SelectItem value="__none__">{t('sales.checkout.customerOptional')}</SelectItem>
             {customers?.map((c) => (
               <SelectItem key={c.id} value={c.id}>
                 {c.name}

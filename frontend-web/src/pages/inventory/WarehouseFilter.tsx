@@ -9,6 +9,8 @@ interface WarehouseFilterProps {
   allLabel: string;
 }
 
+const ALL_VALUE = '__all__';
+
 export function WarehouseFilter({
   warehouses,
   value,
@@ -19,16 +21,16 @@ export function WarehouseFilter({
   if (!warehouses || warehouses.length === 0) return null;
   return (
     <Select
-      value={value ?? ''}
+      value={value ?? ALL_VALUE}
       onValueChange={(val) => {
-        onValueChange(val !== '' ? val : null);
+        onValueChange(val === ALL_VALUE ? null : val);
       }}
     >
       <SelectTrigger size="sm" aria-label={placeholder}>
         <SelectValue placeholder={allLabel} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="">{allLabel}</SelectItem>
+        <SelectItem value={ALL_VALUE}>{allLabel}</SelectItem>
         {warehouses
           .filter((w) => w.isActive)
           .map((w) => (
