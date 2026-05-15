@@ -5,7 +5,7 @@ import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useAuthPresenter } from '../hooks/useAuthPresenter';
 import { useDependencies } from '@shared/hooks/useDependencies';
 import { APP_ROUTES } from '@shared/config/routes';
-import { Button, Input, Label, Spinner, BrandMark } from '@shared/ui/primitives';
+import { Button, Input, Label, Spinner } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -33,11 +33,6 @@ export function LoginForm({ onSuccess }: LoginFormProps): React.ReactElement {
 
   return (
     <div className={styles['wrapper']}>
-      <div className={styles['brand']}>
-        <BrandMark size={40} />
-        <span className={styles['brandName']}>{translate('common.appName')}</span>
-      </div>
-
       <Card className={styles['card']}>
         <form
           onSubmit={(e: React.BaseSyntheticEvent) => {

@@ -7,19 +7,6 @@
   max-width: $container-login-form;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-}
-
-.brandName {
-  font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-primary);
-  letter-spacing: $letter-spacing-tight;
-}
-
 .card {
   width: 100%;
   padding-top: $spacing-8 !important;
