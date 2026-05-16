@@ -5,18 +5,15 @@ import type { UseFormRegister, UseFormHandleSubmit, FieldErrors } from 'react-ho
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   registerCustomerSchema,
-  registerAdminSchema,
   registerCompanySchema,
   type RegisterCustomerValues,
-  type RegisterAdminValues,
   type RegisterCompanyValues,
 } from '../models/auth.schemas';
 import type { RegisterRequest, RegisterRole } from '../models/auth.types';
 import type { IAuthService } from '../services/IAuthService';
 import { telemetry } from '@shared/lib/observability';
 
-// Union of all register form value shapes
-type RegisterFormValues = RegisterCustomerValues | RegisterAdminValues | RegisterCompanyValues;
+type RegisterFormValues = RegisterCustomerValues | RegisterCompanyValues;
 
 export interface IRegisterPresenterProps {
   readonly onSuccess: () => void;
@@ -36,8 +33,7 @@ export interface IRegisterPresenter {
 
 function schemaForRole(
   role: RegisterRole
-): typeof registerCustomerSchema | typeof registerAdminSchema | typeof registerCompanySchema {
-  if (role === 'admin') return registerAdminSchema;
+): typeof registerCustomerSchema | typeof registerCompanySchema {
   if (role === 'company') return registerCompanySchema;
   return registerCustomerSchema;
 }
@@ -54,17 +50,6 @@ function buildRegisterRequest(data: RegisterFormValues, role: RegisterRole): Reg
       cif: d.cif,
       legalRepresentative: d.legalRepresentative,
       phone: d.phone,
-    };
-  }
-  if (role === 'admin') {
-    const d = data as RegisterAdminValues;
-    return {
-      username: d.username,
-      email: d.email,
-      password: d.password,
-      role,
-      fullName: d.fullName,
-      adminCode: d.adminCode,
     };
   }
   const d = data as RegisterCustomerValues;

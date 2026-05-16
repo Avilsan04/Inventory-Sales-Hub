@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckIcon, UserIcon, ShieldCheckIcon, Building2Icon } from 'lucide-react';
+import { CheckIcon, UserIcon, Building2Icon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import { RegisterForm } from '@features/auth';
@@ -15,7 +15,6 @@ import styles from '@shared/styles/themes/pages/Register.module.scss';
 
 const TABS: ReadonlyArray<{ role: RegisterRole; labelKey: string }> = [
   { role: 'customer', labelKey: 'auth.tabUser' },
-  { role: 'admin', labelKey: 'auth.tabAdmin' },
   { role: 'company', labelKey: 'auth.tabCompany' },
 ];
 
@@ -25,11 +24,6 @@ const ROLE_META: Record<RegisterRole, { titleKey: string; subtitleKey: string; I
       titleKey: 'auth.registerTitleCustomer',
       subtitleKey: 'auth.registerSubtitleCustomer',
       Icon: UserIcon,
-    },
-    admin: {
-      titleKey: 'auth.registerTitleAdmin',
-      subtitleKey: 'auth.registerSubtitleAdmin',
-      Icon: ShieldCheckIcon,
     },
     company: {
       titleKey: 'auth.registerTitleCompany',

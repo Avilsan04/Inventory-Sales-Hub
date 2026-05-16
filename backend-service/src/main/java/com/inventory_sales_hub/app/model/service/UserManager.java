@@ -40,8 +40,10 @@ public class UserManager {
         user.setEmail(params.email());
         user.setPassword(passwordEncoder.encode(params.password()));
         if (params.role() != null) {
-            try { user.setRole(Role.valueOf(params.role().toUpperCase())); }
-            catch (IllegalArgumentException ignored) {}
+            try {
+                Role requested = Role.valueOf(params.role().toUpperCase());
+                if (requested != Role.ADMIN) user.setRole(requested);
+            } catch (IllegalArgumentException ignored) {}
         }
 
         User saved = userDao.save(user);

@@ -39,24 +39,6 @@ export const registerCustomerSchema = z
     path: ['confirmPassword'],
   });
 
-export const registerAdminSchema = z
-  .object({
-    username: z
-      .string()
-      .min(
-        AUTH_VALIDATION_RULES.MIN_USERNAME_LENGTH,
-        `Min ${String(AUTH_VALIDATION_RULES.MIN_USERNAME_LENGTH)} characters`
-      ),
-    email: z.email('Valid email required'),
-    fullName: z.string().min(1, 'Required'),
-    adminCode: z.string().min(1, 'Required'),
-    ...passwordFields,
-  })
-  .refine((d) => d.password === d.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
 export const registerCompanySchema = z
   .object({
     companyName: z.string().min(1, 'Required'),
@@ -72,5 +54,4 @@ export const registerCompanySchema = z
   });
 
 export type RegisterCustomerValues = z.infer<typeof registerCustomerSchema>;
-export type RegisterAdminValues = z.infer<typeof registerAdminSchema>;
 export type RegisterCompanyValues = z.infer<typeof registerCompanySchema>;

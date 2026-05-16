@@ -1,6 +1,6 @@
 export type UserRole = 'company' | 'admin' | 'manager' | 'staff' | 'customer' | 'test';
 
-export type RegisterRole = Extract<UserRole, 'customer' | 'admin' | 'company'>;
+export type RegisterRole = Extract<UserRole, 'customer' | 'company'>;
 
 export interface LoginRequest {
   email: string;
@@ -12,9 +12,6 @@ export interface RegisterRequest {
   readonly email: string;
   readonly password: string;
   readonly role?: RegisterRole;
-  // admin fields
-  readonly fullName?: string;
-  readonly adminCode?: string;
   // company fields
   readonly companyName?: string;
   readonly cif?: string;

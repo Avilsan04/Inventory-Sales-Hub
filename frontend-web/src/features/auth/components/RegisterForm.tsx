@@ -113,18 +113,6 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
           </>
         ) : (
           <>
-            {role === 'admin' && (
-              <FormField label={translate('auth.fullName')} error={fieldError('fullName')} required>
-                <Input
-                  id="fullName"
-                  type="text"
-                  placeholder={translate('auth.fullNamePlaceholder')}
-                  autoComplete="name"
-                  disabled={isLoading}
-                  {...register('fullName')}
-                />
-              </FormField>
-            )}
             <FormField label={translate('auth.username')} error={fieldError('username')} required>
               <Input
                 id="username"
@@ -173,24 +161,6 @@ export function RegisterForm({ onSuccess, role }: RegisterFormProps): React.Reac
             {...register('confirmPassword')}
           />
         </FormField>
-
-        {role === 'admin' && (
-          <>
-            <div className={styles.infoCallout} role="note">
-              {translate('auth.adminCodeInfo')}
-            </div>
-            <FormField label={translate('auth.adminCode')} error={fieldError('adminCode')} required>
-              <Input
-                id="adminCode"
-                type="password"
-                placeholder={translate('auth.adminCodePlaceholder')}
-                autoComplete="off"
-                disabled={isLoading}
-                {...register('adminCode')}
-              />
-            </FormField>
-          </>
-        )}
       </div>
 
       <div className={styles.footer}>
