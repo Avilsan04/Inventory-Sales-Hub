@@ -5,7 +5,7 @@
   z-index: $z-sidebar;
   background-color: var(--color-overlay);
   opacity: 0;
-  transition: opacity $duration-base ease;
+  transition: opacity var(--duration-base) ease;
   pointer-events: none;
 
   @media (min-width: $breakpoint-lg) {
@@ -40,7 +40,7 @@
     height: $height-screen;
     z-index: $z-sidebar-mobile;
     transform: translateX(-100%);
-    transition: transform $duration-slow ease;
+    transition: transform var(--duration-slow) ease;
   }
 }
 
@@ -152,8 +152,8 @@
   text-decoration: none;
   position: relative;
   transition:
-    background-color $duration-fast ease,
-    color $duration-fast ease;
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
 
   &:hover {
     background-color: var(--color-sidebar-accent);
@@ -189,7 +189,7 @@
   height: $size-5;
   flex-shrink: 0;
   color: var(--color-sidebar-nav-inactive);
-  transition: color $duration-fast ease;
+  transition: color var(--duration-fast) ease;
   display: flex;
   align-items: center;
   justify-content: center;

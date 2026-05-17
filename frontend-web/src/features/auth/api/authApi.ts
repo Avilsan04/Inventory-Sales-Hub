@@ -72,4 +72,8 @@ export const authApi = {
   changePassword: async (payload: ChangePasswordRequest): Promise<void> => {
     await httpClient.patch('/auth/me/password', payload);
   },
+
+  deleteAccount: async (): Promise<void> => {
+    await httpClient.delete('/auth/me');
+  },
 };

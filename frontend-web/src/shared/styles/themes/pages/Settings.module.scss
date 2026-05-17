@@ -4,6 +4,7 @@
   flex-direction: column;
   gap: $spacing-6;
   max-width: $container-settings;
+  margin-inline: auto;
 }
 
 // ── Horizontal tab nav ────────────────────────────────────────────────────────
@@ -42,8 +43,8 @@
   cursor: pointer;
   white-space: nowrap;
   transition:
-    color $duration-fast ease,
-    border-bottom-color $duration-fast ease;
+    color var(--duration-fast) ease,
+    border-bottom-color var(--duration-fast) ease;
 
   &:hover {
     color: var(--color-text-primary);
@@ -110,6 +111,10 @@
   padding: $spacing-8;
   border-bottom: $border-width-base solid var(--color-border);
 
+  :global(html[data-density='compact']) & {
+    padding: $spacing-5;
+  }
+
   &:last-of-type {
     border-bottom: none;
   }
@@ -142,6 +147,10 @@
   gap: $spacing-3;
   padding: $spacing-5 $spacing-8;
   background-color: var(--color-surface-high);
+
+  :global(html[data-density='compact']) & {
+    padding: $spacing-5;
+  }
   border-top: $border-width-base solid var(--color-border);
 }
 
@@ -191,7 +200,7 @@
   border: $border-width-base solid var(--color-border);
   border-radius: $border-radius-2xl;
   box-shadow: var(--shadow-subtle);
-  transition: border-color $duration-fast ease;
+  transition: border-color var(--duration-fast) ease;
 
   &:hover {
     border-color: var(--color-primary);
@@ -274,7 +283,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $spacing-4 0;
+  gap: $spacing-8;
+  padding: $spacing-5 0;
   border-bottom: $border-width-base solid var(--color-border);
 
   &:last-child {
@@ -316,6 +326,8 @@
 }
 
 .toggleLabels {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: $spacing-0-5;

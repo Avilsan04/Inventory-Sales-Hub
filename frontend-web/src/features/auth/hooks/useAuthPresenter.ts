@@ -45,9 +45,9 @@ export function useAuthPresenter({ onSuccess, authService }: IAuthPresenterProps
         await authService.login({ email: data.email, password: data.password });
         onSuccess();
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : translate('auth.invalidCredentials');
-        telemetry.captureMessage('Authentication failure', { message });
-        setError(message);
+        const raw = err instanceof Error ? err.message : 'unknown';
+        telemetry.captureMessage('Authentication failure', { message: raw });
+        setError(translate('auth.invalidCredentials'));
       } finally {
         setIsLoading(false);
       }

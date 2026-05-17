@@ -22,8 +22,8 @@ body {
   background-color: var(--color-bg-primary);
   line-height: 1.5;
   transition:
-    color $duration-base ease,
-    background-color $duration-base ease;
+    color var(--duration-base) ease,
+    background-color var(--duration-base) ease;
 }
 
 #root {

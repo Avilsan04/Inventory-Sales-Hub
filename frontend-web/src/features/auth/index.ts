@@ -14,6 +14,7 @@ export {
   useAuthPresenter,
   useRegisterPresenter,
   useLogout,
+  useDeleteAccount,
   useAuthMe,
   useEffectiveRole,
   useForgotPassword,

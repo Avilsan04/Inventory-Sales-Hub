@@ -19,6 +19,11 @@
   gap: $spacing-6;
   padding: $page-padding;
   min-height: 100%;
+
+  :global(html[data-density='compact']) & {
+    padding: $spacing-4;
+    gap: $spacing-4;
+  }
 }
 
 .header {

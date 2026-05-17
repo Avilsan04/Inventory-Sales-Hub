@@ -48,13 +48,28 @@ function loadSettings(): AppSettings {
   }
 }
 
+const MOTION_VARS = [
+  '--duration-fast',
+  '--duration-base',
+  '--duration-slow',
+  '--duration-slower',
+] as const;
+
 function applySettings(s: AppSettings): void {
   const root = document.documentElement;
   root.style.setProperty('--color-primary', ACCENT_COLORS[s.accentColor]);
   root.setAttribute('data-scale', s.displayScale);
   root.setAttribute('data-density', s.density);
-  if (s.reduceMotion) root.setAttribute('data-reduce-motion', 'true');
-  else root.removeAttribute('data-reduce-motion');
+  // Inline style on html element overrides all stylesheet rules (no !important needed)
+  if (s.reduceMotion) {
+    MOTION_VARS.forEach((v) => {
+      root.style.setProperty(v, '0s');
+    });
+  } else {
+    MOTION_VARS.forEach((v) => {
+      root.style.removeProperty(v);
+    });
+  }
   if (s.highContrast) root.setAttribute('data-high-contrast', 'true');
   else root.removeAttribute('data-high-contrast');
 }

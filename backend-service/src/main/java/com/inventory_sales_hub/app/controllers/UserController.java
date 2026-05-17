@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -130,6 +131,21 @@ public class UserController {
         try {
             Number id = jwt.getClaim("id");
             return ResponseEntity.ok(userManager.updateProfile(id.longValue(), params));
+        } catch (UserException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping(path = "/me")
+    public ResponseEntity<?> deleteAccount(@AuthenticationPrincipal Jwt jwt) {
+        try {
+            Number id = jwt.getClaim("id");
+            userManager.deleteCurrentUser(id.longValue());
+            return ResponseEntity.noContent()
+                    .header(HttpHeaders.SET_COOKIE, clearRefreshCookie().toString())
+                    .build();
         } catch (UserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

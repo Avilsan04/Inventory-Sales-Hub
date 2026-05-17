@@ -145,6 +145,15 @@ public class UserManager {
     }
 
     @Transactional
+    public void deleteCurrentUser(Long userId) {
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new UserException("User not found"));
+        passwordResetTokenDao.deleteByUser(user);
+        refreshTokenDao.deleteByUser(user);
+        userDao.delete(user);
+    }
+
+    @Transactional
     public void changePassword(Long userId, String currentPassword, String newPassword) {
         User user = userDao.findById(userId)
                 .orElseThrow(() -> new UserException("User not found"));

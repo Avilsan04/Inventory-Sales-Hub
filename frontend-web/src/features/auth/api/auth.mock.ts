@@ -28,6 +28,7 @@ function getPersistedSession(): MockUserType | null {
 // Restore session from localStorage so refresh survives page reloads.
 let _activeUser: MockUserType = getPersistedSession() ?? 'admin';
 let _isLoggedIn: boolean = getPersistedSession() !== null;
+const _deletedUsers = new Set<MockUserType>();
 
 const CREDENTIAL_MAP: Record<string, MockUserType> = {
   'admin@ish.dev': 'admin',
@@ -49,7 +50,7 @@ export const authHandlers = [
     await delay(1000);
     const body = (await request.json()) as LoginRequest;
     const userType = CREDENTIAL_MAP[body.email];
-    if (!userType) {
+    if (!userType || _deletedUsers.has(userType)) {
       return new HttpResponse(null, { status: 401 });
     }
     _activeUser = userType;
@@ -123,6 +124,14 @@ export const authHandlers = [
 
   http.patch(`${API_BASE_URL}/auth/me/password`, async () => {
     await delay(500);
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.delete(`${API_BASE_URL}/auth/me`, async () => {
+    await delay(600);
+    _deletedUsers.add(_activeUser);
+    _isLoggedIn = false;
+    clearSession();
     return new HttpResponse(null, { status: 204 });
   }),
 ];
