@@ -180,6 +180,13 @@ export function AppRouter(): React.ReactElement {
                   </S>
                 }
               />
+            </Route>
+
+            <Route
+              element={
+                <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company', 'test']} />
+              }
+            >
               <Route
                 path={APP_ROUTES.CUSTOMERS}
                 element={
