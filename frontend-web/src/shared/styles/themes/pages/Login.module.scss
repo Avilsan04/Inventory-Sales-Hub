@@ -164,3 +164,28 @@
   color: var(--color-destructive);
   font-size: $font-size-sm;
 }
+
+.footerStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-3;
+  width: 100%;
+  padding-top: $spacing-3;
+}
+
+.recallLink {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-family: inherit;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}

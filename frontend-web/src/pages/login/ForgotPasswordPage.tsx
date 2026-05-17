@@ -2,12 +2,12 @@ import * as React from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeftIcon, CheckCircle2Icon } from 'lucide-react';
+import { CheckCircle2Icon } from 'lucide-react';
 import { useForgotPassword } from '@features/auth';
 import { APP_ROUTES } from '@shared/config/routes';
 import { useRoutingAdapter } from '@adapters/useRoutingAdapter';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { Button, Input, Label, Spinner, BrandMark } from '@shared/ui/primitives';
+import { Button, Input, Label, Spinner } from '@shared/ui/primitives';
 import {
   Card,
   CardHeader,
@@ -15,6 +15,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
+  AuthPageHeader,
 } from '@shared/ui/composed';
 import styles from '@shared/styles/themes/pages/Login.module.scss';
 
@@ -25,6 +26,10 @@ export function ForgotPasswordPage(): React.ReactElement {
   const { navigateTo } = useRoutingAdapter();
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending, isSuccess } = useForgotPassword();
+
+  const handleBackToLanding = React.useCallback((): void => {
+    navigateTo(APP_ROUTES.LANDING);
+  }, [navigateTo]);
 
   const {
     register,
@@ -40,20 +45,8 @@ export function ForgotPasswordPage(): React.ReactElement {
 
   return (
     <main className={styles['page']}>
-      <Button
-        variant="ghost"
-        className={styles['backBtn']}
-        onClick={() => {
-          navigateTo(APP_ROUTES.LOGIN);
-        }}
-      >
-        <ArrowLeftIcon size={16} aria-hidden="true" />
-        {t('auth.backToLogin')}
-      </Button>
+      <AuthPageHeader onLogoClick={handleBackToLanding} />
       <div className={styles['container']}>
-        <div className={styles['brandWrapper']}>
-          <BrandMark size={40} />
-        </div>
         <Card>
           <CardHeader>
             <CardTitle>{t('auth.forgotPassword')}</CardTitle>
@@ -93,9 +86,20 @@ export function ForgotPasswordPage(): React.ReactElement {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" disabled={isPending} className={styles['submitBtn']}>
-                  {isPending ? <Spinner size="sm" /> : t('auth.sendResetLink')}
-                </Button>
+                <div className={styles['footerStack']}>
+                  <Button type="submit" disabled={isPending} className={styles['submitBtn']}>
+                    {isPending ? <Spinner size="sm" /> : t('auth.sendResetLink')}
+                  </Button>
+                  <button
+                    type="button"
+                    className={styles['recallLink']}
+                    onClick={() => {
+                      navigateTo(APP_ROUTES.LOGIN);
+                    }}
+                  >
+                    {t('auth.rememberedPassword')}
+                  </button>
+                </div>
               </CardFooter>
             </form>
           )}
