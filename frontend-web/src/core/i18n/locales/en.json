@@ -559,6 +559,7 @@
     "addEmployee": "Add Employee",
     "newEmployee": "Add new employee",
     "editEmployee": "Update employee details",
+    "deleteEmployee": "Delete employee?",
     "emailPlaceholder": "employee@company.com",
     "roles": {
       "admin": "Admin",

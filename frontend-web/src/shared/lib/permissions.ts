@@ -7,6 +7,7 @@ export type Permission =
   | 'adjust:stock'
   | 'view:employees'
   | 'create:employee'
+  | 'delete:employee'
   | 'view:analytics'
   | 'create:sale'
   | 'manage:suppliers'
@@ -24,6 +25,7 @@ const ALL_PERMISSIONS: ReadonlyArray<Permission> = [
   'adjust:stock',
   'view:employees',
   'create:employee',
+  'delete:employee',
   'view:analytics',
   'create:sale',
   'manage:suppliers',
@@ -38,7 +40,14 @@ const ALL_PERMISSIONS: ReadonlyArray<Permission> = [
 const PERMISSIONS: Readonly<Record<UserRole, ReadonlyArray<Permission>>> = {
   admin: ALL_PERMISSIONS,
   // company can view analytics, employees, audit and manage suppliers — no POS or stock ops.
-  company: ['view:analytics', 'view:employees', 'view:audit', 'manage:suppliers', 'export:csv'],
+  company: [
+    'view:analytics',
+    'view:employees',
+    'delete:employee',
+    'view:audit',
+    'manage:suppliers',
+    'export:csv',
+  ],
   manager: [
     'create:product',
     'delete:product',
@@ -46,6 +55,7 @@ const PERMISSIONS: Readonly<Record<UserRole, ReadonlyArray<Permission>>> = {
     'adjust:stock',
     'view:employees',
     'create:employee',
+    'delete:employee',
     'view:analytics',
     'create:sale',
     'manage:suppliers',

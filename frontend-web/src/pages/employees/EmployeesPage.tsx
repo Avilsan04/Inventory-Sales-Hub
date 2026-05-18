@@ -1,7 +1,14 @@
 import * as React from 'react';
-import { UserCogIcon, CheckCircle2Icon, ShieldCheckIcon, PencilIcon, PlusIcon } from 'lucide-react';
+import {
+  UserCogIcon,
+  CheckCircle2Icon,
+  ShieldCheckIcon,
+  PencilIcon,
+  PlusIcon,
+  Trash2Icon,
+} from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { useEmployees } from '@features/employees';
+import { useEmployees, useDeleteEmployee } from '@features/employees';
 import { PermissionGuard } from '@features/auth';
 import { Spinner, Badge, Button, Pagination } from '@shared/ui/primitives';
 import {
@@ -10,6 +17,7 @@ import {
   CardTitle,
   CardAction,
   CardContent,
+  ConfirmDialog,
   EmptyState,
   Table,
   TableHeader,
@@ -44,9 +52,20 @@ function roleVariant(role: EmployeeRole): BadgeVariant {
 export function EmployeesPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
   const { data, isPending, isError, refetch } = useEmployees();
+  const deleteEmployee = useDeleteEmployee();
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editEmployee, setEditEmployee] = React.useState<Employee | null>(null);
+  const [deleteEmployeeId, setDeleteEmployeeId] = React.useState<string | null>(null);
+
+  function handleDelete(): void {
+    if (deleteEmployeeId === null) return;
+    deleteEmployee.mutate(deleteEmployeeId, {
+      onSuccess: () => {
+        setDeleteEmployeeId(null);
+      },
+    });
+  }
 
   const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Employee>(
     data,
@@ -207,6 +226,18 @@ export function EmployeesPage(): React.ReactElement {
                             >
                               <PencilIcon size={14} aria-hidden="true" />
                             </Button>
+                            <PermissionGuard permission="delete:employee">
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                aria-label={t('employees.deleteEmployee')}
+                                onClick={() => {
+                                  setDeleteEmployeeId(e.id);
+                                }}
+                              >
+                                <Trash2Icon size={14} aria-hidden="true" />
+                              </Button>
+                            </PermissionGuard>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -248,6 +279,16 @@ export function EmployeesPage(): React.ReactElement {
         onOpenChange={(open) => {
           if (!open) setEditEmployee(null);
         }}
+      />
+      <ConfirmDialog
+        open={deleteEmployeeId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteEmployeeId(null);
+        }}
+        title={t('employees.deleteEmployee')}
+        description={t('common.cannotUndo')}
+        isPending={deleteEmployee.isPending}
+        onConfirm={handleDelete}
       />
     </div>
   );

@@ -11,6 +11,7 @@ const ALL_MOCK_PERMISSIONS = [
   'adjust:stock',
   'view:employees',
   'create:employee',
+  'delete:employee',
   'view:analytics',
   'create:sale',
   'manage:suppliers',
@@ -43,6 +44,7 @@ const MOCK_ROLE_PERMISSIONS: Record<MockRole, ReadonlyArray<MockPermission>> = {
     'adjust:stock',
     'view:employees',
     'create:employee',
+    'delete:employee',
     'view:analytics',
     'create:sale',
     'manage:suppliers',
@@ -59,7 +61,14 @@ const MOCK_ROLE_PERMISSIONS: Record<MockRole, ReadonlyArray<MockPermission>> = {
     'close:cash-session',
     'transfer:stock',
   ],
-  company: ['view:analytics', 'view:employees', 'view:audit', 'manage:suppliers', 'export:csv'],
+  company: [
+    'view:analytics',
+    'view:employees',
+    'delete:employee',
+    'view:audit',
+    'manage:suppliers',
+    'export:csv',
+  ],
   customer: ['create:sale'],
 };
 

@@ -69,7 +69,7 @@ export const employeeHandlers = [
 
   http.delete(`${API_BASE_URL}/employees/:id`, async ({ params, request }) => {
     await delay(400);
-    const denied = requirePermission(request, 'create:employee');
+    const denied = requirePermission(request, 'delete:employee');
     if (denied) return denied;
     const tenantId = resolveTenant(request);
     const employees = getTenantBucket(tenantId, 'employees', () => baseEmployees);
