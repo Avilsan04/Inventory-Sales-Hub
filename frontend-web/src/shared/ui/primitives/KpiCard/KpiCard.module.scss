@@ -107,3 +107,25 @@
 .icon-error {
   background: var(--color-error);
 }
+
+// ── Adaptive density ─────────────────────────────────────────────────────────
+@media (max-width: #{$breakpoint-md}) {
+  .card {
+    padding: $spacing-4; // 1.25rem → 1rem
+  }
+}
+
+@media (max-width: #{$breakpoint-sm}) {
+  .card {
+    gap: $spacing-2;
+  }
+
+  .value {
+    font-size: $font-size-xl;
+  }
+
+  .iconContainer {
+    width: $size-8;
+    height: $size-8;
+  }
+}

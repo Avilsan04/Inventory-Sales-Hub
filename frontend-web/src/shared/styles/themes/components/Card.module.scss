@@ -50,3 +50,30 @@
   align-items: center;
   padding: 0 $spacing-6;
 }
+
+// ── Adaptive density ─────────────────────────────────────────────────────────
+@media (max-width: #{$breakpoint-md}) {
+  .card {
+    padding: $spacing-5 0; // 1.5rem → 1.25rem
+    gap: $spacing-5;
+  }
+
+  .cardHeader,
+  .cardContent,
+  .cardFooter {
+    padding: 0 $spacing-5;
+  }
+}
+
+@media (max-width: #{$breakpoint-sm}) {
+  .card {
+    padding: $spacing-4 0;
+    gap: $spacing-4;
+  }
+
+  .cardHeader,
+  .cardContent,
+  .cardFooter {
+    padding: 0 $spacing-4;
+  }
+}

@@ -96,7 +96,7 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
             aria-expanded={currencyOpen}
           >
             <span className={styles['currencySymbol']}>{currentCurrency.symbol}</span>
-            <span>{currentCurrency.value}</span>
+            <span className={styles['currencyLabel']}>{currentCurrency.value}</span>
             <ChevronDownIcon className={styles['currencyChevron']} aria-hidden="true" />
           </Button>
           {currencyOpen && (
@@ -140,7 +140,7 @@ export function TopBar({ onToggleSidebar }: TopBarProps): React.ReactElement {
             aria-expanded={langOpen}
           >
             <img src={currentLang.flag} alt="" aria-hidden="true" className={styles['langFlag']} />
-            <span>{language.toUpperCase()}</span>
+            <span className={styles['langLabel']}>{language.toUpperCase()}</span>
             <ChevronDownIcon className={styles['langChevron']} aria-hidden="true" />
           </Button>
           {langOpen && (

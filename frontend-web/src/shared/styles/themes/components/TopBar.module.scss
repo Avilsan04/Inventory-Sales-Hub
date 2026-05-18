@@ -65,8 +65,8 @@
   justify-content: center;
   min-width: 0;
 
-  // Collapse to icon-only width on mobile — search remains accessible via tap
-  @media (max-width: #{$breakpoint-sm - 1px}) {
+  // Collapse to icon-only width when sidebar is hidden — search remains accessible via tap
+  @media (max-width: #{$breakpoint-md - 1px}) {
     flex: 0 0 auto;
   }
 }
@@ -143,8 +143,8 @@
     border-color: var(--color-border-focus);
   }
 
-  // Compact icon-only on mobile — still tappable, triggers dialog
-  @media (max-width: #{$breakpoint-sm - 1px}) {
+  // Compact icon-only when sidebar is hidden — still tappable, triggers dialog
+  @media (max-width: #{$breakpoint-md - 1px}) {
     width: $size-9;
     max-width: none;
     padding: 0;
@@ -169,7 +169,7 @@
   flex: 1;
   text-align: left;
 
-  @media (max-width: #{$breakpoint-sm - 1px}) {
+  @media (max-width: #{$breakpoint-md - 1px}) {
     display: none;
   }
 }
@@ -189,7 +189,7 @@
   pointer-events: none;
   font-family: $font-family-mono;
 
-  @media (max-width: #{$breakpoint-sm - 1px}) {
+  @media (max-width: #{$breakpoint-md - 1px}) {
     display: none;
   }
 }
@@ -970,4 +970,35 @@
   border-color: var(--color-primary);
   color: var(--color-primary-hover);
   font-weight: $font-weight-semibold;
+}
+
+// ── Compact mode: sidebar hidden, topbar carries full nav weight (<lg) ───────
+@media (max-width: #{$breakpoint-lg - 1px}) {
+  .currencyLabel,
+  .langLabel,
+  .quickActionLabel {
+    display: none;
+  }
+
+  .topbarSeparator {
+    display: none;
+  }
+}
+
+// ── Compact density: sidebar hidden, search icon-only (<md) ─────────────────
+@media (max-width: #{$breakpoint-md - 1px}) {
+  .topbar {
+    padding: 0 $spacing-3;
+    gap: $spacing-2;
+  }
+
+  // Preserve WCAG 44px touch targets — visual size unchanged, hit area via min-size
+  .iconBtn,
+  .currencyBtn,
+  .langBtn,
+  .menuBtn,
+  .userMenuTrigger {
+    min-width: $size-12; // 3rem / 48px — nearest token above WCAG 44px minimum
+    min-height: $size-12;
+  }
 }

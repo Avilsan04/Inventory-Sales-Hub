@@ -33,7 +33,7 @@ export function QuickActionBtn(): React.ReactElement | null {
   return (
     <Button size="sm" className={styles['quickActionBtn']} onClick={() => void navigate(route)}>
       <Icon aria-hidden="true" />
-      {label}
+      <span className={styles['quickActionLabel']}>{label}</span>
     </Button>
   );
 }

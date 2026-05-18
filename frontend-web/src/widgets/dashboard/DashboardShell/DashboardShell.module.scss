@@ -34,6 +34,10 @@
   @media (max-width: $breakpoint-md) {
     gap: $spacing-4;
   }
+
+  @media (max-width: $breakpoint-sm) {
+    gap: $spacing-3;
+  }
 }
 
 .section {
@@ -53,6 +57,7 @@
 
   @media (max-width: $breakpoint-sm) {
     grid-template-columns: 1fr;
+    gap: $spacing-3;
   }
 }
 
