@@ -29,24 +29,46 @@ const MONTH_LABELS: Record<string, string> = {
   '12': 'Dec',
 };
 
+import { formatAmount } from '@shared/lib';
+
+function formatPeriodLabel(period: string): string {
+  if (period.length === 10) {
+    // Daily: YYYY-MM-DD → "19 Apr"
+    const parts = period.split('-');
+    const mm = parts[1] ?? '';
+    const dd = parts[2] ?? '';
+    return `${dd} ${MONTH_LABELS[mm] ?? mm}`;
+  }
+  // Monthly: YYYY-MM → "Apr"
+  return MONTH_LABELS[period.slice(5)] ?? period.slice(5);
+}
+
 interface TooltipRow {
   entry: TooltipPayloadEntry;
   index: number;
 }
 
-function formatTooltipValue(entry: TooltipPayloadEntry): string {
-  const v = entry.value;
-  if (typeof v !== 'number') return String(v ?? '');
-  return entry.name === 'Revenue' ? `$${v.toLocaleString()}` : v.toString();
+interface ChartTooltipProps extends TooltipContentProps {
+  currency: string;
 }
 
-function ChartTooltip({ active, payload, label }: TooltipContentProps): React.ReactElement | null {
+function ChartTooltip({
+  active,
+  payload,
+  label,
+  currency,
+}: ChartTooltipProps): React.ReactElement | null {
   if (!active || !payload.length) return null;
   return (
     <div className={styles.tooltipContainer}>
       <p className={styles.tooltipLabel}>{String(label ?? '')}</p>
       {payload.map((entry, i) => {
         const row: TooltipRow = { entry, index: i };
+        const v = entry.value;
+        const formatted =
+          typeof v === 'number' && entry.name === 'Revenue'
+            ? formatAmount(v, currency)
+            : String(v ?? '');
         return (
           <div key={String(row.entry.name ?? row.index)} className={styles.tooltipRow}>
             <span
@@ -54,7 +76,7 @@ function ChartTooltip({ active, payload, label }: TooltipContentProps): React.Re
               style={{ background: entry.color ?? 'var(--color-chart-1)' }}
             />
             <span className={styles.tooltipName}>{String(entry.name ?? '')}</span>
-            <span className={styles.tooltipValue}>{formatTooltipValue(entry)}</span>
+            <span className={styles.tooltipValue}>{formatted}</span>
           </div>
         );
       })}
@@ -65,29 +87,38 @@ function ChartTooltip({ active, payload, label }: TooltipContentProps): React.Re
 interface Props {
   data: SalesPeriod[] | undefined;
   isLoading: boolean;
+  currency?: string;
   ariaLabel?: string;
 }
 
 export function RevenueAreaChart({
   data,
   isLoading,
+  currency = 'EUR',
   ariaLabel = 'Revenue and orders area chart',
 }: Props): React.ReactElement {
   const colors = useChartColors();
+
+  const tooltip = React.useCallback(
+    (props: TooltipContentProps) => <ChartTooltip {...props} currency={currency} />,
+    [currency]
+  );
 
   if (isLoading || !data) {
     return <Skeleton className={styles.chartSkeleton} />;
   }
 
   const chartData = data.map((d) => ({
-    month: MONTH_LABELS[d.period.slice(5)] ?? d.period.slice(5),
+    label: formatPeriodLabel(d.period),
     Revenue: d.revenue,
     Orders: d.orders,
   }));
 
+  const xAxisInterval = chartData.length <= 10 ? 0 : Math.floor(chartData.length / 8);
+
   const formatYAxis = (v: number | string): string => {
     if (typeof v !== 'number') return v;
-    return v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${String(v)}`;
+    return formatAmount(v >= 1000 ? v / 1000 : v, currency) + (v >= 1000 ? 'k' : '');
   };
 
   return (
@@ -106,10 +137,11 @@ export function RevenueAreaChart({
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke={colors.border} vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="label"
             tick={{ fill: colors.textMuted, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
+            interval={xAxisInterval}
           />
           <YAxis
             yAxisId="left"
@@ -127,7 +159,7 @@ export function RevenueAreaChart({
             tickLine={false}
             width={32}
           />
-          <Tooltip content={ChartTooltip} />
+          <Tooltip content={tooltip} />
           <Area
             yAxisId="left"
             type="monotone"

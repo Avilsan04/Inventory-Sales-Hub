@@ -31,6 +31,7 @@ export const analyticsApi = {
 
   getSalesAnalytics: async (params?: SalesAnalyticsParams): Promise<SalesPeriod[]> => {
     const queryParams: Record<string, string> = {};
+    if (params?.period) queryParams['period'] = params.period;
     if (params?.from) queryParams['start'] = params.from;
     if (params?.to) queryParams['end'] = params.to;
     const res = await httpClient.get<unknown>(

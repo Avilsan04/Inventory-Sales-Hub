@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 import { useChartColors } from '@shared/hooks/useChartColors';
 import { Skeleton } from '@shared/ui/primitives';
+import { formatAmount } from '@shared/lib';
 import styles from '@shared/styles/themes/components/ChartTooltip.module.scss';
 
 export interface StatusSlice {
@@ -11,7 +12,15 @@ export interface StatusSlice {
   revenue: number;
 }
 
-function StatusTooltip({ active, payload }: TooltipContentProps): React.ReactElement | null {
+interface StatusTooltipProps extends TooltipContentProps {
+  currency: string;
+}
+
+function StatusTooltip({
+  active,
+  payload,
+  currency,
+}: StatusTooltipProps): React.ReactElement | null {
   if (!active || !payload.length) return null;
   const entry = payload[0];
   if (!entry) return null;
@@ -23,7 +32,7 @@ function StatusTooltip({ active, payload }: TooltipContentProps): React.ReactEle
         Orders: <strong>{slice.count}</strong>
       </p>
       <p className={styles.tooltipStat}>
-        Revenue: <strong>${slice.revenue.toLocaleString()}</strong>
+        Revenue: <strong>{formatAmount(slice.revenue, currency)}</strong>
       </p>
     </div>
   );
@@ -32,6 +41,7 @@ function StatusTooltip({ active, payload }: TooltipContentProps): React.ReactEle
 interface Props {
   data: StatusSlice[] | undefined;
   isLoading: boolean;
+  currency?: string;
 }
 
 const RADIAN = Math.PI / 180;
@@ -72,8 +82,13 @@ function renderCustomLabel({
   );
 }
 
-export function SalesDonutChart({ data, isLoading }: Props): React.ReactElement {
+export function SalesDonutChart({ data, isLoading, currency = 'EUR' }: Props): React.ReactElement {
   const colors = useChartColors();
+
+  const tooltip = React.useCallback(
+    (props: TooltipContentProps) => <StatusTooltip {...props} currency={currency} />,
+    [currency]
+  );
 
   if (isLoading || !data) {
     return <Skeleton className={styles.donutSkeleton} />;
@@ -102,7 +117,7 @@ export function SalesDonutChart({ data, isLoading }: Props): React.ReactElement 
               <Cell key={i} fill={sliceColors[i % sliceColors.length]} />
             ))}
           </Pie>
-          <Tooltip content={StatusTooltip} />
+          <Tooltip content={tooltip} />
         </PieChart>
       </ResponsiveContainer>
 

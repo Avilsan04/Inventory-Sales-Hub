@@ -604,6 +604,10 @@
     "orders": "Orders",
     "revenueOverTime": "Revenue Over Time",
     "revenueOverTimeSubtitle": "Monthly revenue and order volume for the last 12 months",
+    "revenueSubtitle7d": "Daily revenue for the last 7 days",
+    "revenueSubtitle30d": "Daily revenue for the last 30 days",
+    "revenueSubtitle90d": "Revenue for the last 90 days",
+    "revenueSubtitleCustom": "Revenue for the selected period",
     "salesByStatus": "Sales by Status",
     "topProductsRevenue": "Top Products by Revenue",
     "topProducts": "Top products",
@@ -615,6 +619,10 @@
     "rangeCustom": "Custom",
     "exportProducts": "Export products",
     "exportCustomers": "Export customers",
+    "toasts": {
+      "exportEmptyProducts": "No products available to export",
+      "exportEmptyCustomers": "No customers available to export"
+    },
     "dateRangeGroup": "Date range",
     "kpiAriaLabel": "Key performance indicators",
     "col": {

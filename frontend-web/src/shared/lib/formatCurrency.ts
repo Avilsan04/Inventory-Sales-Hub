@@ -33,3 +33,24 @@ export function useFormatCurrency(): (amountInCents: number) => string {
   const locale = LOCALE_MAP[language] ?? 'en-GB';
   return (amountInCents: number) => formatCurrency(amountInCents, currency, locale);
 }
+
+/** Format a plain (non-cents) amount as a localized currency string */
+export function formatAmount(amount: number, currency: string, locale = 'en-GB'): string {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
+/**
+ * Hook that formats plain (non-cents) amounts using the active locale and currency.
+ * Use for analytics and inventory values that come from the backend as raw decimals.
+ */
+export function useFormatAmount(): (amount: number) => string {
+  const { language } = useLanguageAdapter();
+  const { currency } = useCurrencyAdapter();
+  const locale = LOCALE_MAP[language] ?? 'en-GB';
+  return (amount: number) => formatAmount(amount, currency, locale);
+}

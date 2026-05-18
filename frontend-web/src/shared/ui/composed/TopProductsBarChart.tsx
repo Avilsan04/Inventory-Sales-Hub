@@ -12,15 +12,20 @@ import {
 import type { TooltipContentProps } from 'recharts';
 import { useChartColors } from '@shared/hooks/useChartColors';
 import { Skeleton } from '@shared/ui/primitives';
+import { formatAmount } from '@shared/lib';
 import type { TopProduct } from '@entities/analytics';
 import styles from '@shared/styles/themes/components/ChartTooltip.module.scss';
 
-function BarTooltip({ active, payload }: TooltipContentProps): React.ReactElement | null {
+interface BarTooltipProps extends TooltipContentProps {
+  currency: string;
+}
+
+function BarTooltip({ active, payload, currency }: BarTooltipProps): React.ReactElement | null {
   if (!active || !payload.length) return null;
   const entry = payload[0];
   if (!entry) return null;
   const v = entry.value;
-  const formatted = typeof v === 'number' ? `$${v.toLocaleString()}` : (v ?? '').toString();
+  const formatted = typeof v === 'number' ? formatAmount(v, currency) : (v ?? '').toString();
   return (
     <div className={styles['tooltipContainer']}>
       <p className={styles['tooltipTitle']}>{String(entry.name ?? '')}</p>
@@ -34,10 +39,20 @@ function BarTooltip({ active, payload }: TooltipContentProps): React.ReactElemen
 interface Props {
   data: TopProduct[] | undefined;
   isLoading: boolean;
+  currency?: string;
 }
 
-export function TopProductsBarChart({ data, isLoading }: Props): React.ReactElement {
+export function TopProductsBarChart({
+  data,
+  isLoading,
+  currency = 'EUR',
+}: Props): React.ReactElement {
   const colors = useChartColors();
+
+  const tooltip = React.useCallback(
+    (props: TooltipContentProps) => <BarTooltip {...props} currency={currency} />,
+    [currency]
+  );
 
   if (isLoading || !data) {
     return <Skeleton className={styles['donutSkeleton']} />;
@@ -52,7 +67,7 @@ export function TopProductsBarChart({ data, isLoading }: Props): React.ReactElem
 
   const formatXAxis = (v: number | string): string => {
     if (typeof v !== 'number') return v;
-    return v >= 1000 ? `$${(v / 1000).toFixed(0)}k` : `$${String(v)}`;
+    return formatAmount(v >= 1000 ? v / 1000 : v, currency) + (v >= 1000 ? 'k' : '');
   };
 
   return (
@@ -79,7 +94,7 @@ export function TopProductsBarChart({ data, isLoading }: Props): React.ReactElem
           tickLine={false}
           width={110}
         />
-        <Tooltip content={BarTooltip} cursor={{ fill: 'var(--color-muted)', opacity: 0.3 }} />
+        <Tooltip content={tooltip} cursor={{ fill: 'var(--color-muted)', opacity: 0.3 }} />
         <Bar dataKey="Revenue" radius={[0, 4, 4, 0]}>
           {chartData.map((_, i) => (
             // eslint-disable-next-line @typescript-eslint/no-deprecated

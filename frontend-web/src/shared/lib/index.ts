@@ -1,5 +1,12 @@
 export { cn } from './cn';
-export { formatCurrency, toCents, fromCents, useFormatCurrency } from './formatCurrency';
+export {
+  formatCurrency,
+  formatAmount,
+  toCents,
+  fromCents,
+  useFormatCurrency,
+  useFormatAmount,
+} from './formatCurrency';
 export {
   formatOrderId,
   formatDate,

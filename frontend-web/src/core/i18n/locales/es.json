@@ -604,6 +604,10 @@
     "orders": "Pedidos",
     "revenueOverTime": "Ingresos en el tiempo",
     "revenueOverTimeSubtitle": "Ingresos mensuales y volumen de pedidos en los últimos 12 meses",
+    "revenueSubtitle7d": "Ingresos diarios en los últimos 7 días",
+    "revenueSubtitle30d": "Ingresos diarios en los últimos 30 días",
+    "revenueSubtitle90d": "Ingresos en los últimos 90 días",
+    "revenueSubtitleCustom": "Ingresos en el periodo seleccionado",
     "salesByStatus": "Ventas por Estado",
     "topProductsRevenue": "Productos por Ingresos",
     "topProducts": "Productos destacados",
@@ -615,6 +619,10 @@
     "rangeCustom": "Personalizado",
     "exportProducts": "Exportar productos",
     "exportCustomers": "Exportar clientes",
+    "toasts": {
+      "exportEmptyProducts": "No hay productos para exportar",
+      "exportEmptyCustomers": "No hay clientes para exportar"
+    },
     "dateRangeGroup": "Rango de fechas",
     "kpiAriaLabel": "Indicadores clave de rendimiento",
     "col": {
