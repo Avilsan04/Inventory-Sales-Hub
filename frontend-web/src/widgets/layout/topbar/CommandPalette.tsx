@@ -25,8 +25,9 @@ export function CommandPalette(): React.ReactElement {
     () =>
       Object.entries(ROUTE_META)
         .filter(([, meta]) => !meta.roles || (role !== undefined && meta.roles.includes(role)))
-        .map(([route, meta]) => ({ route, ...meta })),
-    [role]
+        .map(([route, meta]) => ({ route, ...meta }))
+        .sort((a, b) => t(a.labelKey).localeCompare(t(b.labelKey))),
+    [role, t]
   );
 
   const filtered = React.useMemo(() => {
