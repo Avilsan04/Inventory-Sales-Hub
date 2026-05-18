@@ -8,6 +8,7 @@ import com.inventory_sales_hub.app.model.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -28,6 +29,7 @@ public class AnalyticsManager {
     @Autowired private ProductDao productDao;
     @Autowired private CustomerDao customerDao;
 
+    @Transactional(readOnly = true)
     public DashboardResponse getDashboard() {
         LocalDate today = LocalDate.now(ZoneOffset.UTC);
         Instant startOfDay   = today.atStartOfDay(ZoneOffset.UTC).toInstant();
@@ -62,6 +64,7 @@ public class AnalyticsManager {
                 totalActiveProducts, totalCustomers, lowStockCount, inventoryValue);
     }
 
+    @Transactional(readOnly = true)
     public List<SalesPeriodDataPoint> getSalesAnalytics(LocalDate startDate, LocalDate endDate) {
         Instant start = startDate.atStartOfDay(ZoneOffset.UTC).toInstant();
         Instant end   = endDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
@@ -85,6 +88,7 @@ public class AnalyticsManager {
         return result;
     }
 
+    @Transactional(readOnly = true)
     public List<TopProductResponse> getTopProducts(int limit) {
         return saleItemDao.findTopProducts(SaleStatus.COMPLETED, PageRequest.of(0, limit))
                 .stream()
@@ -95,6 +99,7 @@ public class AnalyticsManager {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<TopCustomerResponse> getTopCustomers(int limit) {
         return saleDao.findTopCustomers(SaleStatus.COMPLETED, PageRequest.of(0, limit))
                 .stream()
@@ -106,6 +111,7 @@ public class AnalyticsManager {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public InventoryValueResponse getInventoryValue() {
         List<Inventory> all = inventoryDao.findAllWithProduct();
         BigDecimal purchaseValue = BigDecimal.ZERO;
@@ -128,6 +134,7 @@ public class AnalyticsManager {
                 totalUnits, totalProducts);
     }
 
+    @Transactional(readOnly = true)
     public List<InventoryResponse> getLowStockAlerts() {
         return inventoryDao.findLowStock().stream().map(i -> {
             ProductResponse p = toProductResponse(i.getProduct());
