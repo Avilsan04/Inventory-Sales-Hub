@@ -1,5 +1,16 @@
 import * as React from 'react';
 import { useSalesAnalytics, useLowStockAlerts } from './useAnalytics';
+
+function currentWeekRange(): { from: string; to: string } {
+  const today = new Date();
+  const daysToMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - daysToMonday);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const iso = (d: Date): string => d.toISOString().slice(0, 10);
+  return { from: iso(monday), to: iso(sunday) };
+}
 import { useSalesFlat as useSales } from '@features/sales';
 import { useEmployees } from '@features/employees';
 import { computeStatusSlices } from '@shared/lib/saleCalculations';
@@ -53,7 +64,8 @@ function computeManagerStats(
 }
 
 export function useManagerStats(): ManagerStats {
-  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics({ period: '7d' });
+  const weekRange = React.useMemo(() => currentWeekRange(), []);
+  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(weekRange);
   const { data: allSales, isLoading: salesLoading } = useSales();
   const { data: lowStockItems, isLoading: alertsLoading } = useLowStockAlerts();
   const { data: employees, isLoading: employeesLoading } = useEmployees();

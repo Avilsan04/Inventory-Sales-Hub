@@ -160,7 +160,7 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
-            <div className={styles['gridPriceShort']}>
+            <div className={styles['grid2']}>
               <FormField label={t('products.uom')} error={errors.uom?.message}>
                 <Controller
                   name="uom"

@@ -271,6 +271,15 @@
       "weeklySalesChart": "Weekly Sales Chart",
       "salesByStatusChart": "Sales by Status",
       "recentTransactionsSection": "Recent Transactions"
+    },
+    "labels": {
+      "last7d": "(7d)",
+      "inflow": "In:",
+      "outflow": "Out:",
+      "skusTracked": "{{count}} SKUs tracked",
+      "noWasteReported": "No waste reported",
+      "estimatedLoss": "Estimated loss:",
+      "units": "units"
     }
   },
   "inventory": {

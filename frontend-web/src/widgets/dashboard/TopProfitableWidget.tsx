@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TrophyIcon } from 'lucide-react';
 import { useTopProducts } from '@features/analytics';
 import { useFormatCurrency } from '@shared/lib/formatCurrency';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Skeleton } from '@shared/ui/primitives';
 import { Card, CardHeader, CardTitle, CardContent } from '@shared/ui/composed';
 import styles from './DashboardWidget.module.scss';
@@ -9,13 +10,14 @@ import styles from './DashboardWidget.module.scss';
 export function TopProfitableWidget(): React.ReactElement {
   const { data, isLoading } = useTopProducts();
   const fmt = useFormatCurrency();
+  const { translate: t } = useTranslationAdapter();
   const top5 = data?.slice(0, 5) ?? [];
 
   return (
     <Card>
       <CardHeader className={styles['cardHeader']}>
         <TrophyIcon size={16} aria-hidden="true" />
-        <CardTitle>Top Products</CardTitle>
+        <CardTitle>{t('dashboard.section.topProducts')}</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -25,7 +27,7 @@ export function TopProfitableWidget(): React.ReactElement {
             ))}
           </div>
         ) : top5.length === 0 ? (
-          <p className={styles['emptyText']}>No data</p>
+          <p className={styles['emptyText']}>{t('common.noData')}</p>
         ) : (
           <ol className={styles['rankList']}>
             {top5.map((p, i) => (

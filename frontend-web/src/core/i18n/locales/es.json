@@ -271,6 +271,15 @@
       "weeklySalesChart": "Gráfico semanal de ventas",
       "salesByStatusChart": "Ventas por estado",
       "recentTransactionsSection": "Transacciones recientes"
+    },
+    "labels": {
+      "last7d": "(7d)",
+      "inflow": "Entradas:",
+      "outflow": "Salidas:",
+      "skusTracked": "{{count}} SKUs registrados",
+      "noWasteReported": "Sin mermas reportadas",
+      "estimatedLoss": "Pérdida estimada:",
+      "units": "uds."
     }
   },
   "inventory": {

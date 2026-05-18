@@ -12,6 +12,17 @@ import type { StatusSliceData } from '@shared/lib/saleCalculations';
 import type { DashboardKpi, LowStockAlert, SalesPeriod } from '@entities/analytics';
 import type { Sale } from '@entities/sale';
 
+function currentWeekRange(): { from: string; to: string } {
+  const today = new Date();
+  const daysToMonday = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - daysToMonday);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const iso = (d: Date): string => d.toISOString().slice(0, 10);
+  return { from: iso(monday), to: iso(sunday) };
+}
+
 export interface DashboardStats {
   kpi: DashboardKpi | undefined;
   kpiLoading: boolean;
@@ -30,7 +41,8 @@ export function useDashboardStats(): DashboardStats {
   const { data: recentSales = [], isLoading: salesLoading } = useRecentSales(5);
   const { data: sales } = useSalesFlat();
   const { data: topCustomers } = useTopCustomers();
-  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics({ period: '7d' });
+  const weekRange = React.useMemo(() => currentWeekRange(), []);
+  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(weekRange);
 
   const customerMap = React.useMemo((): Map<string, string> => {
     const map = new Map<string, string>();
