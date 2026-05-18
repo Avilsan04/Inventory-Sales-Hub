@@ -1,3 +1,10 @@
 package com.inventory_sales_hub.app.model.dto;
 
-public record CustomerParams(String name, String email, String phone) {}
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record CustomerParams(
+        @NotBlank String name,
+        @Email String email,
+        String phone
+) {}

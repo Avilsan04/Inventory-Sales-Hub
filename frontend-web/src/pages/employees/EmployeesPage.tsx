@@ -69,9 +69,16 @@ export function EmployeesPage(): React.ReactElement {
 
   const { page, setPage, pageCount, pageSize, setPageSize, paginated } = useTableFilters<Employee>(
     data,
-    () => true,
+    null,
     EMPLOYEE_PAGE_SIZE
   );
+
+  const activeCount = React.useMemo(() => (data ?? []).filter((e) => e.isActive).length, [data]);
+  const adminCount = React.useMemo(
+    () => (data ?? []).filter((e) => e.role === 'admin').length,
+    [data]
+  );
+  const totalEmployees = data?.length ?? 0;
 
   if (isPending) {
     return (
@@ -98,9 +105,6 @@ export function EmployeesPage(): React.ReactElement {
     );
   }
 
-  const activeCount = data.filter((e) => e.isActive).length;
-  const adminCount = data.filter((e) => e.role === 'admin').length;
-  const totalEmployees = data.length;
   const employees = paginated;
 
   return (

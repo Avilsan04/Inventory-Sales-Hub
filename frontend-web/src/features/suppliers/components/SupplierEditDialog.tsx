@@ -72,9 +72,7 @@ export function SupplierEditDialog({ supplier, open, onOpenChange }: Props): Rea
       onSuccess: () => {
         toast({ title: t('suppliers.toasts.updated') });
         setSaved(true);
-        setTimeout(() => {
-          onClose();
-        }, 400);
+        onClose();
       },
       onError: (err) => {
         toast({

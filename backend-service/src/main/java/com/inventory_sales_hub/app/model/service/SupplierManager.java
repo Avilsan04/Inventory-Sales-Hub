@@ -1,5 +1,6 @@
 package com.inventory_sales_hub.app.model.service;
 
+import com.inventory_sales_hub.app.config.TenantContext;
 import com.inventory_sales_hub.app.exceptions.SupplierException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.*;
@@ -23,34 +24,59 @@ public class SupplierManager {
     @Autowired private SupplierOrderDao supplierOrderDao;
     @Autowired private SupplierOrderItemDao supplierOrderItemDao;
     @Autowired private ProductDao productDao;
+    @Autowired private TenantContext tenantContext;
 
     public List<SupplierResponse> getAll() {
-        return supplierDao.findAll().stream().map(this::toResponse).toList();
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? supplierDao.findByTenantId(tenantId, PageRequest.of(0, Integer.MAX_VALUE, Sort.by("name"))).getContent()
+                : supplierDao.findAll())
+                .stream().map(this::toResponse).toList();
     }
 
     public PaginatedResponse<SupplierResponse> getAllPaginated(int page, int size, String search) {
+        Long tenantId = tenantContext.currentTenantId();
         PageRequest pageable = PageRequest.of(page, size, Sort.by("name"));
-        Page<Supplier> p = (search != null && !search.isBlank())
-                ? supplierDao.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable)
-                : supplierDao.findAll(pageable);
+        Page<Supplier> p;
+        if (tenantId != null) {
+            p = (search != null && !search.isBlank())
+                    ? supplierDao.findByTenantIdAndSearch(tenantId, search, pageable)
+                    : supplierDao.findByTenantId(tenantId, pageable);
+        } else {
+            p = (search != null && !search.isBlank())
+                    ? supplierDao.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable)
+                    : supplierDao.findAll(pageable);
+        }
         List<SupplierResponse> data = p.getContent().stream().map(this::toResponse).toList();
         return new PaginatedResponse<>(data, p.getTotalElements(), page, size);
     }
 
     public SupplierResponse getById(Long id) {
-        return supplierDao.findById(id)
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? supplierDao.findById(id).filter(s -> s.getTenantId().equals(tenantId))
+                : supplierDao.findById(id))
                 .map(this::toResponse)
                 .orElseThrow(() -> new SupplierException("Supplier not found"));
     }
 
     public List<ProductResponse> getProducts(Long id) {
-        if (!supplierDao.existsById(id)) throw new SupplierException("Supplier not found");
-        return productDao.findActiveBySupplier(id).stream().map(this::toProductResponse).toList();
+        Long tenantId = tenantContext.currentTenantId();
+        if (supplierDao.findById(id)
+                .filter(s -> tenantId == null || s.getTenantId().equals(tenantId))
+                .isEmpty()) {
+            throw new SupplierException("Supplier not found");
+        }
+        List<Product> products = tenantId != null
+                ? productDao.findActiveBySupplierAndTenant(id, tenantId)
+                : productDao.findActiveBySupplier(id);
+        return products.stream().map(this::toProductResponse).toList();
     }
 
     @Transactional
     public SupplierResponse create(SupplierParams params) {
-        if (params.email() != null && supplierDao.existsByEmail(params.email())) {
+        Long tenantId = requireTenantId();
+        if (params.email() != null && supplierDao.existsByEmailAndTenantId(params.email(), tenantId)) {
             throw new SupplierException("A supplier with this email already exists");
         }
         Supplier supplier = new Supplier();
@@ -58,15 +84,19 @@ public class SupplierManager {
         supplier.setEmail(params.email());
         supplier.setPhone(params.phone());
         supplier.setAddress(params.address());
+        supplier.setTenantId(tenantId);
         return toResponse(supplierDao.save(supplier));
     }
 
     @Transactional
     public SupplierResponse update(Long id, SupplierParams params) {
+        Long tenantId = requireTenantId();
         Supplier supplier = supplierDao.findById(id)
+                .filter(s -> s.getTenantId().equals(tenantId))
                 .orElseThrow(() -> new SupplierException("Supplier not found"));
+
         if (params.email() != null && !params.email().equals(supplier.getEmail())
-                && supplierDao.existsByEmailAndIdNot(params.email(), id)) {
+                && supplierDao.existsByEmailAndIdNotAndTenantId(params.email(), id, tenantId)) {
             throw new SupplierException("A supplier with this email already exists");
         }
         supplier.setName(params.name());
@@ -78,9 +108,11 @@ public class SupplierManager {
 
     @Transactional
     public void delete(Long id) {
+        Long tenantId = requireTenantId();
         Supplier supplier = supplierDao.findById(id)
+                .filter(s -> s.getTenantId().equals(tenantId))
                 .orElseThrow(() -> new SupplierException("Supplier not found"));
-        if (productDao.existsBySupplierId(id)) {
+        if (productDao.existsBySupplierIdAndTenantId(id, tenantId)) {
             throw new SupplierException("Cannot delete supplier with associated products");
         }
         if (supplierOrderDao.existsBySupplier(supplier)) {
@@ -91,8 +123,11 @@ public class SupplierManager {
 
     @Transactional
     public SupplierOrderResponse createOrder(Long supplierId, CreateSupplierOrderParams params) {
+        Long tenantId = requireTenantId();
         Supplier supplier = supplierDao.findById(supplierId)
+                .filter(s -> s.getTenantId().equals(tenantId))
                 .orElseThrow(() -> new SupplierException("Supplier not found"));
+
         if (params.items() == null || params.items().isEmpty()) {
             throw new SupplierException("Order must contain at least one item");
         }
@@ -102,7 +137,7 @@ public class SupplierManager {
         BigDecimal total = BigDecimal.ZERO;
 
         for (SupplierOrderItemParams item : params.items()) {
-            Product product = productDao.findByIdAndActiveTrue(item.productId())
+            Product product = productDao.findByIdAndActiveTrueAndTenantId(item.productId(), tenantId)
                     .orElseThrow(() -> new SupplierException("Product not found: " + item.productId()));
             BigDecimal subtotal = item.unitPrice()
                     .multiply(BigDecimal.valueOf(item.quantity()))
@@ -138,6 +173,12 @@ public class SupplierManager {
                 savedOrder.getId(), supplier.getId(), supplier.getName(),
                 savedOrder.getStatus().name(), savedOrder.getTotalAmount(),
                 itemResponses, savedOrder.getCreatedAt());
+    }
+
+    private Long requireTenantId() {
+        Long tenantId = tenantContext.currentTenantId();
+        if (tenantId == null) throw new SupplierException("No tenant context");
+        return tenantId;
     }
 
     private SupplierResponse toResponse(Supplier s) {

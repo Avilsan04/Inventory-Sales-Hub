@@ -43,4 +43,7 @@ public class Sale {
 
     @Column
     private Instant updatedAt;
+
+    @Column(name = "tenant_id", nullable = false)
+    private Long tenantId;
 }

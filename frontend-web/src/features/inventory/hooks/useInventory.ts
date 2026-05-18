@@ -2,6 +2,7 @@ import { useQuery, type QueryKey, type UseQueryResult } from '@tanstack/react-qu
 import { inventoryApi } from '../api/inventoryApi';
 import type { InventoryListParams } from '../api/inventoryApi';
 import { withTenant } from '@core/api/queryKeys';
+import { TIMING } from '@core/config/timing';
 import type { PaginatedInventoryResponse } from '@entities/inventory';
 
 export const inventoryKeys = {
@@ -21,5 +22,6 @@ export function useInventory(
   return useQuery({
     queryKey: inventoryKeys.lists(params),
     queryFn: () => inventoryApi.getInventoryList(params),
+    staleTime: TIMING.INVENTORY_STALE_MS,
   });
 }

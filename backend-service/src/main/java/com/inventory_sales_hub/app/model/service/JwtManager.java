@@ -30,15 +30,17 @@ public class JwtManager {
         return secretKey;
     }
 
-    public String generateToken(String username, Long id, String role) {
-        return Jwts.builder()
+    public String generateToken(String username, Long id, String role, Long tenantId) {
+        var builder = Jwts.builder()
                 .setSubject(username)
                 .claim("id", id)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY_MS))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRY_MS));
+        if (tenantId != null) {
+            builder.claim("tenantId", tenantId);
+        }
+        return builder.signWith(secretKey, SignatureAlgorithm.HS256).compact();
     }
 
     public boolean isTokenValid(String token) {

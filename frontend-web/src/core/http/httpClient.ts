@@ -20,15 +20,13 @@ setupRequestInterceptor(
   axiosInstance,
   () => tokenStorage.getToken(),
   () => {
+    // Client sends the token as-is; backend validates signature and expiry.
+    // No client-side JWT payload inspection — trust the server.
     try {
       const raw = sessionStorage.getItem('ish.impersonation');
       if (!raw) return null;
-      const session = JSON.parse(raw) as { token: string; expiresAt: number };
-      if (Date.now() > session.expiresAt) {
-        sessionStorage.removeItem('ish.impersonation');
-        return null;
-      }
-      return session.token;
+      const session = JSON.parse(raw) as { token?: string };
+      return session.token ?? null;
     } catch {
       return null;
     }

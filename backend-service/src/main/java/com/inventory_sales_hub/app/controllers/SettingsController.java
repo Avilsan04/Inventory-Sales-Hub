@@ -10,24 +10,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/settings")
 public class SettingsController {
+
     @Autowired
     private SettingsManager settingsManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSettings() {
-        try {
-            return ResponseEntity.ok(settingsManager.getSettings());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(settingsManager.getSettings());
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateSettings(@RequestBody TenantSettingsParams params) {
-        try {
-            return ResponseEntity.ok(settingsManager.updateSettings(params));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(settingsManager.updateSettings(params));
     }
 }

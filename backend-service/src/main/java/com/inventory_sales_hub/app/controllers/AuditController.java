@@ -4,13 +4,12 @@ import com.inventory_sales_hub.app.model.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/audit")
+@PreAuthorize("hasAnyRole('ADMIN','COMPANY')")
 public class AuditController {
 
     @Autowired
@@ -20,10 +19,6 @@ public class AuditController {
     public ResponseEntity<?> getLogs(
             @RequestParam(required = false) String entityType,
             @RequestParam(required = false) String userId) {
-        try {
-            return ResponseEntity.ok(auditService.getLogs(entityType, userId));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(auditService.getLogs(entityType, userId));
     }
 }

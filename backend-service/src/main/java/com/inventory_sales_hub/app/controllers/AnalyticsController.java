@@ -14,76 +14,45 @@ import java.time.LocalDate;
 @RequestMapping("api/analytics")
 public class AnalyticsController {
 
-    @Autowired
-    private AnalyticsManager analyticsManager;
-
-    @Autowired
-    private SaleManager saleManager;
+    @Autowired private AnalyticsManager analyticsManager;
+    @Autowired private SaleManager saleManager;
 
     @GetMapping(path = "/recent-sales", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getRecentSales(@RequestParam(defaultValue = "5") int limit) {
-        try {
-            return ResponseEntity.ok(saleManager.getRecent(limit));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(saleManager.getRecent(limit));
     }
 
     @GetMapping(path = "/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDashboard() {
-        try {
-            return ResponseEntity.ok(analyticsManager.getDashboard());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(analyticsManager.getDashboard());
     }
 
     @GetMapping(path = "/sales", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSales(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        try {
-            LocalDate resolvedEnd   = end   != null ? end   : LocalDate.now();
-            LocalDate resolvedStart = start != null ? start : resolvedEnd.minusDays(29);
-            return ResponseEntity.ok(analyticsManager.getSalesAnalytics(resolvedStart, resolvedEnd));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        LocalDate resolvedEnd   = end   != null ? end   : LocalDate.now();
+        LocalDate resolvedStart = start != null ? start : resolvedEnd.minusDays(29);
+        return ResponseEntity.ok(analyticsManager.getSalesAnalytics(resolvedStart, resolvedEnd));
     }
 
     @GetMapping(path = "/top-products", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getTopProducts(@RequestParam(defaultValue = "5") int limit) {
-        try {
-            return ResponseEntity.ok(analyticsManager.getTopProducts(limit));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(analyticsManager.getTopProducts(limit));
     }
 
     @GetMapping(path = "/top-customers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getTopCustomers(@RequestParam(defaultValue = "5") int limit) {
-        try {
-            return ResponseEntity.ok(analyticsManager.getTopCustomers(limit));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(analyticsManager.getTopCustomers(limit));
     }
 
     @GetMapping(path = "/inventory-value", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getInventoryValue() {
-        try {
-            return ResponseEntity.ok(analyticsManager.getInventoryValue());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(analyticsManager.getInventoryValue());
     }
 
     @GetMapping(path = "/low-stock-alerts", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getLowStockAlerts() {
-        try {
-            return ResponseEntity.ok(analyticsManager.getLowStockAlerts());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(analyticsManager.getLowStockAlerts());
     }
 }

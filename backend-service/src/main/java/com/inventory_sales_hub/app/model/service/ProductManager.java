@@ -1,5 +1,6 @@
 package com.inventory_sales_hub.app.model.service;
 
+import com.inventory_sales_hub.app.config.TenantContext;
 import com.inventory_sales_hub.app.exceptions.ProductException;
 import com.inventory_sales_hub.app.model.dto.CategoryParams;
 import com.inventory_sales_hub.app.model.dto.CategoryResponse;
@@ -23,24 +24,38 @@ public class ProductManager {
     @Autowired private ProductDao productDao;
     @Autowired private CategoryDao categoryDao;
     @Autowired private SupplierDao supplierDao;
+    @Autowired private TenantContext tenantContext;
 
     public List<ProductResponse> getAll() {
-        return productDao.findAllByActiveTrue().stream().map(this::toResponse).toList();
+        Long tenantId = tenantContext.currentTenantId();
+        List<Product> products = tenantId != null
+                ? productDao.findAllByActiveTrueAndTenantId(tenantId)
+                : productDao.findAllByActiveTrue();
+        return products.stream().map(this::toResponse).toList();
     }
 
     public ProductResponse getById(Long id) {
-        return productDao.findByIdAndActiveTrue(id)
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? productDao.findByIdAndActiveTrueAndTenantId(id, tenantId)
+                : productDao.findByIdAndActiveTrue(id))
                 .map(this::toResponse)
                 .orElseThrow(() -> new ProductException("Product not found"));
     }
 
     public List<CategoryResponse> getCategories() {
-        return categoryDao.findAll().stream().map(this::toCategoryResponse).toList();
+        Long tenantId = tenantContext.currentTenantId();
+        List<Category> categories = tenantId != null
+                ? categoryDao.findAllByTenantId(tenantId)
+                : categoryDao.findAll();
+        return categories.stream().map(this::toCategoryResponse).toList();
     }
 
     @Transactional
     public ProductResponse create(ProductParams params) {
-        if (params.sku() != null && productDao.existsBySku(params.sku())) {
+        Long tenantId = requireTenantId();
+
+        if (params.sku() != null && productDao.existsBySkuAndTenantId(params.sku(), tenantId)) {
             throw new ProductException("A product with this SKU already exists");
         }
 
@@ -50,18 +65,21 @@ public class ProductManager {
         product.setPurchasePrice(params.purchasePrice());
         product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
-        product.setCategory(resolveCategory(params.categoryId()));
-        product.setSupplier(resolveSupplier(params.supplierId()));
+        product.setCategory(resolveCategory(params.categoryId(), tenantId));
+        product.setSupplier(resolveSupplier(params.supplierId(), tenantId));
+        product.setTenantId(tenantId);
 
         return toResponse(productDao.save(product));
     }
 
     @Transactional
     public ProductResponse update(Long id, ProductParams params) {
-        Product product = productDao.findById(id)
+        Long tenantId = requireTenantId();
+        Product product = productDao.findByIdAndActiveTrueAndTenantId(id, tenantId)
                 .orElseThrow(() -> new ProductException("Product not found"));
 
-        if (params.sku() != null && !params.sku().equals(product.getSku()) && productDao.existsBySku(params.sku())) {
+        if (params.sku() != null && !params.sku().equals(product.getSku())
+                && productDao.existsBySkuAndTenantIdAndIdNot(params.sku(), tenantId, id)) {
             throw new ProductException("A product with this SKU already exists");
         }
 
@@ -70,15 +88,16 @@ public class ProductManager {
         product.setPurchasePrice(params.purchasePrice());
         product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
-        product.setCategory(resolveCategory(params.categoryId()));
-        product.setSupplier(resolveSupplier(params.supplierId()));
+        product.setCategory(resolveCategory(params.categoryId(), tenantId));
+        product.setSupplier(resolveSupplier(params.supplierId(), tenantId));
 
         return toResponse(productDao.save(product));
     }
 
     @Transactional
     public ProductResponse patch(Long id, PatchProductParams params) {
-        Product product = productDao.findById(id)
+        Long tenantId = requireTenantId();
+        Product product = productDao.findByIdAndActiveTrueAndTenantId(id, tenantId)
                 .orElseThrow(() -> new ProductException("Product not found"));
 
         if (params.active() != null) product.setActive(params.active());
@@ -88,30 +107,43 @@ public class ProductManager {
 
     @Transactional
     public void delete(Long id) {
-        if (!productDao.existsById(id)) throw new ProductException("Product not found");
+        Long tenantId = requireTenantId();
+        if (productDao.findByIdAndActiveTrueAndTenantId(id, tenantId).isEmpty()) {
+            throw new ProductException("Product not found");
+        }
         productDao.deleteById(id);
     }
 
     @Transactional
     public CategoryResponse createCategory(CategoryParams params) {
-        if (categoryDao.existsByName(params.name())) {
+        Long tenantId = requireTenantId();
+        if (categoryDao.existsByNameAndTenantId(params.name(), tenantId)) {
             throw new ProductException("A category with this name already exists");
         }
         Category category = new Category();
         category.setName(params.name());
         category.setDescription(params.description());
+        category.setTenantId(tenantId);
         return toCategoryResponse(categoryDao.save(category));
     }
 
-    private Category resolveCategory(Long categoryId) {
+    private Long requireTenantId() {
+        Long tenantId = tenantContext.currentTenantId();
+        if (tenantId == null) throw new ProductException("No tenant context");
+        return tenantId;
+    }
+
+    private Category resolveCategory(Long categoryId, Long tenantId) {
         if (categoryId == null) return null;
         return categoryDao.findById(categoryId)
+                .filter(c -> c.getTenantId().equals(tenantId))
                 .orElseThrow(() -> new ProductException("Category not found"));
     }
 
-    private Supplier resolveSupplier(Long supplierId) {
+    private Supplier resolveSupplier(Long supplierId, Long tenantId) {
         if (supplierId == null) return null;
         return supplierDao.findById(supplierId)
+                .filter(s -> s.getTenantId().equals(tenantId))
                 .orElseThrow(() -> new ProductException("Supplier not found"));
     }
 

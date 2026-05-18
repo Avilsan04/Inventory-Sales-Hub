@@ -19,3 +19,4 @@ export {
 } from './models/inventory.schema';
 
 export type { PaginatedInventoryResponse } from './models/inventory.schema';
+export { useLowStockList } from './hooks/useLowStockList';

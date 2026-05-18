@@ -1,11 +1,13 @@
 package com.inventory_sales_hub.app.model.service;
 
+import com.inventory_sales_hub.app.config.TenantContext;
 import com.inventory_sales_hub.app.exceptions.SaleException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.*;
 import com.inventory_sales_hub.app.model.persistence.*;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,7 +27,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class SaleManager {
-    private static final BigDecimal TAX_RATE = new BigDecimal("0.21");
+
+    @Value("${app.tax.rate:0.21}")
+    private BigDecimal taxRate;
 
     @Autowired private SaleDao saleDao;
     @Autowired private SaleItemDao saleItemDao;
@@ -35,10 +39,14 @@ public class SaleManager {
     @Autowired private InventoryDao inventoryDao;
     @Autowired private AuditService auditService;
     @Autowired private StockMovementDao stockMovementDao;
+    @Autowired private TenantContext tenantContext;
 
     public List<SaleResponse> getMyOrders(Long userId) {
+        Long tenantId = tenantContext.currentTenantId();
         User user = userDao.findById(userId).orElseThrow(() -> new SaleException("User not found"));
-        List<Sale> sales = saleDao.findAllByCustomerEmail(user.getEmail());
+        List<Sale> sales = tenantId != null
+                ? saleDao.findAllByCustomerEmailAndTenant(user.getEmail(), tenantId)
+                : saleDao.findAllByCustomerEmail(user.getEmail());
         if (sales.isEmpty()) return List.of();
         List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
         Map<Long, List<SaleItem>> bySaleId = allItems.stream()
@@ -49,7 +57,10 @@ public class SaleManager {
     }
 
     public List<SaleResponse> getAll() {
-        List<Sale> sales = saleDao.findAllWithDetails();
+        Long tenantId = tenantContext.currentTenantId();
+        List<Sale> sales = tenantId != null
+                ? saleDao.findAllWithDetailsByTenant(tenantId)
+                : saleDao.findAllWithDetails();
         if (sales.isEmpty()) return List.of();
         List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
         Map<Long, List<SaleItem>> bySaleId = allItems.stream()
@@ -60,28 +71,33 @@ public class SaleManager {
     }
 
     public PaginatedResponse<SaleResponse> getAllPaginated(int page, int size, String search, Instant dateFrom, Instant dateTo) {
+        Long tenantId = tenantContext.currentTenantId();
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         String searchTerm = (search != null && !search.isBlank()) ? search.toLowerCase() : null;
 
         Specification<Sale> spec = (root, query, cb) -> cb.conjunction();
+
+        if (tenantId != null) {
+            Long tid = tenantId;
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("tenantId"), tid));
+        }
         if (searchTerm != null) {
-            spec = spec.and((root, query, cb) -> {
-                root.join("customer", JoinType.LEFT);
-                return cb.or(
-                    cb.like(cb.lower(root.get("id").as(String.class)), "%" + searchTerm + "%"),
-                    cb.like(cb.lower(root.join("customer", JoinType.LEFT).get("name")), "%" + searchTerm + "%")
-                );
-            });
+            String term = searchTerm;
+            spec = spec.and((root, query, cb) -> cb.or(
+                cb.like(cb.lower(root.get("id").as(String.class)), "%" + term + "%"),
+                cb.like(cb.lower(root.join("customer", JoinType.LEFT).get("name")), "%" + term + "%")
+            ));
         }
         if (dateFrom != null) {
-            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("createdAt"), dateFrom));
+            Instant df = dateFrom;
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("createdAt"), df));
         }
         if (dateTo != null) {
-            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), dateTo));
+            Instant dt = dateTo;
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("createdAt"), dt));
         }
 
         Page<Sale> salePage = saleDao.findAll(spec, pageable);
-
         List<Sale> sales = salePage.getContent();
         if (sales.isEmpty()) return new PaginatedResponse<>(List.of(), salePage.getTotalElements(), page, size);
 
@@ -95,7 +111,11 @@ public class SaleManager {
     }
 
     public List<SaleResponse> getRecent(int limit) {
-        List<Sale> sales = saleDao.findRecent(PageRequest.of(0, limit));
+        Long tenantId = tenantContext.currentTenantId();
+        PageRequest pageable = PageRequest.of(0, limit);
+        List<Sale> sales = tenantId != null
+                ? saleDao.findRecentByTenant(tenantId, pageable)
+                : saleDao.findRecent(pageable);
         if (sales.isEmpty()) return List.of();
         List<SaleItem> allItems = saleItemDao.findBySalesWithProduct(sales);
         Map<Long, List<SaleItem>> bySaleId = allItems.stream()
@@ -106,7 +126,10 @@ public class SaleManager {
     }
 
     public SaleResponse getById(Long id) {
-        Sale sale = saleDao.findByIdWithDetails(id)
+        Long tenantId = tenantContext.currentTenantId();
+        Sale sale = (tenantId != null
+                ? saleDao.findByIdWithDetailsAndTenant(id, tenantId)
+                : saleDao.findByIdWithDetails(id))
                 .orElseThrow(() -> new SaleException("Sale not found"));
         return toResponse(sale, saleItemDao.findBySaleIdWithProduct(id));
     }
@@ -117,25 +140,36 @@ public class SaleManager {
     }
 
     public SaleSummaryResponse getSummary() {
+        Long tenantId = tenantContext.currentTenantId();
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
         Instant todayStart = now.truncatedTo(ChronoUnit.DAYS).toInstant();
         Instant todayEnd = todayStart.plus(1, ChronoUnit.DAYS);
         Instant monthStart = now.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS).toInstant();
         Instant monthEnd = now.plusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS).toInstant();
 
-        SalePeriodStats today = new SalePeriodStats(
-                saleDao.sumRevenueBetween(SaleStatus.COMPLETED, todayStart, todayEnd),
-                saleDao.countBetween(SaleStatus.COMPLETED, todayStart, todayEnd),
-                saleItemDao.sumNetProfitBetween(SaleStatus.COMPLETED, todayStart, todayEnd)
-        );
-        SalePeriodStats month = new SalePeriodStats(
-                saleDao.sumRevenueBetween(SaleStatus.COMPLETED, monthStart, monthEnd),
-                saleDao.countBetween(SaleStatus.COMPLETED, monthStart, monthEnd),
-                saleItemDao.sumNetProfitBetween(SaleStatus.COMPLETED, monthStart, monthEnd)
-        );
+        BigDecimal todayRevenue = tenantId != null
+                ? saleDao.sumRevenueBetweenAndTenant(SaleStatus.COMPLETED, todayStart, todayEnd, tenantId)
+                : saleDao.sumRevenueBetween(SaleStatus.COMPLETED, todayStart, todayEnd);
+        long todayCount = tenantId != null
+                ? saleDao.countBetweenAndTenant(SaleStatus.COMPLETED, todayStart, todayEnd, tenantId)
+                : saleDao.countBetween(SaleStatus.COMPLETED, todayStart, todayEnd);
+        BigDecimal monthRevenue = tenantId != null
+                ? saleDao.sumRevenueBetweenAndTenant(SaleStatus.COMPLETED, monthStart, monthEnd, tenantId)
+                : saleDao.sumRevenueBetween(SaleStatus.COMPLETED, monthStart, monthEnd);
+        long monthCount = tenantId != null
+                ? saleDao.countBetweenAndTenant(SaleStatus.COMPLETED, monthStart, monthEnd, tenantId)
+                : saleDao.countBetween(SaleStatus.COMPLETED, monthStart, monthEnd);
 
+        SalePeriodStats today = new SalePeriodStats(todayRevenue,
+                todayCount,
+                saleItemDao.sumNetProfitBetween(SaleStatus.COMPLETED, todayStart, todayEnd));
+        SalePeriodStats month = new SalePeriodStats(monthRevenue,
+                monthCount,
+                saleItemDao.sumNetProfitBetween(SaleStatus.COMPLETED, monthStart, monthEnd));
+
+        PageRequest top5 = PageRequest.of(0, 5);
         List<TopProductResponse> topProducts = saleItemDao
-                .findTopProducts(SaleStatus.COMPLETED, PageRequest.of(0, 5))
+                .findTopProducts(SaleStatus.COMPLETED, top5)
                 .stream()
                 .map(row -> new TopProductResponse((Long) row[0], (String) row[1], ((Number) row[2]).longValue()))
                 .toList();
@@ -145,23 +179,25 @@ public class SaleManager {
 
     @Transactional
     public SaleResponse create(CreateSaleParams params, Long userId) {
+        Long tenantId = requireTenantId();
+
         if (params.items() == null || params.items().isEmpty()) {
             throw new SaleException("A sale must have at least one item");
         }
 
         User user = userDao.findById(userId).orElseThrow(() -> new SaleException("User not found"));
         Customer customer = params.customerId() != null
-                ? customerDao.findById(params.customerId()).orElseThrow(() -> new SaleException("Customer not found"))
+                ? customerDao.findByIdAndTenantId(params.customerId(), tenantId)
+                    .orElseThrow(() -> new SaleException("Customer not found"))
                 : null;
 
-        // Validate items and pre-calculate totals before any DB insert
         record ResolvedItem(Product product, int quantity, BigDecimal unitPrice, BigDecimal subtotal) {}
         List<ResolvedItem> resolved = new java.util.ArrayList<>();
         BigDecimal subtotal = BigDecimal.ZERO;
 
         for (SaleItemParams itemParam : params.items()) {
             if (itemParam.quantity() <= 0) throw new SaleException("Item quantity must be positive");
-            Product product = productDao.findById(itemParam.productId())
+            Product product = productDao.findByIdAndActiveTrueAndTenantId(itemParam.productId(), tenantId)
                     .orElseThrow(() -> new SaleException("Product not found: " + itemParam.productId()));
             BigDecimal unitPrice = product.getSalePrice();
             BigDecimal itemSubtotal = unitPrice.multiply(BigDecimal.valueOf(itemParam.quantity()))
@@ -170,15 +206,16 @@ public class SaleManager {
             resolved.add(new ResolvedItem(product, itemParam.quantity(), unitPrice, itemSubtotal));
         }
 
-        BigDecimal taxAmount = subtotal.multiply(TAX_RATE).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal taxAmount = subtotal.multiply(taxRate).setScale(2, RoundingMode.HALF_UP);
 
         Sale sale = new Sale();
         sale.setProcessedBy(user);
         sale.setCustomer(customer);
-        sale.setTaxRate(TAX_RATE);
+        sale.setTaxRate(taxRate);
         sale.setSubtotal(subtotal);
         sale.setTaxAmount(taxAmount);
         sale.setTotal(subtotal.add(taxAmount));
+        sale.setTenantId(tenantId);
         Sale savedSale = saleDao.save(sale);
 
         for (ResolvedItem ri : resolved) {
@@ -200,7 +237,10 @@ public class SaleManager {
 
     @Transactional
     public SaleResponse updateStatus(Long id, PatchSaleStatusParams params) {
-        Sale sale = saleDao.findByIdWithDetails(id)
+        Long tenantId = tenantContext.currentTenantId();
+        Sale sale = (tenantId != null
+                ? saleDao.findByIdWithDetailsAndTenant(id, tenantId)
+                : saleDao.findByIdWithDetails(id))
                 .orElseThrow(() -> new SaleException("Sale not found"));
 
         if (sale.getStatus() == SaleStatus.CANCELLED) {
@@ -254,6 +294,12 @@ public class SaleManager {
                 Map.of("status", oldStatus.name()), Map.of("status", newStatus.name()), null);
 
         return toResponse(sale, items);
+    }
+
+    private Long requireTenantId() {
+        Long tenantId = tenantContext.currentTenantId();
+        if (tenantId == null) throw new SaleException("No tenant context");
+        return tenantId;
     }
 
     private void recordStockMovement(Inventory inventory, MovementType type, int quantity, int previousStock, String note) {

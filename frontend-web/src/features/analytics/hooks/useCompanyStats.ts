@@ -5,7 +5,7 @@ import {
   useTopProducts,
   useTopCustomers,
 } from './useAnalytics';
-import { useEmployees } from '@features/employees';
+import { useEmployeeList as useEmployees } from '@entities/employee';
 import type { SalesPeriod, TopProduct, TopCustomer, DashboardKpi } from '@entities/analytics';
 import type { Employee } from '@entities/employee';
 

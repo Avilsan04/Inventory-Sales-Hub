@@ -23,4 +23,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.CUSTOMER;
+
+    // Null for ADMIN users (global access). Set for all other users.
+    @Column(name = "tenant_id")
+    private Long tenantId;
 }

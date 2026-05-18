@@ -18,7 +18,7 @@ export type Permission =
   | 'manage:warehouses'
   | 'transfer:stock';
 
-const ALL_PERMISSIONS: ReadonlyArray<Permission> = [
+const ALL_PERMISSIONS: ReadonlySet<Permission> = new Set<Permission>([
   'create:product',
   'delete:product',
   'create:inventory',
@@ -35,20 +35,20 @@ const ALL_PERMISSIONS: ReadonlyArray<Permission> = [
   'close:cash-session',
   'manage:warehouses',
   'transfer:stock',
-];
+]);
 
-const PERMISSIONS: Readonly<Record<UserRole, ReadonlyArray<Permission>>> = {
+const PERMISSIONS: Readonly<Record<UserRole, ReadonlySet<Permission>>> = {
   admin: ALL_PERMISSIONS,
   // company can view analytics, employees, audit and manage suppliers — no POS or stock ops.
-  company: [
+  company: new Set<Permission>([
     'view:analytics',
     'view:employees',
     'delete:employee',
     'view:audit',
     'manage:suppliers',
     'export:csv',
-  ],
-  manager: [
+  ]),
+  manager: new Set<Permission>([
     'create:product',
     'delete:product',
     'create:inventory',
@@ -64,20 +64,20 @@ const PERMISSIONS: Readonly<Record<UserRole, ReadonlyArray<Permission>>> = {
     'close:cash-session',
     'manage:warehouses',
     'transfer:stock',
-  ],
-  staff: [
+  ]),
+  staff: new Set<Permission>([
     'adjust:stock',
     'create:sale',
     'open:cash-session',
     'close:cash-session',
     'transfer:stock',
-  ],
-  customer: [],
+  ]),
+  customer: new Set<Permission>([]),
   // test role has all permissions to simulate any role during development/demo.
   test: ALL_PERMISSIONS,
 };
 
 export function hasPermission(role: UserRole | undefined, permission: Permission): boolean {
   if (!role) return false;
-  return PERMISSIONS[role].includes(permission);
+  return PERMISSIONS[role].has(permission);
 }

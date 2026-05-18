@@ -1,5 +1,6 @@
 package com.inventory_sales_hub.app.model.service;
 
+import com.inventory_sales_hub.app.config.TenantContext;
 import com.inventory_sales_hub.app.exceptions.CustomerException;
 import com.inventory_sales_hub.app.model.dto.CustomerParams;
 import com.inventory_sales_hub.app.model.dto.CustomerResponse;
@@ -17,47 +18,65 @@ import java.util.List;
 
 @Service
 public class CustomerManager {
-    @Autowired
-    private CustomerDao customerDao;
+    @Autowired private CustomerDao customerDao;
+    @Autowired private TenantContext tenantContext;
 
     public List<CustomerResponse> getAll() {
-        return customerDao.findAll().stream().map(this::toResponse).toList();
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? customerDao.findByTenantId(tenantId, PageRequest.of(0, Integer.MAX_VALUE, Sort.by("name"))).getContent()
+                : customerDao.findAll())
+                .stream().map(this::toResponse).toList();
     }
 
     public PaginatedResponse<CustomerResponse> getAllPaginated(int page, int size, String search) {
+        Long tenantId = tenantContext.currentTenantId();
         PageRequest pageable = PageRequest.of(page, size, Sort.by("name"));
-        Page<Customer> p = (search != null && !search.isBlank())
-                ? customerDao.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable)
-                : customerDao.findAll(pageable);
+        Page<Customer> p;
+        if (tenantId != null) {
+            p = (search != null && !search.isBlank())
+                    ? customerDao.findByTenantIdAndSearch(tenantId, search, pageable)
+                    : customerDao.findByTenantId(tenantId, pageable);
+        } else {
+            p = (search != null && !search.isBlank())
+                    ? customerDao.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable)
+                    : customerDao.findAll(pageable);
+        }
         List<CustomerResponse> data = p.getContent().stream().map(this::toResponse).toList();
         return new PaginatedResponse<>(data, p.getTotalElements(), page, size);
     }
 
     public CustomerResponse getById(Long id) {
-        return customerDao.findById(id)
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? customerDao.findByIdAndTenantId(id, tenantId)
+                : customerDao.findById(id))
                 .map(this::toResponse)
                 .orElseThrow(() -> new CustomerException("Customer not found"));
     }
 
     @Transactional
     public CustomerResponse create(CustomerParams params) {
-        if (params.email() != null && customerDao.existsByEmail(params.email())) {
+        Long tenantId = requireTenantId();
+        if (params.email() != null && customerDao.existsByEmailAndTenantId(params.email(), tenantId)) {
             throw new CustomerException("A customer with this email already exists");
         }
         Customer customer = new Customer();
         customer.setName(params.name());
         customer.setEmail(params.email());
         customer.setPhone(params.phone());
+        customer.setTenantId(tenantId);
         return toResponse(customerDao.save(customer));
     }
 
     @Transactional
     public CustomerResponse update(Long id, CustomerParams params) {
-        Customer customer = customerDao.findById(id)
+        Long tenantId = requireTenantId();
+        Customer customer = customerDao.findByIdAndTenantId(id, tenantId)
                 .orElseThrow(() -> new CustomerException("Customer not found"));
 
         if (params.email() != null && !params.email().equals(customer.getEmail())
-                && customerDao.existsByEmailAndIdNot(params.email(), id)) {
+                && customerDao.existsByEmailAndIdNotAndTenantId(params.email(), id, tenantId)) {
             throw new CustomerException("A customer with this email already exists");
         }
 
@@ -69,8 +88,16 @@ public class CustomerManager {
 
     @Transactional
     public void delete(Long id) {
-        if (!customerDao.existsById(id)) throw new CustomerException("Customer not found");
-        customerDao.deleteById(id);
+        Long tenantId = requireTenantId();
+        Customer customer = customerDao.findByIdAndTenantId(id, tenantId)
+                .orElseThrow(() -> new CustomerException("Customer not found"));
+        customerDao.delete(customer);
+    }
+
+    private Long requireTenantId() {
+        Long tenantId = tenantContext.currentTenantId();
+        if (tenantId == null) throw new CustomerException("No tenant context");
+        return tenantId;
     }
 
     private CustomerResponse toResponse(Customer c) {

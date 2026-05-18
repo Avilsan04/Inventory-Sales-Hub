@@ -1,9 +1,7 @@
 package com.inventory_sales_hub.app.controllers;
 
-import com.inventory_sales_hub.app.exceptions.NotificationException;
 import com.inventory_sales_hub.app.model.service.NotificationManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,34 +17,20 @@ public class NotificationController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAll(@AuthenticationPrincipal Jwt jwt) {
-        try {
-            Number userId = jwt.getClaim("id");
-            return ResponseEntity.ok(notificationManager.getForUser(userId.longValue()));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        Number userId = jwt.getClaim("id");
+        return ResponseEntity.ok(notificationManager.getForUser(userId.longValue()));
     }
 
     @PatchMapping(path = "/{id}/read", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> markRead(@PathVariable Long id, @AuthenticationPrincipal Jwt jwt) {
-        try {
-            Number userId = jwt.getClaim("id");
-            return ResponseEntity.ok(notificationManager.markRead(id, userId.longValue()));
-        } catch (NotificationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        Number userId = jwt.getClaim("id");
+        return ResponseEntity.ok(notificationManager.markRead(id, userId.longValue()));
     }
 
     @PatchMapping(path = "/read-all")
     public ResponseEntity<?> markAllRead(@AuthenticationPrincipal Jwt jwt) {
-        try {
-            Number userId = jwt.getClaim("id");
-            notificationManager.markAllRead(userId.longValue());
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        Number userId = jwt.getClaim("id");
+        notificationManager.markAllRead(userId.longValue());
+        return ResponseEntity.ok().build();
     }
 }

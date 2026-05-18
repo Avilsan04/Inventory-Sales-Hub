@@ -77,9 +77,7 @@ export function EmployeeEditDialog({ employee, open, onOpenChange }: Props): Rea
       onSuccess: () => {
         toast({ title: t('employees.toasts.updated') });
         setSaved(true);
-        setTimeout(() => {
-          onClose();
-        }, 400);
+        onClose();
       },
       onError: (err) => {
         toast({

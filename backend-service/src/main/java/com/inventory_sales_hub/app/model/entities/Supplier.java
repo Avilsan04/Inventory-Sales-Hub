@@ -14,9 +14,12 @@ public class Supplier {
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true)
+    @Column
     private String email;
 
     private String phone;
     private String address;
+
+    @Column(name = "tenant_id", nullable = false)
+    private Long tenantId;
 }

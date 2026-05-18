@@ -18,3 +18,4 @@ export {
   updateSaleStatusSchema,
 } from './models/sale.schema';
 export { getSaleStatusBadgeVariant, lookupCustomerName } from './lib/statusUtils';
+export { useSalesFlatList } from './hooks/useSalesFlatList';

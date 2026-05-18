@@ -22,14 +22,16 @@ import {
 import { Button, Input } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 
-const schema = z.object({
-  username: z.string().min(1, 'Required'),
-  email: z.email('Invalid email'),
-  password: z.string().min(6, 'Min 6 characters'),
-  role: z.enum(['admin', 'manager', 'staff']),
-});
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const buildSchema = (t: (k: string) => string) =>
+  z.object({
+    username: z.string().min(1, t('validation.required')),
+    email: z.email(t('validation.invalidEmail')),
+    password: z.string().min(6, t('validation.minPassword')),
+    role: z.enum(['admin', 'manager', 'staff']),
+  });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 interface Props {
   open: boolean;
@@ -40,6 +42,7 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useCreateEmployee();
   const [saved, setSaved] = React.useState(false);
+  const schema = React.useMemo(() => buildSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -63,9 +66,7 @@ export function EmployeeCreateDialog({ open, onOpenChange }: Props): React.React
       onSuccess: () => {
         toast({ title: t('employees.toasts.created') });
         setSaved(true);
-        setTimeout(() => {
-          onClose();
-        }, 400);
+        onClose();
       },
       onError: (err) => {
         toast({

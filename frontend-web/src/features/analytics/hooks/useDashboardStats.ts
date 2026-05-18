@@ -6,7 +6,7 @@ import {
   useSalesAnalytics,
   useRecentSales,
 } from './useAnalytics';
-import { useSalesFlat } from '@features/sales';
+import { useSalesFlatList as useSalesFlat } from '@entities/sale';
 import { computeStatusSlices } from '@shared/lib/saleCalculations';
 import type { StatusSliceData } from '@shared/lib/saleCalculations';
 import type { DashboardKpi, LowStockAlert, SalesPeriod } from '@entities/analytics';

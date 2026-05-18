@@ -56,9 +56,7 @@ export function CustomerCreateDialog({ open, onOpenChange }: Props): React.React
       onSuccess: () => {
         toast({ title: t('customers.toasts.created') });
         setSaved(true);
-        setTimeout(() => {
-          onClose();
-        }, 400);
+        onClose();
       },
       onError: (err) => {
         toast({

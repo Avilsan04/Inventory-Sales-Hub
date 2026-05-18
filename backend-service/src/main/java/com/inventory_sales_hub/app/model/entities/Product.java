@@ -7,7 +7,10 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-@Table(name = "products")
+@Table(
+    name = "products",
+    uniqueConstraints = @UniqueConstraint(name = "uq_product_sku_tenant", columnNames = {"sku", "tenant_id"})
+)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,7 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal salePrice;
 
-    @Column(unique = true)
+    @Column
     private String sku;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,4 +41,7 @@ public class Product {
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean active = true;
+
+    @Column(name = "tenant_id", nullable = false)
+    private Long tenantId;
 }

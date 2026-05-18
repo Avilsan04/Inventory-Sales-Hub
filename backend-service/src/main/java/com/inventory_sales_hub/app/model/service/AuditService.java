@@ -41,7 +41,14 @@ public class AuditService {
         AuditEntityType entityType = entityTypeParam != null
                 ? AuditEntityType.valueOf(entityTypeParam.toUpperCase())
                 : null;
-        Long userId = userIdParam != null ? Long.parseLong(userIdParam) : null;
+        Long userId = null;
+        if (userIdParam != null) {
+            try {
+                userId = Long.parseLong(userIdParam);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid userId: " + userIdParam);
+            }
+        }
 
         List<AuditLog> logs;
         if (entityType != null && userId != null) {

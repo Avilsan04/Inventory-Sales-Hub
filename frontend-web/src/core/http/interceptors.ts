@@ -14,8 +14,7 @@ export class HttpError extends Error {
 
 function toHttpError(error: AxiosError): HttpError {
   const data = error.response?.data;
-  const message =
-    typeof data === 'string' && data.length > 0 ? data : error.message;
+  const message = typeof data === 'string' && data.length > 0 ? data : error.message;
   return new HttpError(message, error.response?.status ?? 0);
 }
 
@@ -55,8 +54,11 @@ export function setupRequestInterceptor(
 const MAX_QUEUE_SIZE = 20;
 const QUEUE_TIMEOUT_MS = 10_000;
 
+type QueueEntry = { resolve: (value: unknown) => void; reject: (reason: Error) => void };
+
 let isRefreshing = false;
-let failedQueue: Array<{ resolve: (value: unknown) => void; reject: (reason: Error) => void }> = [];
+// Set instead of Array: O(1) delete, no splice-index corruption during concurrent iteration
+const failedQueue = new Set<QueueEntry>();
 
 function normalizeError(error: unknown): Error {
   return error instanceof Error ? error : new Error(String(error));
@@ -66,25 +68,28 @@ function enqueueRequest(
   client: AxiosInstance,
   originalRequest: InternalAxiosRequestConfig | undefined
 ): Promise<unknown> {
-  if (failedQueue.length >= MAX_QUEUE_SIZE) {
+  if (failedQueue.size >= MAX_QUEUE_SIZE) {
     return Promise.reject(
       new Error('Token refresh queue overflow — too many concurrent requests.')
     );
   }
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error('Token refresh queue timeout.'));
-    }, QUEUE_TIMEOUT_MS);
-    failedQueue.push({
+    const entry: QueueEntry = {
       resolve: (value): void => {
         clearTimeout(timer);
+        failedQueue.delete(entry);
         resolve(value);
       },
       reject: (reason): void => {
         clearTimeout(timer);
+        failedQueue.delete(entry);
         reject(reason);
       },
-    });
+    };
+    const timer = setTimeout(() => {
+      entry.reject(new Error('Token refresh queue timeout.'));
+    }, QUEUE_TIMEOUT_MS);
+    failedQueue.add(entry);
   }).then((token) => {
     if (originalRequest) {
       originalRequest.headers.set('Authorization', `Bearer ${String(token)}`);
@@ -96,14 +101,16 @@ function enqueueRequest(
 
 function processQueue(error: unknown, token: string | null = null): void {
   const rejection = error === null ? null : normalizeError(error);
-  failedQueue.forEach(({ resolve, reject }) => {
+  // Snapshot the set before iterating so entries removed during iteration don't cause issues
+  const snapshot = [...failedQueue];
+  failedQueue.clear();
+  snapshot.forEach(({ resolve, reject }) => {
     if (rejection !== null) {
       reject(rejection);
     } else {
       resolve(token);
     }
   });
-  failedQueue = [];
 }
 
 export function setupResponseInterceptor(

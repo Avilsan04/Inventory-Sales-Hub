@@ -18,14 +18,16 @@ import { Button, Input } from '@shared/ui/primitives';
 import type { Customer } from '@entities/customer';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 
-const schema = z.object({
-  name: z.string().min(1, 'Required'),
-  email: z.email('Invalid email'),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-});
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const buildSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z.string().min(1, t('validation.required')),
+    email: z.email(t('validation.invalidEmail')),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+  });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 interface Props {
   customer: Customer | null;
@@ -37,6 +39,7 @@ export function CustomerEditDialog({ customer, open, onOpenChange }: Props): Rea
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateCustomer(customer?.id ?? '');
   const [saved, setSaved] = React.useState(false);
+  const schema = React.useMemo(() => buildSchema(t), [t]);
   const {
     register,
     handleSubmit,
@@ -70,9 +73,7 @@ export function CustomerEditDialog({ customer, open, onOpenChange }: Props): Rea
       onSuccess: () => {
         toast({ title: t('customers.toasts.updated') });
         setSaved(true);
-        setTimeout(() => {
-          onClose();
-        }, 400);
+        onClose();
       },
       onError: (err) => {
         toast({

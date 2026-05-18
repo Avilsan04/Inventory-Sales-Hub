@@ -1,104 +1,67 @@
 package com.inventory_sales_hub.app.controllers;
 
-import com.inventory_sales_hub.app.exceptions.ProductException;
 import com.inventory_sales_hub.app.model.dto.CategoryParams;
 import com.inventory_sales_hub.app.model.dto.PatchProductParams;
 import com.inventory_sales_hub.app.model.dto.ProductParams;
 import com.inventory_sales_hub.app.model.service.ProductManager;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/products")
 public class ProductController {
+
     @Autowired
     private ProductManager productManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAll() {
-        try {
-            return ResponseEntity.ok(productManager.getAll());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(productManager.getAll());
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(productManager.getById(id));
-        } catch (ProductException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(productManager.getById(id));
     }
 
     @GetMapping(path = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getCategories() {
-        try {
-            return ResponseEntity.ok(productManager.getCategories());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(productManager.getCategories());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(@RequestBody ProductParams params) {
-        try {
-            return new ResponseEntity<>(productManager.create(params), HttpStatus.CREATED);
-        } catch (ProductException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ResponseEntity<?> create(@Valid @RequestBody ProductParams params) {
+        return new ResponseEntity<>(productManager.create(params), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductParams params) {
-        try {
-            return ResponseEntity.ok(productManager.update(id, params));
-        } catch (ProductException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ProductParams params) {
+        return ResponseEntity.ok(productManager.update(id, params));
     }
 
     @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<?> patch(@PathVariable Long id, @RequestBody PatchProductParams params) {
-        try {
-            return ResponseEntity.ok(productManager.patch(id, params));
-        } catch (ProductException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        return ResponseEntity.ok(productManager.patch(id, params));
     }
 
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            productManager.delete(id);
-            return ResponseEntity.ok().build();
-        } catch (ProductException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+        productManager.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(path = "/categories", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createCategory(@RequestBody CategoryParams params) {
-        try {
-            return new ResponseEntity<>(productManager.createCategory(params), HttpStatus.CREATED);
-        } catch (ProductException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryParams params) {
+        return new ResponseEntity<>(productManager.createCategory(params), HttpStatus.CREATED);
     }
 }

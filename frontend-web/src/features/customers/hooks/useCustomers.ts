@@ -1,6 +1,7 @@
 import { useQuery, type QueryKey, type UseQueryResult } from '@tanstack/react-query';
 import { customersApi } from '../api/customersApi';
 import { withTenant } from '@core/api/queryKeys';
+import { TIMING } from '@core/config/timing';
 import type { Customer } from '@entities/customer';
 
 export const customerKeys = {
@@ -10,5 +11,9 @@ export const customerKeys = {
 };
 
 export function useCustomers(): UseQueryResult<Customer[]> {
-  return useQuery({ queryKey: customerKeys.lists(), queryFn: customersApi.getCustomers });
+  return useQuery({
+    queryKey: customerKeys.lists(),
+    queryFn: customersApi.getCustomers,
+    staleTime: TIMING.OPERATIONAL_STALE_MS,
+  });
 }

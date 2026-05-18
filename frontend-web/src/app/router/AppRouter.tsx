@@ -145,11 +145,7 @@ export function AppRouter(): React.ReactElement {
               }
             />
 
-            <Route
-              element={
-                <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company', 'test']} />
-              }
-            >
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company']} />}>
               <Route
                 path={APP_ROUTES.SALES}
                 element={
@@ -160,7 +156,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company', 'test']} />}>
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company']} />}>
               <Route
                 path={APP_ROUTES.PRODUCTS}
                 element={
@@ -171,7 +167,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'test']} />}>
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff']} />}>
               <Route
                 path={APP_ROUTES.INVENTORY}
                 element={
@@ -182,11 +178,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route
-              element={
-                <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company', 'test']} />
-              }
-            >
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'company']} />}>
               <Route
                 path={APP_ROUTES.CUSTOMERS}
                 element={
@@ -197,7 +189,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company', 'test']} />}>
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company']} />}>
               <Route
                 path={APP_ROUTES.EMPLOYEES}
                 element={
@@ -224,11 +216,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route
-              element={
-                <RoleRoute allowedRoles={['admin', 'manager', 'staff', 'customer', 'test']} />
-              }
-            >
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'staff', 'customer']} />}>
               <Route
                 path={APP_ROUTES.POS}
                 element={
@@ -239,7 +227,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route element={<RoleRoute allowedRoles={['admin', 'company', 'test']} />}>
+            <Route element={<RoleRoute allowedRoles={['admin', 'company']} />}>
               <Route
                 path={APP_ROUTES.ADMIN_TENANTS}
                 element={

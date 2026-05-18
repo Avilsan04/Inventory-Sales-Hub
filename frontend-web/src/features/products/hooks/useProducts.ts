@@ -1,6 +1,7 @@
 import { useQuery, type QueryKey, type UseQueryResult } from '@tanstack/react-query';
 import { productsApi } from '../api/productsApi';
 import { withTenant } from '@core/api/queryKeys';
+import { TIMING } from '@core/config/timing';
 import type { Product } from '@entities/product';
 
 export const productKeys = {
@@ -11,5 +12,9 @@ export const productKeys = {
 };
 
 export function useProducts(): UseQueryResult<Product[]> {
-  return useQuery({ queryKey: productKeys.lists(), queryFn: productsApi.getProducts });
+  return useQuery({
+    queryKey: productKeys.lists(),
+    queryFn: productsApi.getProducts,
+    staleTime: TIMING.CATALOG_STALE_MS,
+  });
 }

@@ -51,7 +51,8 @@ public class AdminService {
     }
 
     public ImpersonationTokenResponse impersonate(Long tenantId) {
-        String token = jwtManager.generateToken("impersonated-" + tenantId, tenantId, "ADMIN");
+        // Impersonation token scoped to the target tenant — backend validates this on every request.
+        String token = jwtManager.generateToken("impersonated-" + tenantId, tenantId, "ADMIN", tenantId);
         String expiresAt = Instant.now().plus(1, ChronoUnit.HOURS).toString();
         return new ImpersonationTokenResponse(token, expiresAt);
     }

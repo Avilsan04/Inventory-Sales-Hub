@@ -1,4 +1,4 @@
-export { useSales, useSalesFlat, saleKeys } from './hooks/useSales';
+export { useSales, saleKeys } from './hooks/useSales';
 export type { SaleFilters } from './hooks/useSales';
 export { useMyOrders } from './hooks/useMyOrders';
 export { useSale } from './hooks/useSale';

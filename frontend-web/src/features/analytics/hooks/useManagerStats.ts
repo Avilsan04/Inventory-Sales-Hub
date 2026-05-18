@@ -11,8 +11,8 @@ function currentWeekRange(): { from: string; to: string } {
   const iso = (d: Date): string => d.toISOString().slice(0, 10);
   return { from: iso(monday), to: iso(sunday) };
 }
-import { useSalesFlat as useSales } from '@features/sales';
-import { useEmployees } from '@features/employees';
+import { useSalesFlatList as useSales } from '@entities/sale';
+import { useEmployeeList as useEmployees } from '@entities/employee';
 import { computeStatusSlices } from '@shared/lib/saleCalculations';
 import type { StatusSliceData } from '@shared/lib/saleCalculations';
 import type { SalesPeriod, LowStockAlert } from '@entities/analytics';

@@ -57,9 +57,7 @@ export function SupplierCreateDialog({ open, onOpenChange }: Props): React.React
       onSuccess: () => {
         toast({ title: t('suppliers.toasts.created') });
         setSaved(true);
-        setTimeout(() => {
-          onClose();
-        }, 400);
+        onClose();
       },
       onError: (err) => {
         toast({

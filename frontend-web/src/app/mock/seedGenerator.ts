@@ -56,8 +56,8 @@ function dayVolume(date: Date): number {
 }
 
 export function generateSixMonthsSales(startId: number): Sale[] {
-  const today = new Date(2026, 4, 3); // 2026-05-03
-  const sixMonthsAgo = new Date(2025, 11, 1); // 2025-12-01
+  const today = new Date();
+  const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1);
   const sales: Sale[] = [];
   let idCounter = startId;
 

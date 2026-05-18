@@ -2,13 +2,8 @@ package com.inventory_sales_hub.app.model.service;
 
 import com.inventory_sales_hub.app.exceptions.UserException;
 import com.inventory_sales_hub.app.model.dto.*;
-import com.inventory_sales_hub.app.model.entities.PasswordResetToken;
-import com.inventory_sales_hub.app.model.entities.RefreshToken;
-import com.inventory_sales_hub.app.model.entities.Role;
-import com.inventory_sales_hub.app.model.entities.User;
-import com.inventory_sales_hub.app.model.persistence.PasswordResetTokenDao;
-import com.inventory_sales_hub.app.model.persistence.RefreshTokenDao;
-import com.inventory_sales_hub.app.model.persistence.UserDao;
+import com.inventory_sales_hub.app.model.entities.*;
+import com.inventory_sales_hub.app.model.persistence.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,9 +23,11 @@ public class UserManager {
     @Autowired private UserDao userDao;
     @Autowired private RefreshTokenDao refreshTokenDao;
     @Autowired private PasswordResetTokenDao passwordResetTokenDao;
+    @Autowired private TenantDao tenantDao;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private JwtManager jwtManager;
 
+    @Transactional
     public UserResponse registerUser(RegisterParams params) {
         if (userDao.existsByEmail(params.email())) throw new UserException("This email already exists");
         if (userDao.existsByUsername(params.username())) throw new UserException("This username already exists");
@@ -39,15 +36,23 @@ public class UserManager {
         user.setUsername(params.username());
         user.setEmail(params.email());
         user.setPassword(passwordEncoder.encode(params.password()));
-        if (params.role() != null) {
-            try {
-                Role requested = Role.valueOf(params.role().toUpperCase());
-                if (requested != Role.ADMIN) user.setRole(requested);
-            } catch (IllegalArgumentException ignored) {}
+
+        // Role is determined by endpoint/context — client cannot self-assign a role.
+        // Default role for self-registration is CUSTOMER.
+        user.setRole(Role.CUSTOMER);
+
+        // COMPANY self-registration: auto-provision a Tenant for this company owner.
+        if ("COMPANY".equalsIgnoreCase(params.role())) {
+            user.setRole(Role.COMPANY);
+            Tenant tenant = new Tenant();
+            tenant.setName(params.username() + "'s Company");
+            tenant.setOwnerEmail(params.email());
+            Tenant savedTenant = tenantDao.save(tenant);
+            user.setTenantId(savedTenant.getId());
         }
 
         User saved = userDao.save(user);
-        String accessToken = jwtManager.generateToken(saved.getUsername(), saved.getId(), saved.getRole().name());
+        String accessToken = jwtManager.generateToken(saved.getUsername(), saved.getId(), saved.getRole().name(), saved.getTenantId());
         String refreshToken = createRefreshToken(saved);
         return new UserResponse(saved.getId(), saved.getUsername(), saved.getEmail(), saved.getRole().name(), accessToken, refreshToken);
     }
@@ -57,7 +62,7 @@ public class UserManager {
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new UserException("The password or email is incorrect");
         }
-        String accessToken = jwtManager.generateToken(user.getUsername(), user.getId(), user.getRole().name());
+        String accessToken = jwtManager.generateToken(user.getUsername(), user.getId(), user.getRole().name(), user.getTenantId());
         String refreshToken = createRefreshToken(user);
         return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole().name(), accessToken, refreshToken);
     }
@@ -86,7 +91,7 @@ public class UserManager {
         User user = stored.getUser();
         refreshTokenDao.delete(stored);
 
-        String newAccessToken = jwtManager.generateToken(user.getUsername(), user.getId(), user.getRole().name());
+        String newAccessToken = jwtManager.generateToken(user.getUsername(), user.getId(), user.getRole().name(), user.getTenantId());
         String newRefreshToken = createRefreshToken(user);
         return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole().name(), newAccessToken, newRefreshToken);
     }
@@ -106,7 +111,7 @@ public class UserManager {
         passwordResetTokenDao.save(resetToken);
 
         // TODO: Send email with reset link -> /api/auth/reset-password?token={tokenValue}
-        log.info("Password reset token generated for {}: {}", email, tokenValue);
+        log.info("Password reset token generated for {}", email);
     }
 
     @Transactional

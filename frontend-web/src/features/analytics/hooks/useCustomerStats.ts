@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSalesFlat as useSales } from '@features/sales';
+import { useSalesFlatList as useSales } from '@entities/sale';
 import { useAuthMe } from '@features/auth';
 import type { Sale } from '@entities/sale';
 

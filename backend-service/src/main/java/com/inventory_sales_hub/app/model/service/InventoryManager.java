@@ -1,9 +1,12 @@
 package com.inventory_sales_hub.app.model.service;
 
+import com.inventory_sales_hub.app.config.TenantContext;
 import com.inventory_sales_hub.app.exceptions.InventoryException;
 import com.inventory_sales_hub.app.model.dto.*;
 import com.inventory_sales_hub.app.model.entities.*;
 import com.inventory_sales_hub.app.model.persistence.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,44 +19,53 @@ public class InventoryManager {
     @Autowired private StockMovementDao stockMovementDao;
     @Autowired private ProductDao productDao;
     @Autowired private CategoryDao categoryDao;
+    @Autowired private TenantContext tenantContext;
 
     public PaginatedResponse<InventoryResponse> getAll(int page, int pageSize, String search, String status) {
+        Long tenantId = tenantContext.currentTenantId();
+        String normalizedSearch = (search != null && !search.isBlank()) ? search : null;
+        String normalizedStatus = (status != null && !status.isBlank()) ? status.toUpperCase() : null;
+
+        if (tenantId != null) {
+            PageRequest pageable = PageRequest.of(page, pageSize);
+            Page<Inventory> result = inventoryDao.findPageByTenantAndFilter(tenantId, normalizedSearch, normalizedStatus, pageable);
+            List<InventoryResponse> data = result.getContent().stream().map(this::toResponse).toList();
+            return new PaginatedResponse<>(data, result.getTotalElements(), page, pageSize);
+        }
+
+        // Admin: no tenant filter — fall back to in-memory (admin use-case, acceptable for small datasets)
         List<InventoryResponse> filtered = inventoryDao.findAllWithProduct().stream()
-                .filter(i -> matchesStatus(i, status))
-                .filter(i -> matchesSearch(i, search))
+                .filter(i -> normalizedStatus == null || switch (normalizedStatus) {
+                    case "LOW_STOCK" -> i.getQuantity() > 0 && i.getQuantity() <= i.getMinStock();
+                    case "OUT_OF_STOCK" -> i.getQuantity() == 0;
+                    default -> true;
+                })
+                .filter(i -> normalizedSearch == null
+                        || i.getProduct().getName().toLowerCase().contains(normalizedSearch.toLowerCase())
+                        || (i.getProduct().getSku() != null && i.getProduct().getSku().toLowerCase().contains(normalizedSearch.toLowerCase())))
                 .map(this::toResponse)
                 .toList();
         long total = filtered.size();
         int start = page * pageSize;
-        int end = (int) Math.min(start + pageSize, total);
-        List<InventoryResponse> pageData = start < total ? filtered.subList(start, end) : List.of();
+        List<InventoryResponse> pageData = start < total ? filtered.subList(start, (int) Math.min(start + pageSize, total)) : List.of();
         return new PaginatedResponse<>(pageData, total, page, pageSize);
     }
 
-    private boolean matchesStatus(Inventory i, String status) {
-        if (status == null || status.isBlank()) return true;
-        return switch (status.toUpperCase()) {
-            case "LOW_STOCK" -> i.getQuantity() > 0 && i.getQuantity() <= i.getMinStock();
-            case "OUT_OF_STOCK" -> i.getQuantity() == 0;
-            default -> true;
-        };
-    }
-
-    private boolean matchesSearch(Inventory i, String search) {
-        if (search == null || search.isBlank()) return true;
-        String q = search.toLowerCase();
-        return i.getProduct().getName().toLowerCase().contains(q)
-                || i.getProduct().getSku().toLowerCase().contains(q);
-    }
-
     public InventoryResponse getById(Long id) {
-        return inventoryDao.findByIdWithProduct(id)
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? inventoryDao.findByIdWithProductAndTenant(id, tenantId)
+                : inventoryDao.findByIdWithProduct(id))
                 .map(this::toResponse)
                 .orElseThrow(() -> new InventoryException("Inventory not found"));
     }
 
     public List<InventoryResponse> getLowStock() {
-        return inventoryDao.findLowStock().stream().map(this::toResponse).toList();
+        Long tenantId = tenantContext.currentTenantId();
+        return (tenantId != null
+                ? inventoryDao.findLowStockByTenant(tenantId)
+                : inventoryDao.findLowStock())
+                .stream().map(this::toResponse).toList();
     }
 
     public List<StockMovementResponse> getMovements() {
@@ -62,12 +74,16 @@ public class InventoryManager {
 
     @Transactional
     public InventoryResponse create(CreateInventoryParams params) {
-        if (params.sku() != null && productDao.existsBySku(params.sku())) {
+        Long tenantId = requireTenantId();
+
+        if (params.sku() != null && productDao.existsBySkuAndTenantId(params.sku(), tenantId)) {
             throw new InventoryException("A product with this SKU already exists");
         }
 
         Category category = params.categoryId() != null
-                ? categoryDao.findById(params.categoryId()).orElseThrow(() -> new InventoryException("Category not found"))
+                ? categoryDao.findById(params.categoryId())
+                    .filter(c -> c.getTenantId().equals(tenantId))
+                    .orElseThrow(() -> new InventoryException("Category not found"))
                 : null;
 
         Product product = new Product();
@@ -77,6 +93,7 @@ public class InventoryManager {
         product.setSalePrice(params.salePrice());
         product.setSku(params.sku());
         product.setCategory(category);
+        product.setTenantId(tenantId);
         product = productDao.save(product);
 
         Inventory inventory = new Inventory();
@@ -94,7 +111,10 @@ public class InventoryManager {
 
     @Transactional
     public InventoryResponse update(Long id, UpdateInventoryParams params) {
-        Inventory inventory = inventoryDao.findByIdWithProduct(id)
+        Long tenantId = requireTenantId();
+        Inventory inventory = (tenantId != null
+                ? inventoryDao.findByIdWithProductAndTenant(id, tenantId)
+                : inventoryDao.findByIdWithProduct(id))
                 .orElseThrow(() -> new InventoryException("Inventory not found"));
         if (params.minStock() != null) inventory.setMinStock(params.minStock());
         return toResponse(inventoryDao.save(inventory));
@@ -102,7 +122,10 @@ public class InventoryManager {
 
     @Transactional
     public InventoryResponse updateStock(Long id, PatchStockParams params) {
-        Inventory inventory = inventoryDao.findByIdWithProduct(id)
+        Long tenantId = tenantContext.currentTenantId();
+        Inventory inventory = (tenantId != null
+                ? inventoryDao.findByIdWithProductAndTenant(id, tenantId)
+                : inventoryDao.findByIdWithProduct(id))
                 .orElseThrow(() -> new InventoryException("Inventory not found"));
 
         int previous = inventory.getQuantity();
@@ -124,7 +147,10 @@ public class InventoryManager {
 
     @Transactional
     public void delete(Long id) {
-        Inventory inventory = inventoryDao.findByIdWithProduct(id)
+        Long tenantId = requireTenantId();
+        Inventory inventory = (tenantId != null
+                ? inventoryDao.findByIdWithProductAndTenant(id, tenantId)
+                : inventoryDao.findByIdWithProduct(id))
                 .orElseThrow(() -> new InventoryException("Inventory not found"));
 
         Product product = inventory.getProduct();
@@ -132,6 +158,12 @@ public class InventoryManager {
         inventoryDao.delete(inventory);
         product.setActive(false);
         productDao.save(product);
+    }
+
+    private Long requireTenantId() {
+        Long tenantId = tenantContext.currentTenantId();
+        if (tenantId == null) throw new InventoryException("No tenant context");
+        return tenantId;
     }
 
     private void recordMovement(Inventory inventory, MovementType type, int quantity, int previousStock, String note) {

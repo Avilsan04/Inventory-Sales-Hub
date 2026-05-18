@@ -54,7 +54,7 @@ export const supplierHandlers = [
     const now = new Date().toISOString();
     const newSupplier = {
       id: suppliers.length + 1,
-      name: (body['name'] as string | undefined) ?? 'Nuevo proveedor',
+      name: (body['name'] as string | undefined) ?? 'New supplier',
       email: body['email'] as string | null | undefined,
       phone: body['phone'] as string | null | undefined,
       address: body['address'] as string | null | undefined,

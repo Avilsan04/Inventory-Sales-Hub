@@ -8,4 +8,10 @@ export const TIMING = {
   USER_PROFILE_STALE_MS: 10 * 60 * 1000,
   /** Catalog TTL — products change infrequently; 1 min is sufficient. */
   CATALOG_STALE_MS: 60_000,
+  /** Operational data TTL — customers, suppliers, employees: 2 min. */
+  OPERATIONAL_STALE_MS: 2 * 60 * 1000,
+  /** Financial data TTL — sales: 30s to reflect recent transactions. */
+  FINANCIAL_STALE_MS: 30_000,
+  /** Inventory TTL — stock levels: 1 min. */
+  INVENTORY_STALE_MS: 60_000,
 } as const;

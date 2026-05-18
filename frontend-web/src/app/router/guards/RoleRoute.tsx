@@ -26,9 +26,9 @@ export function RoleRoute({ allowedRoles }: RoleRouteProps): React.ReactElement 
   if (isLoading) return <Spinner />;
 
   if (effectiveRole === undefined || !allowedRoles.includes(effectiveRole)) {
+    // If no role, redirect to LANDING to avoid dashboard redirect loop (dashboard may require a role).
     const fallback =
-      (effectiveRole !== undefined ? ROLE_DEFAULT_PATH[effectiveRole] : undefined) ??
-      APP_ROUTES.DASHBOARD;
+      effectiveRole !== undefined ? ROLE_DEFAULT_PATH[effectiveRole] : APP_ROUTES.LANDING;
     return <Navigate to={fallback} replace />;
   }
 
