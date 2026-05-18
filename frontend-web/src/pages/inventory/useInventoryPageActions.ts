@@ -41,21 +41,28 @@ export function useInventoryPageActions(role: UserRole | undefined): InventoryPa
   const [deleteId, setDeleteId] = React.useState<string | null>(null);
   const [historyItem, setHistoryItem] = React.useState<InventoryItem | null>(null);
 
-  const handleExport = React.useCallback((items: InventoryItem[]): void => {
-    exportToCsv(
-      items.map((item) => ({
-        sku: item.sku,
-        name: item.name,
-        category: item.category ?? '',
-        quantity: item.quantity,
-        price: fromCents(item.price),
-        currency: item.currency,
-        status: item.status,
-        reorderThreshold: item.reorderThreshold,
-      })),
-      'inventory'
-    );
-  }, []);
+  const handleExport = React.useCallback(
+    (items: InventoryItem[]): void => {
+      if (items.length === 0) {
+        toast({ title: t('inventory.toasts.exportEmpty'), variant: 'destructive' });
+        return;
+      }
+      exportToCsv(
+        items.map((item) => ({
+          sku: item.sku,
+          name: item.name,
+          category: item.category ?? '',
+          quantity: item.quantity,
+          price: fromCents(item.price),
+          currency: item.currency,
+          status: item.status,
+          reorderThreshold: item.reorderThreshold,
+        })),
+        'inventory'
+      );
+    },
+    [t]
+  );
 
   const handleDelete = React.useCallback((): void => {
     if (deleteId === null) return;

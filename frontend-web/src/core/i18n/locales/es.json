@@ -348,7 +348,8 @@
       "stockAdjusted": "Stock ajustado",
       "adjustFailed": "Error al ajustar",
       "stockTransferred": "Stock transferido",
-      "transferFailed": "Error al transferir"
+      "transferFailed": "Error al transferir",
+      "exportEmpty": "No hay artículos de inventario para exportar"
     }
   },
   "products": {
@@ -488,7 +489,8 @@
       "cashSessionClosed": "Sesión de caja cerrada",
       "closeFailed": "Error al cerrar la sesión",
       "openFailed": "Error al abrir la sesión",
-      "createFailed": "Error al crear el pedido"
+      "createFailed": "Error al crear el pedido",
+      "exportEmpty": "No hay ventas para exportar"
     },
     "sync": {
       "offline": "Sin conexión — {{count}} venta(s) en cola.",
@@ -525,7 +527,8 @@
     "toasts": {
       "deleted": "Cliente eliminado",
       "created": "Cliente añadido",
-      "updated": "Cliente actualizado"
+      "updated": "Cliente actualizado",
+      "exportEmpty": "No hay clientes para exportar"
     }
   },
   "employees": {

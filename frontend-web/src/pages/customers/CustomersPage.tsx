@@ -61,19 +61,21 @@ export function CustomersPage(): React.ReactElement {
   const topMap = useCustomerTopMap(topCustomers);
 
   const handleExport = (): void => {
-    exportToCsv(
-      (data ?? []).map((c) => {
-        const meta = topMap.get(c.id);
-        return {
-          name: c.name,
-          email: c.email,
-          phone: c.phone ?? '',
-          orders: meta?.totalOrders ?? 0,
-          spent: meta?.totalSpent ?? 0,
-        };
-      }),
-      'customers'
-    );
+    const rows = (data ?? []).map((c) => {
+      const meta = topMap.get(c.id);
+      return {
+        name: c.name,
+        email: c.email,
+        phone: c.phone ?? '',
+        orders: meta?.totalOrders ?? 0,
+        spent: meta?.totalSpent ?? 0,
+      };
+    });
+    if (rows.length === 0) {
+      toast({ title: t('customers.toasts.exportEmpty'), variant: 'destructive' });
+      return;
+    }
+    exportToCsv(rows, 'customers');
   };
 
   const handleDelete = (): void => {

@@ -4,6 +4,7 @@ import { exportToCsv } from '@shared/lib/exportCsv';
 import { fromCents } from '@shared/lib';
 import { formatOrderId, formatDate } from '@shared/lib';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
+import { toast } from '@shared/hooks';
 import {
   useSalesFilters,
   SALES_PAGE_SIZE,
@@ -66,18 +67,20 @@ export function SalesPage(): React.ReactElement {
   }, [topCustomers]);
 
   const handleExport = (): void => {
-    exportToCsv(
-      (sales ?? []).map((s) => ({
-        id: formatOrderId(s.id),
-        customer: s.customerId ? (customerMap.get(s.customerId) ?? s.customerId) : '',
-        date: formatDate(s.createdAt),
-        status: s.status,
-        items: s.items.length,
-        total: fromCents(s.total),
-        currency: s.currency,
-      })),
-      'sales'
-    );
+    const rows = (sales ?? []).map((s) => ({
+      id: formatOrderId(s.id),
+      customer: s.customerId ? (customerMap.get(s.customerId) ?? s.customerId) : '',
+      date: formatDate(s.createdAt),
+      status: s.status,
+      items: s.items.length,
+      total: fromCents(s.total),
+      currency: s.currency,
+    }));
+    if (rows.length === 0) {
+      toast({ title: t('sales.toasts.exportEmpty'), variant: 'destructive' });
+      return;
+    }
+    exportToCsv(rows, 'sales');
   };
 
   if (isError) {

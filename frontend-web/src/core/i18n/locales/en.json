@@ -348,7 +348,8 @@
       "stockAdjusted": "Stock adjusted",
       "adjustFailed": "Adjustment failed",
       "stockTransferred": "Stock transferred",
-      "transferFailed": "Transfer failed"
+      "transferFailed": "Transfer failed",
+      "exportEmpty": "No inventory items available to export"
     }
   },
   "products": {
@@ -488,7 +489,8 @@
       "cashSessionClosed": "Cash session closed",
       "closeFailed": "Failed to close session",
       "openFailed": "Failed to open session",
-      "createFailed": "Failed to create order"
+      "createFailed": "Failed to create order",
+      "exportEmpty": "No sales available to export"
     },
     "sync": {
       "offline": "Offline — {{count}} sale(s) queued for sync.",
@@ -525,7 +527,8 @@
     "toasts": {
       "deleted": "Customer deleted",
       "created": "Customer added",
-      "updated": "Customer updated"
+      "updated": "Customer updated",
+      "exportEmpty": "No customers available to export"
     }
   },
   "employees": {
