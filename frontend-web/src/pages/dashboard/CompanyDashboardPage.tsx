@@ -64,6 +64,7 @@ export function CompanyDashboardPage(): React.ReactElement {
     totalCustomers,
     topProducts,
     topCustomers,
+    currency,
     salesPeriod,
     activeEmployees,
     totalEmployees,
@@ -140,7 +141,7 @@ export function CompanyDashboardPage(): React.ReactElement {
           <div className={styles['chartHeader']}>
             <h2 className={styles['chartTitle']}>{t('companyDashboard.revenueChart')}</h2>
           </div>
-          <RevenueAreaChart data={salesPeriod} isLoading={isLoading} />
+          <RevenueAreaChart data={salesPeriod} isLoading={isLoading} currency={currency} />
         </div>
       </SectionErrorBoundary>
 

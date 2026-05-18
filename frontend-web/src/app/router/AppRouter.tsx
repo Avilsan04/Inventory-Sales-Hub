@@ -160,7 +160,7 @@ export function AppRouter(): React.ReactElement {
               />
             </Route>
 
-            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'test']} />}>
+            <Route element={<RoleRoute allowedRoles={['admin', 'manager', 'company', 'test']} />}>
               <Route
                 path={APP_ROUTES.PRODUCTS}
                 element={

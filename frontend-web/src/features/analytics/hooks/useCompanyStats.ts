@@ -68,12 +68,19 @@ function mapStats(
   };
 }
 
+function last12MonthsRange(): { from: string; to: string } {
+  const today = new Date();
+  const start = new Date(today);
+  start.setMonth(today.getMonth() - 12);
+  start.setDate(1);
+  const iso = (d: Date): string => d.toISOString().slice(0, 10);
+  return { from: iso(start), to: iso(today) };
+}
+
 export function useCompanyStats(): CompanyStats {
   const { data: kpi, isLoading: kpiLoading } = useDashboardKpi();
-  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics({
-    period: '12m',
-    groupBy: 'month',
-  });
+  const yearRange = React.useMemo(() => last12MonthsRange(), []);
+  const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(yearRange);
   const { data: topProducts, isLoading: productsLoading } = useTopProducts();
   const { data: topCustomers, isLoading: customersLoading } = useTopCustomers();
   const { data: employees, isLoading: employeesLoading } = useEmployees();
