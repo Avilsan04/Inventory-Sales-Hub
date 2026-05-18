@@ -65,9 +65,9 @@
   justify-content: center;
   min-width: 0;
 
-  // Hide command palette on very small screens — no room alongside right actions
+  // Collapse to icon-only width on mobile — search remains accessible via tap
   @media (max-width: #{$breakpoint-sm - 1px}) {
-    display: none;
+    flex: 0 0 auto;
   }
 }
 
@@ -142,6 +142,21 @@
     box-shadow: $shadow-focus-ring;
     border-color: var(--color-border-focus);
   }
+
+  // Compact icon-only on mobile — still tappable, triggers dialog
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    width: $size-9;
+    max-width: none;
+    padding: 0;
+    justify-content: center;
+    background: transparent;
+    border-color: transparent;
+
+    &:hover {
+      background: var(--color-muted);
+      border-color: transparent;
+    }
+  }
 }
 
 .searchTriggerIcon {
@@ -153,6 +168,10 @@
 .searchTriggerLabel {
   flex: 1;
   text-align: left;
+
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    display: none;
+  }
 }
 
 .kbdHint {
@@ -169,6 +188,10 @@
   flex-shrink: 0;
   pointer-events: none;
   font-family: $font-family-mono;
+
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    display: none;
+  }
 }
 
 // ── Command palette modal ─────────────────────────────────────────────────
@@ -524,6 +547,7 @@
   top: calc(100% + #{$spacing-1});
   right: 0;
   width: $panel-notifications-width;
+  max-width: calc(100vw - #{$spacing-8});
   padding: 0;
   display: flex;
   flex-direction: column;

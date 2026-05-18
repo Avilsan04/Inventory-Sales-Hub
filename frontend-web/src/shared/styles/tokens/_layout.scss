@@ -1,5 +1,6 @@
 // Design Tokens - Layout
 // Breakpoints
+$breakpoint-xs: 400px;
 $breakpoint-sm: 640px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 1024px;
@@ -89,6 +90,7 @@ $size-pos-product-card-min: 10.625rem; // 170px — POS product grid card min-wi
 $size-grid-card-min: 16.25rem; // 260px — product grid card min-width
 $size-date-input: 9rem; // 144px — date range picker input width
 $height-chart-area: 15rem; // 240px — area/bar chart container height
+$height-chart-area-sm: 10rem; // 160px — area/bar chart on mobile
 $height-chart-donut: 13.75rem; // 220px — donut chart container height
 $container-login-form: 25rem; // 400px — login form wrapper max-width
 $container-form: 30rem; // 480px — register form card max-width

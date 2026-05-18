@@ -119,6 +119,11 @@
   flex: 1;
   font-size: $font-size-xs;
   color: var(--color-text-muted);
+
+  @media (max-width: $breakpoint-sm) {
+    justify-content: center;
+    gap: 0;
+  }
 }
 
 .stepDot {
@@ -145,12 +150,16 @@
 .stepDotDone {
   background-color: $color-success;
   border-color: $color-success;
-  color: white;
+  color: $color-primary-foreground;
 }
 
 .stepLabel {
   font-weight: $font-weight-medium;
   color: var(--color-text-muted);
+
+  @media (max-width: $breakpoint-sm) {
+    display: none;
+  }
 }
 
 .stepLabelActive {

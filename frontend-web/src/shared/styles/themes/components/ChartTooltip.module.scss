@@ -75,6 +75,11 @@
   display: flex;
   gap: $spacing-4;
   align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: $breakpoint-sm) {
+    gap: $spacing-3;
+  }
 }
 
 // ── Donut chart legend ────────────────────────────────────────────

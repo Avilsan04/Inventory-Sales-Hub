@@ -20,6 +20,15 @@
   overflow-x: auto;
   scrollbar-width: none;
 
+  // Fade mask on right edge — indicates scrollable tabs on mobile
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+
+  @media (min-width: $breakpoint-md) {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
   &::-webkit-scrollbar {
     display: none;
   }

@@ -75,8 +75,8 @@ export function AuditPage(): React.ReactElement {
               <TableHead>{t('audit.cols.timestamp')}</TableHead>
               <TableHead>{t('audit.cols.user')}</TableHead>
               <TableHead>{t('audit.cols.action')}</TableHead>
-              <TableHead>{t('audit.cols.entity')}</TableHead>
-              <TableHead>{t('audit.cols.details')}</TableHead>
+              <TableHead className={styles['colSecondary']}>{t('audit.cols.entity')}</TableHead>
+              <TableHead className={styles['detailsCell']}>{t('audit.cols.details')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -106,7 +106,7 @@ export function AuditPage(): React.ReactElement {
                       {t(`audit.actions.${log.action}`)}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className={styles['colSecondary']}>
                     <span className={styles['entityType']}>{log.entityType}</span>{' '}
                     <span className={styles['entityId']}>#{log.entityId.slice(0, 8)}</span>
                   </TableCell>

@@ -9,7 +9,7 @@
 .dropZone {
   border: $border-width-base dashed var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 2.5rem $spacing-8;
+  padding: $size-10 $spacing-8;
   text-align: center;
   cursor: pointer;
   background: transparent;

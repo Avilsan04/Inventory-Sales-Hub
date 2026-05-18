@@ -7,7 +7,7 @@
   color: var(--color-warning-fg);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  border-bottom: 1px solid rgba($color-warning, 0.3);
+  border-bottom: $border-width-base solid rgba($color-warning, 0.3);
   position: sticky;
   top: 0;
   z-index: $z-topbar;
@@ -19,14 +19,14 @@
   @extend .banner;
   background: var(--color-muted);
   color: var(--color-text-primary);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: $border-width-base solid var(--color-border);
 }
 
 .bannerError {
   @extend .banner;
   background: var(--color-destructive);
   color: var(--color-destructive-foreground);
-  border-bottom: 1px solid rgba($color-destructive, 0.3);
+  border-bottom: $border-width-base solid rgba($color-destructive, 0.3);
 }
 
 .retryBtn {

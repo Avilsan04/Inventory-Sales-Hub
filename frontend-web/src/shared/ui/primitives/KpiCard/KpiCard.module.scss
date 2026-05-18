@@ -1,6 +1,6 @@
 .card {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  border: $border-width-base solid var(--color-border);
   border-radius: $radius-lg;
   padding: $spacing-5;
   display: flex;
@@ -22,13 +22,13 @@
 }
 
 .iconContainer {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: $size-9;
+  height: $size-9;
   border-radius: $border-radius-base;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-card);
 
   svg {
     width: 1rem;
@@ -65,25 +65,25 @@
 
 // Accent variants
 .cardAccent-primary {
-  border-top: 2px solid var(--color-primary);
+  border-top: $border-width-focus solid var(--color-primary);
 }
 .cardAccent-success {
-  border-top: 2px solid var(--color-success);
+  border-top: $border-width-focus solid var(--color-success);
 }
 .cardAccent-warning {
-  border-top: 2px solid var(--color-warning);
+  border-top: $border-width-focus solid var(--color-warning);
 }
 .cardAccent-neutral {
-  border-top: 2px solid var(--color-border);
+  border-top: $border-width-focus solid var(--color-border);
 }
 .cardAccent-purple {
-  border-top: 2px solid #7c3aed;
+  border-top: $border-width-focus solid $color-chart-5;
 }
 .cardAccent-spent {
-  border-top: 2px solid #0891b2;
+  border-top: $border-width-focus solid $color-chart-4;
 }
 .cardAccent-error {
-  border-top: 2px solid var(--color-error);
+  border-top: $border-width-focus solid var(--color-error);
 }
 
 .icon-primary {
@@ -99,10 +99,10 @@
   background: var(--color-text-muted);
 }
 .icon-purple {
-  background: #7c3aed;
+  background: $color-chart-5;
 }
 .icon-spent {
-  background: #0891b2;
+  background: $color-chart-4;
 }
 .icon-error {
   background: var(--color-error);

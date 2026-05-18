@@ -21,6 +21,9 @@ body {
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
   line-height: 1.5;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   transition:
     color var(--duration-base) ease,
     background-color var(--duration-base) ease;
@@ -48,9 +51,9 @@ body {
 // Focus-visible — WCAG 2.1 criterion 2.4.7 (visible focus indicator)
 // Applies only when navigating via keyboard; mouse users don't see it.
 :focus-visible {
-  outline: 2px solid var(--color-ring);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: $border-width-focus solid var(--color-ring);
+  outline-offset: $border-width-focus;
+  border-radius: $border-width-focus;
 }
 
 // Suppress browser default focus ring for elements that provide their own

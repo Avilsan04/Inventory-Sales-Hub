@@ -61,6 +61,18 @@
   padding: $spacing-3-5 $spacing-4; // 14px vertical → row height ≥ 52px
   vertical-align: middle;
   white-space: nowrap;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Override for columns where full content must be readable (e.g. audit details)
+.tableCellExpand {
+  max-width: none;
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: unset;
 }
 
 .tableCaption {

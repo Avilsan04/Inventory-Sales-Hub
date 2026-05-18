@@ -29,11 +29,11 @@
 }
 
 .skeletonRow {
-  height: 1.25rem;
+  height: $size-5;
 }
 
 .kpiValue {
-  font-size: 1.75rem;
+  font-size: $size-7;
   font-weight: $font-weight-bold;
   font-family: $font-family-mono;
 }
@@ -81,7 +81,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: $spacing-2-5;
 }
 
 .rankItem {

@@ -32,7 +32,7 @@
 }
 
 .divider {
-  border-top: 1px dashed var(--color-border);
+  border-top: $border-width-base dashed var(--color-border);
   margin: $spacing-3 0;
 }
 

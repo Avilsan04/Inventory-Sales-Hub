@@ -27,6 +27,17 @@
 
 .detailsCell {
   max-width: $col-audit-details;
+
+  @media (max-width: $breakpoint-sm) {
+    display: none;
+  }
+}
+
+// Column visibility tiers — hide lower-priority columns on narrow viewports
+.colSecondary {
+  @media (max-width: $breakpoint-sm) {
+    display: none;
+  }
 }
 
 .detailReason {
