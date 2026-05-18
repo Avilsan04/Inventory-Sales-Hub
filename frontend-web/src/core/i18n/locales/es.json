@@ -669,6 +669,56 @@
     },
     "timeAgo": {
       "now": "ahora"
+    },
+    "messages": {
+      "stockLow": {
+        "title": "Alerta de stock bajo",
+        "body": "{{product}} solo tiene {{units}} unidades restantes. El umbral de reposición es {{threshold}}."
+      },
+      "outOfStockBackorders": {
+        "title": "Sin stock",
+        "body": "{{product}} ({{sku}}) está agotado. {{count}} pedidos pendientes."
+      },
+      "outOfStockReorder": {
+        "title": "Sin stock",
+        "body": "{{product}} ({{sku}}) está agotado. Se requiere reposición."
+      },
+      "outOfStockPendingOrders": {
+        "title": "Sin stock",
+        "body": "{{product}} ({{sku}}) está agotado. {{count}} pedidos pendientes afectados."
+      },
+      "orderShipped": {
+        "title": "Pedido enviado",
+        "body": "{{orderId}} de {{customer}} ({{amount}}) ha sido enviado correctamente."
+      },
+      "orderCancelled": {
+        "title": "Pedido cancelado",
+        "body": "{{orderId}} de {{customer}} ({{amount}}) fue cancelado por el cliente."
+      },
+      "restockReceived": {
+        "title": "Reposición recibida",
+        "body": "{{product}}: +{{units}} unidades recibidas de {{supplier}}. Stock actual: {{newStock}}."
+      },
+      "newCustomer": {
+        "title": "Nuevo cliente registrado",
+        "body": "{{name}} ({{email}}) ha creado una cuenta nueva."
+      },
+      "largeOrder": {
+        "title": "Alerta de pedido grande",
+        "body": "{{customer}} realizó un pedido de alto valor ({{orderId}}) por {{amount}}. Revisión requerida."
+      },
+      "newEmployee": {
+        "title": "Nuevo empleado añadido",
+        "body": "{{name}} ({{email}}) se unió como {{role}}. Incorporación pendiente."
+      },
+      "revenueMilestone": {
+        "title": "Hito de ingresos mensuales",
+        "body": "Los ingresos de {{period}} alcanzaron {{amount}} — un {{change}} más que {{prevPeriod}}. ¡Excelente rendimiento!"
+      },
+      "supplierOrderPlaced": {
+        "title": "Pedido a proveedor realizado",
+        "body": "Orden de compra enviada a {{supplier}} por {{units}} unidades de {{product}}."
+      }
     }
   },
   "validation": {

@@ -669,6 +669,56 @@
     },
     "timeAgo": {
       "now": "now"
+    },
+    "messages": {
+      "stockLow": {
+        "title": "Low stock alert",
+        "body": "{{product}} has only {{units}} units remaining. Reorder threshold is {{threshold}}."
+      },
+      "outOfStockBackorders": {
+        "title": "Out of stock",
+        "body": "{{product}} ({{sku}}) is out of stock. {{count}} back-orders pending."
+      },
+      "outOfStockReorder": {
+        "title": "Out of stock",
+        "body": "{{product}} ({{sku}}) is out of stock. Reorder required."
+      },
+      "outOfStockPendingOrders": {
+        "title": "Out of stock",
+        "body": "{{product}} ({{sku}}) is out of stock. {{count}} pending orders affected."
+      },
+      "orderShipped": {
+        "title": "New order shipped",
+        "body": "{{orderId}} from {{customer}} ({{amount}}) has been shipped successfully."
+      },
+      "orderCancelled": {
+        "title": "Order cancelled",
+        "body": "{{orderId}} from {{customer}} ({{amount}}) was cancelled by the customer."
+      },
+      "restockReceived": {
+        "title": "Restock received",
+        "body": "{{product}}: +{{units}} units received from {{supplier}}. New stock: {{newStock}}."
+      },
+      "newCustomer": {
+        "title": "New customer registered",
+        "body": "{{name}} ({{email}}) created a new account."
+      },
+      "largeOrder": {
+        "title": "Large order alert",
+        "body": "{{customer}} placed a high-value order ({{orderId}}) for {{amount}}. Review required."
+      },
+      "newEmployee": {
+        "title": "New employee added",
+        "body": "{{name}} ({{email}}) joined as {{role}}. Onboarding pending."
+      },
+      "revenueMilestone": {
+        "title": "Monthly revenue milestone",
+        "body": "{{period}} revenue reached {{amount}} — up {{change}} from {{prevPeriod}}. Excellent performance!"
+      },
+      "supplierOrderPlaced": {
+        "title": "Supplier order placed",
+        "body": "Purchase order sent to {{supplier}} for {{units}}x {{product}} units."
+      }
     }
   },
   "validation": {

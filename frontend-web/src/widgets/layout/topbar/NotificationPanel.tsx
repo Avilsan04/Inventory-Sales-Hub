@@ -122,8 +122,12 @@ export function NotificationPanel(): React.ReactElement {
                       aria-hidden="true"
                     />
                     <div className={styles['notifContent']}>
-                      <span className={styles['notifTitle']}>{n.title}</span>
-                      {n.message && <span className={styles['notifMessage']}>{n.message}</span>}
+                      <span className={styles['notifTitle']}>
+                        {t(`notifications.messages.${n.messageKey}.title`)}
+                      </span>
+                      <span className={styles['notifMessage']}>
+                        {t(`notifications.messages.${n.messageKey}.body`, n.messageParams)}
+                      </span>
                     </div>
                     <span className={styles['notifTime']}>{timeAgo(n.createdAt, t)}</span>
                   </div>

@@ -2248,120 +2248,146 @@
   "notifications": [
     {
       "id": 1,
-      "title": "Low stock alert",
-      "message": "Monitor stand has only 6 units remaining. Reorder threshold is 20.",
+      "messageKey": "stockLow",
+      "messageParams": { "product": "Monitor stand", "units": 6, "threshold": 20 },
       "type": "warning",
       "isRead": false,
       "createdAt": "2025-10-04T07:30:00.000Z"
     },
     {
       "id": 2,
-      "title": "Out of stock",
-      "message": "Leather desk pad (SKU-1881-BRN) is out of stock. 8 back-orders pending.",
+      "messageKey": "outOfStockBackorders",
+      "messageParams": { "product": "Leather desk pad", "sku": "SKU-1881-BRN", "count": 8 },
       "type": "error",
       "isRead": false,
       "createdAt": "2025-10-04T07:00:00.000Z"
     },
     {
       "id": 3,
-      "title": "New order shipped",
-      "message": "ORD-2014 from Almacenes Torres (€1,260.00) has been shipped successfully.",
+      "messageKey": "orderShipped",
+      "messageParams": {
+        "orderId": "ORD-2014",
+        "customer": "Almacenes Torres",
+        "amount": "€1,260.00"
+      },
       "type": "success",
       "isRead": false,
       "createdAt": "2025-10-04T06:00:00.000Z"
     },
     {
       "id": 4,
-      "title": "Low stock alert",
-      "message": "Cable organizer has only 12 units remaining. Reorder threshold is 40.",
+      "messageKey": "stockLow",
+      "messageParams": { "product": "Cable organizer", "units": 12, "threshold": 40 },
       "type": "warning",
       "isRead": false,
       "createdAt": "2025-10-04T04:00:00.000Z"
     },
     {
       "id": 5,
-      "title": "Order cancelled",
-      "message": "ORD-2010 from Tienda Núñez (€312.00) was cancelled by the customer.",
+      "messageKey": "orderCancelled",
+      "messageParams": { "orderId": "ORD-2010", "customer": "Tienda Núñez", "amount": "€312.00" },
       "type": "error",
       "isRead": false,
       "createdAt": "2025-10-04T00:00:00.000Z"
     },
     {
       "id": 6,
-      "title": "Restock received",
-      "message": "Desk lamp · Blue: +50 units received from LampTech Distribuciones. New stock: 142.",
+      "messageKey": "restockReceived",
+      "messageParams": {
+        "product": "Desk lamp · Blue",
+        "units": 50,
+        "supplier": "LampTech Distribuciones",
+        "newStock": 142
+      },
       "type": "success",
       "isRead": true,
       "createdAt": "2025-10-03T08:00:00.000Z"
     },
     {
       "id": 7,
-      "title": "New customer registered",
-      "message": "Distribuciones Prieto (raquel@distprieto.es) created a new account.",
+      "messageKey": "newCustomer",
+      "messageParams": { "name": "Distribuciones Prieto", "email": "raquel@distprieto.es" },
       "type": "info",
       "isRead": true,
       "createdAt": "2025-10-02T08:00:00.000Z"
     },
     {
       "id": 8,
-      "title": "Large order alert",
-      "message": "Muebles Soler placed a high-value order (ORD-2011) for €5,412.50. Review required.",
+      "messageKey": "largeOrder",
+      "messageParams": {
+        "customer": "Muebles Soler",
+        "orderId": "ORD-2011",
+        "amount": "€5,412.50"
+      },
       "type": "info",
       "isRead": true,
       "createdAt": "2025-10-01T08:00:00.000Z"
     },
     {
       "id": 9,
-      "title": "Out of stock",
-      "message": "Cable tray · Under desk (SKU-1215-BLK) is out of stock. Reorder required.",
+      "messageKey": "outOfStockReorder",
+      "messageParams": { "product": "Cable tray · Under desk", "sku": "SKU-1215-BLK" },
       "type": "error",
       "isRead": true,
       "createdAt": "2025-09-30T08:00:00.000Z"
     },
     {
       "id": 10,
-      "title": "New employee added",
-      "message": "Álvaro Martín (alvaro.martin@ish.dev) joined as Staff. Onboarding pending.",
+      "messageKey": "newEmployee",
+      "messageParams": {
+        "name": "Álvaro Martín",
+        "email": "alvaro.martin@ish.dev",
+        "role": "Staff"
+      },
       "type": "info",
       "isRead": true,
       "createdAt": "2025-09-29T08:00:00.000Z"
     },
     {
       "id": 11,
-      "title": "Monthly revenue milestone",
-      "message": "September 2025 revenue reached €14,200 — up 20.3% from August. Excellent performance!",
+      "messageKey": "revenueMilestone",
+      "messageParams": {
+        "period": "September 2025",
+        "amount": "€14,200",
+        "change": "20.3%",
+        "prevPeriod": "August"
+      },
       "type": "success",
       "isRead": true,
       "createdAt": "2025-09-28T08:00:00.000Z"
     },
     {
       "id": 12,
-      "title": "Low stock alert",
-      "message": "Anti-fatigue mat has only 4 units remaining. Reorder threshold is 12.",
+      "messageKey": "stockLow",
+      "messageParams": { "product": "Anti-fatigue mat", "units": 4, "threshold": 12 },
       "type": "warning",
       "isRead": true,
       "createdAt": "2025-09-27T08:00:00.000Z"
     },
     {
       "id": 13,
-      "title": "Supplier order placed",
-      "message": "Purchase order sent to ErgoMobel España for 5x Office chair · Ergonomic units.",
+      "messageKey": "supplierOrderPlaced",
+      "messageParams": {
+        "supplier": "ErgoMobel España",
+        "units": 5,
+        "product": "Office chair · Ergonomic"
+      },
       "type": "info",
       "isRead": true,
       "createdAt": "2025-09-26T08:00:00.000Z"
     },
     {
       "id": 14,
-      "title": "Out of stock",
-      "message": "Cork notice board (SKU-1790-BEI) is out of stock. 3 pending orders affected.",
+      "messageKey": "outOfStockPendingOrders",
+      "messageParams": { "product": "Cork notice board", "sku": "SKU-1790-BEI", "count": 3 },
       "type": "error",
       "isRead": true,
       "createdAt": "2025-09-25T08:00:00.000Z"
     },
     {
       "id": 15,
-      "title": "Low stock alert",
-      "message": "Monitor stand with drawer has only 2 units remaining. Reorder threshold is 8.",
+      "messageKey": "stockLow",
+      "messageParams": { "product": "Monitor stand with drawer", "units": 2, "threshold": 8 },
       "type": "warning",
       "isRead": true,
       "createdAt": "2025-09-24T08:00:00.000Z"

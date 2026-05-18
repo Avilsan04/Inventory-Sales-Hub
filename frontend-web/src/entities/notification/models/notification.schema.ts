@@ -6,24 +6,27 @@ export const notificationTypeSchema = z
 
 const rawNotificationSchema = z.object({
   id: z.number(),
-  message: z.string(),
+  messageKey: z.string(),
+  messageParams: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
   type: z.string(),
   isRead: z.boolean(),
   createdAt: z.string(),
 });
 
 export const notificationSchema = rawNotificationSchema.transform(
-  (n): {
+  (
+    n
+  ): {
     id: string;
-    title: string;
-    message: string;
+    messageKey: string;
+    messageParams: Record<string, string | number>;
     type: 'info' | 'warning' | 'error' | 'success';
     isRead: boolean;
     createdAt: string;
   } => ({
     id: String(n.id),
-    title: n.message.substring(0, 50),
-    message: n.message,
+    messageKey: n.messageKey,
+    messageParams: n.messageParams ?? {},
     type: n.type.toLowerCase() as 'info' | 'warning' | 'error' | 'success',
     isRead: n.isRead,
     createdAt: n.createdAt,

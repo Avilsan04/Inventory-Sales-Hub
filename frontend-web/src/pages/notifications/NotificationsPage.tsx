@@ -154,8 +154,12 @@ export function NotificationsPage(): React.ReactElement {
                     >
                       {renderTypeIcon(n.type, typeIconClass(n.type, styles))}
                       <div className={styles['notifBody']}>
-                        <p className={styles['notifTitle']}>{n.title}</p>
-                        <p className={styles['notifMessage']}>{n.message}</p>
+                        <p className={styles['notifTitle']}>
+                          {t(`notifications.messages.${n.messageKey}.title`)}
+                        </p>
+                        <p className={styles['notifMessage']}>
+                          {t(`notifications.messages.${n.messageKey}.body`, n.messageParams)}
+                        </p>
                         <div className={styles['notifMeta']}>
                           <Badge variant={typeBadgeVariant(n.type)}>
                             {t(`notifications.types.${n.type}`)}
