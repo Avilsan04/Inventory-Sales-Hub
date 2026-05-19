@@ -4,6 +4,7 @@ import type { ITokenStorage } from '@core/storage/ITokenStorage';
 import { tenantStorage } from '@core/storage/tenantStorage';
 import { clearAllCache } from '@core/api/queryClient';
 import { broadcastTabSync } from '@shared/lib/tabSync';
+import { syncDb } from '@shared/lib';
 import type { LoginRequest, RegisterRequest } from '../models/auth.types';
 import { AUTH_VALIDATION_RULES } from '../models/auth.constants';
 import { logger } from '@shared/lib/logger';
@@ -80,6 +81,7 @@ export class AuthService implements IAuthService {
     this._tokenStorage.removeToken();
     tenantStorage.removeTenantId();
     clearAllCache();
+    void syncDb.syncQueue.clear();
     broadcastTabSync({ type: 'AUTH_LOGOUT' });
 
     try {

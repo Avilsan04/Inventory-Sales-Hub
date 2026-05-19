@@ -25,7 +25,12 @@ export { calculateSaleTotals } from './lib/saleCalculations';
 export type { SaleTotals } from './lib/saleCalculations';
 export { useCartStore } from './stores/cartStore';
 export type { CartState } from './stores/cartStore';
-export { startSalesSyncWorker, retryFailedEntries } from './services/salesSyncWorker';
+export {
+  startSalesSyncWorker,
+  retryFailedEntries,
+  cancelQueuedEntries,
+  clearSyncQueue,
+} from './services/salesSyncWorker';
 export type {
   PaymentMethod,
   PaymentDetails,

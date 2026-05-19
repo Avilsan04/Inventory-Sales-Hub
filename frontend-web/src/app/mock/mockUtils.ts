@@ -73,3 +73,20 @@ export function requirePermission(
   }
   return null;
 }
+
+/**
+ * Resolves a customer ID from a request for the /sales/my-orders endpoint.
+ * Customer tokens embed the ID. Admin/test tokens (used when simulating customer
+ * view via the role switcher) fall back to customer 2 so the mock returns real data.
+ * Returns null for unknown or non-authorised tokens (caller should 401).
+ */
+export function resolveCustomerIdFromRequest(request: Request): number | null {
+  const auth = request.headers.get('Authorization');
+  if (!auth?.startsWith('Bearer ')) return null;
+  const token = auth.slice(7);
+  const match = /mock-token-customer-(\d+)/.exec(token);
+  if (match?.[1] !== undefined) return parseInt(match[1], 10);
+  const role = MOCK_TOKEN_ROLE[token];
+  if (role === 'admin' || role === 'test') return 2;
+  return null;
+}

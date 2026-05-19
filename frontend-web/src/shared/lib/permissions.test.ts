@@ -27,9 +27,9 @@ describe('hasPermission', () => {
     });
   });
 
-  it('customer has no permissions', () => {
+  it('customer can create sales but not manage products or view analytics', () => {
+    expect(hasPermission('customer', 'create:sale')).toBe(true);
     expect(hasPermission('customer', 'create:product')).toBe(false);
-    expect(hasPermission('customer', 'create:sale')).toBe(false);
     expect(hasPermission('customer', 'view:analytics')).toBe(false);
   });
 

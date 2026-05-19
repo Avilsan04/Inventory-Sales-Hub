@@ -1,6 +1,11 @@
 import { http, HttpResponse, delay } from 'msw';
 import { API_BASE_URL } from '@core/config';
-import { getTenantBucket, resolveTenant, requirePermission } from '@app/mock/mockUtils';
+import {
+  getTenantBucket,
+  resolveTenant,
+  requirePermission,
+  resolveCustomerIdFromRequest,
+} from '@app/mock/mockUtils';
 import type { SaleStatus } from '@entities/sale';
 import mockData from '@app/mock/mock-data.json';
 
@@ -58,19 +63,10 @@ type CreateSaleBody = {
   currency?: string;
 };
 
-function getCustomerIdFromToken(request: Request): number | null {
-  const auth = request.headers.get('Authorization');
-  if (!auth?.startsWith('Bearer ')) return null;
-  const token = auth.slice(7);
-  const match = /mock-token-customer-(\d+)/.exec(token);
-  const captured = match !== null ? match[1] : undefined;
-  return captured !== undefined ? parseInt(captured, 10) : null;
-}
-
 export const salesHandlers = [
   http.get(`${API_BASE_URL}/sales/my-orders`, async ({ request }) => {
     await delay(500);
-    const customerId = getCustomerIdFromToken(request);
+    const customerId = resolveCustomerIdFromRequest(request);
     if (customerId === null) return new HttpResponse(null, { status: 401 });
     const tenantId = resolveTenant(request);
     const sales = getTenantBucket(tenantId, 'sales', () => baseSales);
@@ -161,14 +157,16 @@ export const salesHandlers = [
     const taxAmount = Math.round(taxableBase * (taxPercent / 100));
     const total = taxableBase + taxAmount;
 
+    const resolvedCustomerId = body.customerId
+      ? Number(body.customerId)
+      : resolveCustomerIdFromRequest(request);
     const newSale = {
       id: nextNum,
-      customer: body.customer ?? {
-        id: body.customerId ? Number(body.customerId) : null,
-        name: 'Unknown',
-        email: null,
-        phone: null,
-      },
+      customer:
+        body.customer ??
+        (resolvedCustomerId !== null
+          ? { id: resolvedCustomerId, name: 'Customer', email: null, phone: null }
+          : null),
       status: 'pending',
       subtotal,
       taxRate: taxPercent,

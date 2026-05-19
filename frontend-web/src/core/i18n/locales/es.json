@@ -1042,30 +1042,30 @@
     "languageSectionDesc": "Selecciona el idioma utilizado en toda la aplicación."
   },
   "admin": {
-    "title": "Gestión de Tenants",
+    "title": "Gestión de Organizaciones",
     "statsAriaLabel": "Métricas de administración",
-    "subtitle": "Administra todos los tenants de la plataforma y sus suscripciones.",
-    "tenant": "Tenant",
+    "subtitle": "Administra todas las organizaciones de la plataforma y sus suscripciones.",
+    "tenant": "Organización",
     "plan": "Plan",
     "status": "Estado",
     "users": "Usuarios",
     "createdAt": "Alta",
     "activate": "Activar",
     "suspend": "Suspender",
-    "impersonate": "Impersonar",
-    "impersonateConfirmTitle": "¿Impersonar a este tenant?",
-    "impersonateConfirmDescription": "Actuarás en nombre de este tenant. Todas las acciones se realizarán como este tenant hasta que salgas.",
-    "impersonationActive": "Estás impersonando a un tenant. Todas las acciones se realizan en su nombre.",
-    "exitImpersonation": "Salir de impersonación",
+    "impersonate": "Acceder como",
+    "impersonateConfirmTitle": "¿Acceder como esta organización?",
+    "impersonateConfirmDescription": "Actuarás en nombre de esta organización. Todas las acciones se realizarán en su nombre hasta que salgas.",
+    "impersonationActive": "Estás operando en nombre de una organización. Todas las acciones se realizan en su nombre.",
+    "exitImpersonation": "Salir de la organización",
     "metrics": {
-      "totalTenants": "Total Tenants",
-      "activeTenants": "Activos",
-      "suspendedTenants": "Suspendidos",
+      "totalTenants": "Total organizaciones",
+      "activeTenants": "Activas",
+      "suspendedTenants": "Suspendidas",
       "mrr": "MRR"
     },
     "toasts": {
-      "activated": "Tenant activado",
-      "suspended": "Tenant suspendido"
+      "activated": "Organización activada",
+      "suspended": "Organización suspendida"
     }
   }
 }

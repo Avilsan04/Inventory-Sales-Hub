@@ -69,6 +69,7 @@ export const salesApi = {
       items: data.items.map((item) => ({
         productId: Number(item.productId),
         quantity: item.quantity,
+        unitPrice: item.unitPrice,
       })),
     };
     const res = await httpClient.post<unknown>('/sales', payload, config);

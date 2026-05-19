@@ -12,8 +12,8 @@ describe('hasPermission', () => {
     expect(hasPermission('admin', 'transfer:stock')).toBe(true);
   });
 
-  it('customer has no permissions', () => {
-    expect(hasPermission('customer', 'create:sale')).toBe(false);
+  it('customer can create sales but not view analytics', () => {
+    expect(hasPermission('customer', 'create:sale')).toBe(true);
     expect(hasPermission('customer', 'view:analytics')).toBe(false);
   });
 

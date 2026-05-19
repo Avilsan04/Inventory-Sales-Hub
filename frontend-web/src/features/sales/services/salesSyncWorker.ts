@@ -33,6 +33,10 @@ async function processQueue(): Promise<void> {
   try {
     void cleanupFailedEntries();
 
+    // Entries stuck as 'processing' from an interrupted session (page close/refresh mid-sync)
+    // will never be retried since the worker only picks up 'pending'. Reset them here.
+    await syncDb.syncQueue.where('status').equals('processing').modify({ status: 'pending' });
+
     const pending = await syncDb.syncQueue.where('status').equals('pending').sortBy('createdAt');
 
     for (const entry of pending) {
@@ -63,6 +67,17 @@ async function processQueue(): Promise<void> {
 export async function retryFailedEntries(): Promise<void> {
   await syncDb.syncQueue.where('status').equals('failed').modify({ status: 'pending', retries: 0 });
   void processQueue();
+}
+
+export async function cancelQueuedEntries(): Promise<void> {
+  await syncDb.syncQueue
+    .where('status')
+    .anyOf(['pending', 'processing'])
+    .modify({ status: 'failed' });
+}
+
+export async function clearSyncQueue(): Promise<void> {
+  await syncDb.syncQueue.clear();
 }
 
 /**

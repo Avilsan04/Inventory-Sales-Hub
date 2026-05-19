@@ -72,7 +72,7 @@ const PERMISSIONS: Readonly<Record<UserRole, ReadonlySet<Permission>>> = {
     'close:cash-session',
     'transfer:stock',
   ]),
-  customer: new Set<Permission>([]),
+  customer: new Set<Permission>(['create:sale']),
   // test role has all permissions to simulate any role during development/demo.
   test: ALL_PERMISSIONS,
 };
