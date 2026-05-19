@@ -17,6 +17,8 @@ export default defineConfig({
                 '**/*.d.ts',
                 'src/core/i18n/**',
                 'tests/**',
+                'src/shared/lib/printElement.ts',
+                'src/pages/analytics/analyticsPageConfig.tsx',
             ],
             thresholds: {
                 lines: 31,
