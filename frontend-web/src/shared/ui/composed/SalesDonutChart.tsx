@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import type { TooltipContentProps } from 'recharts';
 import { useChartColors } from '@shared/hooks/useChartColors';
+import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Skeleton } from '@shared/ui/primitives';
 import { formatAmount } from '@shared/lib';
 import styles from '@shared/styles/themes/components/ChartTooltip.module.scss';
@@ -14,25 +15,28 @@ export interface StatusSlice {
 
 interface StatusTooltipProps extends TooltipContentProps {
   currency: string;
+  translate: (key: string) => string;
 }
 
 function StatusTooltip({
   active,
   payload,
   currency,
+  translate: t,
 }: StatusTooltipProps): React.ReactElement | null {
   if (!active || !payload.length) return null;
   const entry = payload[0];
   if (!entry) return null;
   const slice = entry.payload as StatusSlice;
+  const statusLabel = t(`sales.statusOption.${slice.status.toLowerCase()}`);
   return (
     <div className={styles.tooltipContainer}>
-      <p className={styles.tooltipTitle}>{slice.status}</p>
+      <p className={styles.tooltipTitle}>{statusLabel}</p>
       <p className={styles.tooltipStat}>
-        Orders: <strong>{slice.count}</strong>
+        {t('analytics.orders')}: <strong>{slice.count}</strong>
       </p>
       <p className={styles.tooltipStat}>
-        Revenue: <strong>{formatAmount(slice.revenue, currency)}</strong>
+        {t('analytics.revenue')}: <strong>{formatAmount(slice.revenue, currency)}</strong>
       </p>
     </div>
   );
@@ -84,10 +88,11 @@ function renderCustomLabel({
 
 export function SalesDonutChart({ data, isLoading, currency = 'EUR' }: Props): React.ReactElement {
   const colors = useChartColors();
+  const { translate: t } = useTranslationAdapter();
 
   const tooltip = React.useCallback(
-    (props: TooltipContentProps) => <StatusTooltip {...props} currency={currency} />,
-    [currency]
+    (props: TooltipContentProps) => <StatusTooltip {...props} currency={currency} translate={t} />,
+    [currency, t]
   );
 
   if (isLoading || !data) {
@@ -128,7 +133,9 @@ export function SalesDonutChart({ data, isLoading, currency = 'EUR' }: Props): R
               className={styles.legendDot}
               style={{ background: sliceColors[i % sliceColors.length] }}
             />
-            <span className={styles.legendLabel}>{slice.status}</span>
+            <span className={styles.legendLabel}>
+              {t(`sales.statusOption.${slice.status.toLowerCase()}`)}
+            </span>
             <span className={styles.legendValue}>{slice.count}</span>
           </div>
         ))}

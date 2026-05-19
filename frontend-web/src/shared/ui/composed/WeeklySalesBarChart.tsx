@@ -69,7 +69,10 @@ export function WeeklySalesBarChart({
             borderRadius: 8,
             fontSize: 12,
             boxShadow: 'var(--shadow-base)',
+            color: 'var(--color-foreground)',
           }}
+          labelStyle={{ color: 'var(--color-foreground)' }}
+          itemStyle={{ color: 'var(--color-foreground)' }}
           formatter={(value) => [formatRevenue(Number(value)), t('analytics.revenue')]}
         />
         <Bar dataKey="revenue" radius={[4, 4, 0, 0]} maxBarSize={48} />

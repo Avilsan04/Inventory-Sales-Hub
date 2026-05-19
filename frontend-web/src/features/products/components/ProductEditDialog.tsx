@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import type { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUpdateProduct, useCategories } from '@features/products';
-import { UOM_OPTIONS } from '@shared/lib/uom';
+import { getUomOptions } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -31,9 +33,35 @@ const schema = z.object({
   currency: z.string().length(3, 'Must be 3 characters'),
   categoryId: z.string().optional(),
   uom: z.enum(['unit', 'kg', 'litre', 'box', 'pack']),
+  uomQty: z.number().positive().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
+
+// Separate component so conditional logic has its own complexity budget.
+interface UomQtyFieldProps {
+  uom: FormValues['uom'];
+  register: UseFormRegister<FormValues>;
+  errors: FieldErrors<FormValues>;
+  t: (key: string) => string;
+}
+
+function UomQtyField({ uom, register, errors, t }: UomQtyFieldProps): React.ReactElement | null {
+  if (uom === 'unit') return null;
+  return (
+    <FormField label={t('products.uomQty')} error={errors.uomQty?.message}>
+      <Input
+        {...register('uomQty', {
+          setValueAs: (v: string) => (v === '' ? undefined : parseFloat(v)),
+        })}
+        type="number"
+        min="0.001"
+        step="0.001"
+        placeholder={t('products.uomQtyPlaceholder')}
+      />
+    </FormField>
+  );
+}
 
 interface Props {
   product: Product | null;
@@ -45,16 +73,18 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
   const { translate: t } = useTranslationAdapter();
   const { mutate, isPending } = useUpdateProduct(product?.id ?? '');
   const { data: categories } = useCategories();
+  const uomOptions = React.useMemo(() => getUomOptions(t), [t]);
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     control,
+    watch,
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
-    defaultValues: { currency: 'USD', price: 0, uom: 'unit' as const },
+    defaultValues: { currency: 'USD', price: 0, uom: 'unit' as const, uomQty: undefined },
   });
 
   React.useEffect(() => {
@@ -70,6 +100,8 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
       });
     }
   }, [open, product, reset]);
+
+  const selectedUom = watch('uom');
 
   const onClose = (): void => {
     reset();
@@ -108,6 +140,7 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('products.editProduct')}</DialogTitle>
+          <DialogDescription>{product?.sku}</DialogDescription>
         </DialogHeader>
         <form
           onSubmit={(e: React.SyntheticEvent) => {
@@ -115,13 +148,15 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
           }}
         >
           <div className={styles['body']}>
-            <FormField label={t('products.name')} required error={errors.name?.message}>
-              <Input {...register('name')} />
-            </FormField>
-            <FormField label={t('inventory.sku')} required error={errors.sku?.message}>
-              <Input {...register('sku')} />
-            </FormField>
-            <div className={styles['gridPriceShort']}>
+            <div className={styles['grid2']}>
+              <FormField label={t('products.name')} required error={errors.name?.message}>
+                <Input {...register('name')} />
+              </FormField>
+              <FormField label={t('inventory.sku')} required error={errors.sku?.message}>
+                <Input {...register('sku')} />
+              </FormField>
+            </div>
+            <div className={styles['gridQtyPriceShort']}>
               <FormField label={t('inventory.price')} required error={errors.price?.message}>
                 <Input
                   {...register('price', { valueAsNumber: true })}
@@ -130,11 +165,6 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                   min="0"
                 />
               </FormField>
-              <FormField label={t('products.currency')} error={errors.currency?.message}>
-                <Input {...register('currency')} maxLength={3} />
-              </FormField>
-            </div>
-            <div className={styles['gridPriceShort']}>
               <FormField label={t('products.uom')} error={errors.uom?.message}>
                 <Controller
                   name="uom"
@@ -145,7 +175,7 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {UOM_OPTIONS.map((o) => (
+                        {uomOptions.map((o) => (
                           <SelectItem key={o.value} value={o.value}>
                             {o.label}
                           </SelectItem>
@@ -155,29 +185,33 @@ export function ProductEditDialog({ product, open, onOpenChange }: Props): React
                   )}
                 />
               </FormField>
-              <FormField label={t('inventory.category')} error={errors.categoryId?.message}>
-                <Controller
-                  name="categoryId"
-                  control={control}
-                  render={({ field }) => (
-                    <Select value={field.value ?? ''} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('products.selectCategory')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories?.map((c) => (
-                          <SelectItem key={c.id} value={c.id}>
-                            {c.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+              <FormField label={t('products.currency')} error={errors.currency?.message}>
+                <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
+            <UomQtyField uom={selectedUom} register={register} errors={errors} t={t} />
+            <FormField label={t('inventory.category')} error={errors.categoryId?.message}>
+              <Controller
+                name="categoryId"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value ?? ''} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('products.selectCategory')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories?.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </FormField>
             <FormField label={t('products.description')} error={errors.description?.message}>
-              <Textarea {...register('description')} rows={3} />
+              <Textarea {...register('description')} rows={4} />
             </FormField>
           </div>
           <DialogFooter>

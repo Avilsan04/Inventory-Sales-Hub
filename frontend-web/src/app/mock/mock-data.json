@@ -1432,7 +1432,7 @@
         "salePrice": 3450,
         "category": {
           "id": 1,
-          "name": "Lighting",
+          "name": "Iluminación",
           "description": "Desk lamps, reading lights, and ambient office lighting"
         },
         "isActive": true
@@ -1452,7 +1452,7 @@
         "salePrice": 8900,
         "category": {
           "id": 2,
-          "name": "Desk",
+          "name": "Escritorio",
           "description": "Monitor stands, arms, laptop risers, and desk organizers"
         },
         "isActive": true
@@ -1472,7 +1472,7 @@
         "salePrice": 12900,
         "category": {
           "id": 3,
-          "name": "Peripherals",
+          "name": "Periféricos",
           "description": "Keyboards, mice, and input devices"
         },
         "isActive": true
@@ -1492,7 +1492,7 @@
         "salePrice": 14200,
         "category": {
           "id": 4,
-          "name": "Furniture",
+          "name": "Mobiliario",
           "description": "Chairs, shelves, cabinets, and structural office furniture"
         },
         "isActive": true
@@ -1512,7 +1512,7 @@
         "salePrice": 1450,
         "category": {
           "id": 5,
-          "name": "Accessories",
+          "name": "Accesorios",
           "description": "Cable management, organizers, mats, and small office accessories"
         },
         "isActive": true
@@ -1532,7 +1532,7 @@
         "salePrice": 4800,
         "category": {
           "id": 2,
-          "name": "Desk",
+          "name": "Escritorio",
           "description": "Monitor stands, arms, laptop risers, and desk organizers"
         },
         "isActive": true
@@ -1552,7 +1552,7 @@
         "salePrice": 2200,
         "category": {
           "id": 6,
-          "name": "Decor",
+          "name": "Decoración",
           "description": "Plants, artwork, and decorative office items"
         },
         "isActive": true
@@ -1572,7 +1572,7 @@
         "salePrice": 38900,
         "category": {
           "id": 4,
-          "name": "Furniture",
+          "name": "Mobiliario",
           "description": "Chairs, shelves, cabinets, and structural office furniture"
         },
         "isActive": true
@@ -1592,7 +1592,7 @@
         "salePrice": 7900,
         "category": {
           "id": 2,
-          "name": "Desk",
+          "name": "Escritorio",
           "description": "Monitor stands, arms, laptop risers, and desk organizers"
         },
         "isActive": true
@@ -1612,7 +1612,7 @@
         "salePrice": 5600,
         "category": {
           "id": 4,
-          "name": "Furniture",
+          "name": "Mobiliario",
           "description": "Chairs, shelves, cabinets, and structural office furniture"
         },
         "isActive": true
@@ -1632,7 +1632,7 @@
         "salePrice": 3800,
         "category": {
           "id": 5,
-          "name": "Accessories",
+          "name": "Accesorios",
           "description": "Cable management, organizers, mats, and small office accessories"
         },
         "isActive": true
@@ -1652,7 +1652,7 @@
         "salePrice": 1200,
         "category": {
           "id": 5,
-          "name": "Accessories",
+          "name": "Accesorios",
           "description": "Cable management, organizers, mats, and small office accessories"
         },
         "isActive": true
@@ -1672,7 +1672,7 @@
         "salePrice": 4500,
         "category": {
           "id": 2,
-          "name": "Desk",
+          "name": "Escritorio",
           "description": "Monitor stands, arms, laptop risers, and desk organizers"
         },
         "isActive": true
@@ -1692,7 +1692,7 @@
         "salePrice": 2800,
         "category": {
           "id": 5,
-          "name": "Accessories",
+          "name": "Accesorios",
           "description": "Cable management, organizers, mats, and small office accessories"
         },
         "isActive": true
@@ -1712,7 +1712,7 @@
         "salePrice": 2400,
         "category": {
           "id": 1,
-          "name": "Lighting",
+          "name": "Iluminación",
           "description": "Desk lamps, reading lights, and ambient office lighting"
         },
         "isActive": true
@@ -1732,7 +1732,7 @@
         "salePrice": 18500,
         "category": {
           "id": 4,
-          "name": "Furniture",
+          "name": "Mobiliario",
           "description": "Chairs, shelves, cabinets, and structural office furniture"
         },
         "isActive": true
@@ -1752,7 +1752,7 @@
         "salePrice": 11500,
         "category": {
           "id": 2,
-          "name": "Desk",
+          "name": "Escritorio",
           "description": "Monitor stands, arms, laptop risers, and desk organizers"
         },
         "isActive": true
@@ -1772,7 +1772,7 @@
         "salePrice": 3600,
         "category": {
           "id": 5,
-          "name": "Accessories",
+          "name": "Accesorios",
           "description": "Cable management, organizers, mats, and small office accessories"
         },
         "isActive": true
@@ -2396,26 +2396,26 @@
   "productCategories": [
     {
       "id": 1,
-      "name": "Lighting",
+      "name": "Iluminación",
       "description": "Desk lamps, reading lights, and ambient office lighting"
     },
     {
       "id": 2,
-      "name": "Desk",
+      "name": "Escritorio",
       "description": "Monitor stands, arms, laptop risers, and desk organizers"
     },
-    { "id": 3, "name": "Peripherals", "description": "Keyboards, mice, and input devices" },
+    { "id": 3, "name": "Periféricos", "description": "Keyboards, mice, and input devices" },
     {
       "id": 4,
-      "name": "Furniture",
+      "name": "Mobiliario",
       "description": "Chairs, shelves, cabinets, and structural office furniture"
     },
     {
       "id": 5,
-      "name": "Accessories",
+      "name": "Accesorios",
       "description": "Cable management, organizers, mats, and small office accessories"
     },
-    { "id": 6, "name": "Decor", "description": "Plants, artwork, and decorative office items" }
+    { "id": 6, "name": "Decoración", "description": "Plants, artwork, and decorative office items" }
   ],
   "products": [
     {
@@ -2427,7 +2427,7 @@
       "salePrice": 3450,
       "category": {
         "id": 1,
-        "name": "Lighting",
+        "name": "Iluminación",
         "description": "Desk lamps, reading lights, and ambient office lighting"
       },
       "supplierId": null,
@@ -2443,7 +2443,7 @@
       "salePrice": 8900,
       "category": {
         "id": 2,
-        "name": "Desk",
+        "name": "Escritorio",
         "description": "Monitor stands, arms, laptop risers, and desk organizers"
       },
       "supplierId": null,
@@ -2459,7 +2459,7 @@
       "salePrice": 12900,
       "category": {
         "id": 3,
-        "name": "Peripherals",
+        "name": "Periféricos",
         "description": "Keyboards, mice, and input devices"
       },
       "supplierId": null,
@@ -2475,7 +2475,7 @@
       "salePrice": 14200,
       "category": {
         "id": 4,
-        "name": "Furniture",
+        "name": "Mobiliario",
         "description": "Chairs, shelves, cabinets, and structural office furniture"
       },
       "supplierId": null,
@@ -2491,7 +2491,7 @@
       "salePrice": 1450,
       "category": {
         "id": 5,
-        "name": "Accessories",
+        "name": "Accesorios",
         "description": "Cable management, organizers, mats, and small office accessories"
       },
       "supplierId": null,
@@ -2507,7 +2507,7 @@
       "salePrice": 4800,
       "category": {
         "id": 2,
-        "name": "Desk",
+        "name": "Escritorio",
         "description": "Monitor stands, arms, laptop risers, and desk organizers"
       },
       "supplierId": null,
@@ -2523,7 +2523,7 @@
       "salePrice": 2200,
       "category": {
         "id": 6,
-        "name": "Decor",
+        "name": "Decoración",
         "description": "Plants, artwork, and decorative office items"
       },
       "supplierId": null,
@@ -2539,7 +2539,7 @@
       "salePrice": 38900,
       "category": {
         "id": 4,
-        "name": "Furniture",
+        "name": "Mobiliario",
         "description": "Chairs, shelves, cabinets, and structural office furniture"
       },
       "supplierId": null,
@@ -2555,7 +2555,7 @@
       "salePrice": 7900,
       "category": {
         "id": 2,
-        "name": "Desk",
+        "name": "Escritorio",
         "description": "Monitor stands, arms, laptop risers, and desk organizers"
       },
       "supplierId": null,
@@ -2571,7 +2571,7 @@
       "salePrice": 5600,
       "category": {
         "id": 4,
-        "name": "Furniture",
+        "name": "Mobiliario",
         "description": "Chairs, shelves, cabinets, and structural office furniture"
       },
       "supplierId": null,
@@ -2587,7 +2587,7 @@
       "salePrice": 3800,
       "category": {
         "id": 5,
-        "name": "Accessories",
+        "name": "Accesorios",
         "description": "Cable management, organizers, mats, and small office accessories"
       },
       "supplierId": null,
@@ -2603,7 +2603,7 @@
       "salePrice": 1200,
       "category": {
         "id": 5,
-        "name": "Accessories",
+        "name": "Accesorios",
         "description": "Cable management, organizers, mats, and small office accessories"
       },
       "supplierId": null,
@@ -2619,7 +2619,7 @@
       "salePrice": 4500,
       "category": {
         "id": 2,
-        "name": "Desk",
+        "name": "Escritorio",
         "description": "Monitor stands, arms, laptop risers, and desk organizers"
       },
       "supplierId": null,
@@ -2635,7 +2635,7 @@
       "salePrice": 2800,
       "category": {
         "id": 5,
-        "name": "Accessories",
+        "name": "Accesorios",
         "description": "Cable management, organizers, mats, and small office accessories"
       },
       "supplierId": null,
@@ -2651,7 +2651,7 @@
       "salePrice": 2400,
       "category": {
         "id": 1,
-        "name": "Lighting",
+        "name": "Iluminación",
         "description": "Desk lamps, reading lights, and ambient office lighting"
       },
       "supplierId": null,
@@ -2667,7 +2667,7 @@
       "salePrice": 18500,
       "category": {
         "id": 4,
-        "name": "Furniture",
+        "name": "Mobiliario",
         "description": "Chairs, shelves, cabinets, and structural office furniture"
       },
       "supplierId": null,
@@ -2683,7 +2683,7 @@
       "salePrice": 11500,
       "category": {
         "id": 2,
-        "name": "Desk",
+        "name": "Escritorio",
         "description": "Monitor stands, arms, laptop risers, and desk organizers"
       },
       "supplierId": null,
@@ -2699,7 +2699,7 @@
       "salePrice": 3600,
       "category": {
         "id": 5,
-        "name": "Accessories",
+        "name": "Accesorios",
         "description": "Cable management, organizers, mats, and small office accessories"
       },
       "supplierId": null,

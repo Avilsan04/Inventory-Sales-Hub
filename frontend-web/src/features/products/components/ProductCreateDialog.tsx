@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateProduct, useCategories, useProducts } from '@features/products';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
-import { UOM_OPTIONS } from '@shared/lib/uom';
+import { getUomOptions } from '@shared/lib/uom';
 import { toast } from '@shared/hooks/useToast';
 import {
   Dialog,
@@ -45,6 +45,7 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
   const { mutate, isPending } = useCreateProduct();
   const { data: categories } = useCategories();
   const { data: products } = useProducts();
+  const uomOptions = React.useMemo(() => getUomOptions(t), [t]);
   const [isVariant, setIsVariant] = React.useState(false);
 
   const {
@@ -171,7 +172,7 @@ export function ProductCreateDialog({ open, onOpenChange }: Props): React.ReactE
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {UOM_OPTIONS.map((o) => (
+                        {uomOptions.map((o) => (
                           <SelectItem key={o.value} value={o.value}>
                             {o.label}
                           </SelectItem>
