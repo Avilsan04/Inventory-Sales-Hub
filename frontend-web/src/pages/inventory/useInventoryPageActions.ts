@@ -28,6 +28,7 @@ export interface InventoryPageActions {
   onAdjustStock: ((item: InventoryItem) => void) | undefined;
   onDelete: ((id: string) => void) | undefined;
   onTransfer: ((item: InventoryItem) => void) | undefined;
+  onViewHistory: (item: InventoryItem) => void;
 }
 
 export function useInventoryPageActions(role: UserRole | undefined): InventoryPageActions {
@@ -81,29 +82,49 @@ export function useInventoryPageActions(role: UserRole | undefined): InventoryPa
     });
   }, [deleteId, deleteItem, t]);
 
-  const onEdit = hasPermission(role, 'create:inventory')
-    ? (item: InventoryItem): void => {
-        setEditItem(item);
-      }
-    : undefined;
+  const onEdit = React.useMemo(
+    () =>
+      hasPermission(role, 'create:inventory')
+        ? (item: InventoryItem): void => {
+            setEditItem(item);
+          }
+        : undefined,
+    [role]
+  );
 
-  const onAdjustStock = hasPermission(role, 'adjust:stock')
-    ? (item: InventoryItem): void => {
-        setAdjustItem(item);
-      }
-    : undefined;
+  const onAdjustStock = React.useMemo(
+    () =>
+      hasPermission(role, 'adjust:stock')
+        ? (item: InventoryItem): void => {
+            setAdjustItem(item);
+          }
+        : undefined,
+    [role]
+  );
 
-  const onDelete = hasPermission(role, 'delete:product')
-    ? (id: string): void => {
-        setDeleteId(id);
-      }
-    : undefined;
+  const onDelete = React.useMemo(
+    () =>
+      hasPermission(role, 'delete:product')
+        ? (id: string): void => {
+            setDeleteId(id);
+          }
+        : undefined,
+    [role]
+  );
 
-  const onTransfer = hasPermission(role, 'transfer:stock')
-    ? (item: InventoryItem): void => {
-        setTransferItem(item);
-      }
-    : undefined;
+  const onTransfer = React.useMemo(
+    () =>
+      hasPermission(role, 'transfer:stock')
+        ? (item: InventoryItem): void => {
+            setTransferItem(item);
+          }
+        : undefined,
+    [role]
+  );
+
+  const onViewHistory = React.useCallback((item: InventoryItem): void => {
+    setHistoryItem(item);
+  }, []);
 
   return {
     createOpen,
@@ -125,5 +146,6 @@ export function useInventoryPageActions(role: UserRole | undefined): InventoryPa
     onAdjustStock,
     onDelete,
     onTransfer,
+    onViewHistory,
   };
 }

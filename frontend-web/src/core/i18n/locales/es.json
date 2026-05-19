@@ -359,7 +359,14 @@
       "stockTransferred": "Stock transferido",
       "transferFailed": "Error al transferir",
       "exportEmpty": "No hay artículos de inventario para exportar"
-    }
+    },
+    "movementsHistory": "Historial de movimientos",
+    "movementsHistoryDescription": "Registro de entradas, salidas y ajustes de este producto",
+    "noMovements": "Sin movimientos registrados",
+    "movementType": "Tipo",
+    "previousQty": "Anterior",
+    "newQty": "Nuevo",
+    "date": "Fecha"
   },
   "products": {
     "subtitle": "Explora y gestiona tu catálogo de productos",

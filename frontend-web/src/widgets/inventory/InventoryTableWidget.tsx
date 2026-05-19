@@ -54,7 +54,7 @@ function stockExtraClass(status: InventoryItem['status']): string | undefined {
   }
 }
 
-export function InventoryTableWidget({
+export const InventoryTableWidget = React.memo(function InventoryTableWidget({
   data,
   isPending = false,
   className,
@@ -84,7 +84,7 @@ export function InventoryTableWidget({
             <TableHead className={styles['numCell']}>{t('inventory.stock')}</TableHead>
             <TableHead className={styles['numCell']}>{t('inventory.reorderAt')}</TableHead>
             <TableHead className={styles['priceCell']}>{t('inventory.price')}</TableHead>
-            <TableHead>{t('inventory.status')}</TableHead>
+            <TableHead>{t('common.status')}</TableHead>
             {hasActions && <TableHead className={styles['dotsHead']} />}
           </TableRow>
         </TableHeader>
@@ -183,4 +183,4 @@ export function InventoryTableWidget({
       </Table>
     </div>
   );
-}
+});

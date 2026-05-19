@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useCreateInventoryItem } from '@features/inventory';
@@ -12,11 +12,6 @@ import {
   DialogTitle,
   DialogFooter,
   FormField,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
 } from '@shared/ui/composed';
 import { Button, Input } from '@shared/ui/primitives';
 import styles from '@shared/styles/themes/components/DialogForm.module.scss';
@@ -27,7 +22,6 @@ const schema = z.object({
   quantity: z.number().int('Must be integer').nonnegative('Must be ≥ 0'),
   price: z.number().nonnegative('Must be ≥ 0'),
   currency: z.string().length(3, 'Must be 3 characters'),
-  status: z.enum(['IN_STOCK', 'LOW_STOCK', 'OUT_OF_STOCK']),
   category: z.string().optional(),
   reorderThreshold: z.number().int().nonnegative().optional(),
   description: z.string().optional(),
@@ -48,11 +42,10 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
     handleSubmit,
     formState: { errors },
     reset,
-    control,
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
-    defaultValues: { currency: 'USD', quantity: 0, price: 0, status: 'IN_STOCK' },
+    defaultValues: { currency: 'USD', quantity: 0, price: 0 },
   });
 
   const onClose = (): void => {
@@ -128,31 +121,9 @@ export function InventoryCreateDialog({ open, onOpenChange }: Props): React.Reac
                 <Input {...register('currency')} maxLength={3} />
               </FormField>
             </div>
-            <div className={styles['grid2']}>
-              <FormField label={t('common.status')} required error={errors.status?.message}>
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="IN_STOCK">{t('inventory.statusInStock')}</SelectItem>
-                        <SelectItem value="LOW_STOCK">{t('inventory.statusLowStock')}</SelectItem>
-                        <SelectItem value="OUT_OF_STOCK">
-                          {t('inventory.statusOutOfStock')}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-              </FormField>
-              <FormField label={t('inventory.category')} error={errors.category?.message}>
-                <Input {...register('category')} placeholder={t('inventory.categoryPlaceholder')} />
-              </FormField>
-            </div>
+            <FormField label={t('inventory.category')} error={errors.category?.message}>
+              <Input {...register('category')} placeholder={t('inventory.categoryPlaceholder')} />
+            </FormField>
             <FormField
               label={t('inventory.reorderThreshold')}
               error={errors.reorderThreshold?.message}

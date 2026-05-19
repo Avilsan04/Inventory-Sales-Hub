@@ -42,6 +42,7 @@ export function InventoryPage(): React.ReactElement {
     onAdjustStock,
     onDelete,
     onTransfer,
+    onViewHistory,
   } = useInventoryPageActions(role);
 
   const {
@@ -59,6 +60,8 @@ export function InventoryPage(): React.ReactElement {
   } = useInventoryFilters();
 
   const { data: inventory, isPending, isError, error, refetch } = useInventory(params);
+  const { data: lowStockData } = useInventory({ status: 'LOW_STOCK', page: 0, pageSize: 1 });
+  const { data: outStockData } = useInventory({ status: 'OUT_OF_STOCK', page: 0, pageSize: 1 });
 
   const inventoryItems = inventory?.data ?? [];
   const serverTotal = inventory?.total ?? 0;
@@ -66,11 +69,11 @@ export function InventoryPage(): React.ReactElement {
 
   const tabs: Array<{ id: StockTab; labelKey: string; count: number }> = React.useMemo(
     () => [
-      { id: 'all', labelKey: 'inventory.allProducts', count: tab === 'all' ? serverTotal : 0 },
-      { id: 'low', labelKey: 'inventory.lowStockTab', count: tab === 'low' ? serverTotal : 0 },
-      { id: 'out', labelKey: 'inventory.outOfStockTab', count: tab === 'out' ? serverTotal : 0 },
+      { id: 'all', labelKey: 'inventory.allProducts', count: serverTotal },
+      { id: 'low', labelKey: 'inventory.lowStockTab', count: lowStockData?.total ?? 0 },
+      { id: 'out', labelKey: 'inventory.outOfStockTab', count: outStockData?.total ?? 0 },
     ],
-    [tab, serverTotal]
+    [serverTotal, lowStockData?.total, outStockData?.total]
   );
 
   React.useEffect(() => {
@@ -166,7 +169,7 @@ export function InventoryPage(): React.ReactElement {
                 className={cn(styles['tab'], tab === tb.id && styles['tabActive'])}
               >
                 {t(tb.labelKey)}
-                <span className={styles['tabCount']}>{tb.count}</span>
+                {tb.count > 0 && <span className={styles['tabCount']}>{tb.count}</span>}
               </Button>
             ))}
           </div>
@@ -197,9 +200,7 @@ export function InventoryPage(): React.ReactElement {
                 onEdit={onEdit}
                 onAdjustStock={onAdjustStock}
                 onDelete={onDelete}
-                onViewHistory={(item) => {
-                  setHistoryItem(item);
-                }}
+                onViewHistory={onViewHistory}
                 onTransfer={onTransfer}
               />
             )}

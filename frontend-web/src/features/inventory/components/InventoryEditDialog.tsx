@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQueryClient } from '@tanstack/react-query';
@@ -14,11 +14,6 @@ import {
   DialogTitle,
   DialogFooter,
   FormField,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
 } from '@shared/ui/composed';
 import { Button, Input } from '@shared/ui/primitives';
 import type { InventoryItem } from '@entities/inventory';
@@ -26,7 +21,6 @@ import styles from '@shared/styles/themes/components/DialogForm.module.scss';
 
 const schema = z.object({
   quantity: z.number().int('Must be integer').nonnegative('Must be ≥ 0'),
-  status: z.enum(['IN_STOCK', 'LOW_STOCK', 'OUT_OF_STOCK']),
   reorderThreshold: z.number().int().nonnegative().optional(),
 });
 
@@ -48,18 +42,16 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
     handleSubmit,
     formState: { errors },
     reset,
-    control,
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: zodResolver(schema),
-    defaultValues: { quantity: 0, status: 'IN_STOCK' },
+    defaultValues: { quantity: 0 },
   });
 
   React.useEffect(() => {
     if (open && item !== null) {
       reset({
         quantity: item.quantity,
-        status: item.status,
         reorderThreshold: item.reorderThreshold,
       });
     }
@@ -77,34 +69,37 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
     const calls: Promise<unknown>[] = [];
 
     if (data.quantity !== item.quantity) {
-      calls.push(inventoryApi.adjustStock(item.id, { quantity: data.quantity }));
+      calls.push(inventoryApi.adjustStock(item.id, { quantity: data.quantity - item.quantity }));
     }
 
     if (data.reorderThreshold !== item.reorderThreshold) {
       calls.push(inventoryApi.updateItem(item.id, { minStock: data.reorderThreshold }));
     }
 
-    const finish = (): void => {
+    if (calls.length === 0) {
       void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
       void queryClient.invalidateQueries({ queryKey: inventoryKeys.detail(item.id) });
       toast({ title: t('inventory.toasts.updated') });
       setIsSaving(false);
       onClose();
-    };
-
-    if (calls.length === 0) {
-      finish();
       return;
     }
 
     Promise.all(calls)
-      .then(finish)
+      .then(() => {
+        toast({ title: t('inventory.toasts.updated') });
+        onClose();
+      })
       .catch((err: unknown) => {
         toast({
           title: t('common.toasts.updateFailed'),
           description: err instanceof Error ? err.message : String(err),
           variant: 'destructive',
         });
+      })
+      .finally(() => {
+        void queryClient.invalidateQueries({ queryKey: inventoryKeys.lists() });
+        void queryClient.invalidateQueries({ queryKey: inventoryKeys.detail(item.id) });
         setIsSaving(false);
       });
   };
@@ -127,26 +122,6 @@ export function InventoryEditDialog({ item, open, onOpenChange }: Props): React.
                 type="number"
                 min="0"
                 step="1"
-              />
-            </FormField>
-            <FormField label={t('common.status')} required error={errors.status?.message}>
-              <Controller
-                name="status"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="IN_STOCK">{t('inventory.statusInStock')}</SelectItem>
-                      <SelectItem value="LOW_STOCK">{t('inventory.statusLowStock')}</SelectItem>
-                      <SelectItem value="OUT_OF_STOCK">
-                        {t('inventory.statusOutOfStock')}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
               />
             </FormField>
             <FormField

@@ -8,7 +8,10 @@
   color: var(--color-popover-foreground);
   padding: $spacing-1;
   box-shadow: var(--shadow-base);
-  animation: contentShow $duration-fast ease-out;
+
+  &[data-state='open'] {
+    animation: contentShow $duration-fast ease-out;
+  }
 }
 
 .dropdownItem {
@@ -168,5 +171,8 @@
   color: var(--color-popover-foreground);
   padding: $spacing-1;
   box-shadow: var(--shadow-lg);
-  animation: contentShow $duration-fast ease-out;
+
+  &[data-state='open'] {
+    animation: contentShow $duration-fast ease-out;
+  }
 }

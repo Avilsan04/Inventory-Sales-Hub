@@ -113,15 +113,31 @@ export const inventoryHandlers = [
     const tenantId = resolveTenant(request);
     const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
     const body = (await request.json()) as { quantity: number };
-    const existing = inventory.find((i) => String(i.id) === params['id']);
-    if (!existing) return new HttpResponse(null, { status: 404 });
-    const newQty = existing.quantity + body.quantity;
+    const idx = inventory.findIndex((i) => String(i.id) === params['id']);
+    if (idx === -1) return new HttpResponse(null, { status: 404 });
+    const existing = inventory[idx];
+    if (existing === undefined) return new HttpResponse(null, { status: 404 });
+    const newQty = Math.max(0, existing.quantity + body.quantity);
     const threshold = existing.minStock;
-    return HttpResponse.json({
+    const updated = {
       ...existing,
       quantity: newQty,
       isLowStock: newQty === 0 || newQty <= threshold,
-    });
+    };
+    inventory[idx] = updated;
+    return HttpResponse.json(updated);
+  }),
+
+  http.delete(`${API_BASE_URL}/inventory/:id`, async ({ params, request }) => {
+    await delay(400);
+    const denied = requirePermission(request, 'delete:product');
+    if (denied) return denied;
+    const tenantId = resolveTenant(request);
+    const inventory = getTenantBucket(tenantId, 'inventory', () => baseInventory);
+    const idx = inventory.findIndex((i) => String(i.id) === params['id']);
+    if (idx === -1) return new HttpResponse(null, { status: 404 });
+    inventory.splice(idx, 1);
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.patch(`${API_BASE_URL}/inventory/:id`, async ({ params, request }) => {
