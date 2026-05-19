@@ -412,6 +412,16 @@
     "customer": "Customer",
     "items": "Items",
     "total": "Total",
+    "createdAt": "Created at",
+    "qty": "Qty",
+    "subtotal": "Subtotal",
+    "employee": "Employee",
+    "cancelSale": "Cancel order",
+    "downloadReceipt": "Download receipt",
+    "receiptCancelledNotice": "This order has been CANCELLED. This document is not a valid proof of purchase.",
+    "receiptPendingNote": "Order pending processing. Not valid as proof of purchase until completed.",
+    "receiptFooter": "Thank you for trusting us.",
+    "viewDetail": "View detail",
     "date": "Date",
     "orderId": "Order",
     "searchPlaceholder": "Search orders or customers…",
@@ -499,7 +509,9 @@
       "closeFailed": "Failed to close session",
       "openFailed": "Failed to open session",
       "createFailed": "Failed to create order",
-      "exportEmpty": "No sales available to export"
+      "exportEmpty": "No sales available to export",
+      "cancelledSuccess": "Order cancelled",
+      "cancelFailed": "Failed to cancel order"
     },
     "sync": {
       "offline": "Offline — {{count}} sale(s) queued for sync.",

@@ -11,7 +11,7 @@
 }
 
 .body {
-  margin-top: $spacing-6;
+  padding: 0 $spacing-6 $spacing-6;
   display: flex;
   flex-direction: column;
   gap: $spacing-6;
@@ -77,6 +77,8 @@
   font-family: var(--font-family-mono);
 }
 
-.cancelBtn {
-  align-self: flex-start;
+.actionsRow {
+  display: flex;
+  gap: $spacing-3;
+  flex-wrap: wrap;
 }

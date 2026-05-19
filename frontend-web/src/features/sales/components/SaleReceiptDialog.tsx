@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PrinterIcon } from 'lucide-react';
-import { useFormatCurrency } from '@shared/lib/formatCurrency';
+import { cn } from '@shared/lib/cn';
+import { useFormatCurrency, printElement } from '@shared/lib';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { Button } from '@shared/ui/primitives';
 import {
@@ -23,6 +24,12 @@ function orderId(id: string): string {
   return id.startsWith('ORD-') ? id : id.slice(0, 8).toUpperCase();
 }
 
+const statusClassMap: Record<'pending' | 'completed' | 'cancelled', string> = {
+  completed: styles['statusCompleted'] ?? '',
+  pending: styles['statusPending'] ?? '',
+  cancelled: styles['statusCancelled'] ?? '',
+};
+
 export function SaleReceiptDialog({
   sale,
   open,
@@ -33,7 +40,8 @@ export function SaleReceiptDialog({
   const subtotal = (sale?.items ?? []).reduce((s, i) => s + i.subtotal, 0);
 
   const handlePrint = (): void => {
-    window.print();
+    const label = sale ? `${t('sales.receipt')} ${orderId(sale.id)}` : t('sales.receipt');
+    printElement('pos-receipt', label);
   };
 
   return (
@@ -57,7 +65,14 @@ export function SaleReceiptDialog({
                   minute: '2-digit',
                 })}
               </p>
+              <p className={cn(styles['statusLine'], statusClassMap[sale.status])}>
+                {t(`sales.status.${sale.status}`).toUpperCase()}
+              </p>
             </div>
+
+            {sale.status === 'cancelled' && (
+              <div className={styles['cancelledNotice']}>{t('sales.receiptCancelledNotice')}</div>
+            )}
 
             <div className={styles['divider']} />
 
@@ -97,7 +112,7 @@ export function SaleReceiptDialog({
 
             <div className={styles['divider']} />
 
-            <p className={styles['thanks']}>{t('sales.thankYou')}</p>
+            <p className={styles['thanks']}>{t('sales.receiptFooter')}</p>
           </div>
         )}
 

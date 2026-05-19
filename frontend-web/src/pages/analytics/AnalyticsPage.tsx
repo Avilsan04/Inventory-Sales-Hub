@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { TrendingUpIcon, ShoppingCartIcon, UsersIcon, PackageIcon } from 'lucide-react';
 import { useTranslationAdapter } from '@adapters/useTranslationAdapter';
 import { useCurrencyAdapter } from '@adapters/useCurrencyAdapter';
 import { useFormatAmount } from '@shared/lib';
@@ -12,6 +11,8 @@ import {
 } from '@features/analytics';
 import { PermissionGuard } from '@features/auth';
 import { useSaleSummary } from '@features/sales';
+import { useSalesFlatList } from '@entities/sale';
+import { computeStatusSlices } from '@shared/lib/saleCalculations';
 import { exportToCsv } from '@shared/lib/exportCsv';
 import { toast } from '@shared/hooks';
 import { Spinner, Skeleton, Button } from '@shared/ui';
@@ -29,95 +30,20 @@ import {
   type DateRange,
   type StatusSlice,
 } from '@shared/ui';
-import type { SalesAnalyticsParams, DashboardKpi } from '@entities/analytics';
 import {
   AnalyticsTopProductsTable,
   AnalyticsTopCustomersTable,
   AnalyticsLowStockTable,
 } from '@widgets/analytics';
 import styles from '@shared/styles/themes/pages/Analytics.module.scss';
-
-const DATE_RANGES = [
-  { id: '7d', labelKey: 'analytics.range7d' },
-  { id: '30d', labelKey: 'analytics.rangeMonthly' },
-  { id: '90d', labelKey: 'analytics.range90d' },
-  { id: 'custom', labelKey: 'analytics.rangeCustom' },
-] as const;
-
-type DateRangeId = (typeof DATE_RANGES)[number]['id'];
-
-const CHART_SUBTITLE_KEY: Record<DateRangeId, string> = {
-  '7d': 'analytics.revenueSubtitle7d',
-  '30d': 'analytics.revenueSubtitle30d',
-  '90d': 'analytics.revenueSubtitle90d',
-  custom: 'analytics.revenueSubtitleCustom',
-};
-
-type KpiIconKey = 'revenue' | 'orders' | 'customers' | 'products';
-
-const KPI_ICON_MAP: Record<KpiIconKey, React.ReactElement> = {
-  revenue: <TrendingUpIcon aria-hidden="true" />,
-  orders: <ShoppingCartIcon aria-hidden="true" />,
-  customers: <UsersIcon aria-hidden="true" />,
-  products: <PackageIcon aria-hidden="true" />,
-};
-
-interface KpiCardDef {
-  key: string;
-  titleKey: string;
-  value: string | number;
-  iconKey: KpiIconKey;
-  trend?: string;
-}
-
-function buildKpiCards(
-  kpi: DashboardKpi | undefined,
-  formatRevenue: (amount: number) => string
-): KpiCardDef[] {
-  const growthStr = (v: number): string => `${v >= 0 ? '+' : ''}${String(v)}%`;
-  return [
-    {
-      key: 'revenue',
-      titleKey: 'analytics.totalRevenue',
-      iconKey: 'revenue',
-      value: kpi ? formatRevenue(kpi.totalRevenue) : '0',
-      trend: kpi ? growthStr(kpi.revenueGrowth) : undefined,
-    },
-    {
-      key: 'orders',
-      titleKey: 'analytics.totalOrders',
-      iconKey: 'orders',
-      value: kpi?.totalOrders ?? 0,
-      trend: kpi ? growthStr(kpi.ordersGrowth) : undefined,
-    },
-    {
-      key: 'customers',
-      titleKey: 'analytics.totalCustomers',
-      iconKey: 'customers',
-      value: kpi?.totalCustomers ?? 0,
-    },
-    {
-      key: 'products',
-      titleKey: 'analytics.totalProducts',
-      iconKey: 'products',
-      value: kpi?.totalProducts ?? 0,
-    },
-  ];
-}
-
-const PERIOD_DAYS: Record<Exclude<DateRangeId, 'custom'>, number> = {
-  '7d': 7,
-  '30d': 30,
-  '90d': 90,
-};
-
-function buildSalesParams(dateRange: DateRangeId, customRange: DateRange): SalesAnalyticsParams {
-  if (dateRange === 'custom') return { from: customRange.from, to: customRange.to };
-  const today = new Date();
-  const days = PERIOD_DAYS[dateRange];
-  const from = new Date(today.getTime() - days * 86400_000).toISOString().slice(0, 10);
-  return { from, to: today.toISOString().slice(0, 10) };
-}
+import {
+  DATE_RANGES,
+  CHART_SUBTITLE_KEY,
+  KPI_ICON_MAP,
+  buildKpiCards,
+  buildSalesParams,
+  type DateRangeId,
+} from './analyticsPageConfig';
 
 export function AnalyticsPage(): React.ReactElement {
   const { translate: t } = useTranslationAdapter();
@@ -140,6 +66,12 @@ export function AnalyticsPage(): React.ReactElement {
   const { data: alerts, isLoading: alertsLoading, isError: alertsError } = useLowStockAlerts();
   const { data: salesPeriod, isLoading: periodLoading } = useSalesAnalytics(salesParams);
   const { isLoading: summaryLoading } = useSaleSummary();
+  const { data: salesFlat, isLoading: salesFlatLoading } = useSalesFlatList();
+
+  const donutData: StatusSlice[] = React.useMemo(
+    () => computeStatusSlices(salesFlat ?? []),
+    [salesFlat]
+  );
 
   const anyLoading = [kpiLoading, prodsLoading, custsLoading, alertsLoading].some(Boolean);
   const anyError = [kpiError, prodsError, custsError, alertsError].some(Boolean);
@@ -170,7 +102,6 @@ export function AnalyticsPage(): React.ReactElement {
   }
 
   const kpiCards = buildKpiCards(kpi, formatRevenue);
-  const donutData: StatusSlice[] = [];
 
   const handleExportProducts = (): void => {
     const rows = (topProds ?? []).map((p) => ({
@@ -300,7 +231,11 @@ export function AnalyticsPage(): React.ReactElement {
             <CardTitle>{t('analytics.salesByStatus')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <SalesDonutChart data={donutData} isLoading={summaryLoading} currency={currency} />
+            <SalesDonutChart
+              data={donutData}
+              isLoading={summaryLoading || salesFlatLoading}
+              currency={currency}
+            />
           </CardContent>
         </Card>
         <Card>

@@ -4,7 +4,9 @@ import { useUpdateSaleStatus } from '../hooks/useUpdateSaleStatus';
 import styles from './SaleDetailDrawer.module.scss';
 import { useFormatCurrency } from '@shared/lib/formatCurrency';
 import { toast } from '@shared/hooks/useToast';
+import { PrinterIcon } from 'lucide-react';
 import { Badge, Button } from '@shared/ui/primitives';
+import { SaleReceiptDialog } from './SaleReceiptDialog';
 import {
   Sheet,
   SheetContent,
@@ -39,6 +41,7 @@ export function SaleDetailDrawer({
   const fmt = useFormatCurrency();
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateSaleStatus(sale?.id ?? '');
 
+  const [receiptOpen, setReceiptOpen] = React.useState(false);
   const subtotal = (sale?.items ?? []).reduce((sum, item) => sum + item.subtotal, 0);
 
   const handleCancel = (): void => {
@@ -47,12 +50,12 @@ export function SaleDetailDrawer({
       { status: 'cancelled' },
       {
         onSuccess: () => {
-          toast({ title: t('sales.cancelledSuccess') });
+          toast({ title: t('sales.toasts.cancelledSuccess') });
           onOpenChange(false);
         },
         onError: (err) => {
           toast({
-            title: t('sales.cancelFailed'),
+            title: t('sales.toasts.cancelFailed'),
             description: err.message,
             variant: 'destructive',
           });
@@ -132,18 +135,25 @@ export function SaleDetailDrawer({
                 </div>
               </div>
 
-              {/* Cancel action */}
-              {sale.status === 'pending' && (
+              {/* Actions */}
+              <div className={styles['actionsRow']}>
                 <Button
-                  variant="destructive"
-                  onClick={handleCancel}
-                  disabled={isUpdating}
-                  className={styles['cancelBtn']}
+                  variant="outline"
+                  onClick={() => {
+                    setReceiptOpen(true);
+                  }}
                 >
-                  {t('sales.cancelSale')}
+                  <PrinterIcon size={14} />
+                  {t('sales.downloadReceipt')}
                 </Button>
-              )}
+                {sale.status === 'pending' && (
+                  <Button variant="destructive" onClick={handleCancel} disabled={isUpdating}>
+                    {t('sales.cancelSale')}
+                  </Button>
+                )}
+              </div>
             </div>
+            <SaleReceiptDialog sale={sale} open={receiptOpen} onOpenChange={setReceiptOpen} />
           </>
         )}
       </SheetContent>

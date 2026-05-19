@@ -71,6 +71,8 @@ const rawTopProductSchema = z.object({
   productId: z.number(),
   name: z.string(),
   totalSold: z.number().int(),
+  revenue: z.number(),
+  sku: z.string().default(''),
 });
 
 export const topProductSchema = rawTopProductSchema.transform(
@@ -85,9 +87,9 @@ export const topProductSchema = rawTopProductSchema.transform(
   } => ({
     productId: String(p.productId),
     productName: p.name,
-    sku: '',
+    sku: p.sku,
     totalSold: p.totalSold,
-    revenue: 0,
+    revenue: p.revenue,
   })
 );
 

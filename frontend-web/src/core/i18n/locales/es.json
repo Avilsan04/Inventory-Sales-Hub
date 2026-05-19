@@ -465,6 +465,16 @@
     "customer": "Cliente",
     "items": "Artículos",
     "total": "Total",
+    "createdAt": "Creado el",
+    "qty": "Cant.",
+    "subtotal": "Subtotal",
+    "employee": "Empleado",
+    "cancelSale": "Cancelar pedido",
+    "downloadReceipt": "Descargar justificante",
+    "receiptCancelledNotice": "Este pedido ha sido CANCELADO. Este documento no es un justificante de compra válido.",
+    "receiptPendingNote": "Pedido pendiente de tramitación. No válido como justificante hasta que sea completado.",
+    "receiptFooter": "Gracias por confiar en nosotros.",
+    "viewDetail": "Ver detalle",
     "date": "Fecha",
     "orderId": "Pedido",
     "searchPlaceholder": "Buscar pedidos o clientes…",
@@ -499,7 +509,9 @@
       "closeFailed": "Error al cerrar la sesión",
       "openFailed": "Error al abrir la sesión",
       "createFailed": "Error al crear el pedido",
-      "exportEmpty": "No hay ventas para exportar"
+      "exportEmpty": "No hay ventas para exportar",
+      "cancelledSuccess": "Pedido cancelado",
+      "cancelFailed": "Error al cancelar el pedido"
     },
     "sync": {
       "offline": "Sin conexión — {{count}} venta(s) en cola.",

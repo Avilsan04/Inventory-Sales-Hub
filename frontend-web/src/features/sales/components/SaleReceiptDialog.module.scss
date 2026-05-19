@@ -92,6 +92,38 @@
   font-size: $font-size-base;
 }
 
+.statusLine {
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+  text-align: center;
+  letter-spacing: 0.08em;
+  margin: $spacing-2 0 0;
+}
+
+.statusCompleted {
+  color: var(--color-success);
+}
+
+.statusPending {
+  color: var(--color-warning);
+}
+
+.statusCancelled {
+  color: var(--color-destructive);
+}
+
+.cancelledNotice {
+  border: 2px solid var(--color-destructive);
+  color: var(--color-destructive);
+  padding: $spacing-2 $spacing-3;
+  border-radius: var(--radius-sm);
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+  font-family: $font-family-base;
+  margin-bottom: $spacing-2;
+}
+
 .thanks {
   text-align: center;
   color: var(--color-muted-foreground);
